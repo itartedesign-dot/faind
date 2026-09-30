@@ -6,6 +6,7 @@
    2. tiene solo le notizie sull'AI degli ultimi N giorni
    3. assegna tipo (news/tool/prezzi/download/guide) e settore
    4. raggruppa la stessa notizia data da più fonti → "coverage"
+   4b. recupera l'immagine di copertina (feed o anteprima social)
    5. unisce lo storico già pubblicato e scrive news.json
    Ogni voce conserva sempre fonte e link originale.
    ===================================================================== */
@@ -45,6 +46,60 @@ function atomLink(block) {
   return href ? decode(href[1]) : '';
 }
 
+/* ------------------------------ Immagini ------------------------------ */
+// Scarta pixel di tracciamento, icone, avatar e loghi
+const BAD_IMG = /(\.svg(\?|$)|gravatar|pixel|spacer|blank\.gif|feedburner|\/emoji\/|favicon|logo[^/]*\.(png|gif)|1x1|avatar)/i;
+export function cleanImage(src, base) {
+  if (!src) return '';
+  try {
+    const u = new URL(decode(src).trim(), base);
+    if (u.protocol !== 'https:' && u.protocol !== 'http:') return '';
+    u.protocol = 'https:';
+    const s = u.toString();
+    return BAD_IMG.test(s) ? '' : s;
+  } catch { return ''; }
+}
+function attr(tagSrc, name) {
+  const m = tagSrc.match(new RegExp(`\\b${name}=["']([^"']+)["']`, 'i'));
+  return m ? m[1] : '';
+}
+export function feedImage(block, base) {
+  const found = [];
+  // <media:content> / <media:thumbnail>: preferisco la più larga
+  for (const [t] of block.matchAll(/<media:(content|thumbnail)\b[^>]*>/gi)) {
+    const url = attr(t, 'url'), medium = attr(t, 'medium'), type = attr(t, 'type');
+    if (!url || (medium && medium !== 'image') || (type && !/^image\//i.test(type))) continue;
+    found.push({ url, w: +attr(t, 'width') || 0 });
+  }
+  found.sort((a, b) => b.w - a.w);
+  for (const f of found) { const c = cleanImage(f.url, base); if (c) return c; }
+  // <enclosure type="image/...">
+  for (const [t] of block.matchAll(/<enclosure\b[^>]*>/gi)) {
+    if (/image\//i.test(attr(t, 'type'))) { const c = cleanImage(attr(t, 'url'), base); if (c) return c; }
+  }
+  // prima <img> dentro il testo dell'articolo (spesso codificata come entità)
+  const html = decode(decode(block));
+  for (const [t] of html.matchAll(/<img\b[^>]*>/gi)) {
+    const w = +attr(t, 'width');
+    if (w && w < 200) continue;
+    const c = cleanImage(attr(t, 'src') || attr(t, 'data-src'), base);
+    if (c) return c;
+  }
+  return '';
+}
+// Anteprima social della pagina (og:image), usata quando il feed non ha immagini
+export function pageImage(html, base) {
+  const head = html.slice(0, 300000);
+  for (const [t] of head.matchAll(/<meta\b[^>]*>/gi)) {
+    const key = (attr(t, 'property') || attr(t, 'name')).toLowerCase();
+    if (key === 'og:image' || key === 'og:image:url' || key === 'og:image:secure_url' || key === 'twitter:image') {
+      const c = cleanImage(attr(t, 'content'), base);
+      if (c) return c;
+    }
+  }
+  return '';
+}
+
 export function parseFeed(xml) {
   const items = [];
   const isAtom = /<feed[\s>]/i.test(xml) && !/<rss[\s>]/i.test(xml);
@@ -55,7 +110,8 @@ export function parseFeed(xml) {
     if (!link) link = decode(tag(block, ['guid', 'id'])).trim();
     const date = tag(block, ['pubDate', 'published', 'updated', 'dc:date']);
     const summary = stripHtml(tag(block, ['description', 'summary', 'content']));
-    if (title && /^https?:\/\//.test(link)) items.push({ title, link, date: decode(date), summary });
+    const image = feedImage(block, link);
+    if (title && /^https?:\/\//.test(link)) items.push({ title, link, date: decode(date), summary, image });
   }
   return items;
 }
@@ -109,6 +165,7 @@ export function cluster(items) {
     if (host) {
       host.also.push({ name: it.source.name, url: it.link.url });
       host.coverage = 1 + host.also.length;
+      if (!host.image && it.image) host.image = it.image;
       if (it.date < host.date) host.date = it.date;     // la notizia è uscita alla prima segnalazione
     } else out.push({ ...it, also: it.also ? [...it.also] : [], coverage: it.coverage || 1, _tk: tk });
   }
@@ -158,6 +215,7 @@ export function normalize(raw, feed, now = Date.now(), maxAgeDays = 7) {
     summary: excerpt(raw.summary),
     lang: feed.lang,
     official: !!feed.official || undefined,
+    image: raw.image || undefined,
     source: { name: feed.name, url: new URL(url).origin },
     link: { type: type === 'download' ? 'download' : 'read', url },
     auto: true
@@ -202,6 +260,21 @@ async function main() {
     (order.get(a.source.name) ?? 99) - (order.get(b.source.name) ?? 99) || a.date.localeCompare(b.date));
 
   const items = cluster(all).sort((a, b) => b.date.localeCompare(a.date)).slice(0, cfg.maxItems);
+
+  // Per le notizie senza immagine leggo l'anteprima social dell'articolo.
+  // Ogni articolo viene controllato una volta sola (imgChecked), massimo 40 per giro.
+  const todo = items.filter(i => !i.image && !i.imgChecked).slice(0, 40);
+  let foundImg = 0;
+  for (let i = 0; i < todo.length; i += 6) {
+    await Promise.all(todo.slice(i, i + 6).map(async (it) => {
+      try {
+        const img = pageImage(await get(it.link.url, 8000), it.link.url);
+        if (img) { it.image = img; foundImg++; }
+      } catch { /* pagina non raggiungibile: resterà il logo FAIND */ }
+      it.imgChecked = true;
+    }));
+  }
+  if (todo.length) console.log(`🖼  anteprime: ${foundImg}/${todo.length} trovate`);
 
   if (ok === 0 && previous.length) {
     console.warn('Nessun feed raggiungibile: mantengo lo storico.');
