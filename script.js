@@ -851,6 +851,11 @@
 
     $('#moreReads').addEventListener('click', function () { state.readsShown += 12; renderReads(); });
     $('#tickerClose').addEventListener('click', function () { setTicker(false, true); $('#tickerOpen').focus(); });
+    // Su telefono e tablet un tocco sulla barra (fuori dai titoli) la ferma o la fa ripartire
+    $('#bticker').addEventListener('click', function (e) {
+      if (e.target.closest('a') || e.target.closest('.bticker__close')) return;
+      $('#bticker').classList.toggle('is-paused');
+    });
     $('#tickerOpen').addEventListener('click', function () { setTicker(true, true); });
 
     $('#themeToggle').addEventListener('click', function () {
