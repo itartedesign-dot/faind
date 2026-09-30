@@ -448,9 +448,11 @@
 
   function buildSections() {
     // L'apertura scelta dalla redazione vale 48 ore; poi passa alla notizia importante più fresca
+    // Se non c'è né un'apertura recente né una notizia importante, apre la più recente con foto
     var lead = all.filter(function (n) { return n.lead && ageMs(n) < 2 * DAY; })[0] ||
                all.filter(function (n) { return isImportant(n) && ageMs(n) < 2 * DAY; })[0] ||
-               all.filter(function (n) { return n.lead; })[0] || all[0] || null;
+               all.filter(function (n) { return n.image && ageMs(n) < DAY; })[0] ||
+               all[0] || null;
     var used = {};
     if (lead) used[lead.id] = 1;
 
@@ -483,7 +485,10 @@
     var pool = [];
     if (sections.lead) pool.push(sections.lead);
     pool = pool.concat(sections.important, sections.fresh)
-      .sort(function (a, b) { return toDate(b.date) - toDate(a.date); }).slice(0, 12);
+      .sort(function (a, b) { return toDate(b.date) - toDate(a.date); });
+    // Nella barra solo notizie delle ultime 48 ore (se ce ne sono abbastanza)
+    var recent = pool.filter(function (n) { return ageMs(n) < 2 * DAY; });
+    pool = (recent.length >= 4 ? recent : pool).slice(0, 12);
     var items = pool.map(function (n) {
       return '<li class="ticker__item"><time datetime="' + esc(n.date) + '">' + esc(shortWhen(n.date)) + '</time>' +
         (isImportant(n) ? '<span class="star" aria-hidden="true">★</span>' : '') +
