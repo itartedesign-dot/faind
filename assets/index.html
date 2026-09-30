@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>FAIND — AI News Agency</title>
+  <meta name="description" content="FAIND: notizie flash, guide ai download, prezzi degli abbonamenti e convenzioni sul mondo dell'Intelligenza Artificiale. Ogni notizia con la sua fonte.">
+  <meta name="theme-color" content="#F4F7FB" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0A1322" media="(prefers-color-scheme: dark)">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="FAIND — AI News Agency">
+  <meta property="og:description" content="Tutta l'AI, in un solo posto. Notizie, tool, prezzi e convenzioni con fonte verificabile.">
+  <meta property="og:image" content="assets/logo-faind.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/logo-faind.png">
+
+  <!-- Applica il tema prima del rendering: niente lampo bianco in dark mode -->
+  <script>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('faind-theme'); } catch (e) {}
+      if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"NewsMediaOrganization","name":"FAIND","description":"AI News Agency","email":"itartedesign@gmail.com"}
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="a11y.skip">Vai ai contenuti</a>
+
+  <!-- ============================ HEADER ============================ -->
+  <header class="masthead">
+    <div class="masthead__bar wrap">
+      <a class="brand" href="#top" aria-label="FAIND — Home">
+        <img class="brand__img brand__img--light" src="assets/logo-mark-light.webp" width="180" height="42" alt="FAIND">
+        <img class="brand__img brand__img--dark" src="assets/logo-mark-dark.webp" width="180" height="42" alt="" aria-hidden="true">
+        <span class="brand__tag" data-i18n="brand.tagline">Tutta l'AI, in un solo posto.</span>
+      </a>
+
+      <nav class="nav" aria-label="Principale">
+        <ul class="nav__list">
+          <li><a href="#top" class="nav__link" data-i18n="nav.home">Home</a></li>
+          <li><a href="#importanti" class="nav__link" data-i18n="nav.news">News</a></li>
+          <li><a href="#guide" class="nav__link" data-i18n="nav.guides">Tool &amp; Guide</a></li>
+          <li><a href="#prezzi" class="nav__link" data-i18n="nav.prices">Prezzi</a></li>
+          <li><a href="#convenzioni" class="nav__link" data-i18n="nav.deals">Convenzioni</a></li>
+          <li><a href="#contatti" class="nav__link" data-i18n="nav.contact">Contatti</a></li>
+        </ul>
+      </nav>
+
+      <div class="controls">
+        <div class="lang" role="group" aria-label="Lingua / Language">
+          <button type="button" class="lang__btn" data-lang="it" aria-pressed="true">IT</button>
+          <button type="button" class="lang__btn" data-lang="en" aria-pressed="false">EN</button>
+          <button type="button" class="lang__btn" data-lang="fr" aria-pressed="false">FR</button>
+          <button type="button" class="lang__btn" data-lang="de" aria-pressed="false">DE</button>
+        </div>
+
+        <button type="button" class="theme" id="themeToggle" aria-pressed="false" data-i18n-aria="theme.toggle" aria-label="Modalità notte">
+          <span class="theme__track" aria-hidden="true">
+            <svg class="theme__icon theme__icon--sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+            <svg class="theme__icon theme__icon--moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+            <span class="theme__thumb"></span>
+          </span>
+        </button>
+
+        <button type="button" class="burger" id="menuBtn" aria-expanded="false" aria-controls="drawer" data-i18n-aria="menu.open" aria-label="Apri menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Barra di caricamento: scorre mentre arrivano le notizie della settimana -->
+    <div class="loadbar" id="loadbar" role="progressbar" aria-hidden="true"><span></span></div>
+  </header>
+
+  <!-- Drawer mobile -->
+  <div class="drawer" id="drawer" hidden>
+    <div class="drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+      <div class="drawer__head">
+        <span id="drawerTitle" class="drawer__title" data-i18n="menu.title">Menu</span>
+        <button type="button" class="drawer__close" id="menuClose" data-i18n-aria="menu.close" aria-label="Chiudi menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <ul class="drawer__nav">
+        <li><a href="#top" data-i18n="nav.home">Home</a></li>
+        <li><a href="#importanti" data-i18n="nav.news">News</a></li>
+        <li><a href="#guide" data-i18n="nav.guides">Tool &amp; Guide</a></li>
+        <li><a href="#prezzi" data-i18n="nav.prices">Prezzi</a></li>
+        <li><a href="#convenzioni" data-i18n="nav.deals">Convenzioni</a></li>
+        <li><a href="#contatti" data-i18n="nav.contact">Contatti</a></li>
+      </ul>
+      <div class="drawer__lang lang" role="group" aria-label="Lingua / Language">
+        <button type="button" class="lang__btn" data-lang="it" aria-pressed="true">IT</button>
+        <button type="button" class="lang__btn" data-lang="en" aria-pressed="false">EN</button>
+        <button type="button" class="lang__btn" data-lang="fr" aria-pressed="false">FR</button>
+        <button type="button" class="lang__btn" data-lang="de" aria-pressed="false">DE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ MAIN ============================ -->
+  <main id="main" class="wrap layout">
+    <div class="content" id="top">
+
+      <!-- Settori: filtra per tipologia di AI -->
+      <div class="sectors">
+        <div class="sectors__chips" id="sectors" role="toolbar" data-i18n-aria="sec.sectors" aria-label="Settori"></div>
+        <label class="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+          <span class="sr-only" data-i18n="search.label">Cerca</span>
+          <input type="search" id="search" autocomplete="off" data-i18n-ph="search.ph" placeholder="Cerca nelle notizie">
+        </label>
+      </div>
+
+      <div id="homeView">
+        <!-- Apertura + Appena uscite -->
+        <section class="front" aria-label="Apertura">
+          <article class="lead is-loading" id="lead" aria-busy="true">
+            <span class="sk sk--tag"></span>
+            <span class="sk sk--h1"></span><span class="sk sk--h1 sk--short"></span>
+            <span class="sk sk--line"></span><span class="sk sk--line"></span><span class="sk sk--line sk--short"></span>
+          </article>
+
+          <aside class="wire" aria-labelledby="wireTitle">
+            <div class="wire__head">
+              <h2 class="wire__title" id="wireTitle"><span class="pulse" aria-hidden="true"></span><span data-i18n="sec.fresh">Appena uscite</span></h2>
+              <p class="wire__status" id="feedStatus" role="status" data-i18n="status.loading">Cerco le notizie della settimana…</p>
+            </div>
+            <ol class="wire__list" id="wire" aria-busy="true">
+              <li class="wire__item"><span class="sk sk--line"></span><span class="sk sk--line"></span></li>
+              <li class="wire__item"><span class="sk sk--line"></span><span class="sk sk--line"></span></li>
+              <li class="wire__item"><span class="sk sk--line"></span><span class="sk sk--line"></span></li>
+              <li class="wire__item"><span class="sk sk--line"></span><span class="sk sk--line"></span></li>
+            </ol>
+          </aside>
+        </section>
+
+        <!-- Importanti -->
+        <section class="block" id="importanti" aria-labelledby="impTitle">
+          <div class="block__head">
+            <h2 class="block__title" id="impTitle" data-i18n="sec.important">Importanti</h2>
+            <p class="block__hint" data-i18n="hint.important">Scelte dalla redazione o riprese da più fonti</p>
+          </div>
+          <div class="grid" id="important">
+            <div class="card card--sk"><span class="sk sk--tag"></span><span class="sk sk--line"></span><span class="sk sk--line"></span><span class="sk sk--line sk--short"></span></div>
+            <div class="card card--sk"><span class="sk sk--tag"></span><span class="sk sk--line"></span><span class="sk sk--line"></span><span class="sk sk--line sk--short"></span></div>
+            <div class="card card--sk"><span class="sk sk--tag"></span><span class="sk sk--line"></span><span class="sk sk--line"></span><span class="sk sk--line sk--short"></span></div>
+          </div>
+        </section>
+
+        <!-- Letture secondarie -->
+        <section class="block" id="letture" aria-labelledby="readsTitle">
+          <div class="block__head">
+            <h2 class="block__title" id="readsTitle" data-i18n="sec.more">Letture secondarie</h2>
+            <p class="block__hint" data-i18n="hint.more">Il resto della settimana, dal più recente</p>
+          </div>
+          <ol class="reads" id="reads"></ol>
+          <button type="button" class="btn btn--ghost reads__more" id="moreReads" hidden data-i18n="more.btn">Mostra altre</button>
+        </section>
+      </div>
+
+      <!-- Risultati filtrati (settore, tipo, ricerca, salvati) -->
+      <section class="block results" id="results" hidden aria-labelledby="resultsTitle">
+        <div class="block__head">
+          <h2 class="block__title" id="resultsTitle" tabindex="-1"></h2>
+          <button type="button" class="btn btn--ghost btn--sm" data-reset data-i18n="results.back">Torna alla home</button>
+        </div>
+        <div class="chips" id="types" role="toolbar" aria-label="Tipo"></div>
+        <div class="grid" id="grid" aria-live="polite"></div>
+      </section>
+
+      <!-- Guide & download -->
+      <section class="block" id="guide" aria-labelledby="guideTitle">
+        <div class="block__head">
+          <h2 class="block__title" id="guideTitle" data-i18n="sec.guides">Guide e download</h2>
+        </div>
+        <ul class="guides" id="guides"></ul>
+      </section>
+    </div>
+
+    <!-- ============================ SIDEBAR ============================ -->
+    <aside class="side" aria-label="Servizi">
+      <section class="panel" id="prezzi" aria-labelledby="pricesTitle">
+        <h2 class="panel__title" id="pricesTitle" data-i18n="sec.prices">Prezzi e abbonamenti</h2>
+        <p class="panel__note" id="pricesNote"></p>
+        <table class="prices">
+          <caption class="sr-only" data-i18n="sec.prices">Prezzi e abbonamenti</caption>
+          <thead>
+            <tr><th scope="col" data-i18n="prices.plan">Piano</th><th scope="col" class="num" data-i18n="prices.month">Al mese</th><th scope="col" class="num" data-i18n="prices.year">Annuale</th></tr>
+          </thead>
+          <tbody id="prices"></tbody>
+        </table>
+        <p class="panel__foot" id="pricesFoot"></p>
+      </section>
+
+      <section class="panel" id="convenzioni" aria-labelledby="dealsTitle">
+        <h2 class="panel__title" id="dealsTitle" data-i18n="sec.deals">Convenzioni e sconti</h2>
+        <ul class="deals" id="deals"></ul>
+      </section>
+
+      <section class="panel panel--support" aria-labelledby="supportTitle">
+        <h2 class="panel__title" id="supportTitle" data-i18n="sec.support">Sostieni FAIND</h2>
+        <p data-i18n="support.text">FAIND è gratuito, indipendente e senza pubblicità invasiva. Se ti è utile, puoi sostenerlo con una donazione.</p>
+        <a class="btn btn--paypal" target="_blank" rel="noopener noreferrer"
+           href="https://www.paypal.com/donate/?business=buono.p%40alice.it&amp;currency_code=EUR&amp;item_name=Sostieni%20FAIND">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 21h-3l2.6-17h6.3c3.5 0 5.4 1.8 4.9 4.9-.6 3.6-3 5.3-6.3 5.3H10l-1 6.8z" fill="currentColor"/></svg>
+          <span data-i18n="support.btn">Dona con PayPal</span>
+        </a>
+        <p class="copyline">
+          <span data-i18n="support.or">Oppure invia a</span>
+          <button type="button" class="copy" data-copy="buono.p@alice.it">buono.p@alice.it</button>
+        </p>
+      </section>
+
+      <section class="panel" id="contatti" aria-labelledby="contactTitle">
+        <h2 class="panel__title" id="contactTitle" data-i18n="sec.contact">Scrivici</h2>
+        <p data-i18n="contact.text">Una notizia da segnalare, una correzione, un'offerta da proporre? Rispondiamo a tutti.</p>
+        <form class="form" id="contactForm" novalidate>
+          <div class="field">
+            <label for="cName" data-i18n="form.name">Nome</label>
+            <input id="cName" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="cEmail" data-i18n="form.email">La tua email</label>
+            <input id="cEmail" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="cType" data-i18n="form.type">Motivo</label>
+            <select id="cType" name="type">
+              <option value="report" data-i18n="form.t.report">Segnalazione notizia</option>
+              <option value="fix" data-i18n="form.t.fix">Correzione</option>
+              <option value="deal" data-i18n="form.t.deal">Proposta di convenzione</option>
+              <option value="collab" data-i18n="form.t.collab">Collaborazione</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cMsg" data-i18n="form.msg">Messaggio</label>
+            <textarea id="cMsg" name="message" rows="4" required></textarea>
+          </div>
+          <button class="btn btn--primary" type="submit" data-i18n="form.send">Invia messaggio</button>
+          <p class="form__status" id="formStatus" role="status"></p>
+        </form>
+        <p class="copyline">
+          <span data-i18n="contact.direct">Oppure scrivi direttamente a</span>
+          <a href="mailto:itartedesign@gmail.com">itartedesign@gmail.com</a>
+        </p>
+      </section>
+    </aside>
+  </main>
+
+  <!-- ============================ FOOTER ============================ -->
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <div class="footer__brand">
+        <img class="brand__img brand__img--light" src="assets/logo-full-light.webp" width="160" height="52" alt="FAIND — AI News Agency" loading="lazy">
+        <img class="brand__img brand__img--dark" src="assets/logo-full-dark.webp" width="160" height="52" alt="" aria-hidden="true" loading="lazy">
+        <p data-i18n="footer.policy">Ogni notizia riporta la fonte originale e il link per verificarla. FAIND non è affiliato ai marchi citati.</p>
+      </div>
+      <ul class="footer__nav">
+        <li><a href="#importanti" data-i18n="nav.news">News</a></li>
+        <li><a href="#guide" data-i18n="nav.guides">Tool &amp; Guide</a></li>
+        <li><a href="#prezzi" data-i18n="nav.prices">Prezzi</a></li>
+        <li><a href="#convenzioni" data-i18n="nav.deals">Convenzioni</a></li>
+        <li><a href="#contatti" data-i18n="nav.contact">Contatti</a></li>
+      </ul>
+      <p class="footer__legal"><span id="year">2026</span> FAIND. <span data-i18n="footer.rights">Tutti i diritti riservati.</span> <span class="footer__upd"><span data-i18n="footer.updated">Aggiornato il</span> <time id="updated"></time></span></p>
+    </div>
+  </footer>
+
+  <!-- Barra titoli in stile telegiornale -->
+  <div class="bticker" id="bticker" data-i18n-aria="ticker.label" aria-label="Ultim'ora" role="region">
+    <div class="bticker__label"><span class="pulse" aria-hidden="true"></span><span data-i18n="ticker.label">Ultim'ora</span></div>
+    <div class="bticker__viewport"><ul class="bticker__track" id="ticker"></ul></div>
+    <button type="button" class="bticker__close" id="tickerClose" data-i18n-aria="ticker.close" aria-label="Nascondi la barra">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>
+    </button>
+  </div>
+  <button type="button" class="bticker-open" id="tickerOpen" hidden>
+    <span class="pulse" aria-hidden="true"></span><span data-i18n="ticker.label">Ultim'ora</span>
+  </button>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>

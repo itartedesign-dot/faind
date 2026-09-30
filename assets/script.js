@@ -1,0 +1,841 @@
+/* =====================================================================
+   FAIND — script.js  (Vanilla JS, nessuna dipendenza)
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  var DATA = window.FAIND_DATA || { news: [], guides: [], prices: { items: [] }, deals: [] };
+  var LANGS = ['it', 'en', 'fr', 'de'];
+  var LOCALES = { it: 'it-IT', en: 'en-GB', fr: 'fr-FR', de: 'de-DE' };
+
+  /* ---------------------------- Traduzioni ---------------------------- */
+  var I18N = {
+    it: {
+      'a11y.skip': 'Vai ai contenuti',
+      'brand.tagline': "Tutta l'AI, in un solo posto.",
+      'nav.home': 'Home', 'nav.news': 'News', 'nav.guides': 'Tool & Guide', 'nav.prices': 'Prezzi', 'nav.deals': 'Convenzioni', 'nav.contact': 'Contatti',
+      'theme.toggle': 'Cambia modalità giorno/notte',
+      'menu.open': 'Apri menu', 'menu.close': 'Chiudi menu', 'menu.title': 'Menu',
+      'ticker.label': "Ultim'ora",
+      'sec.wire': 'Notizie flash', 'sec.all': 'Tutte le notizie', 'sec.guides': 'Guide e download',
+      'sec.prices': 'Prezzi e abbonamenti', 'sec.deals': 'Convenzioni e sconti', 'sec.support': 'Sostieni FAIND', 'sec.contact': 'Scrivici',
+      'search.label': 'Cerca', 'search.ph': 'Cerca nelle notizie',
+      'filter.all': 'Tutte', 'filter.saved': 'Salvati',
+      'tag.news': 'News', 'tag.tool': 'Tool', 'tag.prezzi': 'Prezzi', 'tag.download': 'Download', 'tag.guide': 'Guida', 'tag.convenzioni': 'Convenzioni',
+      'act.read': 'Leggi la fonte', 'act.download': 'Scarica', 'act.try': 'Prova il tool', 'act.deal': "Vai all'offerta",
+      'source': 'Fonte', 'save': 'Salva', 'unsave': 'Rimuovi dai salvati', 'saved.toast': 'Salvato', 'unsaved.toast': 'Rimosso dai salvati',
+      'empty.text': 'Nessuna notizia corrisponde alla ricerca.', 'empty.saved': 'Non hai ancora salvato notizie. Usa il segnalibro su una scheda.', 'empty.reset': 'Mostra tutte le notizie',
+      'prices.plan': 'Piano', 'prices.month': 'Al mese', 'prices.year': 'Annuale', 'prices.checked': 'Verificati il',
+      'prices.note': 'Listini ufficiali USA in dollari, tasse escluse. In Europa i prezzi possono essere più alti.',
+      'prices.verified': 'Controllo incrociato', 'prices.save': 'risparmi',
+      'deal.demo': 'Esempio', 'deal.copy': 'Copia codice', 'copied': 'Copiato negli appunti',
+      'support.text': 'FAIND è gratuito, indipendente e senza pubblicità invasiva. Se ti è utile, puoi sostenerlo con una donazione.',
+      'support.btn': 'Dona con PayPal', 'support.or': 'Oppure invia a',
+      'contact.text': "Una notizia da segnalare, una correzione, un'offerta da proporre? Rispondiamo a tutti.",
+      'contact.direct': 'Oppure scrivi direttamente a',
+      'form.name': 'Nome', 'form.email': 'La tua email', 'form.type': 'Motivo', 'form.msg': 'Messaggio', 'form.send': 'Invia messaggio',
+      'form.t.report': 'Segnalazione notizia', 'form.t.fix': 'Correzione', 'form.t.deal': 'Proposta di convenzione', 'form.t.collab': 'Collaborazione',
+      'form.err': 'Compila nome, email valida e messaggio.', 'form.ok': 'Si apre la tua app di posta con il messaggio già pronto: premi Invia per completare.',
+      'footer.policy': 'Ogni notizia riporta la fonte originale e il link per verificarla. FAIND non è affiliato ai marchi citati.',
+      'footer.rights': 'Tutti i diritti riservati.', 'footer.updated': 'Aggiornato il',
+      'today': 'oggi'
+    },
+    en: {
+      'a11y.skip': 'Skip to content',
+      'brand.tagline': 'All of AI, in one place.',
+      'nav.home': 'Home', 'nav.news': 'News', 'nav.guides': 'Tools & Guides', 'nav.prices': 'Prices', 'nav.deals': 'Deals', 'nav.contact': 'Contact',
+      'theme.toggle': 'Toggle day/night mode',
+      'menu.open': 'Open menu', 'menu.close': 'Close menu', 'menu.title': 'Menu',
+      'ticker.label': 'Breaking',
+      'sec.wire': 'Flash news', 'sec.all': 'All news', 'sec.guides': 'Guides & downloads',
+      'sec.prices': 'Prices & plans', 'sec.deals': 'Deals & discounts', 'sec.support': 'Support FAIND', 'sec.contact': 'Write to us',
+      'search.label': 'Search', 'search.ph': 'Search the news',
+      'filter.all': 'All', 'filter.saved': 'Saved',
+      'tag.news': 'News', 'tag.tool': 'Tool', 'tag.prezzi': 'Pricing', 'tag.download': 'Download', 'tag.guide': 'Guide', 'tag.convenzioni': 'Deals',
+      'act.read': 'Read the source', 'act.download': 'Download', 'act.try': 'Try the tool', 'act.deal': 'Go to offer',
+      'source': 'Source', 'save': 'Save', 'unsave': 'Remove from saved', 'saved.toast': 'Saved', 'unsaved.toast': 'Removed from saved',
+      'empty.text': 'No news matches your search.', 'empty.saved': "You haven't saved any news yet. Use the bookmark on a card.", 'empty.reset': 'Show all news',
+      'prices.plan': 'Plan', 'prices.month': 'Monthly', 'prices.year': 'Annual', 'prices.checked': 'Checked on',
+      'prices.note': 'Official US list prices in dollars, excluding tax. European prices may be higher.',
+      'prices.verified': 'Cross-checked with', 'prices.save': 'save',
+      'deal.demo': 'Example', 'deal.copy': 'Copy code', 'copied': 'Copied to clipboard',
+      'support.text': 'FAIND is free, independent and free of intrusive ads. If you find it useful, you can support it with a donation.',
+      'support.btn': 'Donate with PayPal', 'support.or': 'Or send to',
+      'contact.text': 'News to report, a correction, a deal to propose? We reply to everyone.',
+      'contact.direct': 'Or write directly to',
+      'form.name': 'Name', 'form.email': 'Your email', 'form.type': 'Reason', 'form.msg': 'Message', 'form.send': 'Send message',
+      'form.t.report': 'News tip', 'form.t.fix': 'Correction', 'form.t.deal': 'Deal proposal', 'form.t.collab': 'Collaboration',
+      'form.err': 'Please fill in your name, a valid email and a message.', 'form.ok': 'Your mail app opens with the message ready: press Send to finish.',
+      'footer.policy': 'Every story cites its original source with a link to verify it. FAIND is not affiliated with the brands mentioned.',
+      'footer.rights': 'All rights reserved.', 'footer.updated': 'Updated on',
+      'today': 'today'
+    },
+    fr: {
+      'a11y.skip': 'Aller au contenu',
+      'brand.tagline': "Toute l'IA, au même endroit.",
+      'nav.home': 'Accueil', 'nav.news': 'Actus', 'nav.guides': 'Outils & Guides', 'nav.prices': 'Prix', 'nav.deals': 'Offres', 'nav.contact': 'Contact',
+      'theme.toggle': 'Basculer mode jour/nuit',
+      'menu.open': 'Ouvrir le menu', 'menu.close': 'Fermer le menu', 'menu.title': 'Menu',
+      'ticker.label': 'Dernière heure',
+      'sec.wire': 'Flash info', 'sec.all': 'Toutes les actualités', 'sec.guides': 'Guides et téléchargements',
+      'sec.prices': 'Prix et abonnements', 'sec.deals': 'Offres et réductions', 'sec.support': 'Soutenir FAIND', 'sec.contact': 'Écrivez-nous',
+      'search.label': 'Rechercher', 'search.ph': 'Rechercher dans les actus',
+      'filter.all': 'Toutes', 'filter.saved': 'Enregistrées',
+      'tag.news': 'Actu', 'tag.tool': 'Outil', 'tag.prezzi': 'Prix', 'tag.download': 'Téléchargement', 'tag.guide': 'Guide', 'tag.convenzioni': 'Offres',
+      'act.read': 'Lire la source', 'act.download': 'Télécharger', 'act.try': "Essayer l'outil", 'act.deal': "Voir l'offre",
+      'source': 'Source', 'save': 'Enregistrer', 'unsave': 'Retirer des enregistrées', 'saved.toast': 'Enregistré', 'unsaved.toast': 'Retiré',
+      'empty.text': 'Aucune actualité ne correspond à votre recherche.', 'empty.saved': "Vous n'avez encore rien enregistré. Utilisez le signet d'une fiche.", 'empty.reset': 'Afficher toutes les actus',
+      'prices.plan': 'Offre', 'prices.month': 'Par mois', 'prices.year': 'Annuel', 'prices.checked': 'Vérifiés le',
+      'prices.note': 'Tarifs officiels US en dollars, hors taxes. Les prix européens peuvent être plus élevés.',
+      'prices.verified': 'Recoupé avec', 'prices.save': 'économie',
+      'deal.demo': 'Exemple', 'deal.copy': 'Copier le code', 'copied': 'Copié dans le presse-papiers',
+      'support.text': "FAIND est gratuit, indépendant et sans publicité intrusive. S'il vous est utile, vous pouvez le soutenir par un don.",
+      'support.btn': 'Faire un don via PayPal', 'support.or': 'Ou envoyez à',
+      'contact.text': 'Une info à signaler, une correction, une offre à proposer ? Nous répondons à tous.',
+      'contact.direct': 'Ou écrivez directement à',
+      'form.name': 'Nom', 'form.email': 'Votre e-mail', 'form.type': 'Motif', 'form.msg': 'Message', 'form.send': 'Envoyer le message',
+      'form.t.report': 'Signaler une info', 'form.t.fix': 'Correction', 'form.t.deal': "Proposition d'offre", 'form.t.collab': 'Collaboration',
+      'form.err': 'Indiquez votre nom, un e-mail valide et un message.', 'form.ok': "Votre messagerie s'ouvre avec le message prêt : appuyez sur Envoyer.",
+      'footer.policy': "Chaque actualité cite sa source originale avec un lien pour la vérifier. FAIND n'est affilié à aucune des marques citées.",
+      'footer.rights': 'Tous droits réservés.', 'footer.updated': 'Mis à jour le',
+      'today': "aujourd'hui"
+    },
+    de: {
+      'a11y.skip': 'Zum Inhalt springen',
+      'brand.tagline': 'Alles über KI, an einem Ort.',
+      'nav.home': 'Start', 'nav.news': 'News', 'nav.guides': 'Tools & Anleitungen', 'nav.prices': 'Preise', 'nav.deals': 'Angebote', 'nav.contact': 'Kontakt',
+      'theme.toggle': 'Tag-/Nachtmodus umschalten',
+      'menu.open': 'Menü öffnen', 'menu.close': 'Menü schließen', 'menu.title': 'Menü',
+      'ticker.label': 'Eilmeldung',
+      'sec.wire': 'Kurzmeldungen', 'sec.all': 'Alle Nachrichten', 'sec.guides': 'Anleitungen & Downloads',
+      'sec.prices': 'Preise & Abos', 'sec.deals': 'Angebote & Rabatte', 'sec.support': 'FAIND unterstützen', 'sec.contact': 'Schreib uns',
+      'search.label': 'Suchen', 'search.ph': 'Nachrichten durchsuchen',
+      'filter.all': 'Alle', 'filter.saved': 'Gespeichert',
+      'tag.news': 'News', 'tag.tool': 'Tool', 'tag.prezzi': 'Preise', 'tag.download': 'Download', 'tag.guide': 'Anleitung', 'tag.convenzioni': 'Angebote',
+      'act.read': 'Zur Quelle', 'act.download': 'Herunterladen', 'act.try': 'Tool testen', 'act.deal': 'Zum Angebot',
+      'source': 'Quelle', 'save': 'Speichern', 'unsave': 'Aus Gespeicherten entfernen', 'saved.toast': 'Gespeichert', 'unsaved.toast': 'Entfernt',
+      'empty.text': 'Keine Nachricht passt zu deiner Suche.', 'empty.saved': 'Du hast noch nichts gespeichert. Nutze das Lesezeichen auf einer Karte.', 'empty.reset': 'Alle Nachrichten zeigen',
+      'prices.plan': 'Tarif', 'prices.month': 'Monatlich', 'prices.year': 'Jährlich', 'prices.checked': 'Geprüft am',
+      'prices.note': 'Offizielle US-Listenpreise in Dollar, ohne Steuern. In Europa können Preise höher sein.',
+      'prices.verified': 'Abgeglichen mit', 'prices.save': 'Ersparnis',
+      'deal.demo': 'Beispiel', 'deal.copy': 'Code kopieren', 'copied': 'In die Zwischenablage kopiert',
+      'support.text': 'FAIND ist kostenlos, unabhängig und ohne aufdringliche Werbung. Wenn es dir hilft, kannst du es mit einer Spende unterstützen.',
+      'support.btn': 'Mit PayPal spenden', 'support.or': 'Oder sende an',
+      'contact.text': 'Eine Meldung, eine Korrektur, ein Angebot? Wir antworten allen.',
+      'contact.direct': 'Oder schreib direkt an',
+      'form.name': 'Name', 'form.email': 'Deine E-Mail', 'form.type': 'Anliegen', 'form.msg': 'Nachricht', 'form.send': 'Nachricht senden',
+      'form.t.report': 'Nachricht melden', 'form.t.fix': 'Korrektur', 'form.t.deal': 'Angebotsvorschlag', 'form.t.collab': 'Zusammenarbeit',
+      'form.err': 'Bitte Name, gültige E-Mail und Nachricht ausfüllen.', 'form.ok': 'Dein Mailprogramm öffnet sich mit der fertigen Nachricht: auf Senden tippen.',
+      'footer.policy': 'Jede Meldung nennt die Originalquelle mit Link zur Überprüfung. FAIND ist mit den genannten Marken nicht verbunden.',
+      'footer.rights': 'Alle Rechte vorbehalten.', 'footer.updated': 'Aktualisiert am',
+      'today': 'heute'
+    }
+  };
+
+  /* Testi aggiunti per sezioni, settori, caricamento e barra TG */
+  var EXTRA = {
+    it: {
+      'sec.fresh': 'Appena uscite', 'sec.important': 'Importanti', 'sec.more': 'Letture secondarie', 'sec.sectors': 'Settori',
+      'hint.important': 'Scelte dalla redazione o riprese da più fonti', 'hint.more': 'Il resto della settimana, dal più recente',
+      'more.btn': 'Mostra altre', 'results.back': 'Torna alla home',
+      'results.all': 'Tutte le notizie', 'results.saved': 'Notizie salvate', 'results.search': 'Risultati per “{q}”', 'results.count': '{n} risultati',
+      'status.loading': 'Cerco le notizie della settimana…',
+      'status.ok': 'Aggiornato {t}: {n} notizie da {s} fonti',
+      'status.local': 'Anteprima locale: notizie della redazione. L’aggiornamento automatico parte una volta online.',
+      'status.error': 'Aggiornamento automatico non raggiungibile: mostro le notizie della redazione.',
+      'ticker.close': 'Nascondi la barra delle ultime notizie', 'ticker.open': 'Mostra la barra delle ultime notizie',
+      'sector.all': 'Tutto', 'type.all': 'Tutti i tipi',
+      'cat.chatbot': 'Chatbot e LLM', 'cat.immagini': 'Immagini e grafica', 'cat.video': 'Video', 'cat.musica': 'Musica e audio',
+      'cat.codice': 'Programmazione', 'cat.produttivita': 'Produttività', 'cat.ricerca': 'Ricerca e scienza', 'cat.hardware': 'Chip e infrastruttura',
+      'cat.regole': 'Leggi e regole', 'cat.altro': 'Altro',
+      'also': 'Anche su', 'official': 'Fonte ufficiale', 'lang.title': 'Lingua dell’articolo originale', 'important.badge': 'Importante'
+    },
+    en: {
+      'sec.fresh': 'Just in', 'sec.important': 'Top stories', 'sec.more': 'More reading', 'sec.sectors': 'Sectors',
+      'hint.important': 'Picked by the editors or covered by several sources', 'hint.more': 'The rest of the week, newest first',
+      'more.btn': 'Show more', 'results.back': 'Back to home',
+      'results.all': 'All news', 'results.saved': 'Saved news', 'results.search': 'Results for “{q}”', 'results.count': '{n} results',
+      'status.loading': 'Fetching this week’s news…',
+      'status.ok': 'Updated {t}: {n} stories from {s} sources',
+      'status.local': 'Local preview: editorial news only. Automatic updates start once online.',
+      'status.error': 'Automatic updates unavailable: showing editorial news.',
+      'ticker.close': 'Hide the breaking news bar', 'ticker.open': 'Show the breaking news bar',
+      'sector.all': 'All', 'type.all': 'All types',
+      'cat.chatbot': 'Chatbots & LLMs', 'cat.immagini': 'Images & design', 'cat.video': 'Video', 'cat.musica': 'Music & audio',
+      'cat.codice': 'Coding', 'cat.produttivita': 'Productivity', 'cat.ricerca': 'Research & science', 'cat.hardware': 'Chips & infrastructure',
+      'cat.regole': 'Law & policy', 'cat.altro': 'Other',
+      'also': 'Also on', 'official': 'Official source', 'lang.title': 'Language of the original article', 'important.badge': 'Top story'
+    },
+    fr: {
+      'sec.fresh': 'À l’instant', 'sec.important': 'À la une', 'sec.more': 'Autres lectures', 'sec.sectors': 'Secteurs',
+      'hint.important': 'Choisies par la rédaction ou reprises par plusieurs sources', 'hint.more': 'Le reste de la semaine, du plus récent',
+      'more.btn': 'Afficher plus', 'results.back': 'Retour à l’accueil',
+      'results.all': 'Toutes les actualités', 'results.saved': 'Actualités enregistrées', 'results.search': 'Résultats pour « {q} »', 'results.count': '{n} résultats',
+      'status.loading': 'Recherche des actualités de la semaine…',
+      'status.ok': 'Mis à jour {t} : {n} actualités de {s} sources',
+      'status.local': 'Aperçu local : actualités de la rédaction. La mise à jour automatique démarre une fois en ligne.',
+      'status.error': 'Mise à jour automatique indisponible : actualités de la rédaction.',
+      'ticker.close': 'Masquer la barre des dernières infos', 'ticker.open': 'Afficher la barre des dernières infos',
+      'sector.all': 'Tout', 'type.all': 'Tous les types',
+      'cat.chatbot': 'Chatbots et LLM', 'cat.immagini': 'Images et design', 'cat.video': 'Vidéo', 'cat.musica': 'Musique et audio',
+      'cat.codice': 'Programmation', 'cat.produttivita': 'Productivité', 'cat.ricerca': 'Recherche et science', 'cat.hardware': 'Puces et infrastructure',
+      'cat.regole': 'Lois et régulation', 'cat.altro': 'Autre',
+      'also': 'Aussi sur', 'official': 'Source officielle', 'lang.title': 'Langue de l’article original', 'important.badge': 'À la une'
+    },
+    de: {
+      'sec.fresh': 'Gerade erschienen', 'sec.important': 'Wichtig', 'sec.more': 'Weitere Artikel', 'sec.sectors': 'Bereiche',
+      'hint.important': 'Von der Redaktion gewählt oder von mehreren Quellen berichtet', 'hint.more': 'Der Rest der Woche, neueste zuerst',
+      'more.btn': 'Mehr anzeigen', 'results.back': 'Zur Startseite',
+      'results.all': 'Alle Nachrichten', 'results.saved': 'Gespeicherte Nachrichten', 'results.search': 'Ergebnisse für „{q}“', 'results.count': '{n} Ergebnisse',
+      'status.loading': 'Suche die Nachrichten der Woche…',
+      'status.ok': 'Aktualisiert {t}: {n} Meldungen aus {s} Quellen',
+      'status.local': 'Lokale Vorschau: nur Redaktionsmeldungen. Automatische Updates starten online.',
+      'status.error': 'Automatische Updates nicht erreichbar: Redaktionsmeldungen werden gezeigt.',
+      'ticker.close': 'Eilmeldungsleiste ausblenden', 'ticker.open': 'Eilmeldungsleiste einblenden',
+      'sector.all': 'Alles', 'type.all': 'Alle Typen',
+      'cat.chatbot': 'Chatbots & LLMs', 'cat.immagini': 'Bilder & Grafik', 'cat.video': 'Video', 'cat.musica': 'Musik & Audio',
+      'cat.codice': 'Programmierung', 'cat.produttivita': 'Produktivität', 'cat.ricerca': 'Forschung & Wissenschaft', 'cat.hardware': 'Chips & Infrastruktur',
+      'cat.regole': 'Recht & Regulierung', 'cat.altro': 'Sonstiges',
+      'also': 'Auch bei', 'official': 'Offizielle Quelle', 'lang.title': 'Sprache des Originalartikels', 'important.badge': 'Wichtig'
+    }
+  };
+  Object.keys(EXTRA).forEach(function (l) { Object.keys(EXTRA[l]).forEach(function (k) { I18N[l][k] = EXTRA[l][k]; }); });
+
+  var CATS = ['chatbot', 'immagini', 'video', 'musica', 'codice', 'produttivita', 'ricerca', 'hardware', 'regole', 'altro'];
+  var TYPES = ['news', 'tool', 'prezzi', 'download', 'guide', 'convenzioni'];
+  var CAT_ICON = {
+    chatbot: '<path d="M4 5h16v11H9l-5 4z"/>',
+    immagini: '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M20 16l-5-5-8 8"/>',
+    video: '<rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10.5l5-3v9l-5-3z"/>',
+    musica: '<path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',
+    codice: '<path d="M8.5 7L3.5 12l5 5M15.5 7l5 5-5 5"/>',
+    produttivita: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
+    ricerca: '<path d="M9.5 3.5h5M10.5 3.5v6L5 19a1 1 0 0 0 .9 1.5h12.2A1 1 0 0 0 19 19l-5.5-9.5v-6"/>',
+    hardware: '<rect x="6.5" y="6.5" width="11" height="11" rx="1.5"/><path d="M9.5 3v3.5M14.5 3v3.5M9.5 17.5V21M14.5 17.5V21M3 9.5h3.5M3 14.5h3.5M17.5 9.5H21M17.5 14.5H21"/>',
+    regole: '<path d="M12 4v16M7 20h10M5 7h14M5 7l-2.5 6a3 3 0 0 0 5 0zM19 7l-2.5 6a3 3 0 0 0 5 0z"/>',
+    altro: '<circle cx="6" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="18" cy="12" r="1.3"/>',
+    saved: '<path d="M6 3.5h12v17l-6-4.2-6 4.2z"/>'
+  };
+  function icon(name) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (CAT_ICON[name] || CAT_ICON.altro) + '</svg>'; }
+
+  /* ------------------------------ Stato ------------------------------ */
+  var store = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+  var session = {
+    get: function (k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+  };
+
+  var state = {
+    lang: pickLang(),
+    sector: 'all',     // settore oppure 'saved'
+    type: 'all',
+    query: '',
+    saved: readSaved(),
+    readsShown: 12,
+    loaded: false,
+    feed: null,        // { generated, sources, count } dalla GitHub Action
+    feedState: 'loading'
+  };
+  var all = [];        // tutte le notizie (redazione + automatiche)
+  var sections = { lead: null, important: [], fresh: [], reads: [] };
+
+  function pickLang() {
+    var s = store.get('faind-lang');
+    if (s && LANGS.indexOf(s) > -1) return s;
+    var nav = (navigator.language || 'it').slice(0, 2).toLowerCase();
+    return LANGS.indexOf(nav) > -1 ? nav : 'it';
+  }
+  function readSaved() { try { return JSON.parse(store.get('faind-saved') || '[]'); } catch (e) { return []; } }
+
+  /* ------------------------------ Utility ------------------------------ */
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  function t(key, vars) {
+    var s = (I18N[state.lang] && I18N[state.lang][key]) || I18N.it[key] || key;
+    if (vars) Object.keys(vars).forEach(function (k) { s = s.replace('{' + k + '}', vars[k]); });
+    return s;
+  }
+  function tx(v) {
+    if (v == null) return '';
+    if (typeof v === 'string') return v;
+    return v[state.lang] || v.it || v.en || '';
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function safeUrl(u) { return /^(https?:|mailto:|#)/i.test(u || '') ? u : '#'; }
+  function isExternal(u) { return /^https?:/i.test(u || ''); }
+  function linkAttrs(u) {
+    return 'href="' + esc(safeUrl(u)) + '"' + (isExternal(u) ? ' target="_blank" rel="noopener noreferrer"' : '');
+  }
+  var EXT = '<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
+  var BOOKMARK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17l-6-4.2-6 4.2z"/></svg>';
+  var CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+  function hasTime(iso) { return /T\d{2}:\d{2}/.test(iso || ''); }
+  function toDate(iso) { return new Date(hasTime(iso) ? iso : iso + 'T12:00:00'); }
+  function startOfDay(d) { var x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
+  function ageMs(n) { return n.date ? Date.now() - toDate(n.date).getTime() : Infinity; }
+
+  function relTime(iso) {
+    var d = toDate(iso), diff = (d - Date.now()) / 1000, abs = Math.abs(diff);
+    var rtf = new Intl.RelativeTimeFormat(LOCALES[state.lang], { numeric: 'auto' });
+    if (!hasTime(iso)) {
+      var days = Math.round((startOfDay(d) - startOfDay(new Date())) / 864e5);
+      return Math.abs(days) < 7 ? rtf.format(days, 'day') : fmtDate(iso, true);
+    }
+    if (abs < 60) return rtf.format(0, 'minute');
+    if (abs < 3600) return rtf.format(Math.round(diff / 60), 'minute');
+    if (abs < 86400) return rtf.format(Math.round(diff / 3600), 'hour');
+    if (abs < 604800) return rtf.format(Math.round(diff / 86400), 'day');
+    return fmtDate(iso, true);
+  }
+  function fmtDate(iso, withYear) {
+    var o = { day: 'numeric', month: 'short' };
+    if (withYear && toDate(iso).getFullYear() !== new Date().getFullYear()) o.year = 'numeric';
+    return new Intl.DateTimeFormat(LOCALES[state.lang], o).format(toDate(iso));
+  }
+  function fmtClock(iso) {
+    return new Intl.DateTimeFormat(LOCALES[state.lang], { hour: '2-digit', minute: '2-digit' }).format(toDate(iso));
+  }
+  function isToday(iso) { return startOfDay(toDate(iso)).getTime() === startOfDay(new Date()).getTime(); }
+  function shortWhen(iso) {
+    return hasTime(iso) && isToday(iso) ? fmtClock(iso) : fmtDate(iso);
+  }
+  function fmtMoney(n) {
+    return new Intl.NumberFormat(LOCALES[state.lang], {
+      style: 'currency', currencyDisplay: 'narrowSymbol', currency: (DATA.prices && DATA.prices.currency) || 'USD',
+      minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2
+    }).format(n);
+  }
+
+  /* ------------------------------ Componenti ------------------------------ */
+  function timeEl(iso) {
+    if (!iso) return '';
+    return '<time datetime="' + esc(iso) + '" data-rel="' + esc(iso) + '">' + esc(relTime(iso)) + '</time>';
+  }
+  function tagEl(tag) { return '<span class="tag" data-tag="' + esc(tag) + '">' + esc(t('tag.' + tag)) + '</span>'; }
+  function catEl(cat) { cat = cat || 'altro'; return '<span class="cat">' + icon(cat) + esc(t('cat.' + cat)) + '</span>'; }
+  function flagEl(n) {
+    if (!n.lang || n.lang === state.lang) return '';
+    return '<span class="flag" title="' + esc(t('lang.title')) + '">' + esc(n.lang.toUpperCase()) + '</span>';
+  }
+  function officialEl(n) { return n.official ? '<span class="official">' + CHECK + esc(t('official')) + '</span>' : ''; }
+  function sourceEl(src) {
+    if (!src) return '';
+    return '<span class="source">' + esc(t('source')) + ': <a ' + linkAttrs(src.url) + '>' + esc(src.name) + '</a></span>';
+  }
+  function alsoEl(n) {
+    if (!n.also || !n.also.length) return '';
+    var shown = n.also.slice(0, 3).map(function (a) { return '<a ' + linkAttrs(a.url) + '>' + esc(a.name) + '</a>'; }).join(', ');
+    var more = n.also.length > 3 ? ' +' + (n.also.length - 3) : '';
+    return '<p class="also"><strong>' + (n.also.length + 1) + '</strong> · ' + esc(t('also')) + ' ' + shown + more + '</p>';
+  }
+  function actionEl(link, cls) {
+    if (!link) return '';
+    return '<a class="' + (cls || 'go') + '" ' + linkAttrs(link.url) + '>' + esc(t('act.' + (link.type || 'read'))) + ' ' + EXT + '</a>';
+  }
+  function saveEl(id) {
+    var on = state.saved.indexOf(id) > -1;
+    return '<button type="button" class="save" data-save="' + esc(id) + '" aria-pressed="' + on + '" aria-label="' + esc(on ? t('unsave') : t('save')) + '" title="' + esc(on ? t('unsave') : t('save')) + '">' + BOOKMARK + '</button>';
+  }
+  function card(n) {
+    var url = n.link && n.link.url;
+    return '<article class="card" data-tag="' + esc(n.tag) + '">' +
+      '<div class="card__top">' + tagEl(n.tag) + timeEl(n.date) + '</div>' +
+      '<div class="read__meta">' + catEl(n.category) + flagEl(n) + officialEl(n) + '</div>' +
+      '<h3 class="card__title"><a ' + linkAttrs(url) + '>' + esc(tx(n.title)) + '</a></h3>' +
+      (n.summary ? '<p class="card__summary">' + esc(tx(n.summary)) + '</p>' : '') +
+      sourceEl(n.source) + alsoEl(n) +
+      '<div class="card__foot">' + actionEl(n.link) + (n.id ? saveEl(n.id) : '') + '</div></article>';
+  }
+
+  /* ------------------------------ Caricamento notizie ------------------------------ */
+  var editorial = (DATA.news || []).map(function (n) { var c = {}; for (var k in n) c[k] = n[k]; c.editorial = true; return c; });
+
+  function merge(auto) {
+    var urls = {};
+    editorial.forEach(function (n) { if (n.link) urls[n.link.url] = 1; });
+    var extra = (auto || []).filter(function (n) { return n && n.link && !urls[n.link.url] && n.title; });
+    all = editorial.concat(extra).sort(function (a, b) { return toDate(b.date) - toDate(a.date); });
+  }
+
+  function loadbar(on) {
+    var el = $('#loadbar');
+    if (on) { el.classList.remove('is-done'); el.classList.add('is-on'); return; }
+    el.classList.add('is-done');
+    setTimeout(function () { el.classList.remove('is-on', 'is-done'); }, 450);
+  }
+
+  function fetchNews(silent) {
+    if (location.protocol === 'file:') return Promise.reject(new Error('local'));
+    if (!silent) loadbar(true);
+    var ctrl = 'AbortController' in window ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 8000);
+    // Il parametro cambia ogni 5 minuti: niente cache vecchia, ma niente richieste inutili
+    var bucket = Math.floor(Date.now() / 3e5);
+    return fetch('news.json?v=' + bucket, { cache: 'no-cache', signal: ctrl ? ctrl.signal : undefined })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .finally(function () { clearTimeout(timer); });
+  }
+
+  function load() {
+    fetchNews(false).then(function (json) {
+      state.feed = { generated: json.generated, sources: json.sources, count: (json.items || []).length };
+      state.feedState = 'ok';
+      merge(json.items);
+    }).catch(function (e) {
+      state.feedState = e && e.message === 'local' ? 'local' : 'error';
+      merge([]);
+    }).then(function () {
+      state.loaded = true;
+      loadbar(false);
+      $('#lead').removeAttribute('aria-busy'); $('#wire').removeAttribute('aria-busy');
+      $('#lead').classList.remove('is-loading');
+      renderAll();
+    });
+  }
+
+  // Controllo silenzioso ogni 10 minuti mentre la pagina è aperta
+  function refresh() {
+    if (document.hidden || state.feedState !== 'ok') return;
+    fetchNews(true).then(function (json) {
+      if (!state.feed || json.generated === state.feed.generated) return;
+      state.feed = { generated: json.generated, sources: json.sources, count: (json.items || []).length };
+      merge(json.items);
+      renderAll();
+    }).catch(function () {});
+  }
+
+  /* ------------------------------ Sezioni home ------------------------------ */
+  var WEEK = 7 * 864e5, DAY = 864e5;
+  function isImportant(n) { return n.priority === 'alta' || (n.coverage || 1) >= 3; }
+
+  function buildSections() {
+    // L'apertura scelta dalla redazione vale 48 ore; poi passa alla notizia importante più fresca
+    var lead = all.filter(function (n) { return n.lead && ageMs(n) < 2 * DAY; })[0] ||
+               all.filter(function (n) { return isImportant(n) && ageMs(n) < 2 * DAY; })[0] ||
+               all.filter(function (n) { return n.lead; })[0] || all[0] || null;
+    var used = {};
+    if (lead) used[lead.id] = 1;
+
+    var important = all.filter(function (n) { return !used[n.id] && isImportant(n) && ageMs(n) < WEEK; }).slice(0, 5);
+    important.forEach(function (n) { used[n.id] = 1; });
+
+    var rest = all.filter(function (n) { return !used[n.id]; });
+    var fresh = rest.filter(function (n) { return ageMs(n) < DAY; }).slice(0, 8);
+    if (fresh.length < 5) fresh = rest.slice(0, 5);
+    fresh.forEach(function (n) { used[n.id] = 1; });
+
+    sections = { lead: lead, important: important, fresh: fresh, reads: all.filter(function (n) { return !used[n.id]; }) };
+  }
+
+  /* ------------------------------ Render ------------------------------ */
+  function renderStatus() {
+    var el = $('#feedStatus');
+    if (!state.loaded) {
+      el.textContent = t('status.loading');
+      $('#ticker').innerHTML = '<li class="ticker__item">' + esc(t('status.loading')) + '</li>';
+      return;
+    }
+    if (state.feedState === 'ok' && state.feed) {
+      el.innerHTML = esc(t('status.ok', { t: '\u0000', n: all.length, s: state.feed.sources || 0 }))
+        .replace('\u0000', '<time datetime="' + esc(state.feed.generated) + '" data-rel="' + esc(state.feed.generated) + '">' + esc(relTime(state.feed.generated)) + '</time>');
+    } else el.textContent = t(state.feedState === 'local' ? 'status.local' : 'status.error');
+  }
+
+  function renderTicker() {
+    var pool = [];
+    if (sections.lead) pool.push(sections.lead);
+    pool = pool.concat(sections.important, sections.fresh)
+      .sort(function (a, b) { return toDate(b.date) - toDate(a.date); }).slice(0, 12);
+    var items = pool.map(function (n) {
+      return '<li class="ticker__item"><time datetime="' + esc(n.date) + '">' + esc(shortWhen(n.date)) + '</time>' +
+        (isImportant(n) ? '<span class="star" aria-hidden="true">★</span>' : '') +
+        '<a ' + linkAttrs(n.link && n.link.url) + '>' + esc(tx(n.title)) + '</a></li>';
+    }).join('');
+    var track = $('#ticker');
+    // Seconda copia per uno scorrimento continuo, nascosta agli screen reader
+    track.innerHTML = items + items.replace(/<li class="ticker__item">/g, '<li class="ticker__item" aria-hidden="true">').replace(/<a /g, '<a tabindex="-1" ');
+    track.style.setProperty('--tdur', Math.max(40, pool.length * 8) + 's');
+  }
+
+  function renderLead() {
+    var n = sections.lead, el = $('#lead');
+    if (!n) { el.hidden = true; return; }
+    el.hidden = false;
+    el.innerHTML =
+      '<div class="read__meta">' + tagEl(n.tag) + catEl(n.category) + flagEl(n) + officialEl(n) + '</div>' +
+      '<h1 class="lead__title"><a ' + linkAttrs(n.link.url) + '>' + esc(tx(n.title)) + '</a></h1>' +
+      (n.summary ? '<p class="lead__summary">' + esc(tx(n.summary)) + '</p>' : '') +
+      '<div class="lead__foot">' +
+        '<div><div class="meta">' + timeEl(n.date) + sourceEl(n.source) + '</div>' + alsoEl(n) + '</div>' +
+        '<div class="lead__actions">' + actionEl(n.link, 'btn btn--light') + saveEl(n.id) + '</div>' +
+      '</div>';
+  }
+
+  function renderWire() {
+    $('#wire').innerHTML = sections.fresh.map(function (n) {
+      var when = hasTime(n.date) && isToday(n.date)
+        ? esc(fmtClock(n.date)) + '<small>' + esc(t('today')) + '</small>' : esc(fmtDate(n.date));
+      return '<li class="wire__item">' +
+        '<div class="wire__when"><time datetime="' + esc(n.date) + '">' + when + '</time></div>' +
+        '<div class="wire__body"><div class="read__meta">' + tagEl(n.tag) + flagEl(n) + '</div>' +
+          '<h3 class="wire__headline"><a ' + linkAttrs(n.link.url) + '>' + esc(tx(n.title)) + '</a></h3>' +
+          sourceEl(n.source) +
+        '</div></li>';
+    }).join('');
+  }
+
+  function renderImportant() {
+    var box = $('#importanti');
+    box.hidden = !sections.important.length;
+    var grid = $('#important');
+    grid.classList.add('grid--important');
+    grid.innerHTML = sections.important.map(card).join('');
+  }
+
+  function renderReads() {
+    var list = sections.reads.slice(0, state.readsShown);
+    $('#letture').hidden = !sections.reads.length;
+    $('#reads').innerHTML = list.map(function (n) {
+      return '<li class="read">' +
+        '<div class="read__when">' + timeEl(n.date) + '</div>' +
+        '<div><div class="read__meta">' + tagEl(n.tag) + catEl(n.category) + flagEl(n) + '</div>' +
+          '<h3 class="read__title"><a ' + linkAttrs(n.link.url) + '>' + esc(tx(n.title)) + '</a></h3>' +
+          sourceEl(n.source) + '</div>' +
+        saveEl(n.id) + '</li>';
+    }).join('');
+    $('#moreReads').hidden = sections.reads.length <= state.readsShown;
+  }
+
+  /* Settori: solo quelli che hanno contenuti, con il conteggio */
+  function pool() {
+    var guides = (DATA.guides || []).map(function (g) { var c = {}; for (var k in g) c[k] = g[k]; c.isGuide = true; return c; });
+    return all.concat(guides);
+  }
+  function renderSectors() {
+    var p = pool(), counts = {};
+    p.forEach(function (n) { var c = n.category || 'altro'; counts[c] = (counts[c] || 0) + 1; });
+    var chip = function (key, label, ic, count) {
+      return '<button type="button" class="chip" data-sector="' + key + '" aria-pressed="' + (state.sector === key) + '">' +
+        (ic ? icon(ic) : '') + esc(label) + (count != null ? ' <span class="chip__count">' + count + '</span>' : '') + '</button>';
+    };
+    var html = chip('all', t('sector.all'), null, null);
+    if (state.loaded) CATS.forEach(function (c) { if (counts[c]) html += chip(c, t('cat.' + c), c, counts[c]); });
+    html += chip('saved', t('filter.saved'), 'saved', state.saved.length);
+    $('#sectors').innerHTML = html;
+  }
+
+  function inResults() { return state.sector !== 'all' || state.type !== 'all' || !!state.query; }
+
+  function baseFilter(n) {
+    if (state.sector === 'saved' && state.saved.indexOf(n.id) < 0) return false;
+    if (state.sector !== 'all' && state.sector !== 'saved' && (n.category || 'altro') !== state.sector) return false;
+    if (state.query) {
+      var hay = (tx(n.title) + ' ' + tx(n.summary) + ' ' + (n.source && n.source.name) + ' ' + t('cat.' + (n.category || 'altro'))).toLowerCase();
+      if (hay.indexOf(state.query) < 0) return false;
+    }
+    return true;
+  }
+
+  function renderResults() {
+    var on = inResults();
+    $('#homeView').hidden = on;
+    $('#results').hidden = !on;
+    if (!on) return;
+
+    var base = pool().filter(baseFilter);
+    var counts = {};
+    base.forEach(function (n) { counts[n.tag] = (counts[n.tag] || 0) + 1; });
+    var tchip = function (key, label, count) {
+      return '<button type="button" class="chip" data-type="' + key + '" aria-pressed="' + (state.type === key) + '"' +
+        (key !== 'all' ? ' data-tag="' + key + '"' : '') + '>' + esc(label) + ' <span class="chip__count">' + count + '</span></button>';
+    };
+    var html = tchip('all', t('type.all'), base.length);
+    TYPES.forEach(function (ty) { if (counts[ty]) html += tchip(ty, t('tag.' + ty), counts[ty]); });
+    $('#types').innerHTML = html;
+
+    var list = base.filter(function (n) { return state.type === 'all' || n.tag === state.type; })
+      .sort(function (a, b) { return (b.date ? toDate(b.date) : 0) - (a.date ? toDate(a.date) : 0); });
+
+    var title = state.query ? t('results.search', { q: state.query })
+      : state.sector === 'saved' ? t('results.saved')
+      : state.sector !== 'all' ? t('cat.' + state.sector) : t('results.all');
+    $('#resultsTitle').innerHTML = esc(title) + ' <span class="block__hint">' + esc(t('results.count', { n: list.length })) + '</span>';
+
+    if (!list.length) {
+      var msg = state.sector === 'saved' && !state.query ? t('empty.saved') : t('empty.text');
+      $('#grid').innerHTML = '<div class="empty"><p>' + esc(msg) + '</p><button type="button" class="btn btn--ghost" data-reset>' + esc(t('empty.reset')) + '</button></div>';
+      return;
+    }
+    $('#grid').innerHTML = list.map(card).join('');
+  }
+
+  var ICONS = {
+    download: '<svg viewBox="0 0 24 24"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>',
+    guide: '<svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg>',
+    tool: '<svg viewBox="0 0 24 24"><path d="M14.5 5.5a4 4 0 0 0 4.9 4.9L20 11l-9 9-3-3 9-9zM4 20l3-3"/></svg>'
+  };
+  function renderGuides() {
+    $('#guides').innerHTML = (DATA.guides || []).map(function (g) {
+      return '<li class="guide" data-tag="' + esc(g.tag) + '">' +
+        '<span class="guide__icon" aria-hidden="true">' + (ICONS[g.tag] || ICONS.guide) + '</span>' +
+        '<div><h3 class="guide__title"><a ' + linkAttrs(g.link.url) + '>' + esc(tx(g.title)) + '</a></h3>' +
+          '<p class="guide__sum">' + esc(tx(g.summary)) + '</p>' + sourceEl(g.source) + '</div>' +
+        actionEl(g.link) + '</li>';
+    }).join('');
+  }
+
+  function renderPrices() {
+    var p = DATA.prices || { items: [] };
+    $('#pricesNote').textContent = t('prices.note');
+    $('#prices').innerHTML = p.items.map(function (it) {
+      var saving = it.annual ? Math.round((1 - it.annual / it.monthly) * 100) : 0;
+      return '<tr>' +
+        '<td class="prices__name"><a ' + linkAttrs(it.url) + '>' + esc(it.name) + ' ' + EXT + '</a><span class="prices__vendor">' + esc(it.vendor) + '</span></td>' +
+        '<td class="num"><strong>' + esc(fmtMoney(it.monthly)) + '</strong></td>' +
+        '<td class="num">' + (it.annual
+          ? esc(fmtMoney(it.annual)) + '<span class="prices__save">' + esc(t('prices.save')) + ' ' + saving + '%</span>'
+          : '<span class="dash" aria-label="n/d">—</span>') + '</td></tr>';
+    }).join('');
+    var foot = esc(t('prices.checked')) + ' ' + esc(fmtDate(p.checked, true));
+    if (p.verifiedBy) foot += '. ' + esc(t('prices.verified')) + ' <a ' + linkAttrs(p.verifiedBy.url) + '>' + esc(p.verifiedBy.name) + '</a>.';
+    $('#pricesFoot').innerHTML = foot;
+  }
+
+  function renderDeals() {
+    $('#deals').innerHTML = (DATA.deals || []).map(function (d) {
+      return '<li class="deal">' +
+        '<div class="deal__head"><h3 class="deal__title">' + esc(tx(d.title)) + '</h3>' +
+          (d.demo ? '<span class="deal__demo">' + esc(t('deal.demo')) + '</span>' : (d.saving ? '<span class="deal__saving">' + esc(d.saving) + '</span>' : '')) +
+        '</div>' +
+        '<p class="deal__detail">' + esc(tx(d.detail)) + '</p>' +
+        (d.code ? '<div class="deal__code"><code>' + esc(d.code) + '</code><button type="button" class="copy-sm" data-copy="' + esc(d.code) + '">' + esc(t('deal.copy')) + '</button></div>' : '') +
+        '<div class="deal__foot">' + sourceEl(d.source) + actionEl(d.link) + '</div></li>';
+    }).join('');
+  }
+
+  function renderNews() {
+    if (!state.loaded) return;
+    buildSections();
+    renderStatus(); renderLead(); renderWire(); renderImportant(); renderReads(); renderTicker();
+    renderSectors(); renderResults();
+  }
+  function renderAll() {
+    renderStatus(); renderSectors();
+    renderNews(); renderGuides(); renderPrices(); renderDeals();
+    var up = $('#updated');
+    var when = state.feed && state.feed.generated ? state.feed.generated.slice(0, 10) : DATA.updated;
+    if (up && when) { up.setAttribute('datetime', when); up.textContent = fmtDate(when, true); }
+  }
+
+  /* ------------------------------ Lingua & tema ------------------------------ */
+  function applyLang(lang) {
+    state.lang = lang;
+    store.set('faind-lang', lang);
+    document.documentElement.lang = lang;
+    $$('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
+    $$('[data-i18n-ph]').forEach(function (el) { el.placeholder = t(el.getAttribute('data-i18n-ph')); });
+    $$('[data-i18n-aria]').forEach(function (el) { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria'))); });
+    $$('.lang__btn').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+    $('#tickerOpen').setAttribute('aria-label', t('ticker.open'));
+    renderAll();
+  }
+  function applyTheme(theme, persist) {
+    document.documentElement.setAttribute('data-theme', theme);
+    $('#themeToggle').setAttribute('aria-pressed', String(theme === 'dark'));
+    if (persist) store.set('faind-theme', theme);
+  }
+
+  /* ------------------------------ Barra TG ------------------------------ */
+  function setTicker(on, persist) {
+    $('#bticker').hidden = !on;
+    $('#tickerOpen').hidden = on;
+    document.body.classList.toggle('has-bticker', on);
+    if (persist) session.set('faind-bticker', on ? 'on' : 'off');
+  }
+
+  /* ------------------------------ Toast & copia ------------------------------ */
+  var toastTimer;
+  function toast(msg) {
+    var el = $('#toast');
+    el.textContent = msg; el.classList.add('is-on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('is-on'); }, 2000);
+  }
+  function copyText(txt) {
+    var done = function () { toast(t('copied')); };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(done, fallback);
+    else fallback();
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  }
+
+  /* ------------------------------ Drawer mobile ------------------------------ */
+  var lastFocus;
+  function openDrawer() {
+    lastFocus = document.activeElement;
+    $('#drawer').hidden = false;
+    $('#menuBtn').setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    $('#menuClose').focus();
+  }
+  function closeDrawer() {
+    if ($('#drawer').hidden) return;
+    $('#drawer').hidden = true;
+    $('#menuBtn').setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+  }
+
+  function goResults() {
+    state.type = 'all';
+    renderResults();
+    var h = $('#resultsTitle');
+    if (!$('#results').hidden) {
+      var top = $('.sectors').getBoundingClientRect().top + window.scrollY - 80;
+      if (window.scrollY > top) window.scrollTo({ top: top });
+    }
+    return h;
+  }
+  function resetFilters() {
+    state.sector = 'all'; state.type = 'all'; state.query = ''; $('#search').value = '';
+    renderSectors(); renderResults();
+  }
+
+  /* ------------------------------ Eventi ------------------------------ */
+  function bind() {
+    document.addEventListener('click', function (e) {
+      var el;
+      if ((el = e.target.closest('.lang__btn'))) { applyLang(el.dataset.lang); return; }
+      if ((el = e.target.closest('[data-sector]'))) {
+        var key = el.dataset.sector;
+        state.sector = state.sector === key && key !== 'all' ? 'all' : key;
+        renderSectors(); goResults();
+        var active = $('[data-sector="' + state.sector + '"]');
+        if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest', inline: 'center' });
+        return;
+      }
+      if ((el = e.target.closest('[data-type]'))) {
+        state.type = el.dataset.type; renderResults(); return;
+      }
+      if ((el = e.target.closest('[data-reset]'))) { resetFilters(); return; }
+      if ((el = e.target.closest('[data-save]'))) {
+        var id = el.dataset.save, i = state.saved.indexOf(id);
+        if (i > -1) state.saved.splice(i, 1); else state.saved.push(id);
+        store.set('faind-saved', JSON.stringify(state.saved));
+        toast(i > -1 ? t('unsaved.toast') : t('saved.toast'));
+        $$('[data-save="' + id + '"]').forEach(function (b) {
+          var on = state.saved.indexOf(id) > -1;
+          b.setAttribute('aria-pressed', String(on));
+          b.setAttribute('aria-label', on ? t('unsave') : t('save'));
+          b.title = on ? t('unsave') : t('save');
+        });
+        renderSectors();
+        if (state.sector === 'saved') renderResults();
+        return;
+      }
+      if ((el = e.target.closest('[data-copy]'))) { copyText(el.dataset.copy); return; }
+      if (e.target.closest('#drawer a') || e.target === $('#drawer')) closeDrawer();
+      // I link del menu riportano sempre alla home, anche da una ricerca
+      if ((el = e.target.closest('a[href^="#"]')) && inResults() && el.getAttribute('href') !== '#main') resetFilters();
+    });
+
+    $('#moreReads').addEventListener('click', function () { state.readsShown += 12; renderReads(); });
+    $('#tickerClose').addEventListener('click', function () { setTicker(false, true); $('#tickerOpen').focus(); });
+    $('#tickerOpen').addEventListener('click', function () { setTicker(true, true); });
+
+    $('#themeToggle').addEventListener('click', function () {
+      applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
+    });
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var onScheme = function (ev) { if (!store.get('faind-theme')) applyTheme(ev.matches ? 'dark' : 'light', false); };
+    if (mq.addEventListener) mq.addEventListener('change', onScheme);
+
+    $('#menuBtn').addEventListener('click', openDrawer);
+    $('#menuClose').addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeDrawer();
+      if (e.key === 'Tab' && !$('#drawer').hidden) {
+        var f = $$('#drawer a, #drawer button'), first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+    window.addEventListener('resize', function () { if (window.innerWidth > 1240) closeDrawer(); });
+
+    var qTimer;
+    $('#search').addEventListener('input', function (e) {
+      clearTimeout(qTimer);
+      qTimer = setTimeout(function () {
+        state.query = e.target.value.trim().toLowerCase();
+        state.type = 'all';
+        renderResults();
+      }, 150);
+    });
+
+    // Modulo contatti: GitHub Pages non ha backend → si apre il client di posta
+    $('#contactForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var el = e.target.elements, status = $('#formStatus');
+      var f = { name: el['name'], email: el['email'], message: el['message'], type: el['type'] };
+      var name = f.name.value.trim(), email = f.email.value.trim(), msg = f.message.value.trim();
+      var okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+      f.name.setAttribute('aria-invalid', String(!name));
+      f.email.setAttribute('aria-invalid', String(!okEmail));
+      f.message.setAttribute('aria-invalid', String(!msg));
+      if (!name || !okEmail || !msg) {
+        status.textContent = t('form.err'); status.classList.add('is-error');
+        (!name ? f.name : !okEmail ? f.email : f.message).focus();
+        return;
+      }
+      status.classList.remove('is-error');
+      var type = f.type.options[f.type.selectedIndex].text;
+      var subject = '[FAIND] ' + type + ' — ' + name;
+      var body = msg + '\n\n—\n' + name + ' <' + email + '>\n' + location.href;
+      window.location.href = 'mailto:itartedesign@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      status.textContent = t('form.ok');
+    });
+
+    if ('IntersectionObserver' in window) {
+      var links = $$('.nav__link');
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          var href = en.target.id && en.target.id !== 'homeView' ? '#' + en.target.id : '#top';
+          links.forEach(function (l) { l.setAttribute('aria-current', String(l.getAttribute('href') === href)); });
+        });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      ['importanti', 'guide', 'prezzi', 'convenzioni', 'contatti'].forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+      io.observe($('.front'));
+    }
+
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) { tickTimes(); refresh(); } });
+  }
+
+  function tickTimes() {
+    $$('time[data-rel]').forEach(function (el) { el.textContent = relTime(el.getAttribute('data-rel')); });
+  }
+
+  /* ------------------------------ Avvio ------------------------------ */
+  applyTheme(document.documentElement.getAttribute('data-theme') || 'light', false);
+  setTicker(session.get('faind-bticker') !== 'off', false);
+  bind();
+  applyLang(state.lang);
+  $('#year').textContent = new Date().getFullYear();
+  load();
+  setInterval(tickTimes, 60000);
+  setInterval(refresh, 10 * 60000);
+})();
