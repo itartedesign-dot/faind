@@ -345,9 +345,18 @@
     var on = state.saved.indexOf(id) > -1;
     return '<button type="button" class="save" data-save="' + esc(id) + '" aria-pressed="' + on + '" aria-label="' + esc(on ? t('unsave') : t('save')) + '" title="' + esc(on ? t('unsave') : t('save')) + '">' + BOOKMARK + '</button>';
   }
+  /* Immagine della notizia; senza immagine (o se non si carica) compare il logo FAIND */
+  var PH = '<img class="thumb__logo" src="assets/logo-mark-dark.webp" alt="" width="180" height="42">';
+  function thumb(n, size, eager) {
+    var cls = 'thumb thumb--' + size;
+    if (!n.image || !/^https:\/\//.test(n.image)) return '<div class="' + cls + ' thumb--ph" aria-hidden="true">' + PH + '</div>';
+    return '<div class="' + cls + '" aria-hidden="true"><img src="' + esc(n.image) + '" alt="" ' +
+      (eager ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async" referrerpolicy="no-referrer"></div>';
+  }
   function card(n) {
     var url = n.link && n.link.url;
     return '<article class="card" data-tag="' + esc(n.tag) + '">' +
+      '<a class="card__media" ' + linkAttrs(url) + ' tabindex="-1" aria-hidden="true">' + thumb(n, 'wide') + '</a>' +
       '<div class="card__top">' + tagEl(n.tag) + timeEl(n.date) + '</div>' +
       '<div class="read__meta">' + catEl(n.category) + flagEl(n) + officialEl(n) + '</div>' +
       '<h3 class="card__title"><a ' + linkAttrs(url) + '>' + esc(tx(n.title)) + '</a></h3>' +
@@ -471,6 +480,7 @@
     if (!n) { el.hidden = true; return; }
     el.hidden = false;
     el.innerHTML =
+      '<a class="lead__media" ' + linkAttrs(n.link.url) + ' tabindex="-1" aria-hidden="true">' + thumb(n, 'lead', true) + '</a>' +
       '<div class="read__meta">' + tagEl(n.tag) + catEl(n.category) + flagEl(n) + officialEl(n) + '</div>' +
       '<h1 class="lead__title"><a ' + linkAttrs(n.link.url) + '>' + esc(tx(n.title)) + '</a></h1>' +
       (n.summary ? '<p class="lead__summary">' + esc(tx(n.summary)) + '</p>' : '') +
@@ -489,7 +499,7 @@
         '<div class="wire__body"><div class="read__meta">' + tagEl(n.tag) + flagEl(n) + '</div>' +
           '<h3 class="wire__headline"><a ' + linkAttrs(n.link.url) + '>' + esc(tx(n.title)) + '</a></h3>' +
           sourceEl(n.source) +
-        '</div></li>';
+        '</div>' + thumb(n, 'sm') + '</li>';
     }).join('');
   }
 
@@ -506,8 +516,9 @@
     $('#letture').hidden = !sections.reads.length;
     $('#reads').innerHTML = list.map(function (n) {
       return '<li class="read">' +
-        '<div class="read__when">' + timeEl(n.date) + '</div>' +
-        '<div><div class="read__meta">' + tagEl(n.tag) + catEl(n.category) + flagEl(n) + '</div>' +
+        thumb(n, 'md') +
+        '<div class="read__body"><div class="read__meta">' + tagEl(n.tag) + catEl(n.category) + flagEl(n) +
+          '<span class="read__when">' + timeEl(n.date) + '</span></div>' +
           '<h3 class="read__title"><a ' + linkAttrs(n.link.url) + '>' + esc(tx(n.title)) + '</a></h3>' +
           sourceEl(n.source) + '</div>' +
         saveEl(n.id) + '</li>';
@@ -593,13 +604,23 @@
     }).join('');
   }
 
+  /* Icona ufficiale del servizio: dominio → servizio icone di Google; percorso → immagine locale */
+  function plogo(it) {
+    var initial = '<span class="plogo__txt">' + esc((it.name || '?').charAt(0)) + '</span>';
+    if (!it.logo) return '<span class="plogo" aria-hidden="true">' + initial + '</span>';
+    var src = /[\/]/.test(it.logo) ? it.logo
+      : 'https://www.google.com/s2/favicons?sz=64&domain=' + encodeURIComponent(it.logo);
+    return '<span class="plogo" aria-hidden="true" data-initial="' + esc((it.name || '?').charAt(0)) + '">' +
+      '<img class="plogo__img" src="' + esc(src) + '" alt="" width="32" height="32" loading="lazy" decoding="async" referrerpolicy="no-referrer"></span>';
+  }
   function renderPrices() {
     var p = DATA.prices || { items: [] };
     $('#pricesNote').textContent = t('prices.note');
     $('#prices').innerHTML = p.items.map(function (it) {
       var saving = it.annual ? Math.round((1 - it.annual / it.monthly) * 100) : 0;
       return '<tr>' +
-        '<td class="prices__name"><a ' + linkAttrs(it.url) + '>' + esc(it.name) + ' ' + EXT + '</a><span class="prices__vendor">' + esc(it.vendor) + '</span></td>' +
+        '<td class="prices__name"><div class="prices__id">' + plogo(it) +
+          '<div><a ' + linkAttrs(it.url) + '>' + esc(it.name) + '</a><span class="prices__vendor">' + esc(it.vendor) + '</span></div></div></td>' +
         '<td class="num"><strong>' + esc(fmtMoney(it.monthly)) + '</strong></td>' +
         '<td class="num">' + (it.annual
           ? esc(fmtMoney(it.annual)) + '<span class="prices__save">' + esc(t('prices.save')) + ' ' + saving + '%</span>'
@@ -717,6 +738,20 @@
 
   /* ------------------------------ Eventi ------------------------------ */
   function bind() {
+    // Immagine non caricabile (link scaduto o bloccato dalla fonte): passa al logo
+    document.addEventListener('error', function (e) {
+      var img = e.target;
+      if (img && img.classList && img.classList.contains('plogo__img')) {
+        var box = img.parentNode;
+        box.innerHTML = '<span class="plogo__txt">' + esc(box.getAttribute('data-initial') || '?') + '</span>';
+        return;
+      }
+      if (!img || img.tagName !== 'IMG' || !img.parentNode || !img.parentNode.classList || !img.parentNode.classList.contains('thumb')) return;
+      if (img.classList.contains('thumb__logo')) return;
+      img.parentNode.classList.add('thumb--ph');
+      img.outerHTML = PH;
+    }, true);
+
     document.addEventListener('click', function (e) {
       var el;
       if ((el = e.target.closest('.lang__btn'))) { applyLang(el.dataset.lang); return; }

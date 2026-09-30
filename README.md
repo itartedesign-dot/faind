@@ -33,10 +33,22 @@ Se il repository resta senza modifiche per 60 giorni, GitHub mette in pausa le a
 - **Letture secondarie**: il resto della settimana.
 Ogni notizia compare in una sola sezione. La barra in basso fa scorrere apertura, importanti e appena uscite (★ = importante); si chiude con la × e si riapre dal pulsante in basso a destra.
 
+## Immagini
+
+Lo script prende l'immagine di copertina dal feed RSS; se manca, legge l'anteprima social dell'articolo (og:image), una sola volta per articolo.
+Le immagini restano sul sito della fonte e il clic porta sempre all'articolo originale. Se un'immagine non si carica, o la notizia non ne ha, compare il riquadro con il logo FAIND.
+Per le notizie scritte a mano in `data.js` aggiungi `image: "https://..."` se vuoi una foto.
+
 ## Settori
 
 `chatbot`, `immagini`, `video`, `musica`, `codice`, `produttivita`, `ricerca`, `hardware`, `regole`, `altro`.
 Le notizie automatiche vengono classificate da sole con parole chiave (in `scripts/fetch-news.mjs`, lista `CATEGORIES`). Cliccando un settore, o cercando, la home diventa una pagina di risultati filtrabile anche per tipo.
+
+## Immagini e loghi
+
+- Le notizie automatiche prendono l'immagine di copertina dal feed o dall'anteprima social dell'articolo. Se manca o non si carica, compare il logo FAIND.
+- Per le notizie scritte a mano in `data.js` puoi aggiungere `image: "https://..."`.
+- Nella tabella prezzi il campo `logo` indica il dominio del servizio (es. `"claude.ai"`): l'icona ufficiale viene caricata dal servizio icone di Google. Se non si carica, compare l'iniziale.
 
 ## Aggiungere o togliere fonti
 

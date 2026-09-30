@@ -16,6 +16,8 @@
      Le notizie automatiche ci finiscono da sole quando ne parlano
      almeno 3 fonti diverse.
    • `lead: true` = apertura della home (una sola).
+   • `image` (facoltativo): indirizzo https di un'immagine per la
+     notizia. Senza immagine compare il riquadro con il logo FAIND.
    • `link.type`: read | download | try | deal
    • I testi possono essere una stringa (IT) oppure un oggetto
      multilingua: { it: "...", en: "...", fr: "...", de: "..." }
@@ -212,18 +214,20 @@ window.FAIND_DATA = {
 
   /* ---------------------- PREZZI & ABBONAMENTI ---------------------- */
   /* Prezzi di listino USA, tasse escluse. Aggiorna `checked` ogni volta
-     che verifichi. `annual` = prezzo mensile equivalente con piano annuale. */
+     che verifichi. `annual` = prezzo mensile equivalente con piano annuale.
+     `logo`: dominio del servizio (l'icona ufficiale viene caricata da lì)
+     oppure il percorso di un'immagine tua, es. "assets/mio-logo.png". */
   prices: {
     checked: "2026-09-30",
     currency: "USD",
     verifiedBy: { name: "Fello AI — AI pricing comparison", url: "https://felloai.com/ai-pricing-comparison/" },
     items: [
-      { name: "Google AI Plus", vendor: "Google", monthly: 4.99, url: "https://gemini.google/subscriptions/" },
-      { name: "ChatGPT Go", vendor: "OpenAI", monthly: 8, url: "https://openai.com/chatgpt/pricing/" },
-      { name: "Google AI Pro", vendor: "Google", monthly: 19.99, url: "https://gemini.google/subscriptions/" },
-      { name: "ChatGPT Plus", vendor: "OpenAI", monthly: 20, url: "https://openai.com/chatgpt/pricing/" },
-      { name: "Claude Pro", vendor: "Anthropic", monthly: 20, annual: 17, url: "https://claude.com/pricing" },
-      { name: "Perplexity Pro", vendor: "Perplexity", monthly: 20, annual: 16.67, url: "https://www.perplexity.ai/pro" }
+      { name: "Google AI Plus", logo: "gemini.google.com", vendor: "Google", monthly: 4.99, url: "https://gemini.google/subscriptions/" },
+      { name: "ChatGPT Go", logo: "chatgpt.com", vendor: "OpenAI", monthly: 8, url: "https://openai.com/chatgpt/pricing/" },
+      { name: "Google AI Pro", logo: "gemini.google.com", vendor: "Google", monthly: 19.99, url: "https://gemini.google/subscriptions/" },
+      { name: "ChatGPT Plus", logo: "chatgpt.com", vendor: "OpenAI", monthly: 20, url: "https://openai.com/chatgpt/pricing/" },
+      { name: "Claude Pro", logo: "claude.ai", vendor: "Anthropic", monthly: 20, annual: 17, url: "https://claude.com/pricing" },
+      { name: "Perplexity Pro", logo: "perplexity.ai", vendor: "Perplexity", monthly: 20, annual: 16.67, url: "https://www.perplexity.ai/pro" }
     ]
   },
 
