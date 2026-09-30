@@ -51,7 +51,7 @@
      "description":"Agenzia di notizie flash sull'intelligenza artificiale, aggiornata ogni ora con fonte originale."},
     {"@type":"NewsMediaOrganization","@id":"https://itartedesign-dot.github.io/faind/#org","name":"FAIND","alternateName":"Flash AI News Daily","url":"https://itartedesign-dot.github.io/faind/",
      "logo":{"@type":"ImageObject","url":"https://itartedesign-dot.github.io/faind/assets/og-image.png","width":1200,"height":630},
-     "email":"itartedesign@gmail.com","publishingPrinciples":"https://itartedesign-dot.github.io/faind/#chi-siamo"},
+     "email":"itartedesign@gmail.com","sameAs":["https://t.me/faindnews"],"publishingPrinciples":"https://itartedesign-dot.github.io/faind/#chi-siamo"},
     {"@type":"FAQPage","@id":"https://itartedesign-dot.github.io/faind/#faq","mainEntity":[
       {"@type":"Question","name":"Che cos'è FAIND?","acceptedAnswer":{"@type":"Answer","text":"FAIND (Flash AI News Daily) è un'agenzia di notizie flash dedicata all'intelligenza artificiale: raccoglie ogni ora le novità da testate e blog ufficiali, le divide per settore e indica sempre la fonte originale."}},
       {"@type":"Question","name":"FAIND è gratuito?","acceptedAnswer":{"@type":"Answer","text":"Sì. FAIND è gratuito e senza registrazione. Chi vuole può sostenere il progetto con una donazione su PayPal."}},
@@ -128,6 +128,7 @@
         <li><a href="#convenzioni" data-i18n="nav.deals">Convenzioni</a></li>
         <li><a href="#contatti" data-i18n="nav.contact">Contatti</a></li>
         <li><a href="#chi-siamo" data-i18n="nav.about">Chi siamo</a></li>
+        <li><a href="https://t.me/faindnews" target="_blank" rel="noopener noreferrer" data-i18n="tg.follow">Seguici su Telegram</a></li>
       </ul>
       <div class="drawer__lang lang" role="group" aria-label="Lingua / Language">
         <button type="button" class="lang__btn" data-lang="it" aria-pressed="true">IT</button>
@@ -145,7 +146,10 @@
       <!-- Presentazione: il titolo principale della pagina (importante per Google) -->
       <div class="intro">
         <h1 class="intro__title" data-i18n="intro.title">Notizie sull'intelligenza artificiale, aggiornate ogni ora e sempre con la fonte</h1>
-        <a class="intro__btn" href="#chi-siamo" data-i18n="intro.btn">Chi siamo e cosa offriamo</a>
+        <div class="intro__actions">
+          <a class="intro__btn intro__btn--tg" href="https://t.me/faindnews" target="_blank" rel="noopener noreferrer"><span data-i18n="tg.follow">Seguici su Telegram</span></a>
+          <a class="intro__btn" href="#chi-siamo" data-i18n="intro.btn">Chi siamo e cosa offriamo</a>
+        </div>
       </div>
 
       <!-- Settori: filtra per tipologia di AI -->
@@ -319,6 +323,7 @@
 
           <h3>Come lavoriamo: fonti verificabili, sempre</h3>
           <p>Le notizie arrivano da fonti selezionate, italiane e internazionali, e dai blog ufficiali di aziende come OpenAI, Google e Hugging Face. Un sistema automatico le raccoglie ogni ora, scarta ciò che non riguarda l'intelligenza artificiale, unisce le notizie uguali date da più testate e indica quante fonti ne parlano. Di ogni articolo mostriamo solo il titolo, un breve estratto e l'immagine di anteprima: per leggere tutto si va sul sito che l'ha pubblicato.</p>
+          <p>Le notizie più importanti escono anche sul nostro canale Telegram <a href="https://t.me/faindnews" target="_blank" rel="noopener noreferrer">@faindnews</a>, così le ricevi sul telefono appena vengono pubblicate.</p>
           <p>Se trovi un errore, una notizia mancante o una fonte da aggiungere, <a href="#contatti">scrivici</a>: ogni segnalazione viene letta.</p>
 
           <h3>Per chi è FAIND</h3>
@@ -386,6 +391,10 @@
         <div class="share">
           <h3 class="share__title" data-i18n="share.title">Fai conoscere FAIND</h3>
           <p class="share__text" data-i18n="share.text">Se ti è utile, condividilo: è il modo più semplice per aiutarci a crescere.</p>
+          <a class="tgcta" href="https://t.me/faindnews" target="_blank" rel="noopener noreferrer">
+            <span class="tgcta__name">@faindnews</span>
+            <span class="tgcta__text" data-i18n="tg.cta">Le notizie importanti sul tuo telefono, appena escono. Iscriviti al canale Telegram.</span>
+          </a>
           <div class="share__row" id="shareRow">
             <button type="button" class="share__btn share__btn--main" data-share-site data-i18n="share.native">Condividi</button>
             <a class="share__btn" data-share="whatsapp" target="_blank" rel="noopener noreferrer" href="#">WhatsApp</a>
@@ -415,6 +424,7 @@
         <li><a href="#convenzioni" data-i18n="nav.deals">Convenzioni</a></li>
         <li><a href="#contatti" data-i18n="nav.contact">Contatti</a></li>
         <li><a href="#chi-siamo" data-i18n="nav.about">Chi siamo</a></li>
+        <li><a href="https://t.me/faindnews" target="_blank" rel="noopener noreferrer">Telegram</a></li>
       </ul>
       <p class="footer__legal"><span id="year">2026</span> FAIND. <span data-i18n="footer.rights">Tutti i diritti riservati.</span> <span class="footer__upd"><span data-i18n="footer.updated">Aggiornato il</span> <time id="updated"></time></span></p>
     </div>

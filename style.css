@@ -343,6 +343,13 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 }
 .intro__btn:hover { background: color-mix(in srgb, var(--link) 8%, var(--surface)); }
 .nav__link--about { color: var(--link); }
+.intro__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.intro__btn--tg { background: #229ED9; border-color: #229ED9; color: #fff; }
+.intro__btn--tg:hover { background: #1A8BC0; }
+.tgcta { display: block; text-decoration: none; background: #229ED9; color: #fff; border-radius: var(--radius-m); padding: 14px 16px; margin-bottom: 14px; }
+.tgcta:hover { background: #1A8BC0; }
+.tgcta__name { display: block; font-weight: 800; font-size: 17px; }
+.tgcta__text { display: block; font-size: 14px; line-height: 1.4; opacity: .95; margin-top: 2px; }
 
 /* ------------------------------ Settori ------------------------------ */
 .sectors { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
