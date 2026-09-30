@@ -191,7 +191,7 @@ async function get(url, ms = 15000) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), ms);
   try {
-    const res = await fetch(url, { signal: ctrl.signal, headers: { 'user-agent': 'FAIND-news-bot/1.0 (+https://github.com)', accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*' } });
+    const res = await fetch(url, { signal: ctrl.signal, headers: { 'user-agent': 'Mozilla/5.0 (compatible; FAIND-news-bot/1.0; +https://itartedesign-dot.github.io/faind/)', accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*' } });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     return await res.text();
   } finally { clearTimeout(t); }
@@ -254,7 +254,19 @@ async function main() {
     if (now - new Date(it.date).getTime() > cfg.maxAgeDays * 864e5) continue;
     byId.set(it.id, it);
   }
-  for (const it of fresh) if (!byId.has(it.id)) byId.set(it.id, it);
+  // A parità di notizia vince la versione appena letta dal feed (titolo, immagine aggiornati),
+  // ma conserva le fonti già raggruppate e l'immagine trovata in precedenza
+  for (const it of fresh) {
+    const prev = byId.get(it.id);
+    if (!prev) { byId.set(it.id, it); continue; }
+    byId.set(it.id, {
+      ...prev, ...it,
+      date: prev.date < it.date ? prev.date : it.date,
+      also: prev.also, coverage: prev.coverage,
+      image: it.image || prev.image,
+      imgChecked: prev.imgChecked
+    });
+  }
 
   const all = [...byId.values()].sort((a, b) =>
     (order.get(a.source.name) ?? 99) - (order.get(b.source.name) ?? 99) || a.date.localeCompare(b.date));
@@ -262,11 +274,11 @@ async function main() {
   const items = cluster(all).sort((a, b) => b.date.localeCompare(a.date)).slice(0, cfg.maxItems);
 
   // Per le notizie senza immagine leggo l'anteprima social dell'articolo.
-  // Ogni articolo viene controllato una volta sola (imgChecked), massimo 40 per giro.
-  const todo = items.filter(i => !i.image && !i.imgChecked).slice(0, 40);
+  // Ogni articolo viene controllato una volta sola (imgChecked), massimo 80 per giro.
+  const todo = items.filter(i => !i.image && !i.imgChecked).slice(0, 80);
   let foundImg = 0;
-  for (let i = 0; i < todo.length; i += 6) {
-    await Promise.all(todo.slice(i, i + 6).map(async (it) => {
+  for (let i = 0; i < todo.length; i += 8) {
+    await Promise.all(todo.slice(i, i + 8).map(async (it) => {
       try {
         const img = pageImage(await get(it.link.url, 8000), it.link.url);
         if (img) { it.image = img; foundImg++; }
