@@ -70,6 +70,13 @@ I testi possono essere tradotti: `title: { it: "...", en: "...", fr: "...", de: 
 Aprendo `index.html` con doppio clic vedi solo le notizie di `data.js`: il browser blocca la lettura di `news.json` dai file locali.
 Per provare tutto: `node scripts/fetch-news.mjs` e poi `python3 -m http.server`, quindi apri `http://localhost:8000`.
 
+## Farsi trovare su Google
+
+1. Vai su https://search.google.com/search-console e aggiungi la proprietà **Prefisso URL**: `https://itartedesign-dot.github.io/faind/`.
+2. Scegli la verifica **Tag HTML**, copia il meta tag e incollalo in `index.html` al posto del commento "Google Search Console".
+3. Dopo la verifica: **Sitemap** → inserisci `sitemap.xml` → Invia. Poi **Controllo URL** → incolla l'indirizzo del sito → **Richiedi indicizzazione**.
+Google impiega da qualche giorno a qualche settimana per mostrare un sito nuovo. Link da social, forum e altri siti accelerano molto.
+
 ## Contatti e donazioni
 
 - "Scrivici" apre l'app di posta con il messaggio pronto verso `itartedesign@gmail.com`.

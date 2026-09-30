@@ -148,6 +148,10 @@
       'cat.chatbot': 'Chatbot e LLM', 'cat.immagini': 'Immagini e grafica', 'cat.video': 'Video', 'cat.musica': 'Musica e audio',
       'cat.codice': 'Programmazione', 'cat.produttivita': 'Produttività', 'cat.ricerca': 'Ricerca e scienza', 'cat.hardware': 'Chip e infrastruttura',
       'cat.regole': 'Leggi e regole', 'cat.altro': 'Altro',
+      'nav.about': 'Chi siamo', 'intro.title': 'Notizie sull\'intelligenza artificiale, aggiornate ogni ora e sempre con la fonte', 'intro.btn': 'Chi siamo e cosa offriamo',
+      'fact.update': 'Aggiornamento', 'fact.update.v': 'Ogni ora', 'fact.sources': 'Fonti', 'fact.sources.v': 'Testate e blog ufficiali', 'fact.langs': 'Lingue', 'fact.price': 'Costo', 'fact.price.v': 'Gratuito, senza registrazione',
+      'share.title': 'Fai conoscere FAIND', 'share.text': 'Se ti è utile, condividilo: è il modo più semplice per aiutarci a crescere.', 'share.native': 'Condividi', 'share.copy': 'Copia link',
+      'share.msg': 'FAIND – le notizie sull\'intelligenza artificiale aggiornate ogni ora, sempre con la fonte', 'share.news': 'Condividi la notizia', 'share.via': 'via FAIND',
       'also': 'Anche su', 'official': 'Fonte ufficiale', 'lang.title': 'Lingua dell’articolo originale', 'important.badge': 'Importante'
     },
     en: {
@@ -164,6 +168,10 @@
       'cat.chatbot': 'Chatbots & LLMs', 'cat.immagini': 'Images & design', 'cat.video': 'Video', 'cat.musica': 'Music & audio',
       'cat.codice': 'Coding', 'cat.produttivita': 'Productivity', 'cat.ricerca': 'Research & science', 'cat.hardware': 'Chips & infrastructure',
       'cat.regole': 'Law & policy', 'cat.altro': 'Other',
+      'nav.about': 'About', 'intro.title': 'Artificial intelligence news, updated every hour and always with the source', 'intro.btn': 'About FAIND',
+      'fact.update': 'Updates', 'fact.update.v': 'Every hour', 'fact.sources': 'Sources', 'fact.sources.v': 'Newsrooms and official blogs', 'fact.langs': 'Languages', 'fact.price': 'Price', 'fact.price.v': 'Free, no sign-up',
+      'share.title': 'Spread the word', 'share.text': 'If FAIND helps you, share it: it is the easiest way to help us grow.', 'share.native': 'Share', 'share.copy': 'Copy link',
+      'share.msg': 'FAIND – AI news updated every hour, always with the source', 'share.news': 'Share this story', 'share.via': 'via FAIND',
       'also': 'Also on', 'official': 'Official source', 'lang.title': 'Language of the original article', 'important.badge': 'Top story'
     },
     fr: {
@@ -180,6 +188,10 @@
       'cat.chatbot': 'Chatbots et LLM', 'cat.immagini': 'Images et design', 'cat.video': 'Vidéo', 'cat.musica': 'Musique et audio',
       'cat.codice': 'Programmation', 'cat.produttivita': 'Productivité', 'cat.ricerca': 'Recherche et science', 'cat.hardware': 'Puces et infrastructure',
       'cat.regole': 'Lois et régulation', 'cat.altro': 'Autre',
+      'nav.about': 'Qui sommes-nous', 'intro.title': 'L’actualité de l’intelligence artificielle, mise à jour chaque heure et toujours sourcée', 'intro.btn': 'Découvrir FAIND',
+      'fact.update': 'Mise à jour', 'fact.update.v': 'Chaque heure', 'fact.sources': 'Sources', 'fact.sources.v': 'Rédactions et blogs officiels', 'fact.langs': 'Langues', 'fact.price': 'Prix', 'fact.price.v': 'Gratuit, sans inscription',
+      'share.title': 'Faites connaître FAIND', 'share.text': 'S’il vous est utile, partagez-le : c’est la façon la plus simple de nous aider.', 'share.native': 'Partager', 'share.copy': 'Copier le lien',
+      'share.msg': 'FAIND – l’actualité IA mise à jour chaque heure, toujours sourcée', 'share.news': 'Partager cette actu', 'share.via': 'via FAIND',
       'also': 'Aussi sur', 'official': 'Source officielle', 'lang.title': 'Langue de l’article original', 'important.badge': 'À la une'
     },
     de: {
@@ -196,6 +208,10 @@
       'cat.chatbot': 'Chatbots & LLMs', 'cat.immagini': 'Bilder & Grafik', 'cat.video': 'Video', 'cat.musica': 'Musik & Audio',
       'cat.codice': 'Programmierung', 'cat.produttivita': 'Produktivität', 'cat.ricerca': 'Forschung & Wissenschaft', 'cat.hardware': 'Chips & Infrastruktur',
       'cat.regole': 'Recht & Regulierung', 'cat.altro': 'Sonstiges',
+      'nav.about': 'Über uns', 'intro.title': 'Nachrichten über künstliche Intelligenz, stündlich aktualisiert und immer mit Quelle', 'intro.btn': 'Über FAIND',
+      'fact.update': 'Aktualisierung', 'fact.update.v': 'Jede Stunde', 'fact.sources': 'Quellen', 'fact.sources.v': 'Redaktionen und offizielle Blogs', 'fact.langs': 'Sprachen', 'fact.price': 'Preis', 'fact.price.v': 'Kostenlos, ohne Anmeldung',
+      'share.title': 'Erzähl von FAIND', 'share.text': 'Wenn dir FAIND hilft, teile es: So hilfst du uns am einfachsten.', 'share.native': 'Teilen', 'share.copy': 'Link kopieren',
+      'share.msg': 'FAIND – KI-News, stündlich aktualisiert, immer mit Quelle', 'share.news': 'Meldung teilen', 'share.via': 'via FAIND',
       'also': 'Auch bei', 'official': 'Offizielle Quelle', 'lang.title': 'Sprache des Originalartikels', 'important.badge': 'Wichtig'
     }
   };
@@ -276,6 +292,7 @@
   }
   var EXT = '<svg class="ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
   var BOOKMARK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17l-6-4.2-6 4.2z"/></svg>';
+  var SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v11M7.5 8L12 3.5 16.5 8M5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6.5"/></svg>';
   var CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 
   function hasTime(iso) { return /T\d{2}:\d{2}/.test(iso || ''); }
@@ -341,12 +358,15 @@
     if (!link) return '';
     return '<a class="' + (cls || 'go') + '" ' + linkAttrs(link.url) + '>' + esc(t('act.' + (link.type || 'read'))) + ' ' + EXT + '</a>';
   }
+  function shareEl(n) {
+    return '<button type="button" class="save" data-share-news="' + esc(n.id) + '" aria-label="' + esc(t('share.news')) + '" title="' + esc(t('share.news')) + '">' + SHARE + '</button>';
+  }
   function saveEl(id) {
     var on = state.saved.indexOf(id) > -1;
     return '<button type="button" class="save" data-save="' + esc(id) + '" aria-pressed="' + on + '" aria-label="' + esc(on ? t('unsave') : t('save')) + '" title="' + esc(on ? t('unsave') : t('save')) + '">' + BOOKMARK + '</button>';
   }
   /* Immagine della notizia; senza immagine (o se non si carica) compare il logo FAIND */
-  var PH = '<img class="thumb__logo" src="assets/logo-mark-dark.webp" alt="" width="180" height="42">';
+  var PH = '<img class="thumb__logo" src="assets/logo.webp" alt="" width="510" height="180">';
   function thumb(n, size, eager) {
     var cls = 'thumb thumb--' + size;
     if (!n.image || !/^https:\/\//.test(n.image)) return '<div class="' + cls + ' thumb--ph" aria-hidden="true">' + PH + '</div>';
@@ -362,7 +382,7 @@
       '<h3 class="card__title"><a ' + linkAttrs(url) + '>' + esc(tx(n.title)) + '</a></h3>' +
       (n.summary ? '<p class="card__summary">' + esc(tx(n.summary)) + '</p>' : '') +
       sourceEl(n.source) + alsoEl(n) +
-      '<div class="card__foot">' + actionEl(n.link) + (n.id ? saveEl(n.id) : '') + '</div></article>';
+      '<div class="card__foot">' + actionEl(n.link) + '<span class="card__btns">' + (n.id && !n.isGuide ? shareEl(n) : '') + (n.id ? saveEl(n.id) : '') + '</span></div></article>';
   }
 
   /* ------------------------------ Caricamento notizie ------------------------------ */
@@ -482,11 +502,11 @@
     el.innerHTML =
       '<a class="lead__media" ' + linkAttrs(n.link.url) + ' tabindex="-1" aria-hidden="true">' + thumb(n, 'lead', true) + '</a>' +
       '<div class="read__meta">' + tagEl(n.tag) + catEl(n.category) + flagEl(n) + officialEl(n) + '</div>' +
-      '<h1 class="lead__title"><a ' + linkAttrs(n.link.url) + '>' + esc(tx(n.title)) + '</a></h1>' +
+      '<h2 class="lead__title"><a ' + linkAttrs(n.link.url) + '>' + esc(tx(n.title)) + '</a></h2>' +
       (n.summary ? '<p class="lead__summary">' + esc(tx(n.summary)) + '</p>' : '') +
       '<div class="lead__foot">' +
         '<div><div class="meta">' + timeEl(n.date) + sourceEl(n.source) + '</div>' + alsoEl(n) + '</div>' +
-        '<div class="lead__actions">' + actionEl(n.link, 'btn btn--light') + saveEl(n.id) + '</div>' +
+        '<div class="lead__actions">' + actionEl(n.link, 'btn btn--light') + shareEl(n) + saveEl(n.id) + '</div>' +
       '</div>';
   }
 
@@ -657,6 +677,24 @@
     if (up && when) { up.setAttribute('datetime', when); up.textContent = fmtDate(when, true); }
   }
 
+  /* ------------------------------ Condivisione ------------------------------ */
+  var SITE = 'https://itartedesign-dot.github.io/faind/';
+  function shareLinks() {
+    var u = encodeURIComponent(SITE), m = encodeURIComponent(t('share.msg'));
+    var map = {
+      whatsapp: 'https://wa.me/?text=' + m + '%20' + u,
+      telegram: 'https://t.me/share/url?url=' + u + '&text=' + m,
+      x: 'https://twitter.com/intent/tweet?url=' + u + '&text=' + m,
+      linkedin: 'https://www.linkedin.com/sharing/share-offsite/?url=' + u,
+      facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + u
+    };
+    $$('[data-share]').forEach(function (a) { a.href = map[a.getAttribute('data-share')] || SITE; });
+  }
+  function nativeShare(data, fallbackText) {
+    if (navigator.share) { navigator.share(data).catch(function () {}); return; }
+    copyText(fallbackText);
+  }
+
   /* ------------------------------ Lingua & tema ------------------------------ */
   function applyLang(lang) {
     state.lang = lang;
@@ -667,6 +705,10 @@
     $$('[data-i18n-aria]').forEach(function (el) { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria'))); });
     $$('.lang__btn').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
     $('#tickerOpen').setAttribute('aria-label', t('ticker.open'));
+    // Testo "Chi siamo" nella lingua scelta (l'italiano resta la versione completa)
+    var hasLang = !!$('[data-about="' + lang + '"]');
+    $$('[data-about]').forEach(function (b) { b.hidden = b.getAttribute('data-about') !== (hasLang ? lang : 'it'); });
+    shareLinks();
     renderAll();
   }
   function applyTheme(theme, persist) {
@@ -783,6 +825,20 @@
         return;
       }
       if ((el = e.target.closest('[data-copy]'))) { copyText(el.dataset.copy); return; }
+      if ((el = e.target.closest('[data-share-site]'))) {
+        nativeShare({ title: 'FAIND – Flash AI News Daily', text: t('share.msg'), url: SITE }, SITE);
+        return;
+      }
+      if ((el = e.target.closest('[data-share-news]'))) {
+        var sid = el.getAttribute('data-share-news');
+        var item = all.filter(function (x) { return x.id === sid; })[0];
+        if (item) {
+          var title = tx(item.title), url = item.link && item.link.url;
+          nativeShare({ title: title, text: title + ' (' + t('share.via') + ')', url: url },
+            title + ' ' + url + ' — ' + t('share.via') + ' ' + SITE);
+        }
+        return;
+      }
       if (e.target.closest('#drawer a') || e.target === $('#drawer')) closeDrawer();
       // I link del menu riportano sempre alla home, anche da una ricerca
       if ((el = e.target.closest('a[href^="#"]')) && inResults() && el.getAttribute('href') !== '#main') resetFilters();
@@ -853,7 +909,7 @@
           links.forEach(function (l) { l.setAttribute('aria-current', String(l.getAttribute('href') === href)); });
         });
       }, { rootMargin: '-45% 0px -50% 0px' });
-      ['importanti', 'guide', 'prezzi', 'convenzioni', 'contatti'].forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+      ['importanti', 'guide', 'prezzi', 'convenzioni', 'contatti', 'chi-siamo'].forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
       io.observe($('.front'));
     }
 

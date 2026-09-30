@@ -3,19 +3,32 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>FAIND — AI News Agency</title>
-  <meta name="description" content="FAIND: notizie flash, guide ai download, prezzi degli abbonamenti e convenzioni sul mondo dell'Intelligenza Artificiale. Ogni notizia con la sua fonte.">
+  <title>FAIND – Notizie sull'intelligenza artificiale ogni ora | Flash AI News Daily</title>
+  <meta name="description" content="FAIND è l'agenzia di notizie flash sull'intelligenza artificiale: novità su ChatGPT, Claude, Gemini e tool AI, prezzi degli abbonamenti, guide e sconti. Aggiornata ogni ora, sempre con la fonte.">
+  <link rel="canonical" href="https://itartedesign-dot.github.io/faind/">
+  <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#F4F7FB" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0A1322" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0E1222" media="(prefers-color-scheme: dark)">
+  <!-- Google Search Console: incolla qui il meta tag di verifica, es.
+  <meta name="google-site-verification" content="CODICE"> -->
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="FAIND — AI News Agency">
-  <meta property="og:description" content="Tutta l'AI, in un solo posto. Notizie, tool, prezzi e convenzioni con fonte verificabile.">
-  <meta property="og:image" content="assets/logo-faind.png">
+  <meta property="og:site_name" content="FAIND">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:url" content="https://itartedesign-dot.github.io/faind/">
+  <meta property="og:title" content="FAIND – Flash AI News Daily">
+  <meta property="og:description" content="Le notizie sull'intelligenza artificiale in un colpo d'occhio: aggiornate ogni ora, divise per settore, sempre con il link alla fonte originale.">
+  <meta property="og:image" content="https://itartedesign-dot.github.io/faind/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="FAIND – Flash AI News Daily">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FAIND – Flash AI News Daily">
+  <meta name="twitter:description" content="Notizie sull'intelligenza artificiale aggiornate ogni ora, sempre con la fonte.">
+  <meta name="twitter:image" content="https://itartedesign-dot.github.io/faind/assets/og-image.png">
 
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="assets/logo-faind.png">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
 
   <!-- Applica il tema prima del rendering: niente lampo bianco in dark mode -->
   <script>
@@ -33,7 +46,21 @@
   <link rel="stylesheet" href="style.css">
 
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"NewsMediaOrganization","name":"FAIND","description":"AI News Agency","email":"itartedesign@gmail.com"}
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"WebSite","@id":"https://itartedesign-dot.github.io/faind/#website","url":"https://itartedesign-dot.github.io/faind/","name":"FAIND","alternateName":"FAIND – Flash AI News Daily","inLanguage":"it-IT",
+     "description":"Agenzia di notizie flash sull'intelligenza artificiale, aggiornata ogni ora con fonte originale."},
+    {"@type":"NewsMediaOrganization","@id":"https://itartedesign-dot.github.io/faind/#org","name":"FAIND","alternateName":"Flash AI News Daily","url":"https://itartedesign-dot.github.io/faind/",
+     "logo":{"@type":"ImageObject","url":"https://itartedesign-dot.github.io/faind/assets/og-image.png","width":1200,"height":630},
+     "email":"itartedesign@gmail.com","publishingPrinciples":"https://itartedesign-dot.github.io/faind/#chi-siamo"},
+    {"@type":"FAQPage","@id":"https://itartedesign-dot.github.io/faind/#faq","mainEntity":[
+      {"@type":"Question","name":"Che cos'è FAIND?","acceptedAnswer":{"@type":"Answer","text":"FAIND (Flash AI News Daily) è un'agenzia di notizie flash dedicata all'intelligenza artificiale: raccoglie ogni ora le novità da testate e blog ufficiali, le divide per settore e indica sempre la fonte originale."}},
+      {"@type":"Question","name":"FAIND è gratuito?","acceptedAnswer":{"@type":"Answer","text":"Sì. FAIND è gratuito e senza registrazione. Chi vuole può sostenere il progetto con una donazione su PayPal."}},
+      {"@type":"Question","name":"Ogni quanto si aggiornano le notizie?","acceptedAnswer":{"@type":"Answer","text":"Ogni ora. Le notizie restano in pagina per sette giorni e le più rilevanti, riprese da più fonti, finiscono nella sezione Importanti."}},
+      {"@type":"Question","name":"Da dove arrivano le notizie?","acceptedAnswer":{"@type":"Answer","text":"Da testate giornalistiche italiane e internazionali e dai blog ufficiali delle aziende di intelligenza artificiale. Ogni notizia mostra titolo, un breve estratto e il link all'articolo originale."}},
+      {"@type":"Question","name":"Quanto costano ChatGPT Plus, Claude Pro e Gemini?","acceptedAnswer":{"@type":"Answer","text":"FAIND pubblica una tabella aggiornata con i listini ufficiali degli abbonamenti AI più diffusi, con la data dell'ultima verifica e il link alla pagina prezzi di ciascun servizio."}},
+      {"@type":"Question","name":"Come posso segnalare una notizia o proporre una convenzione?","acceptedAnswer":{"@type":"Answer","text":"Con il modulo Scrivici sul sito oppure scrivendo a itartedesign@gmail.com."}}
+    ]}
+  ]}
   </script>
 </head>
 <body>
@@ -43,19 +70,18 @@
   <header class="masthead">
     <div class="masthead__bar wrap">
       <a class="brand" href="#top" aria-label="FAIND — Home">
-        <img class="brand__img brand__img--light" src="assets/logo-mark-light.webp" width="180" height="42" alt="FAIND">
-        <img class="brand__img brand__img--dark" src="assets/logo-mark-dark.webp" width="180" height="42" alt="" aria-hidden="true">
+        <img class="brand__img" src="assets/logo.webp" width="510" height="180" alt="FAIND – Flash AI News Daily">
         <span class="brand__tag" data-i18n="brand.tagline">Tutta l'AI, in un solo posto.</span>
       </a>
 
       <nav class="nav" aria-label="Principale">
         <ul class="nav__list">
-          <li><a href="#top" class="nav__link" data-i18n="nav.home">Home</a></li>
           <li><a href="#importanti" class="nav__link" data-i18n="nav.news">News</a></li>
           <li><a href="#guide" class="nav__link" data-i18n="nav.guides">Tool &amp; Guide</a></li>
           <li><a href="#prezzi" class="nav__link" data-i18n="nav.prices">Prezzi</a></li>
           <li><a href="#convenzioni" class="nav__link" data-i18n="nav.deals">Convenzioni</a></li>
           <li><a href="#contatti" class="nav__link" data-i18n="nav.contact">Contatti</a></li>
+          <li><a href="#chi-siamo" class="nav__link nav__link--about" data-i18n="nav.about">Chi siamo</a></li>
         </ul>
       </nav>
 
@@ -101,6 +127,7 @@
         <li><a href="#prezzi" data-i18n="nav.prices">Prezzi</a></li>
         <li><a href="#convenzioni" data-i18n="nav.deals">Convenzioni</a></li>
         <li><a href="#contatti" data-i18n="nav.contact">Contatti</a></li>
+        <li><a href="#chi-siamo" data-i18n="nav.about">Chi siamo</a></li>
       </ul>
       <div class="drawer__lang lang" role="group" aria-label="Lingua / Language">
         <button type="button" class="lang__btn" data-lang="it" aria-pressed="true">IT</button>
@@ -114,6 +141,12 @@
   <!-- ============================ MAIN ============================ -->
   <main id="main" class="wrap layout">
     <div class="content" id="top">
+
+      <!-- Presentazione: il titolo principale della pagina (importante per Google) -->
+      <div class="intro">
+        <h1 class="intro__title" data-i18n="intro.title">Notizie sull'intelligenza artificiale, aggiornate ogni ora e sempre con la fonte</h1>
+        <a class="intro__btn" href="#chi-siamo" data-i18n="intro.btn">Chi siamo e cosa offriamo</a>
+      </div>
 
       <!-- Settori: filtra per tipologia di AI -->
       <div class="sectors">
@@ -261,12 +294,118 @@
     </aside>
   </main>
 
+  <!-- ============================ CHI SIAMO (testo per lettori e motori di ricerca) ============================ -->
+  <section class="about" id="chi-siamo" aria-labelledby="aboutTitle">
+    <div class="wrap about__inner">
+      <div class="about__text">
+
+        <!-- Italiano: versione completa, indicizzata da Google -->
+        <div data-about="it" lang="it">
+          <h2 class="about__title" id="aboutTitle">Chi siamo: FAIND, Flash AI News Daily</h2>
+          <p class="about__lede">FAIND è un'agenzia di notizie flash dedicata all'<strong>intelligenza artificiale</strong>. Ogni ora raccoglie le novità pubblicate da testate giornalistiche e blog ufficiali, le ordina per importanza e per settore e le presenta in una sola pagina, con il link alla fonte originale sempre in vista.</p>
+
+          <h3>Perché esiste FAIND</h3>
+          <p>L'intelligenza artificiale cambia ogni settimana: nuovi modelli, nuove app, prezzi che salgono e scendono, regole che arrivano da Bruxelles e da Washington. Seguire tutto significa aprire decine di siti, in lingue diverse, e distinguere le notizie vere dal rumore. FAIND nasce per fare questo lavoro al posto tuo: in pochi secondi vedi cosa è appena successo, cosa conta davvero e dove leggerlo per intero.</p>
+          <p>Lo stile è quello delle agenzie di stampa: titoli chiari, zero fuffa, orario di uscita e fonte per ogni notizia. Non riscriviamo gli articoli degli altri e non inventiamo nulla: ti portiamo dritto all'originale, così puoi verificare da solo.</p>
+
+          <h3>Cosa trovi su FAIND</h3>
+          <ul class="about__list">
+            <li><strong>Notizie AI in tempo reale.</strong> "Appena uscite" mostra le ultime 24 ore; "Importanti" raccoglie le notizie scelte dalla redazione o riprese da almeno tre fonti diverse; "Letture secondarie" completa la settimana.</li>
+            <li><strong>Notizie divise per settore.</strong> Chatbot e modelli linguistici come ChatGPT, Claude e Gemini; generazione di immagini e grafica; video; musica e audio; programmazione; produttività; ricerca scientifica; chip e data center; leggi e regolamenti come l'AI Act europeo.</li>
+            <li><strong>Prezzi degli abbonamenti AI.</strong> Una tabella con i listini ufficiali di ChatGPT Plus, ChatGPT Go, Claude Pro, Google AI Pro, Perplexity Pro e altri, con il risparmio dei piani annuali e la data dell'ultima verifica.</li>
+            <li><strong>Guide e download.</strong> I link ufficiali per scaricare le app desktop e gli strumenti per usare l'AI sul tuo computer, come Ollama, LM Studio e ComfyUI.</li>
+            <li><strong>Convenzioni e sconti.</strong> Le offerte ufficiali più convenienti e, in arrivo, codici sconto riservati alla community di FAIND.</li>
+          </ul>
+
+          <h3>Come lavoriamo: fonti verificabili, sempre</h3>
+          <p>Le notizie arrivano da fonti selezionate, italiane e internazionali, e dai blog ufficiali di aziende come OpenAI, Google e Hugging Face. Un sistema automatico le raccoglie ogni ora, scarta ciò che non riguarda l'intelligenza artificiale, unisce le notizie uguali date da più testate e indica quante fonti ne parlano. Di ogni articolo mostriamo solo il titolo, un breve estratto e l'immagine di anteprima: per leggere tutto si va sul sito che l'ha pubblicato.</p>
+          <p>Se trovi un errore, una notizia mancante o una fonte da aggiungere, <a href="#contatti">scrivici</a>: ogni segnalazione viene letta.</p>
+
+          <h3>Per chi è FAIND</h3>
+          <p>Per chi usa l'AI per lavoro e non vuole perdersi un aggiornamento, per chi deve scegliere quale abbonamento comprare, per sviluppatori, creativi, studenti, giornalisti e curiosi. FAIND è gratuito, non richiede registrazione e funziona bene su telefono, tablet e computer, anche in modalità notte. L'interfaccia è disponibile in italiano, inglese, francese e tedesco.</p>
+
+          <h3 id="faq">Domande frequenti</h3>
+          <div class="faq">
+            <details><summary>Che cos'è FAIND?</summary><p>FAIND (Flash AI News Daily) è un'agenzia di notizie flash dedicata all'intelligenza artificiale: raccoglie ogni ora le novità da testate e blog ufficiali, le divide per settore e indica sempre la fonte originale.</p></details>
+            <details><summary>FAIND è gratuito?</summary><p>Sì, è gratuito e senza registrazione. Chi vuole può sostenere il progetto con una donazione su PayPal.</p></details>
+            <details><summary>Ogni quanto si aggiornano le notizie?</summary><p>Ogni ora. Le notizie restano in pagina per sette giorni e le più rilevanti, riprese da più fonti, finiscono nella sezione Importanti.</p></details>
+            <details><summary>Da dove arrivano le notizie?</summary><p>Da testate giornalistiche italiane e internazionali e dai blog ufficiali delle aziende di intelligenza artificiale. Ogni notizia mostra titolo, un breve estratto e il link all'articolo originale.</p></details>
+            <details><summary>Quanto costano ChatGPT Plus, Claude Pro e Gemini?</summary><p>Nella sezione <a href="#prezzi">Prezzi e abbonamenti</a> trovi i listini ufficiali aggiornati, con la data dell'ultima verifica e il link alla pagina prezzi di ciascun servizio.</p></details>
+            <details><summary>Come posso segnalare una notizia o proporre una convenzione?</summary><p>Con il modulo <a href="#contatti">Scrivici</a> oppure scrivendo a <a href="mailto:itartedesign@gmail.com">itartedesign@gmail.com</a>.</p></details>
+          </div>
+        </div>
+
+        <div data-about="en" lang="en" hidden>
+          <h2 class="about__title">About FAIND – Flash AI News Daily</h2>
+          <p class="about__lede">FAIND is a flash news agency for <strong>artificial intelligence</strong>. Every hour it collects what newsrooms and official company blogs publish, sorts it by importance and by sector, and shows it on a single page with a link to the original source.</p>
+          <h3>What you get</h3>
+          <ul class="about__list">
+            <li><strong>Real-time AI news:</strong> just in, top stories covered by several sources, and the rest of the week.</li>
+            <li><strong>News by sector:</strong> chatbots and LLMs, images, video, music and audio, coding, productivity, research, chips, law and policy.</li>
+            <li><strong>AI subscription prices:</strong> official list prices for ChatGPT, Claude, Gemini and Perplexity, with the date they were last checked.</li>
+            <li><strong>Guides, downloads and deals:</strong> official links to desktop apps and local AI tools, plus the best official offers.</li>
+          </ul>
+          <p>We never rewrite other people's articles: every story shows its title, a short excerpt and a link to the original. FAIND is free, needs no sign-up and works on phone, tablet and desktop.</p>
+        </div>
+
+        <div data-about="fr" lang="fr" hidden>
+          <h2 class="about__title">Qui sommes-nous : FAIND – Flash AI News Daily</h2>
+          <p class="about__lede">FAIND est une agence d'infos flash consacrée à l'<strong>intelligence artificielle</strong>. Chaque heure, elle rassemble ce que publient les rédactions et les blogs officiels des entreprises, le classe par importance et par secteur, et l'affiche sur une seule page avec le lien vers la source originale.</p>
+          <h3>Ce que vous trouvez</h3>
+          <ul class="about__list">
+            <li><strong>Actus IA en temps réel :</strong> à l'instant, à la une (reprises par plusieurs sources) et le reste de la semaine.</li>
+            <li><strong>Actus par secteur :</strong> chatbots, images, vidéo, musique et audio, programmation, productivité, recherche, puces, lois et régulation.</li>
+            <li><strong>Prix des abonnements IA :</strong> tarifs officiels de ChatGPT, Claude, Gemini et Perplexity, avec la date de vérification.</li>
+            <li><strong>Guides, téléchargements et offres :</strong> liens officiels vers les applications et les outils d'IA locale.</li>
+          </ul>
+          <p>Nous ne réécrivons jamais les articles des autres : chaque info affiche son titre, un court extrait et le lien vers l'original. FAIND est gratuit et sans inscription.</p>
+        </div>
+
+        <div data-about="de" lang="de" hidden>
+          <h2 class="about__title">Über uns: FAIND – Flash AI News Daily</h2>
+          <p class="about__lede">FAIND ist eine Nachrichtenagentur für Kurzmeldungen rund um <strong>künstliche Intelligenz</strong>. Jede Stunde sammelt sie, was Redaktionen und offizielle Firmenblogs veröffentlichen, ordnet es nach Wichtigkeit und Bereich und zeigt alles auf einer Seite – immer mit Link zur Originalquelle.</p>
+          <h3>Was du findest</h3>
+          <ul class="about__list">
+            <li><strong>KI-News in Echtzeit:</strong> gerade erschienen, wichtige Meldungen (von mehreren Quellen berichtet) und der Rest der Woche.</li>
+            <li><strong>News nach Bereichen:</strong> Chatbots, Bilder, Video, Musik und Audio, Programmierung, Produktivität, Forschung, Chips, Recht und Regulierung.</li>
+            <li><strong>Preise von KI-Abos:</strong> offizielle Listenpreise von ChatGPT, Claude, Gemini und Perplexity mit Prüfdatum.</li>
+            <li><strong>Anleitungen, Downloads und Angebote:</strong> offizielle Links zu Desktop-Apps und lokalen KI-Tools.</li>
+          </ul>
+          <p>Wir schreiben keine fremden Artikel um: Jede Meldung zeigt Titel, einen kurzen Auszug und den Link zum Original. FAIND ist kostenlos und ohne Anmeldung.</p>
+        </div>
+      </div>
+
+      <aside class="about__side">
+        <dl class="facts">
+          <div><dt data-i18n="fact.update">Aggiornamento</dt><dd data-i18n="fact.update.v">Ogni ora</dd></div>
+          <div><dt data-i18n="fact.sources">Fonti</dt><dd data-i18n="fact.sources.v">Testate e blog ufficiali</dd></div>
+          <div><dt data-i18n="fact.langs">Lingue</dt><dd>IT · EN · FR · DE</dd></div>
+          <div><dt data-i18n="fact.price">Costo</dt><dd data-i18n="fact.price.v">Gratuito, senza registrazione</dd></div>
+        </dl>
+
+        <div class="share">
+          <h3 class="share__title" data-i18n="share.title">Fai conoscere FAIND</h3>
+          <p class="share__text" data-i18n="share.text">Se ti è utile, condividilo: è il modo più semplice per aiutarci a crescere.</p>
+          <div class="share__row" id="shareRow">
+            <button type="button" class="share__btn share__btn--main" data-share-site data-i18n="share.native">Condividi</button>
+            <a class="share__btn" data-share="whatsapp" target="_blank" rel="noopener noreferrer" href="#">WhatsApp</a>
+            <a class="share__btn" data-share="telegram" target="_blank" rel="noopener noreferrer" href="#">Telegram</a>
+            <a class="share__btn" data-share="x" target="_blank" rel="noopener noreferrer" href="#">X</a>
+            <a class="share__btn" data-share="linkedin" target="_blank" rel="noopener noreferrer" href="#">LinkedIn</a>
+            <a class="share__btn" data-share="facebook" target="_blank" rel="noopener noreferrer" href="#">Facebook</a>
+            <button type="button" class="share__btn" data-copy="https://itartedesign-dot.github.io/faind/" data-i18n="share.copy">Copia link</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+
   <!-- ============================ FOOTER ============================ -->
   <footer class="footer">
     <div class="wrap footer__inner">
       <div class="footer__brand">
-        <img class="brand__img brand__img--light" src="assets/logo-full-light.webp" width="160" height="52" alt="FAIND — AI News Agency" loading="lazy">
-        <img class="brand__img brand__img--dark" src="assets/logo-full-dark.webp" width="160" height="52" alt="" aria-hidden="true" loading="lazy">
+        <img class="brand__img" src="assets/logo.webp" width="510" height="180" alt="FAIND – Flash AI News Daily" loading="lazy">
         <p data-i18n="footer.policy">Ogni notizia riporta la fonte originale e il link per verificarla. FAIND non è affiliato ai marchi citati.</p>
       </div>
       <ul class="footer__nav">
@@ -275,6 +414,7 @@
         <li><a href="#prezzi" data-i18n="nav.prices">Prezzi</a></li>
         <li><a href="#convenzioni" data-i18n="nav.deals">Convenzioni</a></li>
         <li><a href="#contatti" data-i18n="nav.contact">Contatti</a></li>
+        <li><a href="#chi-siamo" data-i18n="nav.about">Chi siamo</a></li>
       </ul>
       <p class="footer__legal"><span id="year">2026</span> FAIND. <span data-i18n="footer.rights">Tutti i diritti riservati.</span> <span class="footer__upd"><span data-i18n="footer.updated">Aggiornato il</span> <time id="updated"></time></span></p>
     </div>
