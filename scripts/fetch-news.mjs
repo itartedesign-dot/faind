@@ -166,6 +166,7 @@ export function cluster(items) {
       host.also.push({ name: it.source.name, url: it.link.url });
       host.coverage = 1 + host.also.length;
       if (!host.image && it.image) host.image = it.image;
+      if (it.tg && !host.tg) host.tg = it.tg;             // già uscita su Telegram con un'altra fonte
       if (it.date < host.date) host.date = it.date;     // la notizia è uscita alla prima segnalazione
     } else out.push({ ...it, also: it.also ? [...it.also] : [], coverage: it.coverage || 1, _tk: tk });
   }
