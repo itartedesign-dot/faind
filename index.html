@@ -127,6 +127,7 @@
         <li><a href="#feed" data-i18n="feed.short">Feed RSS</a></li>
         <li><a href="#chi-siamo" data-i18n="nav.about">Chi siamo</a></li>
         <li><a href="https://t.me/faindnews" target="_blank" rel="noopener noreferrer" data-i18n="tg.follow">Seguici su Telegram</a></li>
+        <li data-install-li hidden><button type="button" class="drawer__app" data-install data-i18n="app.install">Installa l'app</button></li>
       </ul>
       <div class="drawer__lang lang" role="group" aria-label="Lingua / Language">
         <button type="button" class="lang__btn" data-lang="it" aria-pressed="true">IT</button>
@@ -145,6 +146,7 @@
       <div class="intro">
         <h1 class="intro__title" data-i18n="intro.title">Notizie sull'intelligenza artificiale, aggiornate ogni ora e sempre con la fonte</h1>
         <div class="intro__actions">
+          <button type="button" class="intro__btn intro__btn--app" data-install hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7v7M9 11.5l3 3 3-3M10.5 18.5h3"/></svg><span data-i18n="app.install">Installa l'app</span></button>
           <a class="intro__btn intro__btn--tg" href="https://t.me/faindnews" target="_blank" rel="noopener noreferrer"><span data-i18n="tg.follow">Seguici su Telegram</span></a>
           <a class="intro__btn" href="#chi-siamo" data-i18n="intro.btn">Chi siamo e cosa offriamo</a>
         </div>
@@ -490,6 +492,7 @@
             <a class="share__btn" data-share="facebook" target="_blank" rel="noopener noreferrer" href="#">Facebook</a>
             <button type="button" class="share__btn" data-copy="https://itartedesign-dot.github.io/faind/" data-i18n="share.copy">Copia link</button>
             <a class="share__btn share__btn--rss" href="#feed" data-i18n="feed.short">Feed RSS</a>
+            <button type="button" class="share__btn share__btn--app" data-install hidden data-i18n="app.install">Installa l'app</button>
           </div>
         </div>
       </aside>
@@ -531,6 +534,21 @@
   <button type="button" class="bticker-open" id="tickerOpen" hidden>
     <span class="pulse" aria-hidden="true"></span><span data-i18n="ticker.label">Ultim'ora</span>
   </button>
+
+  <!-- Guida all'installazione su iPhone/iPad (Safari non permette il pulsante diretto) -->
+  <div class="appsheet" id="appSheet" hidden>
+    <div class="appsheet__panel" role="dialog" aria-modal="true" aria-labelledby="appSheetTitle">
+      <img class="appsheet__icon" src="assets/icon-180.png" width="64" height="64" alt="">
+      <h2 class="appsheet__title" id="appSheetTitle" data-i18n="app.ios.title">Installa FAIND sul tuo iPhone o iPad</h2>
+      <ol class="appsheet__steps">
+        <li><span class="appsheet__num">1</span><span><span data-i18n="app.ios.step1">Tocca il pulsante Condividi</span> <svg class="appsheet__share" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4M6 11v9h12v-9"/></svg></span></li>
+        <li><span class="appsheet__num">2</span><span data-i18n="app.ios.step2">Scorri e scegli «Aggiungi alla schermata Home»</span></li>
+        <li><span class="appsheet__num">3</span><span data-i18n="app.ios.step3">Tocca «Aggiungi»: l'icona di FAIND comparirà tra le tue app</span></li>
+      </ol>
+      <p class="appsheet__note" data-i18n="app.ios.note">Funziona da Safari. Se usi un altro browser, apri prima FAIND in Safari.</p>
+      <button type="button" class="btn btn--primary appsheet__ok" id="appSheetClose" data-i18n="app.ok">Ho capito</button>
+    </div>
+  </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

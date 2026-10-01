@@ -58,7 +58,7 @@ Classifica dei ruoli AI e dati più presenti negli annunci degli ultimi 30 giorn
 
 - `privacy.html`: informativa privacy e note legali (link nel footer). Aggiornala se aggiungi servizi esterni (es. statistiche).
 - `404.html`: pagina mostrata per i link non più validi (es. notizie uscite dal sito).
-- `manifest.webmanifest` + `assets/icon-*.png`: permettono di aggiungere FAIND alla schermata Home del telefono come un'app.
+- `manifest.webmanifest` + `assets/icon-*.png` + `sw.js`: rendono FAIND installabile come app. Il pulsante "Installa l'app" compare solo dove serve (Android/computer: installazione diretta; iPhone/iPad: guida in 3 passi; nascosto se già installata).
 - I caratteri tipografici vengono scaricati dall'automazione in `assets/fonts/` e serviti dal sito stesso (nessun contatto con Google Fonts).
 
 ## Settori
