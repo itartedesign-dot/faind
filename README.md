@@ -46,6 +46,21 @@ Per le notizie scritte a mano in `data.js` aggiungi `image: "https://..."` se vu
 - Video: i canali YouTube sono in `scripts/feeds.json` → `youtube`. Per aggiungerne uno: nome, `"handle": "@nomecanale"` (o `"id": "UC..."`), lingua e gruppo (`it`, `intl`, `official`).
 - Il filtro "Lingue notizie" in alto vale per notizie e video ed è separato dalla lingua dell'interfaccia.
 
+## Focus (in fondo alla home)
+
+Cinque temi: Robot e umanoidi, Domus, Medicina e salute, AI e lavoro, Clima e ambiente. Per ciascuno: 1 video (il più recente, anche più vecchio se non ce ne sono di nuovi) e 1 notizia (la più ripresa dalle testate), mai ripetuti tra un tema e l'altro. Parole chiave, fonti e canali extra di ogni tema sono in `scripts/feeds.json` → `spotlight`.
+
+## Lavoro AI
+
+Classifica dei ruoli AI e dati più presenti negli annunci degli ultimi 30 giorni (fonti pubbliche gratuite: Jobicy, Arbeitnow, Remotive), aggiornata ogni 6 ore. Ogni offerta porta all'annuncio originale. Segue il filtro "Lingue notizie": Italia=IT, Francia=FR, Germania=DE, Europa/remoto/mondo=EN. Configurazione in `scripts/feeds.json` → `jobs`.
+
+## Privacy, 404 e app
+
+- `privacy.html`: informativa privacy e note legali (link nel footer). Aggiornala se aggiungi servizi esterni (es. statistiche).
+- `404.html`: pagina mostrata per i link non più validi (es. notizie uscite dal sito).
+- `manifest.webmanifest` + `assets/icon-*.png`: permettono di aggiungere FAIND alla schermata Home del telefono come un'app.
+- I caratteri tipografici vengono scaricati dall'automazione in `assets/fonts/` e serviti dal sito stesso (nessun contatto con Google Fonts).
+
 ## Settori
 
 `chatbot`, `immagini`, `video`, `musica`, `codice`, `produttivita`, `ricerca`, `hardware`, `regole`, `altro`.

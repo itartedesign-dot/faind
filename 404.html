@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pagina non trovata | FAIND</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0E1222">
+  <link rel="icon" href="/faind/assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/faind/assets/fonts/archivo.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: "Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
+      background: radial-gradient(90% 70% at 50% 0%, rgba(66, 147, 185, .28), transparent 70%), #0E1222;
+      color: #E8EEF8; display: grid; place-items: center; text-align: center;
+      padding: calc(24px + env(safe-area-inset-top, 0px)) 24px calc(24px + env(safe-area-inset-bottom, 0px));
+      -webkit-font-smoothing: antialiased;
+    }
+    main { max-width: 560px; }
+    .logo { display: inline-block; border-radius: 6px; transition: transform .2s; }
+    .logo:hover { transform: scale(1.03); }
+    .logo:focus-visible { outline: 2px solid #8FD0F0; outline-offset: 6px; }
+    .logo img { display: block; width: min(320px, 72vw); height: auto; }
+    .code { margin: 36px 0 10px; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: #8FD0F0; font-weight: 700; }
+    h1 { margin: 0 0 14px; font-size: clamp(28px, 6vw, 40px); font-weight: 800; font-stretch: 78%; line-height: 1.1; letter-spacing: -.01em; color: #fff; }
+    .lede { margin: 0 0 22px; font-size: 17px; line-height: 1.6; color: #B9C6DA; }
+    .more { margin: 0 0 22px; font-size: 15.5px; line-height: 1.6; color: #E8EEF8; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, .1); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px; border-radius: 999px;
+      background: #4293B9; color: #fff; text-decoration: none; font-weight: 700; font-size: 16px; transition: background .15s;
+    }
+    .btn:hover { background: #5AAED6; }
+    .btn:focus-visible { outline: 2px solid #8FD0F0; outline-offset: 3px; }
+    @media (prefers-reduced-motion: reduce) { .logo, .btn { transition: none; } }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="logo" href="/faind/" aria-label="FAIND — Home">
+      <img src="/faind/assets/logo.webp" width="510" height="180" alt="FAIND – Flash AI News Daily">
+    </a>
+    <p class="code" data-t="code">Errore 404</p>
+    <h1 data-t="title">Questa notizia ha preso il volo</h1>
+    <p class="lede" data-t="lede">Le notizie sull'AI corrono veloci: questa è già uscita dalla nostra pagina, oppure il link non è più valido.</p>
+    <p class="more" data-t="more">Niente paura: su FAIND trovi tante altre notizie fresche sull'intelligenza artificiale, aggiornate ogni ora e sempre con la fonte.</p>
+    <a class="btn" href="/faind/" data-t="btn">Vai alle ultime notizie →</a>
+  </main>
+  <script>
+    (function () {
+      var T = {
+        en: { code: 'Error 404', title: 'This story has flown away', lede: 'AI news moves fast: this story has already left our page, or the link is no longer valid.', more: 'No worries: FAIND has plenty of fresh AI news, updated every hour and always with the source.', btn: 'See the latest news →' },
+        fr: { code: 'Erreur 404', title: 'Cette actu s’est envolée', lede: 'L’actualité de l’IA va vite : cette info a déjà quitté notre page, ou le lien n’est plus valide.', more: 'Pas de panique : FAIND regorge d’actus IA fraîches, mises à jour chaque heure et toujours sourcées.', btn: 'Voir les dernières actus →' },
+        de: { code: 'Fehler 404', title: 'Diese Meldung ist schon weitergeflogen', lede: 'KI-News sind schnell: Diese Meldung ist nicht mehr auf unserer Seite oder der Link ist nicht mehr gültig.', more: 'Kein Problem: Auf FAIND gibt es viele frische KI-News, stündlich aktualisiert und immer mit Quelle.', btn: 'Zu den neuesten Meldungen →' }
+      };
+      var l = null;
+      try { l = localStorage.getItem('faind-lang'); } catch (e) {}
+      if (!l) l = (navigator.language || 'it').slice(0, 2);
+      if (!T[l]) return;
+      document.documentElement.lang = l;
+      document.title = T[l].title + ' | FAIND';
+      var els = document.querySelectorAll('[data-t]');
+      for (var i = 0; i < els.length; i++) els[i].textContent = T[l][els[i].getAttribute('data-t')];
+    })();
+  </script>
+</body>
+</html>

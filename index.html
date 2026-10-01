@@ -29,7 +29,7 @@
 
   <link rel="icon" href="assets/favicon.png" type="image/png">
   <link rel="alternate" type="application/rss+xml" title="FAIND – Notizie AI" href="feed.xml">
-  <link rel="apple-touch-icon" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/icon-180.png">
 
   <!-- Applica il tema prima del rendering: niente lampo bianco in dark mode -->
   <script>
@@ -41,10 +41,17 @@
     })();
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+  <!-- Caratteri serviti da FAIND (nessun contatto con Google Fonts) -->
+  <link rel="stylesheet" href="assets/fonts/archivo.css">
   <link rel="stylesheet" href="style.css">
+
+  <!-- App sul telefono: "Aggiungi alla schermata Home" -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="FAIND">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="application-name" content="FAIND">
 
   <script type="application/ld+json">
   {"@context":"https://schema.org","@graph":[
@@ -129,6 +136,8 @@
         <li><a href="#convenzioni" data-i18n="nav.deals">Convenzioni</a></li>
         <li><a href="#contatti" data-i18n="nav.contact">Contatti</a></li>
         <li><a href="#video" data-i18n="sec.video">Video</a></li>
+        <li><a href="#job" data-i18n="jobs.nav">Lavoro AI</a></li>
+        <li><a href="#focus" data-i18n="sec.focus">Focus</a></li>
         <li><a href="#feed" data-i18n="feed.short">Feed RSS</a></li>
         <li><a href="#chi-siamo" data-i18n="nav.about">Chi siamo</a></li>
         <li><a href="https://t.me/faindnews" target="_blank" rel="noopener noreferrer" data-i18n="tg.follow">Seguici su Telegram</a></li>
@@ -224,6 +233,22 @@
           <button type="button" class="btn btn--ghost reads__more" id="moreVideos" hidden data-i18n="more.btn">Mostra altre</button>
         </section>
 
+        <!-- Job: ruoli AI più richiesti -->
+        <section class="block jobs" id="job" aria-labelledby="jobTitle" hidden>
+          <div class="jobs__band">
+            <div class="jobs__head">
+              <span class="jobs__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="7.5" width="17" height="12" rx="2"/><path d="M9 7.5V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5v2M3.5 12.5h17"/></svg></span>
+              <div>
+                <h2 class="jobs__title" id="jobTitle" data-i18n="jobs.title">Lavoro nell'AI: i ruoli più richiesti</h2>
+                <p class="jobs__sub" data-i18n="jobs.sub">Classifica calcolata sugli annunci degli ultimi 30 giorni. Tocca un ruolo per vedere le offerte e candidarti sul sito che le pubblica.</p>
+              </div>
+            </div>
+            <p class="jobs__filter" id="jobsFilter"></p>
+            <ol class="jobs__list" id="jobsList"></ol>
+            <p class="jobs__foot" id="jobsFoot"></p>
+          </div>
+        </section>
+
         <!-- Letture secondarie -->
         <section class="block" id="letture" aria-labelledby="readsTitle">
           <div class="block__head">
@@ -232,6 +257,15 @@
           </div>
           <ol class="reads" id="reads"></ol>
           <button type="button" class="btn btn--ghost reads__more" id="moreReads" hidden data-i18n="more.btn">Mostra altre</button>
+        </section>
+
+        <!-- Focus: per ogni tema 1 video + la notizia più ripresa -->
+        <section class="block focus" id="focus" aria-labelledby="focusTitle" hidden>
+          <div class="block__head">
+            <h2 class="block__title" id="focusTitle" data-i18n="sec.focus">Focus</h2>
+            <p class="block__hint" data-i18n="hint.focus">Per ogni tema, un video e la notizia più ripresa dalle testate</p>
+          </div>
+          <div class="focus__list" id="focusList"></div>
         </section>
       </div>
 
@@ -477,9 +511,10 @@
         <li><a href="#chi-siamo" data-i18n="nav.about">Chi siamo</a></li>
         <li><a href="https://t.me/faindnews" target="_blank" rel="noopener noreferrer">Telegram</a></li>
         <li><a href="#video" data-i18n="sec.video">Video</a></li>
+        <li><a href="#job" data-i18n="jobs.nav">Lavoro AI</a></li>
         <li><a href="feed.xml" data-i18n="feed.short">Feed RSS</a></li>
       </ul>
-      <p class="footer__legal"><span id="year">2026</span> FAIND. <span data-i18n="footer.rights">Tutti i diritti riservati.</span> <span class="footer__upd"><span data-i18n="footer.updated">Aggiornato il</span> <time id="updated"></time></span></p>
+      <p class="footer__legal"><span id="year">2026</span> FAIND. <span data-i18n="footer.rights">Tutti i diritti riservati.</span> <a class="footer__privacy" href="privacy.html" data-i18n="footer.privacy">Privacy e note legali</a> <span class="footer__upd"><span data-i18n="footer.updated">Aggiornato il</span> <time id="updated"></time></span></p>
     </div>
   </footer>
 

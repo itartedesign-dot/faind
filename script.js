@@ -148,7 +148,7 @@
       'cat.chatbot': 'Chatbot e LLM', 'cat.immagini': 'Immagini e grafica', 'cat.video': 'Video', 'cat.musica': 'Musica e audio',
       'cat.codice': 'Programmazione', 'cat.produttivita': 'Produttività', 'cat.ricerca': 'Ricerca e scienza', 'cat.hardware': 'Chip e infrastruttura',
       'cat.regole': 'Leggi e regole', 'cat.altro': 'Altro',
-      'tg.follow': 'Seguici su Telegram', 'tg.cta': 'Le notizie importanti sul tuo telefono, appena escono. Iscriviti al canale Telegram.', 'sec.video': 'Video', 'tag.video': 'Video', 'video.all': 'Tutti', 'video.it': 'Creator italiani', 'video.intl': 'Internazionali', 'video.official': 'Canali ufficiali', 'video.play': 'Guarda il video', 'video.yt': 'Apri su YouTube', 'langf.btn': 'Lingue notizie', 'langf.hint': 'Mostra notizie e video in:', 'langf.min': 'Lascia almeno una lingua attiva', 'feed.title': 'Feed RSS gratuiti', 'feed.text': 'Porta le notizie di FAIND nel tuo lettore RSS, sul tuo sito o nella tua app. Gratis, aggiornati ogni ora, anche per settore.', 'feed.all': 'Tutte le notizie', 'feed.copy': 'Copia', 'feed.bysector': 'Feed per settore', 'feed.youtube': 'Video da YouTube', 'feed.short': 'Feed RSS', 'nav.about': 'Chi siamo', 'intro.title': 'Notizie sull\'intelligenza artificiale, aggiornate ogni ora e sempre con la fonte', 'intro.btn': 'Chi siamo e cosa offriamo',
+      'tg.follow': 'Seguici su Telegram', 'tg.cta': 'Le notizie importanti sul tuo telefono, appena escono. Iscriviti al canale Telegram.', 'sec.video': 'Video', 'tag.video': 'Video', 'video.all': 'Tutti', 'video.it': 'Creator italiani', 'video.intl': 'Internazionali', 'video.official': 'Canali ufficiali', 'video.play': 'Guarda il video', 'video.yt': 'Apri su YouTube', 'langf.btn': 'Lingue notizie', 'langf.hint': 'Mostra notizie e video in:', 'langf.min': 'Lascia almeno una lingua attiva', 'feed.title': 'Feed RSS gratuiti', 'feed.text': 'Porta le notizie di FAIND nel tuo lettore RSS, sul tuo sito o nella tua app. Gratis, aggiornati ogni ora, anche per settore.', 'feed.all': 'Tutte le notizie', 'feed.copy': 'Copia', 'feed.bysector': 'Feed per settore', 'feed.youtube': 'Video da YouTube', 'feed.short': 'Feed RSS', 'sec.focus': 'Focus', 'hint.focus': 'Per ogni tema, un video e la notizia più ripresa dalle testate', 'focus.vlabel': 'Il video', 'focus.nlabel': 'La notizia più ripresa', 'focus.robot': 'Robot e umanoidi', 'focus.robot.sub': 'A che punto sono: in casa, in città, in auto, in volo, sui mari e nello spazio', 'focus.domus': 'Domus', 'focus.domus.sub': 'L\'AI in casa: smartphone, elettrodomestici e smart home', 'focus.medicina': 'Medicina e salute', 'focus.medicina.sub': 'Cosa scoprono l\'AI e le macchine per curarci meglio', 'focus.lavoro': 'AI e lavoro', 'focus.lavoro.sub': 'Come cambiano mestieri, competenze e aziende', 'focus.clima': 'Clima e ambiente', 'focus.clima.sub': 'Inquinamento, energia, impatto delle tecnologie e proteste nel mondo', 'jobs.nav': 'Lavoro AI', 'jobs.title': 'Lavoro nell\'AI: i ruoli più richiesti', 'jobs.sub': 'Classifica calcolata sugli annunci degli ultimi 30 giorni. Tocca un ruolo per vedere le offerte e candidarti sul sito che le pubblica.', 'jobs.filter': 'Offerte mostrate in base alle lingue impostate:', 'jobs.change': 'Modifica', 'jobs.one': '1 offerta', 'jobs.many': '{n} offerte', 'jobs.apply': 'Candidati', 'jobs.foot': 'Fonti: {s} · aggiornato {t}', 'jobs.empty': 'Nessuna offerta per le lingue scelte: prova ad aggiungerne una.', 'role.consult': 'Consulente AI', 'img.na': 'Immagine non disponibile', 'footer.privacy': 'Privacy e note legali', 'nav.about': 'Chi siamo', 'intro.title': 'Notizie sull\'intelligenza artificiale, aggiornate ogni ora e sempre con la fonte', 'intro.btn': 'Chi siamo e cosa offriamo',
       'fact.update': 'Aggiornamento', 'fact.update.v': 'Ogni ora', 'fact.sources': 'Fonti', 'fact.sources.v': 'Testate e blog ufficiali', 'fact.langs': 'Lingue', 'fact.price': 'Costo', 'fact.price.v': 'Gratuito, senza registrazione',
       'share.title': 'Fai conoscere FAIND', 'share.text': 'Se ti è utile, condividilo: è il modo più semplice per aiutarci a crescere.', 'share.native': 'Condividi', 'share.copy': 'Copia link',
       'share.msg': 'FAIND – le notizie sull\'intelligenza artificiale aggiornate ogni ora, sempre con la fonte', 'share.news': 'Condividi la notizia', 'share.via': 'via FAIND',
@@ -168,7 +168,7 @@
       'cat.chatbot': 'Chatbots & LLMs', 'cat.immagini': 'Images & design', 'cat.video': 'Video', 'cat.musica': 'Music & audio',
       'cat.codice': 'Coding', 'cat.produttivita': 'Productivity', 'cat.ricerca': 'Research & science', 'cat.hardware': 'Chips & infrastructure',
       'cat.regole': 'Law & policy', 'cat.altro': 'Other',
-      'tg.follow': 'Follow on Telegram', 'tg.cta': 'Top AI stories on your phone as soon as they break. Join the Telegram channel.', 'sec.video': 'Videos', 'tag.video': 'Video', 'video.all': 'All', 'video.it': 'Italian creators', 'video.intl': 'International', 'video.official': 'Official channels', 'video.play': 'Watch the video', 'video.yt': 'Open on YouTube', 'langf.btn': 'News languages', 'langf.hint': 'Show news and videos in:', 'langf.min': 'Keep at least one language on', 'feed.title': 'Free RSS feeds', 'feed.text': 'Bring FAIND news into your RSS reader, website or app. Free, updated hourly, also by sector.', 'feed.all': 'All news', 'feed.copy': 'Copy', 'feed.bysector': 'Feeds by sector', 'feed.youtube': 'YouTube videos', 'feed.short': 'RSS feed', 'nav.about': 'About', 'intro.title': 'Artificial intelligence news, updated every hour and always with the source', 'intro.btn': 'About FAIND',
+      'tg.follow': 'Follow on Telegram', 'tg.cta': 'Top AI stories on your phone as soon as they break. Join the Telegram channel.', 'sec.video': 'Videos', 'tag.video': 'Video', 'video.all': 'All', 'video.it': 'Italian creators', 'video.intl': 'International', 'video.official': 'Official channels', 'video.play': 'Watch the video', 'video.yt': 'Open on YouTube', 'langf.btn': 'News languages', 'langf.hint': 'Show news and videos in:', 'langf.min': 'Keep at least one language on', 'feed.title': 'Free RSS feeds', 'feed.text': 'Bring FAIND news into your RSS reader, website or app. Free, updated hourly, also by sector.', 'feed.all': 'All news', 'feed.copy': 'Copy', 'feed.bysector': 'Feeds by sector', 'feed.youtube': 'YouTube videos', 'feed.short': 'RSS feed', 'sec.focus': 'Focus', 'hint.focus': 'For each topic, one video and the most covered story', 'focus.vlabel': 'The video', 'focus.nlabel': 'Most covered story', 'focus.robot': 'Robots & humanoids', 'focus.robot.sub': 'Where they stand: at home, in cities, cars, planes, at sea and in space', 'focus.domus': 'Domus', 'focus.domus.sub': 'AI at home: smartphones, appliances and smart home', 'focus.medicina': 'Medicine & health', 'focus.medicina.sub': 'What AI and machines are discovering to heal us better', 'focus.lavoro': 'AI & work', 'focus.lavoro.sub': 'How jobs, skills and companies are changing', 'focus.clima': 'Climate & environment', 'focus.clima.sub': 'Pollution, energy, the impact of technology and protests worldwide', 'jobs.nav': 'AI jobs', 'jobs.title': 'AI jobs: the most in-demand roles', 'jobs.sub': 'Ranking based on job ads from the last 30 days. Tap a role to see the openings and apply on the site that posts them.', 'jobs.filter': 'Openings shown for your selected languages:', 'jobs.change': 'Change', 'jobs.one': '1 opening', 'jobs.many': '{n} openings', 'jobs.apply': 'Apply', 'jobs.foot': 'Sources: {s} · updated {t}', 'jobs.empty': 'No openings for the selected languages: try adding one.', 'role.consult': 'AI Consultant', 'img.na': 'Image not available', 'footer.privacy': 'Privacy & legal notes', 'nav.about': 'About', 'intro.title': 'Artificial intelligence news, updated every hour and always with the source', 'intro.btn': 'About FAIND',
       'fact.update': 'Updates', 'fact.update.v': 'Every hour', 'fact.sources': 'Sources', 'fact.sources.v': 'Newsrooms and official blogs', 'fact.langs': 'Languages', 'fact.price': 'Price', 'fact.price.v': 'Free, no sign-up',
       'share.title': 'Spread the word', 'share.text': 'If FAIND helps you, share it: it is the easiest way to help us grow.', 'share.native': 'Share', 'share.copy': 'Copy link',
       'share.msg': 'FAIND – AI news updated every hour, always with the source', 'share.news': 'Share this story', 'share.via': 'via FAIND',
@@ -188,7 +188,7 @@
       'cat.chatbot': 'Chatbots et LLM', 'cat.immagini': 'Images et design', 'cat.video': 'Vidéo', 'cat.musica': 'Musique et audio',
       'cat.codice': 'Programmation', 'cat.produttivita': 'Productivité', 'cat.ricerca': 'Recherche et science', 'cat.hardware': 'Puces et infrastructure',
       'cat.regole': 'Lois et régulation', 'cat.altro': 'Autre',
-      'tg.follow': 'Suivez-nous sur Telegram', 'tg.cta': 'Les infos IA importantes sur votre téléphone, dès leur sortie. Rejoignez la chaîne Telegram.', 'sec.video': 'Vidéos', 'tag.video': 'Vidéo', 'video.all': 'Toutes', 'video.it': 'Créateurs italiens', 'video.intl': 'Internationales', 'video.official': 'Chaînes officielles', 'video.play': 'Regarder la vidéo', 'video.yt': 'Ouvrir sur YouTube', 'langf.btn': 'Langues des actus', 'langf.hint': 'Afficher les actus et vidéos en :', 'langf.min': 'Gardez au moins une langue', 'feed.title': 'Flux RSS gratuits', 'feed.text': 'Recevez les actus FAIND dans votre lecteur RSS, votre site ou votre app. Gratuit, mis à jour chaque heure, aussi par secteur.', 'feed.all': 'Toutes les actus', 'feed.copy': 'Copier', 'feed.bysector': 'Flux par secteur', 'feed.youtube': 'Vidéos YouTube', 'feed.short': 'Flux RSS', 'nav.about': 'Qui sommes-nous', 'intro.title': 'L’actualité de l’intelligence artificielle, mise à jour chaque heure et toujours sourcée', 'intro.btn': 'Découvrir FAIND',
+      'tg.follow': 'Suivez-nous sur Telegram', 'tg.cta': 'Les infos IA importantes sur votre téléphone, dès leur sortie. Rejoignez la chaîne Telegram.', 'sec.video': 'Vidéos', 'tag.video': 'Vidéo', 'video.all': 'Toutes', 'video.it': 'Créateurs italiens', 'video.intl': 'Internationales', 'video.official': 'Chaînes officielles', 'video.play': 'Regarder la vidéo', 'video.yt': 'Ouvrir sur YouTube', 'langf.btn': 'Langues des actus', 'langf.hint': 'Afficher les actus et vidéos en :', 'langf.min': 'Gardez au moins une langue', 'feed.title': 'Flux RSS gratuits', 'feed.text': 'Recevez les actus FAIND dans votre lecteur RSS, votre site ou votre app. Gratuit, mis à jour chaque heure, aussi par secteur.', 'feed.all': 'Toutes les actus', 'feed.copy': 'Copier', 'feed.bysector': 'Flux par secteur', 'feed.youtube': 'Vidéos YouTube', 'feed.short': 'Flux RSS', 'sec.focus': 'Focus', 'hint.focus': 'Pour chaque thème, une vidéo et l’info la plus reprise', 'focus.vlabel': 'La vidéo', 'focus.nlabel': 'L’info la plus reprise', 'focus.robot': 'Robots et humanoïdes', 'focus.robot.sub': 'Où en sont-ils : à la maison, en ville, en voiture, dans les airs, en mer et dans l’espace', 'focus.domus': 'Domus', 'focus.domus.sub': 'L’IA à la maison : smartphones, électroménager et maison connectée', 'focus.medicina': 'Médecine et santé', 'focus.medicina.sub': 'Ce que l’IA et les machines découvrent pour mieux nous soigner', 'focus.lavoro': 'IA et travail', 'focus.lavoro.sub': 'Comment évoluent métiers, compétences et entreprises', 'focus.clima': 'Climat et environnement', 'focus.clima.sub': 'Pollution, énergie, impact des technologies et manifestations dans le monde', 'jobs.nav': 'Emplois IA', 'jobs.title': 'Emplois IA : les profils les plus recherchés', 'jobs.sub': 'Classement établi sur les annonces des 30 derniers jours. Touchez un profil pour voir les offres et postuler sur le site qui les publie.', 'jobs.filter': 'Offres affichées selon les langues choisies :', 'jobs.change': 'Modifier', 'jobs.one': '1 offre', 'jobs.many': '{n} offres', 'jobs.apply': 'Postuler', 'jobs.foot': 'Sources : {s} · mis à jour {t}', 'jobs.empty': 'Aucune offre pour les langues choisies : essayez d’en ajouter une.', 'role.consult': 'Consultant IA', 'img.na': 'Image non disponible', 'footer.privacy': 'Confidentialité et mentions légales', 'nav.about': 'Qui sommes-nous', 'intro.title': 'L’actualité de l’intelligence artificielle, mise à jour chaque heure et toujours sourcée', 'intro.btn': 'Découvrir FAIND',
       'fact.update': 'Mise à jour', 'fact.update.v': 'Chaque heure', 'fact.sources': 'Sources', 'fact.sources.v': 'Rédactions et blogs officiels', 'fact.langs': 'Langues', 'fact.price': 'Prix', 'fact.price.v': 'Gratuit, sans inscription',
       'share.title': 'Faites connaître FAIND', 'share.text': 'S’il vous est utile, partagez-le : c’est la façon la plus simple de nous aider.', 'share.native': 'Partager', 'share.copy': 'Copier le lien',
       'share.msg': 'FAIND – l’actualité IA mise à jour chaque heure, toujours sourcée', 'share.news': 'Partager cette actu', 'share.via': 'via FAIND',
@@ -208,7 +208,7 @@
       'cat.chatbot': 'Chatbots & LLMs', 'cat.immagini': 'Bilder & Grafik', 'cat.video': 'Video', 'cat.musica': 'Musik & Audio',
       'cat.codice': 'Programmierung', 'cat.produttivita': 'Produktivität', 'cat.ricerca': 'Forschung & Wissenschaft', 'cat.hardware': 'Chips & Infrastruktur',
       'cat.regole': 'Recht & Regulierung', 'cat.altro': 'Sonstiges',
-      'tg.follow': 'Folge uns auf Telegram', 'tg.cta': 'Die wichtigsten KI-News sofort aufs Handy. Tritt dem Telegram-Kanal bei.', 'sec.video': 'Videos', 'tag.video': 'Video', 'video.all': 'Alle', 'video.it': 'Italienische Creator', 'video.intl': 'International', 'video.official': 'Offizielle Kanäle', 'video.play': 'Video ansehen', 'video.yt': 'Auf YouTube öffnen', 'langf.btn': 'Sprachen', 'langf.hint': 'Nachrichten und Videos zeigen in:', 'langf.min': 'Mindestens eine Sprache aktiv lassen', 'feed.title': 'Kostenlose RSS-Feeds', 'feed.text': 'Hol dir FAIND-News in deinen RSS-Reader, deine Website oder App. Kostenlos, stündlich aktualisiert, auch nach Bereichen.', 'feed.all': 'Alle Nachrichten', 'feed.copy': 'Kopieren', 'feed.bysector': 'Feeds nach Bereich', 'feed.youtube': 'YouTube-Videos', 'feed.short': 'RSS-Feed', 'nav.about': 'Über uns', 'intro.title': 'Nachrichten über künstliche Intelligenz, stündlich aktualisiert und immer mit Quelle', 'intro.btn': 'Über FAIND',
+      'tg.follow': 'Folge uns auf Telegram', 'tg.cta': 'Die wichtigsten KI-News sofort aufs Handy. Tritt dem Telegram-Kanal bei.', 'sec.video': 'Videos', 'tag.video': 'Video', 'video.all': 'Alle', 'video.it': 'Italienische Creator', 'video.intl': 'International', 'video.official': 'Offizielle Kanäle', 'video.play': 'Video ansehen', 'video.yt': 'Auf YouTube öffnen', 'langf.btn': 'Sprachen', 'langf.hint': 'Nachrichten und Videos zeigen in:', 'langf.min': 'Mindestens eine Sprache aktiv lassen', 'feed.title': 'Kostenlose RSS-Feeds', 'feed.text': 'Hol dir FAIND-News in deinen RSS-Reader, deine Website oder App. Kostenlos, stündlich aktualisiert, auch nach Bereichen.', 'feed.all': 'Alle Nachrichten', 'feed.copy': 'Kopieren', 'feed.bysector': 'Feeds nach Bereich', 'feed.youtube': 'YouTube-Videos', 'feed.short': 'RSS-Feed', 'sec.focus': 'Fokus', 'hint.focus': 'Pro Thema ein Video und die meistberichtete Meldung', 'focus.vlabel': 'Das Video', 'focus.nlabel': 'Meistberichtete Meldung', 'focus.robot': 'Roboter & Humanoide', 'focus.robot.sub': 'Wo sie stehen: zu Hause, in der Stadt, im Auto, in der Luft, auf See und im All', 'focus.domus': 'Domus', 'focus.domus.sub': 'KI zu Hause: Smartphones, Haushaltsgeräte und Smart Home', 'focus.medicina': 'Medizin & Gesundheit', 'focus.medicina.sub': 'Was KI und Maschinen entdecken, um uns besser zu heilen', 'focus.lavoro': 'KI & Arbeit', 'focus.lavoro.sub': 'Wie sich Berufe, Kompetenzen und Unternehmen verändern', 'focus.clima': 'Klima & Umwelt', 'focus.clima.sub': 'Verschmutzung, Energie, Folgen der Technik und Proteste weltweit', 'jobs.nav': 'KI-Jobs', 'jobs.title': 'KI-Jobs: die gefragtesten Rollen', 'jobs.sub': 'Ranking auf Basis der Stellenanzeigen der letzten 30 Tage. Tippe auf eine Rolle, um die Angebote zu sehen und dich direkt zu bewerben.', 'jobs.filter': 'Angebote für deine gewählten Sprachen:', 'jobs.change': 'Ändern', 'jobs.one': '1 Angebot', 'jobs.many': '{n} Angebote', 'jobs.apply': 'Bewerben', 'jobs.foot': 'Quellen: {s} · aktualisiert {t}', 'jobs.empty': 'Keine Angebote für die gewählten Sprachen: füge eine hinzu.', 'role.consult': 'KI-Berater', 'img.na': 'Bild nicht verfügbar', 'footer.privacy': 'Datenschutz & Rechtliches', 'nav.about': 'Über uns', 'intro.title': 'Nachrichten über künstliche Intelligenz, stündlich aktualisiert und immer mit Quelle', 'intro.btn': 'Über FAIND',
       'fact.update': 'Aktualisierung', 'fact.update.v': 'Jede Stunde', 'fact.sources': 'Quellen', 'fact.sources.v': 'Redaktionen und offizielle Blogs', 'fact.langs': 'Sprachen', 'fact.price': 'Preis', 'fact.price.v': 'Kostenlos, ohne Anmeldung',
       'share.title': 'Erzähl von FAIND', 'share.text': 'Wenn dir FAIND hilft, teile es: So hilfst du uns am einfachsten.', 'share.native': 'Teilen', 'share.copy': 'Link kopieren',
       'share.msg': 'FAIND – KI-News, stündlich aktualisiert, immer mit Quelle', 'share.news': 'Meldung teilen', 'share.via': 'via FAIND',
@@ -260,7 +260,7 @@
     feedState: 'loading'
   };
   var all = [];        // notizie visibili (redazione + automatiche, filtrate per lingua)
-  var allRaw = [], videosRaw = [], videos = [], pagesMap = {};
+  var allRaw = [], videosRaw = [], videos = [], pagesMap = {}, spotRaw = [], jobsRaw = [], jobsUpdated = null;
   function readLangs() {
     try {
       var v = JSON.parse(localStorage.getItem('faind-news-langs') || 'null');
@@ -384,9 +384,13 @@
   }
   /* Immagine della notizia; senza immagine (o se non si carica) compare il logo FAIND */
   var PH = '<img class="thumb__logo" src="assets/logo.webp" alt="" width="510" height="180">';
+  function phHtml(size) {
+    var big = size === 'lead' || size === 'wide';
+    return '<span class="thumb__ph">' + PH + (big ? '<span class="thumb__cap">' + esc(t('img.na')) + '</span>' : '') + '</span>';
+  }
   function thumb(n, size, eager) {
     var cls = 'thumb thumb--' + size;
-    if (!n.image || !/^https:\/\//.test(n.image)) return '<div class="' + cls + ' thumb--ph" aria-hidden="true">' + PH + '</div>';
+    if (!n.image || !/^https:\/\//.test(n.image)) return '<div class="' + cls + ' thumb--ph" aria-hidden="true">' + phHtml(size) + '</div>';
     return '<div class="' + cls + '" aria-hidden="true"><img src="' + esc(n.image) + '" alt="" ' +
       (eager ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async" referrerpolicy="no-referrer"></div>';
   }
@@ -420,7 +424,10 @@
   /* ------------------------------ Caricamento notizie ------------------------------ */
   var editorial = (DATA.news || []).map(function (n) { var c = {}; for (var k in n) c[k] = n[k]; c.editorial = true; return c; });
 
-  function merge(auto, vids, pages) {
+  function merge(auto, vids, pages, spot, jobs, jobsUp) {
+    jobsRaw = Array.isArray(jobs) ? jobs : [];
+    jobsUpdated = jobsUp || null;
+    spotRaw = Array.isArray(spot) ? spot : [];
     var urls = {};
     editorial.forEach(function (n) { if (n.link) urls[n.link.url] = 1; });
     var extra = (auto || []).filter(function (n) { return n && n.link && !urls[n.link.url] && n.title; });
@@ -459,7 +466,7 @@
     fetchNews(false).then(function (json) {
       state.feed = { generated: json.generated, sources: json.sources, count: (json.items || []).length };
       state.feedState = 'ok';
-      merge(json.items, json.videos, json.pages);
+      merge(json.items, json.videos, json.pages, json.spotlight, json.jobs, json.jobsUpdated);
     }).catch(function (e) {
       state.feedState = e && e.message === 'local' ? 'local' : 'error';
       merge([], [], {});
@@ -478,7 +485,7 @@
     fetchNews(true).then(function (json) {
       if (!state.feed || json.generated === state.feed.generated) return;
       state.feed = { generated: json.generated, sources: json.sources, count: (json.items || []).length };
-      merge(json.items, json.videos, json.pages);
+      merge(json.items, json.videos, json.pages, json.spotlight, json.jobs, json.jobsUpdated);
       renderAll();
     }).catch(function () {});
   }
@@ -725,10 +732,70 @@
     $('#moreVideos').hidden = list.length <= state.videosShown;
   }
 
+  var FOCUS_ICON = {
+    robot: '<rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5M3 12v3M21 12v3"/><circle cx="12" cy="3.5" r="1"/>',
+    domus: '<path d="M3.5 11L12 4l8.5 7"/><path d="M6 9.5V20h12V9.5"/><rect x="10" y="13" width="4" height="7"/>',
+    medicina: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M9 11.5h6M12 8.5v6"/>',
+    lavoro: '<rect x="3.5" y="7.5" width="17" height="12" rx="2"/><path d="M9 7.5V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5v2M3.5 12.5h17"/>',
+    clima: '<path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19c3-4 6-6.5 10-8.5"/>'
+  };
+  /* Focus: per ogni tema 1 video + 1 notizia, rispettando il filtro lingue */
+  function renderFocus() {
+    var html = spotRaw.map(function (sp) {
+      var v = sp.video && langOk(sp.video) ? sp.video : null;
+      var n = sp.news && langOk(sp.news) ? sp.news : null;
+      if (!v && !n) return '';
+      return '<article class="fblock" id="focus-' + esc(sp.key) + '" data-topic="' + esc(sp.key) + '">' +
+        '<header class="fblock__head"><span class="fblock__ico" aria-hidden="true"><svg viewBox="0 0 24 24">' + (FOCUS_ICON[sp.key] || FOCUS_ICON.robot) + '</svg></span>' +
+          '<div><h3 class="fblock__title">' + esc(t('focus.' + sp.key)) + '</h3><p class="fblock__sub">' + esc(t('focus.' + sp.key + '.sub')) + '</p></div></header>' +
+        '<div class="fblock__body">' +
+          (v ? '<div class="fblock__slot"><p class="fblock__label">▶ ' + esc(t('focus.vlabel')) + '</p>' + vcard(v) + '</div>' : '') +
+          (n ? '<div class="fblock__slot"><p class="fblock__label">★ ' + esc(t('focus.nlabel')) + '</p>' + card(n) + '</div>' : '') +
+        '</div></article>';
+    }).join('');
+    $('#focusList').innerHTML = html;
+    $('#focus').hidden = !html;
+  }
+
+  var ROLE_NAMES = { ml: 'Machine Learning Engineer', ai: 'AI Engineer', ds: 'Data Scientist', de: 'Data Engineer', da: 'Data Analyst',
+    research: 'AI Research Scientist', cv: 'Computer Vision Engineer', nlp: 'NLP Engineer', pm: 'AI Product Manager',
+    arch: 'AI / Data Architect', prompt: 'Prompt Engineer' };
+  var LANG_NAMES = { it: 'Italiano', en: 'English', fr: 'Français', de: 'Deutsch' };
+  /* Job: classifica dei ruoli più presenti negli annunci, filtrata per lingua */
+  function renderJobs() {
+    var list = jobsRaw.filter(langOk);
+    var sec = $('#job');
+    sec.hidden = !jobsRaw.length;
+    if (!jobsRaw.length) return;
+    var groups = {};
+    list.forEach(function (j) { (groups[j.role] = groups[j.role] || []).push(j); });
+    var roles = Object.keys(groups).sort(function (a, b) { return groups[b].length - groups[a].length; }).slice(0, 10);
+    var filtered = state.langs.length < NEWS_LANGS.length;
+    $('#jobsFilter').innerHTML = '<span>' + esc(t('jobs.filter')) + '</span> ' +
+      state.langs.map(function (l) { return '<span class="jobs__lang">' + esc(LANG_NAMES[l]) + '</span>'; }).join('') +
+      ' <button type="button" class="jobs__change" data-open-langf>' + esc(t('jobs.change')) + '</button>';
+    $('#jobsFilter').classList.toggle('is-filtered', filtered);
+    $('#jobsList').innerHTML = roles.length ? roles.map(function (r, i) {
+      var offers = groups[r].slice().sort(function (a, b) { return b.date.localeCompare(a.date); });
+      var n = offers.length;
+      return '<li><details class="jrole"' + (i === 0 ? ' open' : '') + '>' +
+        '<summary><span class="jrole__rank">' + (i + 1) + '</span><span class="jrole__name">' + esc(r === 'consult' ? t('role.consult') : ROLE_NAMES[r] || r) + '</span>' +
+        '<span class="jrole__count">' + esc(n === 1 ? t('jobs.one') : t('jobs.many', { n: n })) + '</span><span class="jrole__chev" aria-hidden="true"></span></summary>' +
+        '<ul class="jrole__offers">' + offers.slice(0, 5).map(function (j) {
+          return '<li><a ' + linkAttrs(j.url) + '><span class="jrole__job"><strong>' + esc(j.title) + '</strong>' +
+            '<span>' + esc([j.company, j.where].filter(Boolean).join(' · ')) + ' · ' + esc(relTime(j.date)) + '</span></span>' +
+            '<span class="jrole__go">' + esc(t('jobs.apply')) + ' ' + EXT + '</span></a></li>';
+        }).join('') + '</ul></details></li>';
+    }).join('') : '<li class="jobs__empty">' + esc(t('jobs.empty')) + '</li>';
+    var srcs = [];
+    jobsRaw.forEach(function (j) { if (srcs.indexOf(j.source) < 0) srcs.push(j.source); });
+    $('#jobsFoot').textContent = jobsUpdated ? t('jobs.foot', { s: srcs.join(', '), t: relTime(jobsUpdated) }) : '';
+  }
+
   function renderNews() {
     if (!state.loaded) return;
     buildSections();
-    renderStatus(); renderLead(); renderWire(); renderImportant(); renderVideos(); renderReads(); renderTicker();
+    renderStatus(); renderLead(); renderWire(); renderImportant(); renderVideos(); renderJobs(); renderReads(); renderFocus(); renderTicker();
     renderSectors(); renderResults();
   }
   function renderAll() {
@@ -852,8 +919,9 @@
       }
       if (!img || img.tagName !== 'IMG' || !img.parentNode || !img.parentNode.classList || !img.parentNode.classList.contains('thumb')) return;
       if (img.classList.contains('thumb__logo')) return;
-      img.parentNode.classList.add('thumb--ph');
-      img.outerHTML = PH;
+      var box = img.parentNode, size = /thumb--(lead|wide|md|sm)/.exec(box.className);
+      box.classList.add('thumb--ph');
+      img.outerHTML = phHtml(size ? size[1] : 'sm');
     }, true);
 
     document.addEventListener('click', function (e) {
@@ -898,6 +966,12 @@
         el.parentNode.replaceChild(frame, el);
         return;
       }
+      if ((el = e.target.closest('[data-open-langf]'))) {
+        e.stopPropagation();
+        $('#langf').scrollIntoView({ block: 'center', behavior: 'smooth' });
+        $('#langfMenu').hidden = false; $('#langfBtn').setAttribute('aria-expanded', 'true');
+        return;
+      }
       if ((el = e.target.closest('[data-vgroup]'))) { state.videoGroup = el.dataset.vgroup; state.videosShown = 6; renderVideos(); return; }
       if ((el = e.target.closest('[data-share-site]'))) {
         nativeShare({ title: 'FAIND – Flash AI News Daily', text: t('share.msg'), url: SITE }, SITE);
@@ -905,7 +979,9 @@
       }
       if ((el = e.target.closest('[data-share-news]'))) {
         var sid = el.getAttribute('data-share-news');
-        var item = all.concat(videos).filter(function (x) { return x.id === sid; })[0];
+        var spotItems = [];
+        spotRaw.forEach(function (sp) { if (sp.news) spotItems.push(sp.news); if (sp.video) spotItems.push(sp.video); });
+        var item = all.concat(videos, spotItems).filter(function (x) { return x.id === sid; })[0];
         if (item) {
           var title = tx(item.title), pg = pageOf(item);
           var url = pg ? SITE + pg : (item.link && item.link.url);
