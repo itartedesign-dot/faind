@@ -26,6 +26,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://itartedesign-dot.github.io/faind/';
 const MAX_PER_RUN = 4;
 const FRESH_HOURS = 6;
+const VIDEO_HOURS = 12;
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT = process.env.TELEGRAM_CHAT_ID;
@@ -58,10 +59,18 @@ export function caption(n) {
 }
 
 function buttons(n) {
-  return { inline_keyboard: [[
-    { text: 'Leggi la notizia', url: n.link.url },
-    { text: 'Tutte le news su FAIND', url: SITE }
+  if (n.kind === 'video') return { inline_keyboard: [[
+    { text: '▶️ Guarda il video', url: n.link.url },
+    { text: 'Altri video su FAIND', url: SITE + '#video' }
   ]] };
+  return { inline_keyboard: [[
+    { text: 'Leggi su FAIND', url: n.page ? SITE + n.page : SITE },
+    { text: 'Fonte originale', url: n.link.url }
+  ]] };
+}
+export function videoCaption(n) {
+  const tags = ['#IntelligenzaArtificiale', '#VideoAI', HASHTAG[n.category]].filter(Boolean).join(' ');
+  return [`🎬 <b>${esc(n.title)}</b>`, `\n📺 ${esc(n.source.name)}`, `\n${tags}`].join('\n').slice(0, 1024);
 }
 
 async function api(method, body) {
@@ -74,7 +83,7 @@ async function api(method, body) {
 }
 
 async function publish(n) {
-  const text = caption(n);
+  const text = n.kind === 'video' ? videoCaption(n) : caption(n);
   const reply_markup = buttons(n);
   if (DRY) { console.log('--- DRY ---\n' + text + '\n[img] ' + (n.image || '—')); return; }
   if (n.image) {
@@ -112,6 +121,15 @@ async function main() {
       if (/chat not found|bot was kicked|not enough rights|unauthorized/i.test(e.message)) break;
     }
   }
+  // Video: al massimo 1 per giro, solo se uscito nelle ultime VIDEO_HOURS ore
+  const videos = (data.videos || []);
+  videos.forEach(v => { if (!v.tg && now - new Date(v.date).getTime() >= VIDEO_HOURS * 36e5) v.tg = 'skip'; });
+  const nextVideo = videos.filter(v => !v.tg).sort((a, b) => b.date.localeCompare(a.date))[0];
+  if (nextVideo) {
+    try { await publish(nextVideo); nextVideo.tg = new Date().toISOString(); console.log('✓ Telegram video:', nextVideo.title); }
+    catch (e) { console.warn('✗ Telegram video:', nextVideo.title, '—', e.message); }
+  }
+
   if (!DRY) await writeFile(file, JSON.stringify(data));
   console.log(`→ Telegram: ${sent} pubblicate, ${fresh.length - sent} in attesa`);
 }

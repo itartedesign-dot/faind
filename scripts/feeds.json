@@ -3,17 +3,148 @@
   "maxAgeDays": 7,
   "maxItems": 160,
   "feeds": [
-    { "name": "OpenAI News",            "url": "https://openai.com/news/rss.xml",                                         "lang": "en", "official": true },
-    { "name": "Google AI Blog",         "url": "https://blog.google/technology/ai/rss/",                                  "lang": "en", "official": true },
-    { "name": "Hugging Face Blog",      "url": "https://huggingface.co/blog/feed.xml",                                    "lang": "en", "official": true },
-    { "name": "ANSA Tecnologia",        "url": "https://www.ansa.it/sito/notizie/tecnologia/tecnologia_rss.xml",          "lang": "it", "filter": true },
-    { "name": "Wired Italia",           "url": "https://www.wired.it/feed/rss",                                           "lang": "it", "filter": true },
-    { "name": "TechCrunch AI",          "url": "https://techcrunch.com/category/artificial-intelligence/feed/",          "lang": "en" },
-    { "name": "The Verge AI",           "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",       "lang": "en" },
-    { "name": "MIT Technology Review",  "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed",     "lang": "en" },
-    { "name": "VentureBeat AI",         "url": "https://venturebeat.com/category/ai/feed/",                               "lang": "en" },
-    { "name": "The Decoder",            "url": "https://the-decoder.com/feed/",                                           "lang": "en" },
-    { "name": "Heise KI",               "url": "https://www.heise.de/rss/heise-atom.xml",                                 "lang": "de", "filter": true },
-    { "name": "Numerama",               "url": "https://www.numerama.com/feed/",                                          "lang": "fr", "filter": true }
+    {
+      "name": "OpenAI News",
+      "url": "https://openai.com/news/rss.xml",
+      "lang": "en",
+      "official": true
+    },
+    {
+      "name": "Google AI Blog",
+      "url": "https://blog.google/technology/ai/rss/",
+      "lang": "en",
+      "official": true
+    },
+    {
+      "name": "Hugging Face Blog",
+      "url": "https://huggingface.co/blog/feed.xml",
+      "lang": "en",
+      "official": true
+    },
+    {
+      "name": "ANSA Tecnologia",
+      "url": "https://www.ansa.it/sito/notizie/tecnologia/tecnologia_rss.xml",
+      "lang": "it",
+      "filter": true
+    },
+    {
+      "name": "Wired Italia",
+      "url": "https://www.wired.it/feed/rss",
+      "lang": "it",
+      "filter": true
+    },
+    {
+      "name": "TechCrunch AI",
+      "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
+      "lang": "en"
+    },
+    {
+      "name": "The Verge AI",
+      "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
+      "lang": "en"
+    },
+    {
+      "name": "MIT Technology Review",
+      "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed",
+      "lang": "en"
+    },
+    {
+      "name": "VentureBeat AI",
+      "url": "https://venturebeat.com/category/ai/feed/",
+      "lang": "en"
+    },
+    {
+      "name": "The Decoder",
+      "url": "https://the-decoder.com/feed/",
+      "lang": "en"
+    },
+    {
+      "name": "Heise KI",
+      "url": "https://www.heise.de/rss/heise-atom.xml",
+      "lang": "de",
+      "filter": true
+    },
+    {
+      "name": "Numerama",
+      "url": "https://www.numerama.com/feed/",
+      "lang": "fr",
+      "filter": true
+    }
+  ],
+  "videoMaxAgeDays": 21,
+  "maxVideos": 60,
+  "_noteYoutube": "Canali YouTube. 'id' = identificativo del canale (UC...), oppure 'handle' = nome con la chiocciola (@nome). 'filter': true = il canale parla anche d'altro, si tengono solo i video sull'AI. 'group': it = creator italiani, intl = internazionali, official = canali ufficiali.",
+  "youtube": [
+    {
+      "name": "Marco Montemagno",
+      "id": "UCNg4RDHGls-HpbV10kWPlsw",
+      "lang": "it",
+      "group": "it",
+      "filter": true
+    },
+    {
+      "name": "Raffaele Gaito",
+      "id": "UCrebGs3b-Z7JLKQM2YOpUKA",
+      "lang": "it",
+      "group": "it",
+      "filter": true
+    },
+    {
+      "name": "Giovanni Beggiato",
+      "id": "UCQbrJm-05Er6plcuNoVhuOw",
+      "lang": "it",
+      "group": "it"
+    },
+    {
+      "name": "Simone Rizzo",
+      "id": "UCbMlkb79E12CwveGAtdFj-A",
+      "lang": "it",
+      "group": "it"
+    },
+    {
+      "name": "Datapizza",
+      "handle": "@datapizza",
+      "lang": "it",
+      "group": "it"
+    },
+    {
+      "name": "OpenAI",
+      "handle": "@OpenAI",
+      "lang": "en",
+      "group": "official",
+      "official": true
+    },
+    {
+      "name": "Google DeepMind",
+      "handle": "@googledeepmind",
+      "lang": "en",
+      "group": "official",
+      "official": true
+    },
+    {
+      "name": "Anthropic",
+      "handle": "@anthropic-ai",
+      "lang": "en",
+      "group": "official",
+      "official": true
+    },
+    {
+      "name": "Two Minute Papers",
+      "handle": "@TwoMinutePapers",
+      "lang": "en",
+      "group": "intl"
+    },
+    {
+      "name": "AI Explained",
+      "handle": "@aiexplained-official",
+      "lang": "en",
+      "group": "intl"
+    },
+    {
+      "name": "Matt Wolfe",
+      "handle": "@mreflow",
+      "lang": "en",
+      "group": "intl"
+    }
   ]
 }

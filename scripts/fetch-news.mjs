@@ -15,6 +15,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { buildSite } from './build-pages.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -223,6 +224,87 @@ export function normalize(raw, feed, now = Date.now(), maxAgeDays = 7) {
   };
 }
 
+/* ------------------------------ Video YouTube ------------------------------ */
+// Ogni canale ha un feed pubblico: https://www.youtube.com/feeds/videos.xml?channel_id=UC...
+// Nella configurazione basta l'id del canale ("UC...") oppure il nome con la chiocciola ("@nome").
+export function parseYouTube(xml) {
+  const out = [];
+  for (const [block] of xml.matchAll(/<entry\b[\s\S]*?<\/entry>/gi)) {
+    const videoId = (block.match(/<yt:videoId>([\w-]{6,})<\/yt:videoId>/) || [])[1];
+    if (!videoId) continue;
+    const link = atomLink(block) || `https://www.youtube.com/watch?v=${videoId}`;
+    if (/\/shorts\//.test(link)) continue;                       // niente Shorts
+    out.push({
+      videoId,
+      title: stripHtml(tag(block, ['media:title', 'title'])),
+      date: tag(block, ['published', 'updated']),
+      summary: stripHtml(tag(block, ['media:description'])),
+      link: `https://www.youtube.com/watch?v=${videoId}`
+    });
+  }
+  return out;
+}
+export function channelIdFromHtml(html) {
+  const m = html.match(/feeds\/videos\.xml\?channel_id=(UC[\w-]{22})/) ||
+            html.match(/"externalId":"(UC[\w-]{22})"/) ||
+            html.match(/<meta itemprop="identifier" content="(UC[\w-]{22})"/) ||
+            html.match(/"channelId":"(UC[\w-]{22})"/);
+  return m ? m[1] : '';
+}
+async function resolveChannel(ch, cache) {
+  if (/^UC[\w-]{22}$/.test(ch.id || '')) return ch.id;
+  const handle = ch.handle;
+  if (cache[handle]) return cache[handle];
+  const id = channelIdFromHtml(await get(`https://www.youtube.com/${handle}`, 12000));
+  if (!id) throw new Error('id del canale non trovato');
+  cache[handle] = id;
+  return id;
+}
+export function normalizeVideo(raw, ch, now, maxAgeDays) {
+  const d = new Date(raw.date);
+  if (isNaN(d) || now - d.getTime() > maxAgeDays * 864e5 || !raw.title) return null;
+  const text = raw.title + ' ' + raw.summary;
+  if (ch.filter && !isAI(text)) return null;
+  return {
+    id: 'v-' + raw.videoId,
+    kind: 'video',
+    videoId: raw.videoId,
+    date: d.toISOString(),
+    tag: 'video',
+    category: categorize(text.replace(/\b(video|videos|vid[eé]o)\b/gi, ' ')),   // "in questo video" non è il settore Video
+    title: raw.title,
+    summary: excerpt(raw.summary, 180),
+    lang: ch.lang,
+    official: !!ch.official || undefined,
+    group: ch.group,
+    source: { name: ch.name, url: ch.handle ? `https://www.youtube.com/${ch.handle}` : `https://www.youtube.com/channel/${ch.id}` },
+    link: { type: 'watch', url: raw.link },
+    image: `https://i.ytimg.com/vi/${raw.videoId}/hqdefault.jpg`,
+    auto: true
+  };
+}
+async function collectVideos(cfg, prevJson, now) {
+  const list = cfg.youtube || [];
+  const maxAge = cfg.videoMaxAgeDays || 21;
+  const cache = { ...(prevJson.channels || {}) };
+  const results = await Promise.allSettled(list.map(async (ch) => {
+    const id = await resolveChannel(ch, cache);
+    const xml = await get(`https://www.youtube.com/feeds/videos.xml?channel_id=${id}`);
+    return parseYouTube(xml).map(r => normalizeVideo(r, ch, now, maxAge)).filter(Boolean);
+  }));
+  const byId = new Map();
+  for (const v of prevJson.videos || []) if (now - new Date(v.date).getTime() <= maxAge * 864e5) byId.set(v.id, v);
+  results.forEach((r, i) => {
+    const name = list[i].name;
+    if (r.status === 'fulfilled') {
+      console.log(`✓ ▶ ${name}: ${r.value.length}`);
+      for (const v of r.value) byId.set(v.id, { ...(byId.get(v.id) || {}), ...v, tg: byId.get(v.id)?.tg });
+    } else console.warn(`✗ ▶ ${name}: ${r.reason?.message || r.reason}`);
+  });
+  const videos = [...byId.values()].sort((a, b) => b.date.localeCompare(a.date)).slice(0, cfg.maxVideos || 60);
+  return { videos, channels: cache };
+}
+
 /* ------------------------------ Main ------------------------------ */
 async function main() {
   const cfg = JSON.parse(await readFile(path.join(ROOT, 'scripts/feeds.json'), 'utf8'));
@@ -243,10 +325,10 @@ async function main() {
   });
 
   // Storico: la versione già online, così la settimana resta completa anche se i feed sono corti
-  let previous = [];
+  let previous = [], prevJson = {};
   const prevUrl = process.env.PREVIOUS_URL;
   if (prevUrl) {
-    try { previous = JSON.parse(await get(prevUrl, 10000)).items || []; console.log(`↺ storico: ${previous.length}`); }
+    try { prevJson = JSON.parse(await get(prevUrl, 10000)); previous = prevJson.items || []; console.log(`↺ storico: ${previous.length}`); }
     catch (e) { console.warn('↺ storico non disponibile:', e.message); }
   }
   // Lo storico conserva le fonti già raggruppate (also); i nuovi arrivi si aggiungono
@@ -292,10 +374,17 @@ async function main() {
   if (ok === 0 && previous.length) {
     console.warn('Nessun feed raggiungibile: mantengo lo storico.');
   }
+  const { videos, channels } = await collectVideos(cfg, prevJson, now);
+
   const sources = new Set(items.flatMap(i => [i.source.name, ...i.also.map(a => a.name)]));
-  const out = { generated: new Date(now).toISOString(), sources: sources.size, count: items.length, items };
+  const out = { generated: new Date(now).toISOString(), sources: sources.size, count: items.length, items, videos, channels };
+
+  // Pagine notizia, feed RSS e sitemap (aggiunge a ogni notizia il campo "page")
+  try { await buildSite(out, ROOT); }
+  catch (e) { console.warn('Pagine/feed non generati:', e.message); }
+
   await writeFile(path.join(ROOT, 'news.json'), JSON.stringify(out));
-  console.log(`→ news.json: ${items.length} notizie da ${sources.size} fonti`);
+  console.log(`→ news.json: ${items.length} notizie da ${sources.size} fonti, ${videos.length} video`);
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
