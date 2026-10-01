@@ -9,7 +9,9 @@
    Regole:
    • solo notizie uscite nelle ultime FRESH_HOURS ore (niente arretrati);
    • prima le importanti (3+ fonti), poi le più recenti;
-   • al massimo MAX_PER_RUN post per giro, per non intasare il canale.
+   • al massimo MAX_PER_RUN post per giro, per non intasare il canale;
+   • più 1 video per giro (uscito nelle ultime VIDEO_HOURS ore);
+   • solo notizie e video nelle lingue TG_LANGS (italiano e inglese).
 
    Serve (GitHub → Settings → Secrets → Actions):
      TELEGRAM_BOT_TOKEN   token di @BotFather
@@ -27,6 +29,9 @@ const SITE = 'https://itartedesign-dot.github.io/faind/';
 const MAX_PER_RUN = 4;
 const FRESH_HOURS = 6;
 const VIDEO_HOURS = 12;
+// Lingue pubblicate sul canale (notizie e video). Le altre restano solo sul sito.
+const TG_LANGS = ['it', 'en'];
+const langOk = (n) => TG_LANGS.includes(n.lang || 'it');
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT = process.env.TELEGRAM_CHAT_ID;
@@ -99,6 +104,8 @@ async function main() {
   const data = JSON.parse(await readFile(file, 'utf8'));
   const now = Date.now();
 
+  // Notizie in lingue non previste: segnate subito, non usciranno mai sul canale
+  data.items.forEach(n => { if (!n.tg && !langOk(n)) n.tg = 'skip-lang'; });
   const pending = data.items.filter(n => !n.tg);
   const fresh = pending.filter(n => now - new Date(n.date).getTime() < FRESH_HOURS * 36e5);
   // Le notizie non recenti non verranno mai pubblicate: le segno subito (evita arretrati al primo avvio)
@@ -123,7 +130,11 @@ async function main() {
   }
   // Video: al massimo 1 per giro, solo se uscito nelle ultime VIDEO_HOURS ore
   const videos = (data.videos || []);
-  videos.forEach(v => { if (!v.tg && now - new Date(v.date).getTime() >= VIDEO_HOURS * 36e5) v.tg = 'skip'; });
+  videos.forEach(v => {
+    if (v.tg) return;
+    if (!langOk(v)) v.tg = 'skip-lang';
+    else if (now - new Date(v.date).getTime() >= VIDEO_HOURS * 36e5) v.tg = 'skip';
+  });
   const nextVideo = videos.filter(v => !v.tg).sort((a, b) => b.date.localeCompare(a.date))[0];
   if (nextVideo) {
     try { await publish(nextVideo); nextVideo.tg = new Date().toISOString(); console.log('✓ Telegram video:', nextVideo.title); }
