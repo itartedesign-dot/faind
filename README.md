@@ -39,6 +39,13 @@ Lo script prende l'immagine di copertina dal feed RSS; se manca, legge l'antepri
 Le immagini restano sul sito della fonte e il clic porta sempre all'articolo originale. Se un'immagine non si carica, o la notizia non ne ha, compare il riquadro con il logo FAIND.
 Per le notizie scritte a mano in `data.js` aggiungi `image: "https://..."` se vuoi una foto.
 
+## Pagine notizia, feed RSS e video
+
+- Ogni notizia ha una pagina sua in `n/` (generata a ogni giro orario da `scripts/build-pages.mjs`). Google indicizza solo quelle della redazione o riprese da almeno 2 fonti.
+- Feed RSS gratuiti: `feed.xml` (tutte), `feeds/<settore>.xml`, `feeds/youtube.xml`. Si rigenerano ogni ora.
+- Video: i canali YouTube sono in `scripts/feeds.json` → `youtube`. Per aggiungerne uno: nome, `"handle": "@nomecanale"` (o `"id": "UC..."`), lingua e gruppo (`it`, `intl`, `official`).
+- Il filtro "Lingue notizie" in alto vale per notizie e video ed è separato dalla lingua dell'interfaccia.
+
 ## Settori
 
 `chatbot`, `immagini`, `video`, `musica`, `codice`, `produttivita`, `ricerca`, `hardware`, `regole`, `altro`.

@@ -148,7 +148,7 @@
       'cat.chatbot': 'Chatbot e LLM', 'cat.immagini': 'Immagini e grafica', 'cat.video': 'Video', 'cat.musica': 'Musica e audio',
       'cat.codice': 'Programmazione', 'cat.produttivita': 'Produttività', 'cat.ricerca': 'Ricerca e scienza', 'cat.hardware': 'Chip e infrastruttura',
       'cat.regole': 'Leggi e regole', 'cat.altro': 'Altro',
-      'tg.follow': 'Seguici su Telegram', 'tg.cta': 'Le notizie importanti sul tuo telefono, appena escono. Iscriviti al canale Telegram.', 'nav.about': 'Chi siamo', 'intro.title': 'Notizie sull\'intelligenza artificiale, aggiornate ogni ora e sempre con la fonte', 'intro.btn': 'Chi siamo e cosa offriamo',
+      'tg.follow': 'Seguici su Telegram', 'tg.cta': 'Le notizie importanti sul tuo telefono, appena escono. Iscriviti al canale Telegram.', 'sec.video': 'Video', 'tag.video': 'Video', 'video.all': 'Tutti', 'video.it': 'Creator italiani', 'video.intl': 'Internazionali', 'video.official': 'Canali ufficiali', 'video.play': 'Guarda il video', 'video.yt': 'Apri su YouTube', 'langf.btn': 'Lingue notizie', 'langf.hint': 'Mostra notizie e video in:', 'langf.min': 'Lascia almeno una lingua attiva', 'feed.title': 'Feed RSS gratuiti', 'feed.text': 'Porta le notizie di FAIND nel tuo lettore RSS, sul tuo sito o nella tua app. Gratis, aggiornati ogni ora, anche per settore.', 'feed.all': 'Tutte le notizie', 'feed.copy': 'Copia', 'feed.bysector': 'Feed per settore', 'feed.youtube': 'Video da YouTube', 'feed.short': 'Feed RSS', 'nav.about': 'Chi siamo', 'intro.title': 'Notizie sull\'intelligenza artificiale, aggiornate ogni ora e sempre con la fonte', 'intro.btn': 'Chi siamo e cosa offriamo',
       'fact.update': 'Aggiornamento', 'fact.update.v': 'Ogni ora', 'fact.sources': 'Fonti', 'fact.sources.v': 'Testate e blog ufficiali', 'fact.langs': 'Lingue', 'fact.price': 'Costo', 'fact.price.v': 'Gratuito, senza registrazione',
       'share.title': 'Fai conoscere FAIND', 'share.text': 'Se ti è utile, condividilo: è il modo più semplice per aiutarci a crescere.', 'share.native': 'Condividi', 'share.copy': 'Copia link',
       'share.msg': 'FAIND – le notizie sull\'intelligenza artificiale aggiornate ogni ora, sempre con la fonte', 'share.news': 'Condividi la notizia', 'share.via': 'via FAIND',
@@ -168,7 +168,7 @@
       'cat.chatbot': 'Chatbots & LLMs', 'cat.immagini': 'Images & design', 'cat.video': 'Video', 'cat.musica': 'Music & audio',
       'cat.codice': 'Coding', 'cat.produttivita': 'Productivity', 'cat.ricerca': 'Research & science', 'cat.hardware': 'Chips & infrastructure',
       'cat.regole': 'Law & policy', 'cat.altro': 'Other',
-      'tg.follow': 'Follow on Telegram', 'tg.cta': 'Top AI stories on your phone as soon as they break. Join the Telegram channel.', 'nav.about': 'About', 'intro.title': 'Artificial intelligence news, updated every hour and always with the source', 'intro.btn': 'About FAIND',
+      'tg.follow': 'Follow on Telegram', 'tg.cta': 'Top AI stories on your phone as soon as they break. Join the Telegram channel.', 'sec.video': 'Videos', 'tag.video': 'Video', 'video.all': 'All', 'video.it': 'Italian creators', 'video.intl': 'International', 'video.official': 'Official channels', 'video.play': 'Watch the video', 'video.yt': 'Open on YouTube', 'langf.btn': 'News languages', 'langf.hint': 'Show news and videos in:', 'langf.min': 'Keep at least one language on', 'feed.title': 'Free RSS feeds', 'feed.text': 'Bring FAIND news into your RSS reader, website or app. Free, updated hourly, also by sector.', 'feed.all': 'All news', 'feed.copy': 'Copy', 'feed.bysector': 'Feeds by sector', 'feed.youtube': 'YouTube videos', 'feed.short': 'RSS feed', 'nav.about': 'About', 'intro.title': 'Artificial intelligence news, updated every hour and always with the source', 'intro.btn': 'About FAIND',
       'fact.update': 'Updates', 'fact.update.v': 'Every hour', 'fact.sources': 'Sources', 'fact.sources.v': 'Newsrooms and official blogs', 'fact.langs': 'Languages', 'fact.price': 'Price', 'fact.price.v': 'Free, no sign-up',
       'share.title': 'Spread the word', 'share.text': 'If FAIND helps you, share it: it is the easiest way to help us grow.', 'share.native': 'Share', 'share.copy': 'Copy link',
       'share.msg': 'FAIND – AI news updated every hour, always with the source', 'share.news': 'Share this story', 'share.via': 'via FAIND',
@@ -188,7 +188,7 @@
       'cat.chatbot': 'Chatbots et LLM', 'cat.immagini': 'Images et design', 'cat.video': 'Vidéo', 'cat.musica': 'Musique et audio',
       'cat.codice': 'Programmation', 'cat.produttivita': 'Productivité', 'cat.ricerca': 'Recherche et science', 'cat.hardware': 'Puces et infrastructure',
       'cat.regole': 'Lois et régulation', 'cat.altro': 'Autre',
-      'tg.follow': 'Suivez-nous sur Telegram', 'tg.cta': 'Les infos IA importantes sur votre téléphone, dès leur sortie. Rejoignez la chaîne Telegram.', 'nav.about': 'Qui sommes-nous', 'intro.title': 'L’actualité de l’intelligence artificielle, mise à jour chaque heure et toujours sourcée', 'intro.btn': 'Découvrir FAIND',
+      'tg.follow': 'Suivez-nous sur Telegram', 'tg.cta': 'Les infos IA importantes sur votre téléphone, dès leur sortie. Rejoignez la chaîne Telegram.', 'sec.video': 'Vidéos', 'tag.video': 'Vidéo', 'video.all': 'Toutes', 'video.it': 'Créateurs italiens', 'video.intl': 'Internationales', 'video.official': 'Chaînes officielles', 'video.play': 'Regarder la vidéo', 'video.yt': 'Ouvrir sur YouTube', 'langf.btn': 'Langues des actus', 'langf.hint': 'Afficher les actus et vidéos en :', 'langf.min': 'Gardez au moins une langue', 'feed.title': 'Flux RSS gratuits', 'feed.text': 'Recevez les actus FAIND dans votre lecteur RSS, votre site ou votre app. Gratuit, mis à jour chaque heure, aussi par secteur.', 'feed.all': 'Toutes les actus', 'feed.copy': 'Copier', 'feed.bysector': 'Flux par secteur', 'feed.youtube': 'Vidéos YouTube', 'feed.short': 'Flux RSS', 'nav.about': 'Qui sommes-nous', 'intro.title': 'L’actualité de l’intelligence artificielle, mise à jour chaque heure et toujours sourcée', 'intro.btn': 'Découvrir FAIND',
       'fact.update': 'Mise à jour', 'fact.update.v': 'Chaque heure', 'fact.sources': 'Sources', 'fact.sources.v': 'Rédactions et blogs officiels', 'fact.langs': 'Langues', 'fact.price': 'Prix', 'fact.price.v': 'Gratuit, sans inscription',
       'share.title': 'Faites connaître FAIND', 'share.text': 'S’il vous est utile, partagez-le : c’est la façon la plus simple de nous aider.', 'share.native': 'Partager', 'share.copy': 'Copier le lien',
       'share.msg': 'FAIND – l’actualité IA mise à jour chaque heure, toujours sourcée', 'share.news': 'Partager cette actu', 'share.via': 'via FAIND',
@@ -208,7 +208,7 @@
       'cat.chatbot': 'Chatbots & LLMs', 'cat.immagini': 'Bilder & Grafik', 'cat.video': 'Video', 'cat.musica': 'Musik & Audio',
       'cat.codice': 'Programmierung', 'cat.produttivita': 'Produktivität', 'cat.ricerca': 'Forschung & Wissenschaft', 'cat.hardware': 'Chips & Infrastruktur',
       'cat.regole': 'Recht & Regulierung', 'cat.altro': 'Sonstiges',
-      'tg.follow': 'Folge uns auf Telegram', 'tg.cta': 'Die wichtigsten KI-News sofort aufs Handy. Tritt dem Telegram-Kanal bei.', 'nav.about': 'Über uns', 'intro.title': 'Nachrichten über künstliche Intelligenz, stündlich aktualisiert und immer mit Quelle', 'intro.btn': 'Über FAIND',
+      'tg.follow': 'Folge uns auf Telegram', 'tg.cta': 'Die wichtigsten KI-News sofort aufs Handy. Tritt dem Telegram-Kanal bei.', 'sec.video': 'Videos', 'tag.video': 'Video', 'video.all': 'Alle', 'video.it': 'Italienische Creator', 'video.intl': 'International', 'video.official': 'Offizielle Kanäle', 'video.play': 'Video ansehen', 'video.yt': 'Auf YouTube öffnen', 'langf.btn': 'Sprachen', 'langf.hint': 'Nachrichten und Videos zeigen in:', 'langf.min': 'Mindestens eine Sprache aktiv lassen', 'feed.title': 'Kostenlose RSS-Feeds', 'feed.text': 'Hol dir FAIND-News in deinen RSS-Reader, deine Website oder App. Kostenlos, stündlich aktualisiert, auch nach Bereichen.', 'feed.all': 'Alle Nachrichten', 'feed.copy': 'Kopieren', 'feed.bysector': 'Feeds nach Bereich', 'feed.youtube': 'YouTube-Videos', 'feed.short': 'RSS-Feed', 'nav.about': 'Über uns', 'intro.title': 'Nachrichten über künstliche Intelligenz, stündlich aktualisiert und immer mit Quelle', 'intro.btn': 'Über FAIND',
       'fact.update': 'Aktualisierung', 'fact.update.v': 'Jede Stunde', 'fact.sources': 'Quellen', 'fact.sources.v': 'Redaktionen und offizielle Blogs', 'fact.langs': 'Sprachen', 'fact.price': 'Preis', 'fact.price.v': 'Kostenlos, ohne Anmeldung',
       'share.title': 'Erzähl von FAIND', 'share.text': 'Wenn dir FAIND hilft, teile es: So hilfst du uns am einfachsten.', 'share.native': 'Teilen', 'share.copy': 'Link kopieren',
       'share.msg': 'FAIND – KI-News, stündlich aktualisiert, immer mit Quelle', 'share.news': 'Meldung teilen', 'share.via': 'via FAIND',
@@ -218,7 +218,7 @@
   Object.keys(EXTRA).forEach(function (l) { Object.keys(EXTRA[l]).forEach(function (k) { I18N[l][k] = EXTRA[l][k]; }); });
 
   var CATS = ['chatbot', 'immagini', 'video', 'musica', 'codice', 'produttivita', 'ricerca', 'hardware', 'regole', 'altro'];
-  var TYPES = ['news', 'tool', 'prezzi', 'download', 'guide', 'convenzioni'];
+  var TYPES = ['news', 'tool', 'prezzi', 'download', 'guide', 'convenzioni', 'video'];
   var CAT_ICON = {
     chatbot: '<path d="M4 5h16v11H9l-5 4z"/>',
     immagini: '<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M20 16l-5-5-8 8"/>',
@@ -244,6 +244,7 @@
     set: function (k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
   };
 
+  var NEWS_LANGS = ['it', 'en', 'fr', 'de'];
   var state = {
     lang: pickLang(),
     sector: 'all',     // settore oppure 'saved'
@@ -251,11 +252,27 @@
     query: '',
     saved: readSaved(),
     readsShown: 12,
+    videosShown: 6,
+    videoGroup: 'all',
+    langs: readLangs(),
     loaded: false,
     feed: null,        // { generated, sources, count } dalla GitHub Action
     feedState: 'loading'
   };
-  var all = [];        // tutte le notizie (redazione + automatiche)
+  var all = [];        // notizie visibili (redazione + automatiche, filtrate per lingua)
+  var allRaw = [], videosRaw = [], videos = [], pagesMap = {};
+  function readLangs() {
+    try {
+      var v = JSON.parse(localStorage.getItem('faind-news-langs') || 'null');
+      if (Array.isArray(v) && v.length) return v.filter(function (l) { return NEWS_LANGS.indexOf(l) > -1; });
+    } catch (e) {}
+    return NEWS_LANGS.slice();
+  }
+  function langOk(n) { return state.langs.indexOf(n.lang || 'it') > -1; }
+  function applyLangFilter() {
+    all = allRaw.filter(langOk);
+    videos = videosRaw.filter(langOk);
+  }
   var sections = { lead: null, important: [], fresh: [], reads: [] };
 
   function pickLang() {
@@ -373,13 +390,28 @@
     return '<div class="' + cls + '" aria-hidden="true"><img src="' + esc(n.image) + '" alt="" ' +
       (eager ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async" referrerpolicy="no-referrer"></div>';
   }
+  /* Video: copertina con play; il lettore YouTube (senza cookie) si carica solo al tocco */
+  function vcard(n) {
+    var flag = flagEl(n);
+    return '<article class="vcard">' +
+      '<div class="vcard__media"><button type="button" class="vcard__play" data-play="' + esc(n.videoId) + '" data-title="' + esc(n.title) + '" aria-label="' + esc(t('video.play') + ': ' + n.title) + '">' +
+        '<img src="' + esc(n.image) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">' +
+        '<span class="vcard__btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>' +
+      '</button></div>' +
+      '<div class="vcard__body">' +
+        '<div class="read__meta"><span class="vcard__ch">' + esc(n.source.name) + '</span>' + (n.official ? officialEl(n) : '') + flag + timeEl(n.date) + '</div>' +
+        '<h3 class="vcard__title"><a ' + linkAttrs(n.link.url) + '>' + esc(n.title) + '</a></h3>' +
+        '<div class="card__foot"><a class="go" ' + linkAttrs(n.link.url) + '>' + esc(t('video.yt')) + ' ' + EXT + '</a><span class="card__btns">' + shareEl(n) + saveEl(n.id) + '</span></div>' +
+      '</div></article>';
+  }
   function card(n) {
+    if (n.kind === 'video') return vcard(n);
     var url = n.link && n.link.url;
     return '<article class="card" data-tag="' + esc(n.tag) + '">' +
-      '<a class="card__media" ' + linkAttrs(url) + ' tabindex="-1" aria-hidden="true">' + thumb(n, 'wide') + '</a>' +
+      '<a class="card__media" ' + titleAttrs(n) + ' tabindex="-1" aria-hidden="true">' + thumb(n, 'wide') + '</a>' +
       '<div class="card__top">' + tagEl(n.tag) + timeEl(n.date) + '</div>' +
       '<div class="read__meta">' + catEl(n.category) + flagEl(n) + officialEl(n) + '</div>' +
-      '<h3 class="card__title"><a ' + linkAttrs(url) + '>' + esc(tx(n.title)) + '</a></h3>' +
+      '<h3 class="card__title"><a ' + titleAttrs(n) + '>' + esc(tx(n.title)) + '</a></h3>' +
       (n.summary ? '<p class="card__summary">' + esc(tx(n.summary)) + '</p>' : '') +
       sourceEl(n.source) + alsoEl(n) +
       '<div class="card__foot">' + actionEl(n.link) + '<span class="card__btns">' + (n.id && !n.isGuide ? shareEl(n) : '') + (n.id ? saveEl(n.id) : '') + '</span></div></article>';
@@ -388,11 +420,20 @@
   /* ------------------------------ Caricamento notizie ------------------------------ */
   var editorial = (DATA.news || []).map(function (n) { var c = {}; for (var k in n) c[k] = n[k]; c.editorial = true; return c; });
 
-  function merge(auto) {
+  function merge(auto, vids, pages) {
     var urls = {};
     editorial.forEach(function (n) { if (n.link) urls[n.link.url] = 1; });
     var extra = (auto || []).filter(function (n) { return n && n.link && !urls[n.link.url] && n.title; });
-    all = editorial.concat(extra).sort(function (a, b) { return toDate(b.date) - toDate(a.date); });
+    allRaw = editorial.concat(extra).sort(function (a, b) { return toDate(b.date) - toDate(a.date); });
+    videosRaw = (vids || []).filter(function (v) { return v && v.videoId && v.title; });
+    pagesMap = pages || {};
+    applyLangFilter();
+  }
+  /* Pagina FAIND della notizia (se esiste): il titolo porta lì, il pulsante alla fonte */
+  function pageOf(n) { return n.page || pagesMap[n.id] || ''; }
+  function titleAttrs(n) {
+    var pg = pageOf(n);
+    return pg ? 'href="' + esc(pg) + '"' : linkAttrs(n.link && n.link.url);
   }
 
   function loadbar(on) {
@@ -418,10 +459,10 @@
     fetchNews(false).then(function (json) {
       state.feed = { generated: json.generated, sources: json.sources, count: (json.items || []).length };
       state.feedState = 'ok';
-      merge(json.items);
+      merge(json.items, json.videos, json.pages);
     }).catch(function (e) {
       state.feedState = e && e.message === 'local' ? 'local' : 'error';
-      merge([]);
+      merge([], [], {});
     }).then(function () {
       state.loaded = true;
       loadbar(false);
@@ -437,7 +478,7 @@
     fetchNews(true).then(function (json) {
       if (!state.feed || json.generated === state.feed.generated) return;
       state.feed = { generated: json.generated, sources: json.sources, count: (json.items || []).length };
-      merge(json.items);
+      merge(json.items, json.videos, json.pages);
       renderAll();
     }).catch(function () {});
   }
@@ -492,7 +533,7 @@
     var items = pool.map(function (n) {
       return '<li class="ticker__item"><time datetime="' + esc(n.date) + '">' + esc(shortWhen(n.date)) + '</time>' +
         (isImportant(n) ? '<span class="star" aria-hidden="true">★</span>' : '') +
-        '<a ' + linkAttrs(n.link && n.link.url) + '>' + esc(tx(n.title)) + '</a></li>';
+        '<a ' + titleAttrs(n) + '>' + esc(tx(n.title)) + '</a></li>';
     }).join('');
     var track = $('#ticker');
     // Seconda copia per uno scorrimento continuo, nascosta agli screen reader
@@ -505,9 +546,9 @@
     if (!n) { el.hidden = true; return; }
     el.hidden = false;
     el.innerHTML =
-      '<a class="lead__media" ' + linkAttrs(n.link.url) + ' tabindex="-1" aria-hidden="true">' + thumb(n, 'lead', true) + '</a>' +
+      '<a class="lead__media" ' + titleAttrs(n) + ' tabindex="-1" aria-hidden="true">' + thumb(n, 'lead', true) + '</a>' +
       '<div class="read__meta">' + tagEl(n.tag) + catEl(n.category) + flagEl(n) + officialEl(n) + '</div>' +
-      '<h2 class="lead__title"><a ' + linkAttrs(n.link.url) + '>' + esc(tx(n.title)) + '</a></h2>' +
+      '<h2 class="lead__title"><a ' + titleAttrs(n) + '>' + esc(tx(n.title)) + '</a></h2>' +
       (n.summary ? '<p class="lead__summary">' + esc(tx(n.summary)) + '</p>' : '') +
       '<div class="lead__foot">' +
         '<div><div class="meta">' + timeEl(n.date) + sourceEl(n.source) + '</div>' + alsoEl(n) + '</div>' +
@@ -522,7 +563,7 @@
       return '<li class="wire__item">' +
         '<div class="wire__when"><time datetime="' + esc(n.date) + '">' + when + '</time></div>' +
         '<div class="wire__body"><div class="read__meta">' + tagEl(n.tag) + flagEl(n) + '</div>' +
-          '<h3 class="wire__headline"><a ' + linkAttrs(n.link.url) + '>' + esc(tx(n.title)) + '</a></h3>' +
+          '<h3 class="wire__headline"><a ' + titleAttrs(n) + '>' + esc(tx(n.title)) + '</a></h3>' +
           sourceEl(n.source) +
         '</div>' + thumb(n, 'sm') + '</li>';
     }).join('');
@@ -544,7 +585,7 @@
         thumb(n, 'md') +
         '<div class="read__body"><div class="read__meta">' + tagEl(n.tag) + catEl(n.category) + flagEl(n) +
           '<span class="read__when">' + timeEl(n.date) + '</span></div>' +
-          '<h3 class="read__title"><a ' + linkAttrs(n.link.url) + '>' + esc(tx(n.title)) + '</a></h3>' +
+          '<h3 class="read__title"><a ' + titleAttrs(n) + '>' + esc(tx(n.title)) + '</a></h3>' +
           sourceEl(n.source) + '</div>' +
         saveEl(n.id) + '</li>';
     }).join('');
@@ -554,7 +595,7 @@
   /* Settori: solo quelli che hanno contenuti, con il conteggio */
   function pool() {
     var guides = (DATA.guides || []).map(function (g) { var c = {}; for (var k in g) c[k] = g[k]; c.isGuide = true; return c; });
-    return all.concat(guides);
+    return all.concat(videos, guides);
   }
   function renderSectors() {
     var p = pool(), counts = {};
@@ -668,10 +709,26 @@
     }).join('');
   }
 
+  function renderVideos() {
+    var box = $('#video');
+    box.hidden = !videos.length;
+    if (!videos.length) return;
+    var groups = ['all', 'it', 'intl', 'official'], counts = { all: videos.length };
+    videos.forEach(function (v) { var g = v.group || 'intl'; counts[g] = (counts[g] || 0) + 1; });
+    if (state.videoGroup !== 'all' && !counts[state.videoGroup]) state.videoGroup = 'all';
+    $('#videoGroups').innerHTML = groups.filter(function (g) { return counts[g]; }).map(function (g) {
+      return '<button type="button" class="chip" data-vgroup="' + g + '" aria-pressed="' + (state.videoGroup === g) + '">' +
+        esc(t('video.' + g)) + ' <span class="chip__count">' + counts[g] + '</span></button>';
+    }).join('');
+    var list = videos.filter(function (v) { return state.videoGroup === 'all' || (v.group || 'intl') === state.videoGroup; });
+    $('#videos').innerHTML = list.slice(0, state.videosShown).map(vcard).join('');
+    $('#moreVideos').hidden = list.length <= state.videosShown;
+  }
+
   function renderNews() {
     if (!state.loaded) return;
     buildSections();
-    renderStatus(); renderLead(); renderWire(); renderImportant(); renderReads(); renderTicker();
+    renderStatus(); renderLead(); renderWire(); renderImportant(); renderVideos(); renderReads(); renderTicker();
     renderSectors(); renderResults();
   }
   function renderAll() {
@@ -830,15 +887,28 @@
         return;
       }
       if ((el = e.target.closest('[data-copy]'))) { copyText(el.dataset.copy); return; }
+      if ((el = e.target.closest('[data-play]'))) {
+        var vid = el.getAttribute('data-play');
+        var frame = document.createElement('iframe');
+        frame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(vid) + '?autoplay=1&rel=0&modestbranding=1';
+        frame.title = el.getAttribute('data-title') || 'YouTube';
+        frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        frame.allowFullscreen = true;
+        frame.className = 'vcard__frame';
+        el.parentNode.replaceChild(frame, el);
+        return;
+      }
+      if ((el = e.target.closest('[data-vgroup]'))) { state.videoGroup = el.dataset.vgroup; state.videosShown = 6; renderVideos(); return; }
       if ((el = e.target.closest('[data-share-site]'))) {
         nativeShare({ title: 'FAIND – Flash AI News Daily', text: t('share.msg'), url: SITE }, SITE);
         return;
       }
       if ((el = e.target.closest('[data-share-news]'))) {
         var sid = el.getAttribute('data-share-news');
-        var item = all.filter(function (x) { return x.id === sid; })[0];
+        var item = all.concat(videos).filter(function (x) { return x.id === sid; })[0];
         if (item) {
-          var title = tx(item.title), url = item.link && item.link.url;
+          var title = tx(item.title), pg = pageOf(item);
+          var url = pg ? SITE + pg : (item.link && item.link.url);
           nativeShare({ title: title, text: title + ' (' + t('share.via') + ')', url: url },
             title + ' ' + url + ' — ' + t('share.via') + ' ' + SITE);
         }
@@ -850,6 +920,26 @@
     });
 
     $('#moreReads').addEventListener('click', function () { state.readsShown += 12; renderReads(); });
+    $('#moreVideos').addEventListener('click', function () { state.videosShown += 6; renderVideos(); });
+
+    // Filtro lingue delle notizie (indipendente dalla lingua dell'interfaccia)
+    var lfBtn = $('#langfBtn'), lfMenu = $('#langfMenu');
+    function lfOpen(open) { lfMenu.hidden = !open; lfBtn.setAttribute('aria-expanded', String(open)); }
+    lfBtn.addEventListener('click', function (e) { e.stopPropagation(); lfOpen(lfMenu.hidden); });
+    document.addEventListener('click', function (e) { if (!lfMenu.hidden && !e.target.closest('#langf')) lfOpen(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !lfMenu.hidden) { lfOpen(false); lfBtn.focus(); } });
+    $$('#langfMenu input').forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        var chosen = $$('#langfMenu input').filter(function (c) { return c.checked; }).map(function (c) { return c.value; });
+        if (!chosen.length) { cb.checked = true; toast(t('langf.min')); return; }
+        state.langs = chosen;
+        try { localStorage.setItem('faind-news-langs', JSON.stringify(chosen)); } catch (e) {}
+        syncLangf();
+        applyLangFilter();
+        state.readsShown = 12; state.videosShown = 6;
+        renderNews();
+      });
+    });
     $('#tickerClose').addEventListener('click', function () { setTicker(false, true); $('#tickerOpen').focus(); });
     // Su telefono e tablet un tocco sulla barra (fuori dai titoli) la ferma o la fa ripartire
     $('#bticker').addEventListener('click', function (e) {
@@ -926,6 +1016,12 @@
     document.addEventListener('visibilitychange', function () { if (!document.hidden) { tickTimes(); refresh(); } });
   }
 
+  function syncLangf() {
+    $$('#langfMenu input').forEach(function (c) { c.checked = state.langs.indexOf(c.value) > -1; });
+    $('#langfCount').textContent = state.langs.length + '/' + NEWS_LANGS.length;
+    $('#langf').classList.toggle('is-filtered', state.langs.length < NEWS_LANGS.length);
+  }
+
   function tickTimes() {
     $$('time[data-rel]').forEach(function (el) { el.textContent = relTime(el.getAttribute('data-rel')); });
   }
@@ -934,6 +1030,7 @@
   applyTheme(document.documentElement.getAttribute('data-theme') || 'light', false);
   setTicker(session.get('faind-bticker') !== 'off', false);
   bind();
+  syncLangf();
   applyLang(state.lang);
   $('#year').textContent = new Date().getFullYear();
   load();
