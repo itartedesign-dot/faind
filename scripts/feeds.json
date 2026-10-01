@@ -146,5 +146,127 @@
       "lang": "en",
       "group": "intl"
     }
-  ]
+  ],
+  "_noteSpotlight": "Sezioni Focus in fondo alla home: per ogni tema 1 video + 1 notizia (la più ripresa dalle testate). 'keywords' = parole che identificano il tema. 'feeds' e 'youtube' = fonti extra usate SOLO per quel tema. 'requireAI': le notizie delle fonti extra devono parlare anche di AI/tecnologia.",
+  "spotlight": {
+    "newsMaxAgeDays": 14,
+    "videoMaxAgeDays": 120,
+    "topics": [
+      {
+        "key": "robot",
+        "requireAI": false,
+        "keywords": "robot|robotic|umanoid|humanoid|androide|drone|guida autonoma|self-driving|autonomous (vehicle|car|driving)|robotaxi|waymo|optimus|unitree|boston dynamics|esoscheletr|exoskeleton|satellit|\\bspace\\b|spazial|nasa|\\besa\\b|\\bmars\\b|marte|rover|orbit",
+        "feeds": [
+          {
+            "name": "The Robot Report",
+            "url": "https://www.therobotreport.com/feed/",
+            "lang": "en"
+          },
+          {
+            "name": "ScienceDaily Robotics",
+            "url": "https://www.sciencedaily.com/rss/computers_math/robotics.xml",
+            "lang": "en"
+          }
+        ],
+        "youtube": [
+          {
+            "name": "Boston Dynamics",
+            "handle": "@BostonDynamics",
+            "lang": "en"
+          },
+          {
+            "name": "Unitree Robotics",
+            "id": "UCsMbp4V8oxzHCMdOUP-3oWw",
+            "lang": "en"
+          }
+        ]
+      },
+      {
+        "key": "domus",
+        "requireAI": true,
+        "keywords": "smartphone|iphone|android|\\bpixel\\b|galaxy|smart home|casa intelligente|domotic|alexa|google home|homepod|\\bsiri\\b|elettrodomestic|appliance|frigorifer|fridge|lavatric|washing machine|aspirapolvere|robot vacuum|roomba|termostat|thermostat|smart ?tv|televisor|wearable|smartwatch|smart glasses|occhiali smart|auricolar|earbuds|airpods|in casa|at home|household|haushalt|maison",
+        "feeds": [],
+        "youtube": []
+      },
+      {
+        "key": "medicina",
+        "requireAI": true,
+        "keywords": "medic|health|salute|sanit|ospedal|hospital|patient|pazient|diagnos|cancer|cancro|tumor|tumour|\\bdrug|farmac|protein|alphafold|clinic|disease|malatti|surgery|chirurg|radiolog|genom|\\bdna\\b|vaccin|alzheimer|cardio|biotech|antibiot|infezion|infection|\\bvirus|therap|terapi|\\bcures?\\b|neuro|brain|cervello|biolog|molecol|molecul|medizin|médic|santé|gesundheit",
+        "feeds": [
+          {
+            "name": "ScienceDaily Medical Technology",
+            "url": "https://www.sciencedaily.com/rss/health_medicine/medical_technology.xml",
+            "lang": "en"
+          }
+        ],
+        "youtube": []
+      },
+      {
+        "key": "lavoro",
+        "requireAI": true,
+        "keywords": "lavoro|lavorator|occupazion|disoccupaz|licenzi|assunzion|\\bjobs?\\b|workforce|worker|employment|employee|layoff|hiring|recruit|career|carriera|competenze|sindacat|salari|\\bwages?\\b|arbeit|emploi",
+        "feeds": [],
+        "youtube": []
+      },
+      {
+        "key": "clima",
+        "requireAI": false,
+        "keywords": "clima|climate|carbon|\\bco2\\b|emission|emissioni|inquinament|pollution|rinnovabil|renewable|solar|solare|eolic|\\bwind power|sostenibil|sustainab|ambient|environment|riscaldamento globale|global warming|protest|siccit|drought|alluvion|flood|wildfire|incend|consumo energetico|energy use|water use",
+        "feeds": [
+          {
+            "name": "Carbon Brief",
+            "url": "https://www.carbonbrief.org/feed/",
+            "lang": "en"
+          },
+          {
+            "name": "Grist",
+            "url": "https://grist.org/feed/",
+            "lang": "en"
+          }
+        ],
+        "youtube": [
+          {
+            "name": "Just Have a Think",
+            "id": "UCRBwLPbXGsI2cJe9W1zfSjQ",
+            "lang": "en"
+          }
+        ]
+      }
+    ]
+  },
+  "_noteJobs": "Offerte di lavoro per la sezione Job. Aggiornate ogni 'refreshHours' ore (le fonti chiedono di non interrogarle troppo spesso). 'lang' collega le offerte al filtro Lingue del sito: Italia=it, Francia=fr, Germania=de, il resto (Europa, remoto, mondo)=en.",
+  "jobs": {
+    "refreshHours": 6,
+    "maxAgeDays": 30,
+    "jobicy": [
+      {
+        "geo": "italy",
+        "lang": "it"
+      },
+      {
+        "geo": "france",
+        "lang": "fr"
+      },
+      {
+        "geo": "germany",
+        "lang": "de"
+      },
+      {
+        "geo": "europe",
+        "lang": "en"
+      },
+      {
+        "geo": "anywhere",
+        "lang": "en"
+      }
+    ],
+    "arbeitnow": {
+      "url": "https://www.arbeitnow.com/api/job-board-api",
+      "lang": "de"
+    },
+    "remotive": {
+      "url": "https://remotive.com/api/remote-jobs?search=ai&limit=150",
+      "lang": "en"
+    }
+  }
 }

@@ -100,10 +100,10 @@ function pageHtml(n, related, sameCat) {
   <link rel="icon" href="../assets/favicon.png" type="image/png">
   <link rel="alternate" type="application/rss+xml" title="FAIND – Notizie AI" href="../feed.xml">
   <script>(function(){var t=null;try{t=localStorage.getItem('faind-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+  <link rel="stylesheet" href="../assets/fonts/archivo.css">
   <link rel="stylesheet" href="../style.css">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="apple-touch-icon" href="../assets/icon-180.png">
   <script type="application/ld+json">${JSON.stringify(crumbs)}</script>
 </head>
 <body class="np-page">
@@ -135,7 +135,7 @@ function pageHtml(n, related, sameCat) {
       <a class="btn btn--ghost np__home" href="../">Tutte le notizie di oggi su FAIND</a>
     </aside>
   </main>
-  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="../#chi-siamo">Chi siamo</a> · <a href="../feed.xml">Feed RSS</a></p></div></footer>
+  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="../#chi-siamo">Chi siamo</a> · <a href="../feed.xml">Feed RSS</a> · <a href="../privacy.html">Privacy e note legali</a></p></div></footer>
 </body>
 </html>`;
 }
@@ -166,6 +166,31 @@ ${entries}
 </rss>`;
 }
 
+/* ------------------------------ Caratteri tipografici sul nostro sito ------------------------------ */
+// I file del carattere Archivo vengono scaricati una volta per giro e serviti da FAIND stesso:
+// così i visitatori non contattano Google Fonts (privacy, GDPR) e il sito è più veloce.
+const FONT_CSS = 'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap';
+export async function selfHostFonts(root) {
+  const dir = path.join(root, 'assets/fonts');
+  const ua = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15';
+  const res = await fetch(FONT_CSS, { headers: { 'user-agent': ua } });
+  if (!res.ok) throw new Error('CSS font HTTP ' + res.status);
+  let css = await res.text();
+  const urls = [...new Set([...css.matchAll(/url\((https:\/\/fonts\.gstatic\.com\/[^)]+\.woff2)\)/g)].map(m => m[1]))];
+  if (!urls.length) throw new Error('nessun file woff2');
+  await mkdir(dir, { recursive: true });
+  let i = 0;
+  for (const u of urls) {
+    const name = `archivo-${i++}.woff2`;
+    const r = await fetch(u, { headers: { 'user-agent': ua } });
+    if (!r.ok) throw new Error('font HTTP ' + r.status);
+    await writeFile(path.join(dir, name), Buffer.from(await r.arrayBuffer()));
+    css = css.split(u).join(name);
+  }
+  await writeFile(path.join(dir, 'archivo.css'), '/* Archivo (SIL Open Font License) servito da FAIND */\n' + css);
+  return urls.length;
+}
+
 /* ------------------------------ Build ------------------------------ */
 export async function buildSite(out, root) {
   const data = await loadEditorial(root);
@@ -176,6 +201,9 @@ export async function buildSite(out, root) {
     if (!it.page) it.page = `n/${slugify(it.title)}-${shortId(it.id)}.html`;
   }
   out.pages = Object.fromEntries(editorial.map(n => [n.id, n.page]));
+  // Le notizie del Focus che sono anche notizie principali puntano alla loro pagina
+  const byId = new Map(out.items.map(i => [i.id, i]));
+  for (const sp of out.spotlight || []) if (sp.news && byId.has(sp.news.id)) sp.news.page = byId.get(sp.news.id).page;
 
   const news = [...editorial, ...out.items.filter(i => !edUrls.has(i.link.url))]
     .sort((a, b) => toDate(b.date) - toDate(a.date));
@@ -206,6 +234,9 @@ export async function buildSite(out, root) {
       `<url><loc>${SITE}${n.page}</loc><lastmod>${toDate(n.date).toISOString().slice(0, 10)}</lastmod></url>`));
   await writeFile(path.join(root, 'sitemap.xml'),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
+
+  try { console.log(`🔤 caratteri serviti da FAIND: ${await selfHostFonts(root)} file`); }
+  catch (e) { console.warn('🔤 caratteri non scaricati (si usano quelli di sistema):', e.message); }
 
   console.log(`📄 pagine: ${news.length} (${news.filter(indexable).length} indicizzabili) · feed RSS: ${Object.keys(CATS).length}`);
 }

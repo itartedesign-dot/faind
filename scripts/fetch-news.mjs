@@ -305,6 +305,131 @@ async function collectVideos(cfg, prevJson, now) {
   return { videos, channels: cache };
 }
 
+/* ------------------------------ Focus (robot, medicina, lavoro, clima) ------------------------------ */
+// Per ogni tema: 1 video (il più recente, anche più vecchio se non ce ne sono di nuovi)
+// e 1 notizia (la più ripresa dalle testate). Mai lo stesso contenuto in due temi.
+export function pickSpotlight(topics, newsPool, videoPool, now) {
+  const usedN = new Set(), usedV = new Set(), out = [];
+  for (const t of topics) {
+    const re = new RegExp(t.keywords, 'i');
+    const text = (n) => `${n.title} ${n.summary || ''}`;
+    const news = newsPool.filter(n => !usedN.has(n.link.url) && (n._topic === t.key || re.test(text(n))))
+      .sort((a, b) => (b.coverage || 1) - (a.coverage || 1) || (!!b.image - !!a.image) || b.date.localeCompare(a.date));
+    const videos = videoPool.filter(v => !usedV.has(v.id) && (v._topic === t.key || re.test(text(v))))
+      .sort((a, b) => b.date.localeCompare(a.date));
+    const n = news[0] || null, v = videos[0] || null;
+    if (n) usedN.add(n.link.url);
+    if (v) usedV.add(v.id);
+    const clean = (x) => { if (!x) return null; const { _topic, ...rest } = x; return rest; };
+    out.push({ key: t.key, news: clean(n), video: clean(v) });
+  }
+  return out;
+}
+
+async function collectSpotlight(cfg, items, videos, prevJson, now) {
+  const sp = cfg.spotlight;
+  if (!sp || !sp.topics) return [];
+  const cache = prevJson.channels || {};
+  const extraNews = [], extraVideos = [];
+  for (const t of sp.topics) {
+    const re = new RegExp(t.keywords, 'i');
+    const res = await Promise.allSettled((t.feeds || []).map(async (feed) => {
+      const xml = await get(feed.url);
+      return parseFeed(xml).map(r => normalize(r, { ...feed, filter: false }, now, sp.newsMaxAgeDays || 14)).filter(Boolean)
+        .filter(n => re.test(n.title + ' ' + n.summary) || /robot|carbon|climate|grist/i.test(feed.name))
+        .filter(n => !t.requireAI || isAI(n.title + ' ' + n.summary))
+        .map(n => ({ ...n, _topic: t.key, also: [], coverage: 1 }));
+    }));
+    res.forEach((r, i) => r.status === 'fulfilled'
+      ? (extraNews.push(...r.value), console.log(`✓ ★ ${t.key} · ${t.feeds[i].name}: ${r.value.length}`))
+      : console.warn(`✗ ★ ${t.key} · ${t.feeds[i].name}: ${r.reason?.message || r.reason}`));
+    const vres = await Promise.allSettled((t.youtube || []).map(async (ch) => {
+      const id = await resolveChannel(ch, cache);
+      const xml = await get(`https://www.youtube.com/feeds/videos.xml?channel_id=${id}`);
+      return parseYouTube(xml).map(r => normalizeVideo(r, { ...ch, group: 'focus' }, now, sp.videoMaxAgeDays || 120))
+        .filter(Boolean).map(v => ({ ...v, _topic: t.key }));
+    }));
+    vres.forEach((r, i) => r.status === 'fulfilled'
+      ? (extraVideos.push(...r.value), console.log(`✓ ★▶ ${t.key} · ${t.youtube[i].name}: ${r.value.length}`))
+      : console.warn(`✗ ★▶ ${t.key} · ${t.youtube[i].name}: ${r.reason?.message || r.reason}`));
+  }
+  // Se un feed tematico non risponde, si recuperano i contenuti del giro precedente
+  for (const s of prevJson.spotlight || []) {
+    if (s.news && !extraNews.some(n => n.id === s.news.id) && now - new Date(s.news.date).getTime() < (sp.newsMaxAgeDays || 14) * 864e5)
+      extraNews.push({ ...s.news, _topic: s.key });
+    if (s.video && !extraVideos.some(v => v.id === s.video.id)) extraVideos.push({ ...s.video, _topic: s.key });
+  }
+  // La "più ripresa": raggruppo le notizie tematiche con quelle principali
+  const pool = cluster([...items.map(i => ({ ...i, also: [...(i.also || [])] })), ...extraNews]);
+  const picks = pickSpotlight(sp.topics, pool, [...videos, ...extraVideos], now);
+  console.log('★ focus:', picks.map(p => `${p.key}=${p.news ? 'N' : '-'}${p.video ? 'V' : '-'}`).join(' '));
+  return picks;
+}
+
+/* ------------------------------ Job: ruoli AI più richiesti ------------------------------ */
+// Fonti pubbliche e gratuite pensate per essere riprese (citate sul sito).
+// Ogni offerta porta al suo annuncio originale, dove ci si candida.
+export const ROLES = [
+  ['ml', /machine learning|\bml\b|mlops|deep learning/i],
+  ['ai', /\bai\b.*(engineer|developer|ingegner|sviluppator|ingénieur|entwickler)|genai|generative ai|\bllm|gen ai|künstliche intelligenz|intelligenza artificiale|intelligence artificielle/i],
+  ['ds', /data scien|datenwissenschaft/i],
+  ['de', /data engineer|analytics engineer|daten ?ingenieur/i],
+  ['da', /data analyst|business intelligence|\bbi (analyst|developer)|datenanalyst|analista dati/i],
+  ['research', /research (scientist|engineer)|ricercator|chercheur|forscher/i],
+  ['cv', /computer vision|vision engineer|bildverarbeitung/i],
+  ['nlp', /\bnlp\b|natural language|linguistic/i],
+  ['pm', /product (manager|owner|lead).*\b(ai|ml|data)\b|\b(ai|ml|data)\b.*product (manager|owner|lead)/i],
+  ['arch', /(solutions?|cloud|data|ai) architect/i],
+  ['prompt', /prompt/i],
+  ['consult', /\b(ai|ml|data)\b.*(consultant|consulente|berater|sales|account)|(consultant|consulente|berater).*\b(ai|ml)\b/i]
+];
+export function roleOf(title) {
+  for (const [key, re] of ROLES) if (re.test(title)) return key;
+  return '';
+}
+function job(src, o) {
+  const title = stripHtml(o.title || '');
+  const role = roleOf(title);
+  if (!role || !/^https?:\/\//.test(o.url || '')) return null;
+  return {
+    id: 'j-' + hash(o.url), role, title, company: stripHtml(o.company || ''),
+    where: stripHtml(o.where || ''), lang: o.lang, url: o.url, source: src,
+    date: new Date(o.date || Date.now()).toISOString()
+  };
+}
+async function collectJobs(cfg, prevJson, now) {
+  const jc = cfg.jobs;
+  if (!jc) return { jobs: [], jobsUpdated: null };
+  if (prevJson.jobsUpdated && prevJson.jobs && now - new Date(prevJson.jobsUpdated).getTime() < (jc.refreshHours || 6) * 36e5) {
+    return { jobs: prevJson.jobs, jobsUpdated: prevJson.jobsUpdated };
+  }
+  const tasks = [];
+  for (const g of jc.jobicy || []) tasks.push(['Jobicy ' + g.geo, async () => {
+    const data = JSON.parse(await get(`https://jobicy.com/api/v2/remote-jobs?count=100&geo=${encodeURIComponent(g.geo)}`));
+    return (data.jobs || []).map(j => job('Jobicy', { title: j.jobTitle, company: j.companyName, where: j.jobGeo, url: j.url, date: j.pubDate, lang: g.lang }));
+  }]);
+  if (jc.arbeitnow) tasks.push(['Arbeitnow', async () => {
+    const data = JSON.parse(await get(jc.arbeitnow.url));
+    return (data.data || []).map(j => job('Arbeitnow', { title: j.title, company: j.company_name, where: j.remote ? 'Remote' : j.location, url: j.url, date: j.created_at ? j.created_at * 1000 : null, lang: jc.arbeitnow.lang }));
+  }]);
+  if (jc.remotive) tasks.push(['Remotive', async () => {
+    const data = JSON.parse(await get(jc.remotive.url));
+    return (data.jobs || []).map(j => job('Remotive', { title: j.title, company: j.company_name, where: j.candidate_required_location, url: j.url, date: j.publication_date, lang: jc.remotive.lang }));
+  }]);
+  const res = await Promise.allSettled(tasks.map(([, fn]) => fn()));
+  const byId = new Map();
+  let ok = 0;
+  res.forEach((r, i) => {
+    if (r.status === 'fulfilled') { ok++; const list = r.value.filter(Boolean); list.forEach(j => byId.set(j.id, j)); console.log(`✓ 💼 ${tasks[i][0]}: ${list.length}`); }
+    else console.warn(`✗ 💼 ${tasks[i][0]}: ${r.reason?.message || r.reason}`);
+  });
+  if (!ok && prevJson.jobs) return { jobs: prevJson.jobs, jobsUpdated: prevJson.jobsUpdated };
+  const jobs = [...byId.values()]
+    .filter(j => now - new Date(j.date).getTime() < (jc.maxAgeDays || 30) * 864e5)
+    .sort((a, b) => b.date.localeCompare(a.date)).slice(0, 500);
+  return { jobs, jobsUpdated: new Date(now).toISOString() };
+}
+
 /* ------------------------------ Main ------------------------------ */
 async function main() {
   const cfg = JSON.parse(await readFile(path.join(ROOT, 'scripts/feeds.json'), 'utf8'));
@@ -375,9 +500,15 @@ async function main() {
     console.warn('Nessun feed raggiungibile: mantengo lo storico.');
   }
   const { videos, channels } = await collectVideos(cfg, prevJson, now);
+  let jobsData = { jobs: prevJson.jobs || [], jobsUpdated: prevJson.jobsUpdated || null };
+  try { jobsData = await collectJobs(cfg, prevJson, now); }
+  catch (e) { console.warn('Job non aggiornati:', e.message); }
+  let spotlight = [];
+  try { spotlight = await collectSpotlight(cfg, items, videos, { ...prevJson, channels }, now); }
+  catch (e) { console.warn('Focus non generato:', e.message); spotlight = prevJson.spotlight || []; }
 
   const sources = new Set(items.flatMap(i => [i.source.name, ...i.also.map(a => a.name)]));
-  const out = { generated: new Date(now).toISOString(), sources: sources.size, count: items.length, items, videos, channels };
+  const out = { generated: new Date(now).toISOString(), sources: sources.size, count: items.length, items, videos, channels, spotlight, jobs: jobsData.jobs, jobsUpdated: jobsData.jobsUpdated };
 
   // Pagine notizia, feed RSS e sitemap (aggiunge a ogni notizia il campo "page")
   try { await buildSite(out, ROOT); }
