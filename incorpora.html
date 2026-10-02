@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Widget notizie AI gratis per il tuo sito | FAIND</title>
+  <meta name="description" content="Aggiungi al tuo sito o blog il widget gratuito Notizie AI by FAIND: le ultime notizie sull'intelligenza artificiale, aggiornate ogni ora, in italiano, inglese, francese o tedesco. Basta copiare una riga di codice.">
+  <link rel="canonical" href="https://itartedesign-dot.github.io/faind/incorpora.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Widget notizie AI gratis per il tuo sito">
+  <meta property="og:description" content="Le ultime notizie sull'intelligenza artificiale sul tuo sito, aggiornate ogni ora. Gratis, una riga di codice.">
+  <meta property="og:url" content="https://itartedesign-dot.github.io/faind/incorpora.html">
+  <meta property="og:image" content="https://itartedesign-dot.github.io/faind/assets/og-image.png">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <script>(function(){var t=null;try{t=localStorage.getItem('faind-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
+  <link rel="stylesheet" href="assets/fonts/archivo.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .lsw { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 13.5px; margin-bottom: 18px; }
+    .lsw__lab { color: var(--muted); } .lsw button { background: none; border: 0; padding: 0; font: inherit; color: var(--ink); font-weight: 600; text-decoration: underline; cursor: pointer; }
+    .lsw button[aria-current="true"] { font-weight: 800; color: #4293B9; text-decoration: none; }
+    .emb { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 380px); gap: 28px; align-items: start; margin-top: 22px; }
+    .emb__opts { display: grid; gap: 14px; }
+    .emb label { display: grid; gap: 6px; font-weight: 700; font-size: 14.5px; color: var(--ink); }
+    .emb select { font: inherit; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); }
+    .emb textarea { width: 100%; box-sizing: border-box; height: 190px; font: 13px/1.5 ui-monospace, Menlo, Consolas, monospace; padding: 12px; border-radius: 10px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); resize: vertical; }
+    .emb iframe { width: 100%; border: 1px solid var(--rule); border-radius: 14px; display: block; background: var(--surface); }
+    .emb__copy { width: 100%; }
+    @media (max-width: 760px) { .emb { grid-template-columns: minmax(0, 1fr); } }
+  </style>
+  <script src="stats.js" defer></script>
+</head>
+<body class="np-page">
+  <header class="masthead">
+    <div class="masthead__bar wrap">
+      <a class="brand" href="./" aria-label="FAIND — Home"><img class="brand__img" src="assets/logo.webp" width="510" height="180" alt="FAIND – Flash AI News Daily"></a>
+      <a class="np__back" href="./" data-t="back">← Torna alle notizie</a>
+    </div>
+  </header>
+
+  <main class="wrap legal">
+    <p class="lsw"><span class="lsw__lab" data-t="pageLang">Lingua della pagina:</span>
+      <button type="button" data-lang="it">Italiano</button> <button type="button" data-lang="en">English</button> <button type="button" data-lang="fr">Français</button> <button type="button" data-lang="de">Deutsch</button></p>
+    <h1 class="legal__title" data-t="h1">Notizie AI by FAIND sul tuo sito</h1>
+    <p class="legal__lede" data-t="lede">Un riquadro gratuito con le ultime notizie sull'intelligenza artificiale, aggiornate ogni ora e sempre con la fonte. Si aggiunge a qualsiasi sito o blog copiando poche righe di codice: nessuna registrazione, nessun costo, nessuna pubblicità.</p>
+
+    <div class="emb">
+      <div class="emb__opts">
+        <label><span data-t="optN">Quante notizie</span>
+          <select id="oN"><option>3</option><option>4</option><option selected>5</option><option>6</option><option>8</option><option>10</option></select></label>
+        <label><span data-t="optLang">Lingua delle notizie</span>
+          <select id="oLang"><option value="it">Italiano</option><option value="en">English</option><option value="fr">Français</option><option value="de">Deutsch</option></select></label>
+        <label><span data-t="optTheme">Aspetto</span>
+          <select id="oTheme"><option value="light" data-t="thLight">Chiaro</option><option value="dark" data-t="thDark">Scuro</option><option value="auto" data-t="thAuto">Automatico (segue il dispositivo)</option></select></label>
+        <label><span data-t="code">Codice da copiare</span>
+          <textarea id="code" readonly spellcheck="false"></textarea></label>
+        <button type="button" class="btn btn--primary emb__copy" id="copy" data-t="copy">Copia il codice</button>
+      </div>
+      <div>
+        <iframe id="prev" title="Notizie AI by FAIND" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <section>
+      <h2 data-t="howT">Come si usa</h2>
+      <p data-t="how">Scegli quante notizie mostrare, la lingua e l'aspetto, poi copia il codice e incollalo nel punto della pagina in cui vuoi il riquadro. Funziona con WordPress (blocco "HTML personalizzato"), Wix, Squarespace, Blogger e con qualsiasi sito che accetti codice HTML.</p>
+      <h2 data-t="rulesT">Le condizioni</h2>
+      <p data-t="rules">Il widget è gratuito anche per siti commerciali. Chiediamo solo di lasciare il link "Notizie AI by FAIND" sotto il riquadro. Ogni titolo porta alla scheda della notizia su FAIND, dove trovi sempre la testata e il link all'articolo originale. Il widget non usa cookie e non raccoglie dati dei tuoi visitatori.</p>
+    </section>
+
+    <p class="legal__back"><a class="btn btn--primary" href="./" data-t="home">Torna alle notizie di FAIND</a></p>
+  </main>
+
+  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="./#chi-siamo">Chi siamo</a> · <a href="redazione.html">Chi c'è dietro FAIND</a> · <a href="feed.xml">Feed RSS</a> · <a href="privacy.html">Privacy e note legali</a></p></div></footer>
+
+<script>
+(function () {
+  var SITE = 'https://itartedesign-dot.github.io/faind/';
+  var T = {
+    it: { back: '← Torna alle notizie', pageLang: 'Lingua della pagina:', h1: 'Notizie AI by FAIND sul tuo sito', credit: 'Notizie AI by FAIND', copy: 'Copia il codice', copied: 'Copiato ✓', home: 'Torna alle notizie di FAIND',
+      optN: 'Quante notizie', optLang: 'Lingua delle notizie', optTheme: 'Aspetto', thLight: 'Chiaro', thDark: 'Scuro', thAuto: 'Automatico (segue il dispositivo)', code: 'Codice da copiare', howT: 'Come si usa', rulesT: 'Le condizioni' },
+    en: { back: '← Back to the news', pageLang: 'Page language:', h1: 'AI news by FAIND on your website', credit: 'AI news by FAIND', copy: 'Copy the code', copied: 'Copied ✓', home: 'Back to FAIND news',
+      lede: 'A free box with the latest artificial intelligence news, updated every hour and always with the source. Add it to any website or blog by copying a few lines of code: no sign-up, no cost, no advertising.',
+      optN: 'How many stories', optLang: 'News language', optTheme: 'Appearance', thLight: 'Light', thDark: 'Dark', thAuto: 'Automatic (follows the device)', code: 'Code to copy', howT: 'How to use it',
+      how: 'Choose how many stories to show, the language and the appearance, then copy the code and paste it where you want the box on your page. It works with WordPress ("Custom HTML" block), Wix, Squarespace, Blogger and any site that accepts HTML code.',
+      rulesT: 'Terms', rules: 'The widget is free, including for commercial sites. We only ask you to keep the "AI news by FAIND" link below the box. Each headline opens the story page on FAIND, which always shows the outlet and the link to the original article. The widget uses no cookies and collects no data about your visitors.' },
+    fr: { back: '← Retour aux actualités', pageLang: 'Langue de la page :', h1: 'Les actualités IA de FAIND sur votre site', credit: 'Actualités IA par FAIND', copy: 'Copier le code', copied: 'Copié ✓', home: 'Retour aux actualités de FAIND',
+      lede: 'Un encadré gratuit avec les dernières actualités de l\'intelligence artificielle, mises à jour chaque heure et toujours avec la source. Il s\'ajoute à n\'importe quel site ou blog en copiant quelques lignes de code : sans inscription, sans frais, sans publicité.',
+      optN: 'Nombre d\'actualités', optLang: 'Langue des actualités', optTheme: 'Apparence', thLight: 'Clair', thDark: 'Sombre', thAuto: 'Automatique (selon l\'appareil)', code: 'Code à copier', howT: 'Mode d\'emploi',
+      how: 'Choisissez le nombre d\'actualités, la langue et l\'apparence, puis copiez le code et collez-le à l\'endroit de la page où vous voulez l\'encadré. Il fonctionne avec WordPress (bloc « HTML personnalisé »), Wix, Squarespace, Blogger et tout site acceptant du code HTML.',
+      rulesT: 'Conditions', rules: 'Le widget est gratuit, y compris pour les sites commerciaux. Nous demandons seulement de conserver le lien « Actualités IA par FAIND » sous l\'encadré. Chaque titre ouvre la fiche de l\'actualité sur FAIND, où figurent toujours le média et le lien vers l\'article original. Le widget n\'utilise aucun cookie et ne collecte aucune donnée sur vos visiteurs.' },
+    de: { back: '← Zurück zu den Nachrichten', pageLang: 'Sprache der Seite:', h1: 'KI-Nachrichten von FAIND auf deiner Website', credit: 'KI-Nachrichten von FAIND', copy: 'Code kopieren', copied: 'Kopiert ✓', home: 'Zurück zu den FAIND-Nachrichten',
+      lede: 'Ein kostenloses Feld mit den neuesten Nachrichten zur künstlichen Intelligenz, stündlich aktualisiert und immer mit Quelle. Es lässt sich auf jeder Website und jedem Blog einbinden, indem man wenige Zeilen Code kopiert: ohne Anmeldung, ohne Kosten, ohne Werbung.',
+      optN: 'Anzahl der Nachrichten', optLang: 'Sprache der Nachrichten', optTheme: 'Darstellung', thLight: 'Hell', thDark: 'Dunkel', thAuto: 'Automatisch (wie das Gerät)', code: 'Code zum Kopieren', howT: 'So geht\'s',
+      how: 'Wähle Anzahl, Sprache und Darstellung, kopiere dann den Code und füge ihn dort in die Seite ein, wo das Feld erscheinen soll. Es funktioniert mit WordPress (Block „Individuelles HTML“), Wix, Squarespace, Blogger und jeder Website, die HTML-Code annimmt.',
+      rulesT: 'Bedingungen', rules: 'Das Widget ist kostenlos, auch für kommerzielle Websites. Wir bitten nur darum, den Link „KI-Nachrichten von FAIND“ unter dem Feld zu belassen. Jede Überschrift öffnet die Nachrichtenseite auf FAIND, auf der stets das Medium und der Link zum Originalartikel stehen. Das Widget verwendet keine Cookies und erhebt keine Daten über deine Besucher.' }
+  };
+  // i testi italiani lunghi restano quelli scritti nella pagina
+  document.querySelectorAll('[data-t]').forEach(function (el) { var k = el.getAttribute('data-t'); if (!T.it[k]) T.it[k] = el.textContent; });
+  var lang = 'it';
+  try { var s = localStorage.getItem('faind-lang'); if (T[s]) lang = s; } catch (e) {}
+  var $ = function (id) { return document.getElementById(id); };
+  function code() {
+    var n = $('oN').value, l = $('oLang').value, th = $('oTheme').value, h = 110 + n * 84;
+    var src = SITE + 'widget.html?n=' + n + '&lang=' + l + '&theme=' + th;
+    $('prev').src = 'widget.html?n=' + n + '&lang=' + l + '&theme=' + th;
+    $('prev').style.height = h + 'px';
+    $('code').value = '<iframe src="' + src + '" title="' + T[l].credit + '" loading="lazy" style="width:100%;max-width:420px;height:' + h + 'px;border:1px solid #d5dbe6;border-radius:14px"></iframe>\n' +
+      '<p style="font-size:13px;margin:6px 0 0"><a href="' + SITE + '">' + T[l].credit + '</a></p>';
+  }
+  function apply(l) {
+    lang = l; document.documentElement.lang = l;
+    document.querySelectorAll('[data-t]').forEach(function (el) { var k = el.getAttribute('data-t'); el.textContent = T[l][k] || T.it[k]; });
+    document.querySelectorAll('.lsw button').forEach(function (b) { b.setAttribute('aria-current', b.dataset.lang === l ? 'true' : 'false'); });
+    $('oLang').value = l; code();
+  }
+  document.querySelectorAll('.lsw button').forEach(function (b) { b.onclick = function () { apply(b.dataset.lang); }; });
+  ['oN', 'oLang', 'oTheme'].forEach(function (id) { $(id).onchange = code; });
+  $('copy').onclick = function () {
+    var t = $('code'); t.select();
+    try { navigator.clipboard.writeText(t.value); } catch (e) { try { document.execCommand('copy'); } catch (e2) {} }
+    this.textContent = T[lang].copied;
+  };
+  apply(lang);
+})();
+</script>
+</body>
+</html>
