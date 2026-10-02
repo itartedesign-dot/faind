@@ -222,6 +222,14 @@
           <button type="button" class="btn btn--ghost reads__more" id="moreVideos" hidden data-i18n="more.btn">Mostra altre</button>
         </section>
 
+        <section class="block focus" id="focus" aria-labelledby="focusTitle" hidden>
+          <div class="block__head">
+            <h2 class="block__title" id="focusTitle" data-i18n="sec.focus">Focus</h2>
+            <p class="block__hint" data-i18n="hint.focus">Per ogni tema, un video e la notizia più ripresa dalle testate</p>
+          </div>
+          <div class="focus__list" id="focusList"></div>
+        </section>
+
         <!-- Job: ruoli AI più richiesti -->
         <section class="block jobs" id="job" aria-labelledby="jobTitle" hidden>
           <div class="jobs__band">
@@ -249,13 +257,6 @@
         </section>
 
         <!-- Focus: per ogni tema 1 video + la notizia più ripresa -->
-        <section class="block focus" id="focus" aria-labelledby="focusTitle" hidden>
-          <div class="block__head">
-            <h2 class="block__title" id="focusTitle" data-i18n="sec.focus">Focus</h2>
-            <p class="block__hint" data-i18n="hint.focus">Per ogni tema, un video e la notizia più ripresa dalle testate</p>
-          </div>
-          <div class="focus__list" id="focusList"></div>
-        </section>
       </div>
 
       <!-- Risultati filtrati (settore, tipo, ricerca, salvati) -->
@@ -533,15 +534,15 @@
   </footer>
 
   <!-- Barra titoli in stile telegiornale -->
-  <div class="bticker" id="bticker" data-i18n-aria="ticker.label" aria-label="Flash" role="region">
-    <div class="bticker__label"><span class="pulse" aria-hidden="true"></span><span data-i18n="ticker.label">Flash</span></div>
+  <div class="bticker" id="bticker" data-i18n-aria="ticker.label" aria-label="Live" role="region">
+    <div class="bticker__label"><span class="pulse" aria-hidden="true"></span><span data-i18n="ticker.label">Live</span></div>
     <div class="bticker__viewport"><ul class="bticker__track" id="ticker"></ul></div>
     <button type="button" class="bticker__close" id="tickerClose" data-i18n-aria="ticker.close" aria-label="Nascondi la barra">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>
     </button>
   </div>
   <button type="button" class="bticker-open" id="tickerOpen" hidden>
-    <span class="pulse" aria-hidden="true"></span><span data-i18n="ticker.label">Flash</span>
+    <span class="pulse" aria-hidden="true"></span><span data-i18n="ticker.label">Live</span>
   </button>
 
   <!-- Guida all'installazione su iPhone/iPad (Safari non permette il pulsante diretto) -->
