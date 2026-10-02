@@ -334,6 +334,21 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 .wire__headline a:hover { color: var(--link); text-decoration: underline; }
 .wire .source { font-size: 13px; }
 .wire .tag { font-size: 11.5px; padding: 4px 8px; }
+/* "Appena uscite" è alta quanto l'apertura e scorre al suo interno: così l'apertura non si allunga mai a vuoto */
+@media (min-width: 901px) {
+  .wire { display: flex; flex-direction: column; contain: size; min-height: 420px; padding-bottom: 0; }
+  .wire__list { flex: 1; min-height: 0; overflow-y: auto; padding-right: 6px; padding-bottom: 26px;
+    -webkit-mask-image: linear-gradient(#000 calc(100% - 34px), transparent); mask-image: linear-gradient(#000 calc(100% - 34px), transparent); }
+}
+/* Quando la colonna è stretta (tablet, portatili): data sopra e titolo a tutta larghezza, invece di una parola per riga */
+.wire { container-type: inline-size; }
+@container (max-width: 400px) {
+  .wire__item { grid-template-columns: minmax(0, 1fr) 64px; row-gap: 4px; }
+  .wire__when { grid-column: 1 / -1; padding-top: 0; }
+  .wire__when small { display: inline; margin-left: 6px; }
+  .wire__item .thumb--sm { width: 64px; }
+  .wire__headline { margin-top: 5px; }
+}
 
 /* ------------------------------ Presentazione (H1) ------------------------------ */
 .intro { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; margin-bottom: 16px; }
