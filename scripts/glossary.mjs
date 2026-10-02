@@ -265,6 +265,7 @@ ${alts}
     .gt:target { background: rgba(66,147,185,.12); border-radius: 10px; padding: 16px 14px; margin-inline: -14px; }
   </style>
   <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>
+  <script src="${up}stats.js" defer></script>
 </head>
 <body class="np-page">
   <header class="masthead">

@@ -322,6 +322,7 @@ ${LANGS.map(k => `  <link rel="alternate" hreflang="${k}" href="${esc(alts[k])}"
   <style>${STYLE}
   </style>
   <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>
+  <script src="${up}stats.js" defer></script>
 </head>
 <body class="np-page">
   <header class="masthead">

@@ -113,6 +113,7 @@ function pageHtml(n, related, sameCat) {
   <link rel="manifest" href="../manifest.webmanifest">
   <link rel="apple-touch-icon" href="../assets/icon-180.png">
   <script type="application/ld+json">${JSON.stringify(crumbs)}</script>
+  <script src="../stats.js" defer></script>
 </head>
 <body class="np-page">
   <header class="masthead">
@@ -248,7 +249,7 @@ export async function buildSite(out, root) {
 
   const today = new Date().toISOString().slice(0, 10);
   const urls = [`<url><loc>${SITE}</loc><lastmod>${today}</lastmod><changefreq>hourly</changefreq><priority>1.0</priority></url>`,
-    ...['redazione.html', 'about.html', 'a-propos.html', 'ueber-uns.html'].map(p => `<url><loc>${SITE}${p}</loc><priority>0.6</priority></url>`)]
+    ...['redazione.html', 'about.html', 'a-propos.html', 'ueber-uns.html', 'incorpora.html'].map(p => `<url><loc>${SITE}${p}</loc><priority>0.6</priority></url>`)]
     .concat(news.filter(indexable).map(n =>
       `<url><loc>${SITE}${n.page}</loc><lastmod>${toDate(n.date).toISOString().slice(0, 10)}</lastmod></url>`));
   await writeFile(path.join(root, 'sitemap.xml'),
