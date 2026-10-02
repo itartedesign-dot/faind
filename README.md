@@ -82,6 +82,14 @@ Cinque pagine permanenti e indicizzabili, una per tema del Focus, più un indice
 
 `scripts/cards.mjs` disegna per ogni pagina notizia un'immagine 1200×630 con logo, settore, titolo e fonte: è l'anteprima che compare quando il link viene condiviso. Usa il browser Chrome già presente sulle macchine di GitHub. Le card già fatte vengono riprese dal sito online; se ne creano al massimo 60 nuove per giro (`CARDS_PER_RUN`). Senza card, la pagina usa l'immagine della fonte o il logo.
 
+## Statistiche delle visite (GoatCounter)
+
+`stats.js` (cartella principale) conta le visite senza cookie tramite GoatCounter; è richiamato da tutte le pagine, anche quelle generate. Il codice dell'account è nella prima riga utile del file (`CODICE`): lasciandolo vuoto le statistiche sono spente. I numeri si leggono su `https://CODICE.goatcounter.com`. Non conta in locale né chi ha attivo "Non tenere traccia".
+
+## Widget "Notizie AI by FAIND"
+
+`widget.html` è il riquadro incorporabile da altri siti (parametri: `n` 3–10, `lang` it/en/fr/de, `theme` light/dark/auto); legge `news.json`. `incorpora.html` è la pagina, in quattro lingue, dove si sceglie l'aspetto e si copia il codice.
+
 ## Chi c'è dietro FAIND
 
 `redazione.html` (italiano), `about.html` (inglese), `a-propos.html` (francese), `ueber-uns.html` (tedesco): stessa pagina in quattro lingue, collegate tra loro e presenti nella sitemap. Foto: `assets/paolo-buono.webp`.
