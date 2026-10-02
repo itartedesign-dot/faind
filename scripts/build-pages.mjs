@@ -16,6 +16,8 @@
 import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
 import vm from 'node:vm';
 import path from 'node:path';
+import { buildCards } from './cards.mjs';
+import { buildGlossary, termsIn, linkify, GLOSSARY_PATH } from './glossary.mjs';
 
 export const SITE = 'https://itartedesign-dot.github.io/faind/';
 const FEED_SIZE = 20;
@@ -75,6 +77,12 @@ function pageHtml(n, related, sameCat) {
       `</ul></section>` : '';
   const img = n.image && /^https:\/\//.test(n.image)
     ? `<img class="np__img" src="${esc(n.image)}" alt="" referrerpolicy="no-referrer" loading="eager" onerror="this.remove()">` : '';
+  // Parole del glossario presenti nella notizia: collegamento automatico alla definizione
+  const found = termsIn(`${title} ${summary}`);
+  const terms = found.length
+    ? `<section class="np__box"><h2>Parole chiave</h2><p style="display:flex;flex-wrap:wrap;gap:8px">` +
+      found.slice(0, 8).map(t => `<a href="../${GLOSSARY_PATH.it}#${t.id}" title="${esc(t.it[1])}" style="padding:6px 12px;border:1px solid var(--rule);border-radius:999px;background:var(--surface);color:var(--ink);text-decoration:none;font-size:14px;font-weight:600">${esc(t.it[0].replace(/ \(.*\)$/, ''))}</a>`).join('') +
+      `</p></section>` : '';
   const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'FAIND', item: SITE },
     { '@type': 'ListItem', position: 2, name: cat, item: SITE + '#news' },
@@ -95,7 +103,7 @@ function pageHtml(n, related, sameCat) {
   <meta property="og:url" content="${esc(url)}">
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(desc)}">
-  <meta property="og:image" content="${esc(n.image && /^https:/.test(n.image) ? n.image : SITE + 'assets/og-image.png')}">
+  <meta property="og:image" content="${esc(n.og ? SITE + n.og : n.image && /^https:/.test(n.image) ? n.image : SITE + 'assets/og-image.png')}">${n.og ? '\n  <meta property="og:image:width" content="1200">\n  <meta property="og:image:height" content="630">' : ''}
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="../assets/favicon.png" type="image/png">
   <link rel="alternate" type="application/rss+xml" title="FAIND – Notizie AI" href="../feed.xml">
@@ -120,11 +128,12 @@ function pageHtml(n, related, sameCat) {
       <h1 class="np__title">${esc(title)}</h1>
       <p class="np__meta"><time datetime="${esc(n.date)}">${esc(fmtDate(n.date))}</time> · Fonte: <a href="${esc(n.link.url)}" target="_blank" rel="noopener noreferrer">${esc(n.source.name)}</a></p>
       ${img}
-      ${summary ? `<p class="np__lede">${esc(summary)}</p>` : ''}
+      ${summary ? `<p class="np__lede">${linkify(esc(summary), '../', GLOSSARY_PATH[n.lang] ? n.lang : 'it')}</p>` : ''}
       ${langNote}
       <a class="btn btn--primary np__cta" href="${esc(n.link.url)}" target="_blank" rel="noopener noreferrer">Leggi l'articolo completo su ${esc(n.source.name)} ↗</a>
       <p class="np__disclaimer">FAIND riporta titolo e un breve estratto: l'articolo completo e i diritti appartengono a ${esc(n.source.name)}.</p>
       ${also}
+      ${terms}
       ${rel}
     </article>
     <aside class="np__side">
@@ -135,7 +144,7 @@ function pageHtml(n, related, sameCat) {
       <a class="btn btn--ghost np__home" href="../">Tutte le notizie di oggi su FAIND</a>
     </aside>
   </main>
-  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="../#chi-siamo">Chi siamo</a> · <a href="../feed.xml">Feed RSS</a> · <a href="../privacy.html">Privacy e note legali</a></p></div></footer>
+  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="../#chi-siamo">Chi siamo</a> · <a href="../temi/">Temi</a> · <a href="../glossario/">Glossario</a> · <a href="../redazione.html">Chi c'è dietro FAIND</a> · <a href="../feed.xml">Feed RSS</a> · <a href="../privacy.html">Privacy e note legali</a></p></div></footer>
 </body>
 </html>`;
 }
@@ -212,6 +221,15 @@ export async function buildSite(out, root) {
   await mkdir(path.join(root, 'n'), { recursive: true });
   await mkdir(path.join(root, 'feeds'), { recursive: true });
 
+  // I caratteri servono anche alle card: li scarico prima
+  try { console.log(`🔤 caratteri serviti da FAIND: ${await selfHostFonts(root)} file`); }
+  catch (e) { console.warn('🔤 caratteri non scaricati (si usano quelli di sistema):', e.message); }
+
+  // Card di condivisione con il marchio FAIND (cartella og/): una per pagina notizia
+  try {
+    await buildCards(news, root, { cats: CATS, liveBase: (process.env.PREVIOUS_URL || '').replace(/\/news\.json.*$/, ''), important: (n) => (n.coverage || 1) >= 3 || n.priority === 'alta' || !!n.editorial });
+  } catch (e) { console.warn('Card di condivisione non generate:', e.message); }
+
   for (const n of news) {
     const related = news.filter(r => r !== n && r.category === n.category).slice(0, 6);
     const sameCat = related.length >= 2;
@@ -229,14 +247,17 @@ export async function buildSite(out, root) {
     rss('FAIND – Video da YouTube', 'I nuovi video sull\'intelligenza artificiale da creator e canali ufficiali.', 'feeds/youtube.xml', (out.videos || []).slice(0, FEED_SIZE)));
 
   const today = new Date().toISOString().slice(0, 10);
-  const urls = [`<url><loc>${SITE}</loc><lastmod>${today}</lastmod><changefreq>hourly</changefreq><priority>1.0</priority></url>`]
+  const urls = [`<url><loc>${SITE}</loc><lastmod>${today}</lastmod><changefreq>hourly</changefreq><priority>1.0</priority></url>`,
+    ...['redazione.html', 'about.html', 'a-propos.html', 'ueber-uns.html'].map(p => `<url><loc>${SITE}${p}</loc><priority>0.6</priority></url>`)]
     .concat(news.filter(indexable).map(n =>
       `<url><loc>${SITE}${n.page}</loc><lastmod>${toDate(n.date).toISOString().slice(0, 10)}</lastmod></url>`));
   await writeFile(path.join(root, 'sitemap.xml'),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
 
-  try { console.log(`🔤 caratteri serviti da FAIND: ${await selfHostFonts(root)} file`); }
-  catch (e) { console.warn('🔤 caratteri non scaricati (si usano quelli di sistema):', e.message); }
+
+  // Glossario AI in quattro lingue (cartella glossario/), con le notizie che citano ogni termine
+  try { await buildGlossary(news, root); }
+  catch (e) { console.warn('Glossario non generato:', e.message); }
 
   console.log(`📄 pagine: ${news.length} (${news.filter(indexable).length} indicizzabili) · feed RSS: ${Object.keys(CATS).length}`);
 }

@@ -326,6 +326,7 @@ export function pickSpotlight(topics, newsPool, videoPool, now) {
   return out;
 }
 
+let TOPIC_POOL = null;
 async function collectSpotlight(cfg, items, videos, prevJson, now) {
   const sp = cfg.spotlight;
   if (!sp || !sp.topics) return [];
@@ -361,6 +362,7 @@ async function collectSpotlight(cfg, items, videos, prevJson, now) {
   }
   // La "più ripresa": raggruppo le notizie tematiche con quelle principali
   const pool = cluster([...items.map(i => ({ ...i, also: [...(i.also || [])] })), ...extraNews]);
+  TOPIC_POOL = { news: pool, videos: [...videos, ...extraVideos] };   // serve alle pagine tematiche (temi/)
   const picks = pickSpotlight(sp.topics, pool, [...videos, ...extraVideos], now);
   console.log('★ focus:', picks.map(p => `${p.key}=${p.news ? 'N' : '-'}${p.video ? 'V' : '-'}`).join(' '));
   return picks;
@@ -508,11 +510,19 @@ async function main() {
   catch (e) { console.warn('Focus non generato:', e.message); spotlight = prevJson.spotlight || []; }
 
   const sources = new Set(items.flatMap(i => [i.source.name, ...i.also.map(a => a.name)]));
-  const out = { generated: new Date(now).toISOString(), sources: sources.size, count: items.length, items, videos, channels, spotlight, jobs: jobsData.jobs, jobsUpdated: jobsData.jobsUpdated };
+  const out = { generated: new Date(now).toISOString(), sources: sources.size, count: items.length, items, videos, channels, spotlight, jobs: jobsData.jobs, jobsUpdated: jobsData.jobsUpdated, tgState: prevJson.tgState || {} };   // tgState = promemoria del bot Telegram (ultimo Punto delle 8, ultima classifica lavori)
 
   // Pagine notizia, feed RSS e sitemap (aggiunge a ogni notizia il campo "page")
   try { await buildSite(out, ROOT); }
   catch (e) { console.warn('Pagine/feed non generati:', e.message); }
+
+  // Pagine tematiche permanenti (temi/): testo fisso + dati che si aggiornano + cronologia che cresce
+  out.topics = prevJson.topics || {};
+  try {
+    const { buildTopics } = await import('./topics.mjs');
+    const pool = TOPIC_POOL || { news: items, videos };
+    out.topics = await buildTopics({ cfgTopics: (cfg.spotlight || {}).topics, news: pool.news, videos: pool.videos, items: out.items, prev: prevJson.topics, root: ROOT, now });
+  } catch (e) { console.warn('Pagine tematiche non generate:', e.message); }
 
   await writeFile(path.join(ROOT, 'news.json'), JSON.stringify(out));
   console.log(`→ news.json: ${items.length} notizie da ${sources.size} fonti, ${videos.length} video`);
