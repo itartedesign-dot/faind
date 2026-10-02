@@ -54,6 +54,38 @@ Cinque temi: Robot e umanoidi, Domus, Medicina e salute, AI e lavoro, Clima e am
 
 Classifica dei ruoli AI e dati più presenti negli annunci degli ultimi 30 giorni (fonti pubbliche gratuite: Jobicy, Arbeitnow, Remotive), aggiornata ogni 6 ore. Ogni offerta porta all'annuncio originale. Segue il filtro "Lingue notizie": Italia=IT, Francia=FR, Germania=DE, Europa/remoto/mondo=EN. Configurazione in `scripts/feeds.json` → `jobs`.
 
+## Canale Telegram (@faindnews)
+
+`scripts/telegram.mjs` gira a ogni giro orario, dopo la raccolta:
+- **Il punto delle 8**: una volta al giorno, al primo giro dopo le 8:00 ora italiana (ora legale e solare gestite da sole), un post con il logo e le 5 notizie più importanti delle ultime 24 ore. Se GitHub salta un giro lo recupera entro le 11:00.
+- **Lavoro AI, la classifica della settimana**: ogni lunedì tra le 10:00 e le 14:00, con una grafica quadrata 1200×1200 e le frecce su/giù rispetto alla settimana prima.
+- **Kit per LinkedIn**: grafica e testo pronti sono sempre aggiornati su `social/lavori-ai.html` (immagine: `social/lavori-ai.png`). La cartella `social/` viene creata dall'automazione, non è nel repository.
+- **Ore di silenzio**: dalle 23:00 alle 7:00 il canale tace. Le notizie della notte escono dal mattino (di notte "l'orologio si ferma", quindi restano fresche) e le più importanti entrano nel Punto delle 8.
+- fino a 4 notizie nuove all'ora (prima le importanti) e 1 video, solo in italiano e inglese, mai duplicati.
+Orari e quantità sono in cima al file (`DIGEST_*`, `JOBS_*`, `QUIET_FROM`, `QUIET_TO`). Il promemoria di ciò che è già uscito è in `news.json` → `tgState`.
+Segreti necessari: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
+
+## Pagine tematiche (cartella `temi/`)
+
+Cinque pagine permanenti e indicizzabili, una per tema del Focus, più un indice, in quattro lingue: `temi/` (italiano), `temi/en/`, `temi/fr/`, `temi/de/`. Le genera `scripts/topics.mjs` a ogni giro orario; la cartella non è nel repository.
+- **Testo fisso** (spiegazione del tema e domande frequenti): italiano in `scripts/topics.mjs` → `TOPICS`; inglese, francese e tedesco in `scripts/topics-i18n.mjs`.
+- **Parti automatiche**: numeri della settimana, notizia più ripresa, testate più attive, ultime notizie, video.
+- **Cronologia**: la notizia più ripresa di ogni giorno, conservata in `news.json` → `topics` (fino a 180 giorni). Cresce da sola.
+- Quali notizie entrano in un tema lo decidono le parole chiave in `scripts/feeds.json` → `spotlight` → `topics`.
+- Dalla home si aprono nella lingua dell'interfaccia; in ogni pagina si può cambiare lingua.
+
+## Glossario AI (cartella `glossario/`)
+
+`scripts/glossary.mjs` genera il glossario in quattro lingue (`glossario/`, `glossario/en/`, `glossario/fr/`, `glossario/de/`). Nelle pagine notizia i termini trovati nel testo diventano link alla definizione e compaiono nel riquadro "Parole chiave"; sotto ogni termine del glossario ci sono le ultime notizie che lo citano. Per aggiungere un termine: una voce in `TERMS` (nome e definizione nelle quattro lingue, più la regola `re` per riconoscerlo).
+
+## Card di condivisione (cartella `og/`)
+
+`scripts/cards.mjs` disegna per ogni pagina notizia un'immagine 1200×630 con logo, settore, titolo e fonte: è l'anteprima che compare quando il link viene condiviso. Usa il browser Chrome già presente sulle macchine di GitHub. Le card già fatte vengono riprese dal sito online; se ne creano al massimo 60 nuove per giro (`CARDS_PER_RUN`). Senza card, la pagina usa l'immagine della fonte o il logo.
+
+## Chi c'è dietro FAIND
+
+`redazione.html` (italiano), `about.html` (inglese), `a-propos.html` (francese), `ueber-uns.html` (tedesco): stessa pagina in quattro lingue, collegate tra loro e presenti nella sitemap. Foto: `assets/paolo-buono.webp`.
+
 ## Privacy, 404 e app
 
 - `privacy.html`: informativa privacy e note legali (link nel footer). Aggiornala se aggiungi servizi esterni (es. statistiche).

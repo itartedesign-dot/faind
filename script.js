@@ -740,6 +740,27 @@
     clima: '<path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19c3-4 6-6.5 10-8.5"/>'
   };
   /* Focus: per ogni tema 1 video + 1 notizia, rispettando il filtro lingue */
+  // Pagine tematiche permanenti (cartella temi/, generate dall'automazione)
+  // Si aprono nella lingua scelta in home; ogni pagina permette poi di cambiare lingua.
+  var TOPIC_PAGES = {
+    it: { dir: 'temi/', robot: 'robot-umanoidi', domus: 'ai-in-casa', medicina: 'ai-medicina-salute', lavoro: 'ai-lavoro', clima: 'ai-clima-ambiente' },
+    en: { dir: 'temi/en/', robot: 'humanoid-robots', domus: 'ai-at-home', medicina: 'ai-medicine-health', lavoro: 'ai-jobs-work', clima: 'ai-climate-environment' },
+    fr: { dir: 'temi/fr/', robot: 'robots-humanoides', domus: 'ia-a-la-maison', medicina: 'ia-medecine-sante', lavoro: 'ia-travail', clima: 'ia-climat-environnement' },
+    de: { dir: 'temi/de/', robot: 'humanoide-roboter', domus: 'ki-zuhause', medicina: 'ki-medizin-gesundheit', lavoro: 'ki-arbeit', clima: 'ki-klima-umwelt' }
+  };
+  var TOPIC_MORE = { it: 'Approfondisci', en: 'Read more', fr: 'En savoir plus', de: 'Mehr dazu' };
+  // Link del footer verso le pagine fisse, nella lingua dell'interfaccia
+  var LOCAL_LINKS = {
+    topics: { it: ['temi/', 'Temi'], en: ['temi/en/', 'Topics'], fr: ['temi/fr/', 'Thèmes'], de: ['temi/de/', 'Themen'] },
+    gloss: { it: ['glossario/', 'Glossario'], en: ['glossario/en/', 'Glossary'], fr: ['glossario/fr/', 'Glossaire'], de: ['glossario/de/', 'Glossar'] },
+    about: { it: ['redazione.html', 'Chi c\'è dietro FAIND'], en: ['about.html', 'Who is behind FAIND'], fr: ['a-propos.html', 'Qui est derrière FAIND'], de: ['ueber-uns.html', 'Wer hinter FAIND steht'] }
+  };
+  function localLinks() {
+    $$('[data-ll]').forEach(function (a) {
+      var m = LOCAL_LINKS[a.getAttribute('data-ll')]; if (!m) return;
+      var v = m[state.lang] || m.it; a.setAttribute('href', v[0]); a.textContent = v[1];
+    });
+  }
   function renderFocus() {
     var html = spotRaw.map(function (sp) {
       var v = sp.video && langOk(sp.video) ? sp.video : null;
@@ -747,7 +768,8 @@
       if (!v && !n) return '';
       return '<article class="fblock" id="focus-' + esc(sp.key) + '" data-topic="' + esc(sp.key) + '">' +
         '<header class="fblock__head"><span class="fblock__ico" aria-hidden="true"><svg viewBox="0 0 24 24">' + (FOCUS_ICON[sp.key] || FOCUS_ICON.robot) + '</svg></span>' +
-          '<div><h3 class="fblock__title">' + esc(t('focus.' + sp.key)) + '</h3><p class="fblock__sub">' + esc(t('focus.' + sp.key + '.sub')) + '</p></div></header>' +
+          '<div><h3 class="fblock__title">' + esc(t('focus.' + sp.key)) + '</h3><p class="fblock__sub">' + esc(t('focus.' + sp.key + '.sub')) + '</p></div>' +
+          ((TOPIC_PAGES[state.lang] || TOPIC_PAGES.it)[sp.key] ? '<a href="' + (TOPIC_PAGES[state.lang] || TOPIC_PAGES.it).dir + (TOPIC_PAGES[state.lang] || TOPIC_PAGES.it)[sp.key] + '.html" style="margin-left:auto;font-size:14px;font-weight:700;white-space:nowrap">' + esc(TOPIC_MORE[state.lang] || TOPIC_MORE.it) + ' →</a>' : '') + '</header>' +
         '<div class="fblock__body">' +
           (v ? '<div class="fblock__slot"><p class="fblock__label">▶ ' + esc(t('focus.vlabel')) + '</p>' + vcard(v) + '</div>' : '') +
           (n ? '<div class="fblock__slot"><p class="fblock__label">★ ' + esc(t('focus.nlabel')) + '</p>' + card(n) + '</div>' : '') +
@@ -838,6 +860,7 @@
     var hasLang = !!$('[data-about="' + lang + '"]');
     $$('[data-about]').forEach(function (b) { b.hidden = b.getAttribute('data-about') !== (hasLang ? lang : 'it'); });
     shareLinks();
+    localLinks();
     renderAll();
   }
   function applyTheme(theme, persist) {
