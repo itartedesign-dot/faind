@@ -43,7 +43,7 @@
 
   <!-- Caratteri serviti da FAIND (nessun contatto con Google Fonts) -->
   <link rel="stylesheet" href="assets/fonts/archivo.css">
-  <link rel="stylesheet" href="style.css?v=20261003d">
+  <link rel="stylesheet" href="style.css?v=20261003e">
 
   <!-- App sul telefono: "Aggiungi alla schermata Home" -->
   <link rel="manifest" href="manifest.webmanifest">
@@ -56,7 +56,7 @@
   <script type="application/ld+json">
   {"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://itartedesign-dot.github.io/faind/#website", "url": "https://itartedesign-dot.github.io/faind/", "name": "FAIND", "alternateName": "FAIND – Flash AI News Daily", "inLanguage": "it-IT", "description": "Agenzia di notizie flash sull'intelligenza artificiale: notizie aggiornate ogni ora con la fonte, video, lavoro nell'AI, prezzi degli abbonamenti e approfondimenti su robot, medicina, lavoro, clima e tecnologia in casa."}, {"@type": "NewsMediaOrganization", "@id": "https://itartedesign-dot.github.io/faind/#org", "name": "FAIND", "alternateName": "Flash AI News Daily", "url": "https://itartedesign-dot.github.io/faind/", "logo": {"@type": "ImageObject", "url": "https://itartedesign-dot.github.io/faind/assets/og-image.png", "width": 1200, "height": 630}, "email": "itartedesign@gmail.com", "founder": {"@type": "Person", "name": "Paolo Buono", "url": "https://itartedesign-dot.github.io/faind/redazione.html"}, "address": {"@type": "PostalAddress", "addressLocality": "Caltanissetta", "addressRegion": "Sicilia", "addressCountry": "IT"}, "sameAs": ["https://t.me/faindnews"], "publishingPrinciples": "https://itartedesign-dot.github.io/faind/#chi-siamo", "knowsAbout": ["Intelligenza artificiale", "ChatGPT", "Claude", "Gemini", "Robotica", "Robot umanoidi", "AI in medicina", "Lavoro nell'intelligenza artificiale", "AI e clima", "Smart home", "Prezzi abbonamenti AI"]}, {"@type": "FAQPage", "@id": "https://itartedesign-dot.github.io/faind/#faq", "mainEntity": [{"@type": "Question", "name": "Che cos'è FAIND?", "acceptedAnswer": {"@type": "Answer", "text": "FAIND (Flash AI News Daily) è un'agenzia di notizie flash dedicata all'intelligenza artificiale: ogni ora raccoglie notizie da testate e blog ufficiali, video dai migliori canali YouTube e offerte di lavoro nel settore, li divide per tema e indica sempre la fonte originale."}}, {"@type": "Question", "name": "FAIND è gratuito?", "acceptedAnswer": {"@type": "Answer", "text": "Sì. FAIND è gratuito, senza registrazione e senza pubblicità invasiva. Chi vuole può sostenere il progetto con una donazione su PayPal."}}, {"@type": "Question", "name": "Ogni quanto si aggiornano le notizie?", "acceptedAnswer": {"@type": "Answer", "text": "Ogni ora. Le notizie restano in pagina per sette giorni: le più recenti sono in Appena uscite, quelle riprese da più testate nella sezione Importanti."}}, {"@type": "Question", "name": "Da dove arrivano le notizie?", "acceptedAnswer": {"@type": "Answer", "text": "Da testate giornalistiche italiane e internazionali e dai blog ufficiali delle aziende di intelligenza artificiale. Ogni notizia ha una pagina su FAIND con titolo, breve estratto, le altre testate che ne parlano e il link all'articolo originale."}}, {"@type": "Question", "name": "Su FAIND ci sono video sull'intelligenza artificiale?", "acceptedAnswer": {"@type": "Answer", "text": "Sì. La sezione Video raccoglie i nuovi video di creator italiani come Marco Montemagno, Raffaele Gaito, Giovanni Beggiato, Simone Rizzo e Datapizza, dei canali ufficiali di OpenAI, Google DeepMind e Anthropic e di divulgatori internazionali. Si guardano direttamente sul sito."}}, {"@type": "Question", "name": "Dove trovo offerte di lavoro nell'intelligenza artificiale?", "acceptedAnswer": {"@type": "Answer", "text": "Nella sezione Lavoro AI: una classifica dei ruoli più richiesti negli annunci degli ultimi 30 giorni, come machine learning engineer, AI engineer, data scientist e prompt engineer, con i link per candidarsi direttamente sul sito che pubblica l'offerta."}}, {"@type": "Question", "name": "Quanto costano ChatGPT Plus, Claude Pro e Gemini?", "acceptedAnswer": {"@type": "Answer", "text": "FAIND pubblica una tabella con i listini ufficiali degli abbonamenti AI più diffusi, con il risparmio dei piani annuali, la data dell'ultima verifica e il link alla pagina prezzi di ciascun servizio."}}, {"@type": "Question", "name": "Posso ricevere le notizie su Telegram o con un feed RSS?", "acceptedAnswer": {"@type": "Answer", "text": "Sì. Le notizie importanti e i nuovi video escono sul canale Telegram @faindnews. Sono disponibili anche feed RSS gratuiti: uno con tutte le notizie, uno per ogni settore e uno per i video."}}, {"@type": "Question", "name": "Posso vedere solo le notizie in italiano?", "acceptedAnswer": {"@type": "Answer", "text": "Sì. Con il filtro Lingue notizie scegli tra italiano, inglese, francese e tedesco: notizie, video e offerte di lavoro si filtrano subito e la scelta viene ricordata."}}, {"@type": "Question", "name": "Posso installare FAIND sul telefono come un'app?", "acceptedAnswer": {"@type": "Answer", "text": "Sì. Su iPhone e iPad apri FAIND in Safari, tocca Condividi e poi Aggiungi alla schermata Home. Su Android usa il menu del browser e scegli Installa app o Aggiungi a schermata Home."}}, {"@type": "Question", "name": "Come posso segnalare una notizia o proporre una collaborazione?", "acceptedAnswer": {"@type": "Answer", "text": "Con il modulo Scrivici sul sito oppure scrivendo a itartedesign@gmail.com."}}]}]}
   </script>
-  <script src="stats.js?v=20261003d" defer></script>
+  <script src="stats.js?v=20261003e" defer></script>
 </head>
 <body>
   <a class="skip" href="#main" data-i18n="a11y.skip">Vai ai contenuti</a>
@@ -231,6 +231,30 @@
         </section>
 
         <!-- Job: ruoli AI più richiesti -->
+        <section class="block" id="trending" aria-labelledby="trendTitle" hidden>
+          <div class="block__head"><h2 class="block__title" id="trendTitle">Trending Tool</h2></div>
+          <div class="agenda">
+            <div class="agenda__tabs" id="trendTabs" role="tablist"></div>
+            <div class="agenda__page" id="trendList" role="tabpanel"></div>
+          </div>
+        </section>
+
+        <section class="block" id="approfondimenti" aria-labelledby="deepTitle">
+          <div class="block__head"><h2 class="block__title" id="deepTitle" data-i18n="sec.deep">Approfondimenti</h2><a class="deep__all" href="approfondimenti/" data-i18n="deep.all">Tutti gli approfondimenti →</a></div>
+          <div class="deep">
+          <a class="deep__card" href="approfondimenti/intelligenza-artificiale-sostituira-uomo-lavori-a-rischio.html"><img src="assets/art-01.webp" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>L'intelligenza artificiale sostituirà l'uomo? I lavori a rischio e quelli no</strong><span>Quali lavori spariranno, quali cambiano e quali restano: cosa dicono i dati.</span></a>
+          <a class="deep__card" href="approfondimenti/intelligenza-artificiale-e-pericolosa.html"><img src="assets/art-02.webp" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>L'intelligenza artificiale è pericolosa? Può davvero ribellarsi?</strong><span>Ribellione, estinzione, perdita di controllo: cosa c'è di vero e cosa no.</span></a>
+          <a class="deep__card" href="approfondimenti/imparare-a-usare-intelligenza-artificiale.html"><img src="assets/art-03.webp" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>Imparare a usare l'intelligenza artificiale: da dove iniziare</strong><span>Una guida per chi parte da zero: quale usare, cosa chiederle, cosa evitare.</span></a>
+          <a class="deep__card" href="approfondimenti/guadagnare-con-intelligenza-artificiale.html"><img src="assets/art-04.webp" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>Guadagnare con l'intelligenza artificiale: cosa funziona davvero</strong><span>Niente formule magiche: dove l'AI fa risparmiare tempo e dove le promesse sono vuote.</span></a>
+          <a class="deep__card" href="approfondimenti/intelligenza-artificiale-rischi-e-vantaggi.html"><img src="assets/art-05.webp" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>Intelligenza artificiale: rischi e vantaggi</strong><span>I benefici concreti e i rischi reali, messi sulla stessa bilancia.</span></a>
+          <a class="deep__card" href="approfondimenti/perche-intelligenza-artificiale-consuma-acqua-energia.html"><img src="assets/art-06.webp" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>Perché l'intelligenza artificiale consuma acqua ed energia?</strong><span>Data center, elettricità e raffreddamento: quanto inquina davvero l'AI.</span></a>
+          <a class="deep__card" href="approfondimenti/intelligenza-artificiale-e-affidabile.html"><img src="assets/art-07.webp" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>L'intelligenza artificiale è affidabile? Quando può sbagliare</strong><span>Perché l'AI sbaglia con tono sicuro e come capire quando fidarsi.</span></a>
+          <a class="deep__card" href="approfondimenti/intelligenza-artificiale-gratis-o-a-pagamento.html"><img src="assets/art-08.webp" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>L'intelligenza artificiale è gratis o a pagamento?</strong><span>Cosa si può fare senza pagare e quando conviene un abbonamento.</span></a>
+          <a class="deep__card" href="approfondimenti/leggi-intelligenza-artificiale-nel-mondo.html"><img src="assets/art-09.webp" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>Leggi sull'intelligenza artificiale nel mondo</strong><span>Europa, Italia, Stati Uniti, Cina: chi regola l'AI e come.</span></a>
+          <a class="deep__card" href="approfondimenti/come-riconoscere-audio-foto-video-intelligenza-artificiale.html"><img src="assets/art-10.webp" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>Come riconoscere audio, foto e video fatti con l'intelligenza artificiale</strong><span>I segnali da guardare e i controlli da fare prima di credere, o condividere.</span></a>
+          </div>
+        </section>
+
         <section class="block jobs" id="job" aria-labelledby="jobTitle" hidden>
           <div class="jobs__band">
             <div class="jobs__head">
@@ -305,12 +329,6 @@
           <button class="btn btn--primary nl__btn" type="submit" data-i18n="nl.btn">Iscrivimi</button>
           <p class="nl__msg" id="nlMsg" role="status" aria-live="polite"></p>
         </form>
-      </section>
-
-      <section class="panel trend" id="trending" aria-labelledby="trendTitle" hidden>
-        <h2 class="panel__title" id="trendTitle">Trending Tool</h2>
-        <div class="trend__tabs" id="trendTabs" role="tablist"></div>
-        <ul class="trend__list" id="trendList"></ul>
       </section>
 
       <section class="panel" id="prezzi" aria-labelledby="pricesTitle">
@@ -592,7 +610,7 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="data.js?v=20261003d" defer></script>
-  <script src="script.js?v=20261003d" defer></script>
+  <script src="data.js?v=20261003e" defer></script>
+  <script src="script.js?v=20261003e" defer></script>
 </body>
 </html>
