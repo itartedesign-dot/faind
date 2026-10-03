@@ -36,6 +36,7 @@
 
 import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
 import { shot } from './cards.mjs';
+import { ARTICLES } from './articles.mjs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -366,6 +367,97 @@ async function maybeJobs(data, t, card) {
   } catch (e) { console.warn('✗ Classifica lavori —', e.message); }
 }
 
+/* ---------- Feed per LinkedIn (feeds/linkedin.xml) ----------
+   Due post a settimana, già scritti come post social: un servizio esterno (es. dlvr.it)
+   legge questo feed e li pubblica da solo sulla pagina LinkedIn di FAIND.
+   • lunedì dalle 10: la classifica dei lavori AI, con la grafica;
+   • venerdì dalle LI_FRIDAY_FROM: "La settimana dell'AI", le 5 notizie più riprese + un approfondimento.
+   Ogni post: apertura che cambia, testo fisso su FAIND (a rotazione tra LI_INTRO), riepilogo, link, hashtag.
+   Le voci già uscite sono conservate in news.json → tgState.linkedin. */
+const LI_FRIDAY_FROM = 9, LI_KEEP = 20;
+// Il testo fisso che spiega FAIND: cinque versioni, usate a rotazione
+const LI_INTRO = [
+  'FAIND raccoglie ogni ora le notizie sull\'intelligenza artificiale da testate italiane e internazionali, sempre con la fonte. Gratis, senza pubblicità e senza registrazione.',
+  'Seguire l\'intelligenza artificiale richiede tempo. FAIND lo fa per te: notizie AI aggiornate ogni ora, video, i lavori più richiesti e il confronto tra ChatGPT, Claude e Gemini, in un solo posto.',
+  'Cosa è successo questa settimana nell\'intelligenza artificiale? FAIND mette in fila le notizie più importanti e dice sempre da dove arrivano, così puoi verificare.',
+  'ChatGPT, Claude, Gemini, robot, leggi, lavoro: su FAIND trovi le novità dell\'AI spiegate in poche righe, con il link all\'articolo originale.',
+  'FAIND è un\'agenzia di notizie flash sull\'intelligenza artificiale: titolo, poche righe, fonte. Per chi vuole restare aggiornato sull\'AI senza perdere ore.'
+];
+// Hashtag: tre fissi + due scelti in base a ciò di cui parla il post (azienda o prodotto, e tema)
+const LI_TAGS = ['#IntelligenzaArtificiale', '#NotizieAI', '#AI'];
+const LI_WHO = [[/chatgpt/i, '#ChatGPT'], [/openai/i, '#OpenAI'], [/claude|anthropic/i, '#Anthropic'], [/gemini/i, '#Gemini'], [/google|deepmind/i, '#Google'], [/copilot|microsoft/i, '#Microsoft'],
+  [/\bmeta\b|llama/i, '#MetaAI'], [/nvidia/i, '#Nvidia'], [/apple|siri/i, '#Apple'], [/grok|\bxai\b/i, '#Grok'], [/mistral/i, '#MistralAI'], [/deepseek/i, '#DeepSeek'], [/perplexity/i, '#Perplexity'], [/amazon|alexa/i, '#Amazon']];
+const LI_WHAT = [[/ai act|regolament|\blegg[ei]\b|\blaw\b|regulat|garante|copyright/i, '#AIAct'], [/lavor|\bjobs?\b|licenzi|layoff|assunzion|hiring/i, '#LavoroAI'], [/robot|umanoid|humanoid/i, '#Robotica'],
+  [/agent/i, '#AgentiAI'], [/chip|gpu|data ?cent/i, '#DataCenter'], [/medic|salute|health|farmac/i, '#AIinMedicina'], [/video|immagin|image/i, '#AIgenerativa'], [/sicurezz|safety|security|deepfake/i, '#SicurezzaAI']];
+const xml = (v = '') => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+export function liTags(texts, fallback = '#AIgenerativa') {
+  const top = (rules) => { let best = null, n = 0; for (const [re, tag] of rules) { const c = texts.filter(x => re.test(x)).length; if (c > n) { n = c; best = tag; } } return best; };
+  return [...LI_TAGS, top(LI_WHO), top(LI_WHAT) || fallback].filter(Boolean).filter((x, i, a) => a.indexOf(x) === i).join(' ');
+}
+// Le notizie più riprese degli ultimi 7 giorni
+export function pickWeek(items, now, count = 5) {
+  return items.filter(n => langOk(n) && n.title && n.link && n.link.url && now - new Date(n.date).getTime() < 7 * 864e5)
+    .sort((a, b) => (b.coverage || 1) - (a.coverage || 1) || (isImportant(b) - isImportant(a)) || b.date.localeCompare(a.date)).slice(0, count);
+}
+
+export function linkedinItems(data, t, rank) {
+  const st = data.tgState, out = [];
+  const intro = () => { const i = (st.liIntro || 0) % LI_INTRO.length; st.liIntro = (st.liIntro || 0) + 1; return LI_INTRO[i]; };
+  // Lunedì: classifica dei lavori AI
+  if (t.weekday === JOBS_WEEKDAY && t.hour >= JOBS_FROM && st.liJobs !== t.day && rank && rank.total >= JOBS_MIN && rank.rows.length >= 3) {
+    const tags = `${LI_TAGS.join(' ')} #LavoroAI #AIJobs`, top = rank.rows.slice(0, 5);
+    out.push({ id: 'lavori-' + t.day, link: `${SITE}?lavori=${t.day}#job`, date: new Date(t.now).toISOString(), img: SITE + 'social/lavori-ai.png',
+      title: `Lavoro e intelligenza artificiale: ${top[0].name} è il ruolo più richiesto questa settimana. La classifica completa su FAIND ${tags}`,
+      text: [`Quali sono i lavori più richiesti nell'intelligenza artificiale? Questa settimana in testa c'è ${top[0].name}.`, '', intro(), '',
+        `La classifica (settimana del ${t.mondayLabel}):`, ...top.map((r, i) => `${i + 1}. ${r.name}: ${offers(r.n)}`), '',
+        `Nasce da ${rank.total} annunci pubblici degli ultimi 30 giorni e si aggiorna ogni 6 ore.`, `Tutte le offerte, con il link per candidarsi: ${SITE}#job`, '', tags].join('\n') });
+    st.liJobs = t.day;
+  }
+  // Venerdì: la settimana dell'AI
+  if (t.weekday === 'Fri' && t.hour >= LI_FRIDAY_FROM && st.liWeek !== t.day) {
+    const list = pickWeek(data.items, t.now);
+    if (list.length >= DIGEST_MIN) {
+      const tags = liTags(list.map(n => n.title));
+      const a = ARTICLES[(st.liArt || 0) % ARTICLES.length]; st.liArt = (st.liArt || 0) + 1;
+      out.push({ id: 'settimana-' + t.day, link: `${SITE}?settimana=${t.day}`, date: new Date(t.now).toISOString(), img: SITE + DIGEST_LOGO,
+        title: `La settimana dell'intelligenza artificiale: ${cut(list[0].title, 110).replace(/[.!?…]+$/, '')}. Le ${list.length} notizie AI da sapere, su FAIND ${tags}`,
+        text: [`La settimana dell'intelligenza artificiale in ${list.length} notizie. La più ripresa: ${list[0].title}`, '', intro(), '',
+          ...list.map((n, i) => `${i + 1}. ${n.title} (${n.source.name})`), '',
+          `Tutte le notizie, con la fonte: ${SITE}`, `Da leggere con calma: ${a.title} ${SITE}approfondimenti/${a.slug}.html`, '', tags].join('\n') });
+    }
+    st.liWeek = t.day;
+  }
+  return out;
+}
+
+async function linkedinFeed(data, t, rank) {
+  try {
+    const st = data.tgState;
+    const fresh = linkedinItems(data, t, rank);
+    st.linkedin = [...fresh, ...(st.linkedin || [])].slice(0, LI_KEEP);
+    const items = st.linkedin.map(i => `  <item>
+    <title>${xml(i.title)}</title>
+    <link>${xml(i.link)}</link>
+    <guid isPermaLink="false">faind-linkedin-${xml(i.id)}</guid>
+    <pubDate>${new Date(i.date).toUTCString()}</pubDate>
+    <description>${xml(i.text)}</description>${i.img ? `\n    <enclosure url="${xml(i.img)}" type="image/png" length="0"/>` : ''}
+  </item>`).join('\n');
+    await mkdir(path.join(ROOT, 'feeds'), { recursive: true });
+    await writeFile(path.join(ROOT, 'feeds', 'linkedin.xml'), `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+  <title>FAIND – post per LinkedIn</title>
+  <link>${SITE}</link>
+  <description>Il punto delle 8, la classifica dei lavori AI e gli approfondimenti di FAIND, pronti per i social.</description>
+  <language>it</language>
+  <lastBuildDate>${new Date(t.now).toUTCString()}</lastBuildDate>
+${items}
+</channel></rss>
+`);
+    if (fresh.length) console.log(`✓ feed LinkedIn: ${fresh.length} nuov${fresh.length === 1 ? 'a voce' : 'e voci'} (${st.linkedin.length} in tutto)`);
+  } catch (e) { console.warn('Feed LinkedIn non aggiornato:', e.message); }
+}
+
 async function main() {
   if (!DRY && (!TOKEN || !CHAT)) { console.log('Telegram non configurato: salto.'); return; }
   const file = path.join(ROOT, 'news.json');
@@ -381,6 +473,9 @@ async function main() {
 
   // Grafica e testo "Lavoro AI" per i social: sempre aggiornati sul sito
   const card = await buildJobsCard(data, t);
+
+  // Feed con i post per LinkedIn (pubblicati da un servizio esterno che legge feeds/linkedin.xml)
+  await linkedinFeed(data, t, card.rank);
 
   // Ore di silenzio: non si pubblica e non si scarta nulla, si riprende al mattino
   const forced = process.env.TG_DIGEST === '1' || process.env.TG_JOBS === '1';
