@@ -28,7 +28,7 @@ const SEEN_MAX = 800;
 
 export const TOPICS = {
   robot: {
-    slug: 'robot-umanoidi', color: '#4293B9', name: 'Robot e umanoidi', short: 'robot e umanoidi', home: 'focus-robot',
+    slug: 'robot-umanoidi', color: '#4293B9', name: 'Robotics e Umanoidi', short: 'robot e umanoidi', home: 'focus-robot',
     title: 'Robot e umanoidi: notizie, video e a che punto siamo',
     desc: 'Robot umanoidi, auto a guida autonoma, droni e robot nello spazio: le notizie aggiornate ogni ora con la fonte, i video e la cronologia di FAIND.',
     lede: 'Dai robot umanoidi che imparano a muoversi nei magazzini alle auto senza conducente, dai droni ai rover nello spazio: qui FAIND raccoglie, ora per ora, quello che succede dove l\'intelligenza artificiale incontra il mondo fisico.',

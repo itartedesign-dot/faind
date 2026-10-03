@@ -8,7 +8,7 @@
 export const TOPICS_I18N = {
   en: {
     robot: {
-      slug: 'humanoid-robots', name: 'Robots and humanoids', short: 'robots and humanoids',
+      slug: 'humanoid-robots', name: 'Robotics & humanoids', short: 'robots and humanoids',
       title: 'Robots and humanoids: news, videos and where things stand',
       desc: 'Humanoid robots, self-driving cars, drones and robots in space: news updated every hour with the source, videos and the FAIND timeline.',
       lede: 'From humanoid robots learning to move around warehouses to driverless cars, from drones to rovers in space: here FAIND collects, hour by hour, what happens where artificial intelligence meets the physical world.',
@@ -106,7 +106,7 @@ export const TOPICS_I18N = {
 
   fr: {
     robot: {
-      slug: 'robots-humanoides', name: 'Robots et humanoïdes', short: 'les robots et les humanoïdes',
+      slug: 'robots-humanoides', name: 'Robotique et humanoïdes', short: 'les robots et les humanoïdes',
       title: 'Robots et humanoïdes : actualités, vidéos et état des lieux',
       desc: 'Robots humanoïdes, voitures autonomes, drones et robots dans l\'espace : les actualités mises à jour chaque heure avec la source, les vidéos et la chronologie de FAIND.',
       lede: 'Des robots humanoïdes qui apprennent à se déplacer dans les entrepôts aux voitures sans conducteur, des drones aux rovers dans l\'espace : FAIND rassemble ici, heure par heure, ce qui se passe là où l\'intelligence artificielle rencontre le monde physique.',
@@ -204,7 +204,7 @@ export const TOPICS_I18N = {
 
   de: {
     robot: {
-      slug: 'humanoide-roboter', name: 'Roboter und Humanoide', short: 'Roboter und Humanoide',
+      slug: 'humanoide-roboter', name: 'Robotik & Humanoide', short: 'Roboter und Humanoide',
       title: 'Roboter und Humanoide: Nachrichten, Videos und aktueller Stand',
       desc: 'Humanoide Roboter, selbstfahrende Autos, Drohnen und Roboter im All: stündlich aktualisierte Nachrichten mit Quelle, Videos und die FAIND-Chronik.',
       lede: 'Von humanoiden Robotern, die sich in Lagerhallen bewegen lernen, bis zu fahrerlosen Autos, von Drohnen bis zu Rovern im All: Hier sammelt FAIND Stunde für Stunde, was dort geschieht, wo künstliche Intelligenz auf die physische Welt trifft.',

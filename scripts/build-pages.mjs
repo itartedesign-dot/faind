@@ -17,6 +17,7 @@ import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
 import vm from 'node:vm';
 import path from 'node:path';
 import { buildCards } from './cards.mjs';
+import { buildCompare } from './compare.mjs';
 import { buildGlossary, termsIn, linkify, GLOSSARY_PATH } from './glossary.mjs';
 
 export const SITE = 'https://itartedesign-dot.github.io/faind/';
@@ -145,7 +146,7 @@ function pageHtml(n, related, sameCat) {
       <a class="btn btn--ghost np__home" href="../">Tutte le notizie di oggi su FAIND</a>
     </aside>
   </main>
-  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="../#chi-siamo">Chi siamo</a> · <a href="../temi/">Temi</a> · <a href="../glossario/">Glossario</a> · <a href="../redazione.html">Chi c'è dietro FAIND</a> · <a href="../feed.xml">Feed RSS</a> · <a href="../privacy.html">Privacy e note legali</a></p></div></footer>
+  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="../#chi-siamo">Chi siamo</a> · <a href="../temi/">Temi</a> · <a href="../glossario/">Glossario</a> · <a href="../confronto/">Le AI a confronto</a> · <a href="../redazione.html">Chi c'è dietro FAIND</a> · <a href="../feed.xml">Feed RSS</a> · <a href="../privacy.html">Privacy e note legali</a></p></div></footer>
 </body>
 </html>`;
 }
@@ -259,6 +260,10 @@ export async function buildSite(out, root) {
   // Glossario AI in quattro lingue (cartella glossario/), con le notizie che citano ogni termine
   try { await buildGlossary(news, root); }
   catch (e) { console.warn('Glossario non generato:', e.message); }
+
+  // Le AI a confronto, in quattro lingue (cartella confronto/)
+  try { await buildCompare(root); }
+  catch (e) { console.warn('Pagina di confronto non generata:', e.message); }
 
   console.log(`📄 pagine: ${news.length} (${news.filter(indexable).length} indicizzabili) · feed RSS: ${Object.keys(CATS).length}`);
 }

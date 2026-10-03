@@ -69,6 +69,11 @@
       "url": "https://www.numerama.com/feed/",
       "lang": "fr",
       "filter": true
+    },
+    {
+      "name": "The Rundown AI",
+      "url": "https://rss.beehiiv.com/feeds/2R3C6Bt5wj.xml",
+      "lang": "en"
     }
   ],
   "videoMaxAgeDays": 21,

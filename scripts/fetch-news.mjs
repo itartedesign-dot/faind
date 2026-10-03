@@ -101,6 +101,94 @@ export function pageImage(html, base) {
   return '';
 }
 
+/* ---------- Logo della fonte, per le notizie senza foto ---------- */
+// Misure di un'immagine lette dall'intestazione del file (PNG, JPEG, GIF, WebP; SVG = vettoriale)
+export function imageSize(buf) {
+  try {
+    if (buf.length > 24 && buf.readUInt32BE(0) === 0x89504E47) return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
+    if (buf.length > 10 && buf.toString('ascii', 0, 3) === 'GIF') return { w: buf.readUInt16LE(6), h: buf.readUInt16LE(8) };
+    if (buf.length > 30 && buf.toString('ascii', 0, 4) === 'RIFF' && buf.toString('ascii', 8, 12) === 'WEBP') {
+      const kind = buf.toString('ascii', 12, 16);
+      if (kind === 'VP8X') return { w: 1 + buf.readUIntLE(24, 3), h: 1 + buf.readUIntLE(27, 3) };
+      if (kind === 'VP8 ') return { w: buf.readUInt16LE(26) & 0x3FFF, h: buf.readUInt16LE(28) & 0x3FFF };
+      if (kind === 'VP8L') { const b = buf.readUInt32LE(21); return { w: 1 + (b & 0x3FFF), h: 1 + ((b >> 14) & 0x3FFF) }; }
+    }
+    if (buf.length > 4 && buf[0] === 0xFF && buf[1] === 0xD8) {
+      let p = 2;
+      while (p + 9 < buf.length) {
+        if (buf[p] !== 0xFF) { p++; continue; }
+        const m = buf[p + 1];
+        if (m >= 0xC0 && m <= 0xCF && m !== 0xC4 && m !== 0xC8 && m !== 0xCC) return { w: buf.readUInt16BE(p + 7), h: buf.readUInt16BE(p + 5) };
+        if (m === 0xD8 || m === 0x01 || (m >= 0xD0 && m <= 0xD7)) { p += 2; continue; }
+        p += 2 + buf.readUInt16BE(p + 2);
+      }
+    }
+    if (/<svg[\s>]/i.test(buf.toString('utf8', 0, Math.min(buf.length, 2000)))) return { w: 512, h: 512, svg: true };
+  } catch { /* file non leggibile */ }
+  return null;
+}
+// Non un'icona: almeno 160×60, al massimo 2400 px per lato
+export const LOGO_MIN_W = 160, LOGO_MIN_H = 60, LOGO_MAX = 2400, LOGO_MAX_BYTES = 700000;
+export const logoSizeOk = (s) => !!s && s.w >= LOGO_MIN_W && s.h >= LOGO_MIN_H && s.w <= LOGO_MAX && s.h <= LOGO_MAX;
+// Candidati dalla home della testata, dal migliore al peggiore: logo dichiarato, anteprima social, icona grande
+export function logoCandidates(html, base) {
+  const head = html.slice(0, 400000), out = [];
+  // qui i file chiamati "logo" vanno bene (cleanImage li scarterebbe)
+  const add = (u) => {
+    if (!u) return;
+    try { const x = new URL(decode(u).trim(), base); if (!/^https?:$/.test(x.protocol)) return; x.protocol = 'https:'; if (!out.includes(x.toString())) out.push(x.toString()); } catch { /* indirizzo non valido */ }
+  };
+  for (const m of head.matchAll(/"logo"\s*:\s*(?:"([^"]+)"|\{[^{}]*?"url"\s*:\s*"([^"]+)")/g)) add((m[1] || m[2]).replace(/\\\//g, '/'));
+  for (const [t] of head.matchAll(/<meta\b[^>]*>/gi)) {
+    const key = (attr(t, 'property') || attr(t, 'name')).toLowerCase();
+    if (key === 'og:image' || key === 'og:image:secure_url' || key === 'twitter:image') add(attr(t, 'content'));
+  }
+  const icons = [];
+  for (const [t] of head.matchAll(/<link\b[^>]*>/gi)) {
+    const rel = attr(t, 'rel').toLowerCase();
+    if (!/apple-touch-icon|(^|\s)icon(\s|$)/.test(rel)) continue;
+    const size = parseInt((attr(t, 'sizes').match(/\d+/) || [rel.includes('apple') ? '180' : '0'])[0], 10);
+    if (size >= LOGO_MIN_W) icons.push([size, attr(t, 'href')]);
+  }
+  icons.sort((a, b) => b[0] - a[0]).forEach(([, h]) => add(h));
+  return out.slice(0, 6);
+}
+async function getBuf(url, ms = 8000) {
+  const res = await fetch(url, { signal: AbortSignal.timeout(ms), headers: { 'user-agent': 'Mozilla/5.0 (compatible; FAIND-news-bot/1.0; +https://itartedesign-dot.github.io/faind/)' } });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const buf = Buffer.from(await res.arrayBuffer());
+  if (buf.length > LOGO_MAX_BYTES) throw new Error('file troppo grande');
+  return buf;
+}
+async function findSourceLogo(origin) {
+  const html = await get(origin + '/', 8000);
+  for (const url of logoCandidates(html, origin + '/')) {
+    if (!/^https:\/\//.test(url)) continue;
+    try { if (logoSizeOk(imageSize(await getBuf(url)))) return url; } catch { /* provo il candidato successivo */ }
+  }
+  return '';
+}
+// Assegna srcLogo alle notizie senza foto. Ogni testata viene controllata al massimo ogni 14 giorni, 12 per giro.
+async function sourceLogos(items, cache, now) {
+  const originOf = (it) => { try { return new URL(it.link.url).origin; } catch { return ''; } };
+  const need = [...new Set(items.filter(i => !i.image).map(originOf).filter(o => /^https:/.test(o)))];
+  const todo = need.filter(o => !cache[o] || now - cache[o].t > 14 * 864e5).slice(0, 12);
+  let found = 0;
+  for (let i = 0; i < todo.length; i += 4) {
+    await Promise.all(todo.slice(i, i + 4).map(async (o) => {
+      let url = '';
+      try { url = await findSourceLogo(o); } catch { /* home non raggiungibile */ }
+      cache[o] = { url, t: now }; if (url) found++;
+    }));
+  }
+  for (const it of items) {
+    const c = !it.image && cache[originOf(it)];
+    if (c && c.url) it.srcLogo = c.url; else delete it.srcLogo;
+  }
+  if (todo.length) console.log(`🏷  loghi delle fonti: ${found}/${todo.length} trovati`);
+  return cache;
+}
+
 export function parseFeed(xml) {
   const items = [];
   const isAtom = /<feed[\s>]/i.test(xml) && !/<rss[\s>]/i.test(xml);
@@ -498,10 +586,19 @@ async function main() {
   }
   if (todo.length) console.log(`🖼  anteprime: ${foundImg}/${todo.length} trovate`);
 
+  // Dove la foto manca davvero, provo con il logo della testata (se ha misure adeguate); altrimenti resta il logo FAIND
+  let logos = prevJson.logos || {};
+  try { logos = await sourceLogos(items, logos, now); } catch (e) { console.warn('Loghi delle fonti non aggiornati:', e.message); }
+
   if (ok === 0 && previous.length) {
     console.warn('Nessun feed raggiungibile: mantengo lo storico.');
   }
   const { videos, channels } = await collectVideos(cfg, prevJson, now);
+  // Controllo dei prezzi degli abbonamenti (ogni 12 ore): confronta data.js con un listino pubblico, senza mai modificarlo
+  let priceCheck = prevJson.priceCheck || null;
+  try { const { checkPrices } = await import('./prices.mjs'); priceCheck = await checkPrices(ROOT, priceCheck, now, get); }
+  catch (e) { console.warn('Controllo prezzi non riuscito:', e.message); }
+
   let jobsData = { jobs: prevJson.jobs || [], jobsUpdated: prevJson.jobsUpdated || null };
   try { jobsData = await collectJobs(cfg, prevJson, now); }
   catch (e) { console.warn('Job non aggiornati:', e.message); }
@@ -510,7 +607,7 @@ async function main() {
   catch (e) { console.warn('Focus non generato:', e.message); spotlight = prevJson.spotlight || []; }
 
   const sources = new Set(items.flatMap(i => [i.source.name, ...i.also.map(a => a.name)]));
-  const out = { generated: new Date(now).toISOString(), sources: sources.size, count: items.length, items, videos, channels, spotlight, jobs: jobsData.jobs, jobsUpdated: jobsData.jobsUpdated, tgState: prevJson.tgState || {} };   // tgState = promemoria del bot Telegram (ultimo Punto delle 8, ultima classifica lavori)
+  const out = { generated: new Date(now).toISOString(), sources: sources.size, count: items.length, items, videos, channels, spotlight, jobs: jobsData.jobs, jobsUpdated: jobsData.jobsUpdated, tgState: prevJson.tgState || {}, logos, priceCheck };   // tgState = promemoria del bot Telegram (ultimo Punto delle 8, ultima classifica lavori)
 
   // Pagine notizia, feed RSS e sitemap (aggiunge a ogni notizia il campo "page")
   try { await buildSite(out, ROOT); }
