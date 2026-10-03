@@ -18,6 +18,7 @@ import vm from 'node:vm';
 import path from 'node:path';
 import { buildCards } from './cards.mjs';
 import { buildCompare } from './compare.mjs';
+import { buildArticles } from './articles.mjs';
 import { buildGlossary, termsIn, linkify, GLOSSARY_PATH } from './glossary.mjs';
 
 export const SITE = 'https://itartedesign-dot.github.io/faind/';
@@ -146,7 +147,7 @@ function pageHtml(n, related, sameCat) {
       <a class="btn btn--ghost np__home" href="../">Tutte le notizie di oggi su FAIND</a>
     </aside>
   </main>
-  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="../#chi-siamo">Chi siamo</a> · <a href="../temi/">Temi</a> · <a href="../glossario/">Glossario</a> · <a href="../confronto/">Le AI a confronto</a> · <a href="../redazione.html">Chi c'è dietro FAIND</a> · <a href="../feed.xml">Feed RSS</a> · <a href="../privacy.html">Privacy e note legali</a></p></div></footer>
+  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="../#chi-siamo">Chi siamo</a> · <a href="../temi/">Temi</a> · <a href="../glossario/">Glossario</a> · <a href="../confronto/">Le AI a confronto</a> · <a href="../approfondimenti/">Approfondimenti</a> · <a href="../redazione.html">Chi c'è dietro FAIND</a> · <a href="../feed.xml">Feed RSS</a> · <a href="../privacy.html">Privacy e note legali</a></p></div></footer>
 </body>
 </html>`;
 }
@@ -264,6 +265,10 @@ export async function buildSite(out, root) {
   // Le AI a confronto, in quattro lingue (cartella confronto/)
   try { await buildCompare(root); }
   catch (e) { console.warn('Pagina di confronto non generata:', e.message); }
+
+  // Approfondimenti: gli articoli di fondo (cartella approfondimenti/)
+  try { await buildArticles(root); }
+  catch (e) { console.warn('Approfondimenti non generati:', e.message); }
 
   console.log(`📄 pagine: ${news.length} (${news.filter(indexable).length} indicizzabili) · feed RSS: ${Object.keys(CATS).length}`);
 }
