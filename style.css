@@ -526,13 +526,15 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 .trend__vid { display: inline-block; font-size: 10.5px; font-weight: 800; letter-spacing: .05em; color: #fff; background: #D8483F; border-radius: 4px; padding: 1px 6px; margin-right: 6px; vertical-align: 1px; }
 .trend__empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
 /* Newsletter */
-.nl { border: 2px solid #4293B9; }
+.nl { border-color: color-mix(in srgb, #F2811D 45%, var(--rule)); background: linear-gradient(160deg, var(--surface) 60%, color-mix(in srgb, #F2811D 8%, var(--surface))); }
+.nl .nl__btn { background: #F2811D; border-color: #F2811D; color: #fff; }
+.nl .nl__btn:hover { background: #D96F12; }
 .nl__form { display: grid; gap: 10px; margin-top: 10px; }
 .nl__freq { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
 .nl__freq label { position: relative; }
 .nl__freq input { position: absolute; opacity: 0; inset: 0; }
 .nl__freq span { display: block; text-align: center; padding: 9px 4px; border: 1px solid var(--rule); border-radius: 10px; font-size: 13.5px; font-weight: 700; color: var(--ink); cursor: pointer; background: var(--surface); }
-.nl__freq input:checked + span { background: #4293B9; border-color: #4293B9; color: #fff; }
+.nl__freq input:checked + span { background: #F2811D; border-color: #F2811D; color: #fff; }
 .nl__freq input:focus-visible + span { outline: 2px solid var(--link); outline-offset: 2px; }
 .nl__input { font: inherit; width: 100%; box-sizing: border-box; padding: 12px; border-radius: 10px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); }
 .nl__hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
