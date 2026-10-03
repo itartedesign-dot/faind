@@ -220,7 +220,7 @@ window.FAIND_DATA = {
   prices: {
     checked: "2026-09-30",
     currency: "USD",
-    verifiedBy: { name: "Fello AI — AI pricing comparison", url: "https://felloai.com/ai-pricing-comparison/" },
+    verifiedBy: { name: "AI Price Compare", url: "https://aipricecompare.org/" },
     items: [
       { name: "Google AI Plus", logo: "gemini.google.com", vendor: "Google", monthly: 4.99, url: "https://gemini.google/subscriptions/" },
       { name: "ChatGPT Go", logo: "chatgpt.com", vendor: "OpenAI", monthly: 8, url: "https://openai.com/chatgpt/pricing/" },

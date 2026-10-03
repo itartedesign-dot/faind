@@ -215,7 +215,7 @@
         <!-- Video -->
         <section class="block" id="video" aria-labelledby="videoTitle">
           <div class="block__head">
-            <h2 class="block__title" id="videoTitle" data-i18n="sec.video">Video</h2>
+            <h2 class="block__title" id="videoTitle" data-i18n="sec.video">L'AI in video</h2>
             <div class="chips chips--inline" id="videoGroups" role="toolbar" aria-label="Video"></div>
           </div>
           <div class="vgrid" id="videos"></div>
@@ -249,7 +249,7 @@
         <!-- Letture secondarie -->
         <section class="block" id="letture" aria-labelledby="readsTitle">
           <div class="block__head">
-            <h2 class="block__title" id="readsTitle" data-i18n="sec.more">Letture secondarie</h2>
+            <h2 class="block__title" id="readsTitle" data-i18n="sec.more">Se hai 10 minuti - Letture secondarie</h2>
             <p class="block__hint" data-i18n="hint.more">Il resto della settimana, dal più recente</p>
           </div>
           <ol class="reads" id="reads"></ol>
@@ -288,8 +288,33 @@
         <p data-i18n="tgbox.text">Le notizie sull'intelligenza artificiale in tempo reale, gratis e senza registrazione: le più importanti ogni ora con la fonte, «Il punto delle 8» ogni mattina e la classifica dei lavori AI più richiesti ogni lunedì. Di notte, dalle 23 alle 7, nessuna notifica.</p>
         <a class="tgbox__btn" href="https://t.me/faindnews" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1.1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.100-8.200c.4-.4-.1-.5-.6-.2L6.300 13.100 1.500 11.600c-1-.3-1.100-1 .2-1.500L20.500 2.900c.9-.3 1.700.2 1.400 1.400z"/></svg><span data-i18n="tgbox.btn">Apri il canale @faindnews</span></a>
       </section>
+      <section class="panel nl" id="newsletter" aria-labelledby="nlTitle">
+        <h2 class="panel__title" id="nlTitle" data-i18n="nl.title">Iscriviti alla newsletter</h2>
+        <p data-i18n="nl.text">Le notizie AI che contano, nella tua casella di posta. Scegli tu ogni quanto riceverle.</p>
+        <form class="nl__form" id="nlForm" novalidate>
+          <fieldset class="nl__freq">
+            <legend class="sr-only" data-i18n="nl.freq">Frequenza</legend>
+            <label><input type="radio" name="freq" value="giornaliera" checked><span data-i18n="nl.daily">Giornaliera</span></label>
+            <label><input type="radio" name="freq" value="settimanale"><span data-i18n="nl.weekly">Settimanale</span></label>
+            <label><input type="radio" name="freq" value="mensile"><span data-i18n="nl.monthly">Mensile</span></label>
+          </fieldset>
+          <label class="sr-only" for="nlEmail" data-i18n="nl.email">La tua email</label>
+          <input class="nl__input" id="nlEmail" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="nome@esempio.it" data-i18n-ph="nl.ph">
+          <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="nl__hp" aria-hidden="true">
+          <label class="nl__ok"><input type="checkbox" id="nlOk" required><span><span data-i18n="nl.consent">Acconsento a ricevere la newsletter di FAIND. Posso annullare in ogni momento.</span> <a href="privacy.html#newsletter">Privacy</a></span></label>
+          <button class="btn btn--primary nl__btn" type="submit" data-i18n="nl.btn">Iscrivimi</button>
+          <p class="nl__msg" id="nlMsg" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="panel trend" id="trending" aria-labelledby="trendTitle" hidden>
+        <h2 class="panel__title" id="trendTitle">Trending Tool</h2>
+        <div class="trend__tabs" id="trendTabs" role="tablist"></div>
+        <ul class="trend__list" id="trendList"></ul>
+      </section>
+
       <section class="panel" id="prezzi" aria-labelledby="pricesTitle">
-        <h2 class="panel__title" id="pricesTitle" data-i18n="sec.prices">Prezzi e abbonamenti</h2>
+        <h2 class="panel__title" id="pricesTitle" data-i18n="sec.prices">Prezzi e abbonamenti delle AI</h2>
         <p class="panel__note" id="pricesNote"></p>
         <table class="prices">
           <caption class="sr-only" data-i18n="sec.prices">Prezzi e abbonamenti</caption>
@@ -299,10 +324,11 @@
           <tbody id="prices"></tbody>
         </table>
         <p class="panel__foot" id="pricesFoot"></p>
+        <a class="btn cmp-btn" href="confronto/" data-ll="compare">Le AI a confronto: pro, contro e prezzi</a>
       </section>
 
       <section class="panel" id="convenzioni" aria-labelledby="dealsTitle">
-        <h2 class="panel__title" id="dealsTitle" data-i18n="sec.deals">Convenzioni e sconti</h2>
+        <h2 class="panel__title" id="dealsTitle" data-i18n="sec.deals">Sconti e offerte sui servizi AI</h2>
         <ul class="deals" id="deals"></ul>
       </section>
 
@@ -388,6 +414,7 @@
         <!-- Italiano: versione completa, indicizzata da Google -->
         <div data-about="it" lang="it">
           <h2 class="about__title" id="aboutTitle">Chi siamo: FAIND, Flash AI News Daily</h2>
+          <p class="about__founder"><a href="redazione.html"><img src="assets/paolo-buono.webp" width="44" height="44" alt="Paolo Buono, fondatore di FAIND" loading="lazy" decoding="async"><span>Il fondatore: Paolo Buono</span></a></p>
           <p class="about__lede">FAIND è un'agenzia di notizie flash dedicata all'<strong>intelligenza artificiale</strong>. Ogni ora raccoglie notizie da testate e blog ufficiali, video dai migliori canali YouTube e offerte di lavoro nel settore, li ordina per importanza e per tema e li presenta in un unico posto, con la fonte originale sempre in vista.</p>
 
           <h3>Perché esiste FAIND</h3>
@@ -433,6 +460,7 @@
 
         <div data-about="en" lang="en" hidden>
           <h2 class="about__title">About FAIND – Flash AI News Daily</h2>
+          <p class="about__founder"><a href="about.html"><img src="assets/paolo-buono.webp" width="44" height="44" alt="Paolo Buono, founder of FAIND" loading="lazy" decoding="async"><span>The founder: Paolo Buono</span></a></p>
           <p class="about__lede">FAIND is a flash news agency for <strong>artificial intelligence</strong>. Every hour it collects news from newsrooms and official company blogs, videos from the best YouTube channels and AI job openings, sorts them by importance and topic, and shows everything in one place with a link to the original source.</p>
           <h3>What you get</h3>
           <ul class="about__list">
@@ -448,6 +476,7 @@
 
         <div data-about="fr" lang="fr" hidden>
           <h2 class="about__title">Qui sommes-nous : FAIND – Flash AI News Daily</h2>
+          <p class="about__founder"><a href="a-propos.html"><img src="assets/paolo-buono.webp" width="44" height="44" alt="Paolo Buono, fondateur de FAIND" loading="lazy" decoding="async"><span>Le fondateur : Paolo Buono</span></a></p>
           <p class="about__lede">FAIND est une agence d'infos flash consacrée à l'<strong>intelligence artificielle</strong>. Chaque heure, elle rassemble les actus des rédactions et des blogs officiels, les vidéos des meilleures chaînes YouTube et les offres d'emploi du secteur, les classe par importance et par thème, et les affiche au même endroit avec le lien vers la source.</p>
           <h3>Ce que vous trouvez</h3>
           <ul class="about__list">
@@ -463,6 +492,7 @@
 
         <div data-about="de" lang="de" hidden>
           <h2 class="about__title">Über uns: FAIND – Flash AI News Daily</h2>
+          <p class="about__founder"><a href="ueber-uns.html"><img src="assets/paolo-buono.webp" width="44" height="44" alt="Paolo Buono, Gründer von FAIND" loading="lazy" decoding="async"><span>Der Gründer: Paolo Buono</span></a></p>
           <p class="about__lede">FAIND ist eine Nachrichtenagentur für Kurzmeldungen rund um <strong>künstliche Intelligenz</strong>. Jede Stunde sammelt sie Meldungen von Redaktionen und offiziellen Firmenblogs, Videos der besten YouTube-Kanäle und KI-Stellenangebote, ordnet alles nach Wichtigkeit und Thema und zeigt es an einem Ort – immer mit Link zur Quelle.</p>
           <h3>Was du findest</h3>
           <ul class="about__list">

@@ -270,6 +270,9 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 .thumb { position: relative; overflow: hidden; background: var(--surface-2); flex-shrink: 0; }
 .thumb img:not(.thumb__logo) { width: 100%; height: 100%; object-fit: cover; display: block; }
 .thumb--ph { display: grid; place-items: center; background: #0E1222; }
+/* Notizia senza foto ma con il logo della fonte: logo intero, centrato, su fondo chiaro */
+.thumb--src { background: #F4F6FA; box-shadow: inset 0 0 0 1px var(--rule); }
+.thumb.thumb--src img { width: 100%; height: 100%; object-fit: contain; padding: 9%; display: block; }
 :root[data-theme="dark"] .thumb--ph { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06); }
 .thumb__logo { width: 72%; max-width: 320px; height: auto; }
 .thumb--wide .thumb__logo, .thumb--lead .thumb__logo { width: 58%; }
@@ -502,6 +505,42 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 .side { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
 .panel { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-l); padding: 22px; }
 .panel > p { color: var(--muted); font-size: 15px; }
+/* Domanda sotto il titolo di ogni sezione */
+.secq { font-size: 14.5px; font-style: italic; color: var(--muted); margin: -6px 0 14px; line-height: 1.4; }
+.panel > .secq { font-size: 13.5px !important; margin: -4px 0 12px; }
+.wire__head .secq { margin: 6px 0 0; padding-left: 18px; font-size: 13px; }
+.lead + .wire .secq { margin-bottom: 0; }
+/* Pulsante verso la pagina di confronto */
+.cmp-btn { display: block; text-align: center; margin-top: 14px; background: #0E1222; color: #fff; text-decoration: none; padding: 12px 14px; border-radius: 10px; font-weight: 750; font-size: 15px; }
+:root[data-theme="dark"] .cmp-btn { background: #4293B9; }
+/* Trending Tool */
+.trend__tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.trend__tab { font: inherit; font-size: 13px; font-weight: 700; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); cursor: pointer; }
+.trend__tab[aria-selected="true"] { background: #4293B9; border-color: #4293B9; color: #fff; }
+.trend__list { list-style: none; margin: 0; padding: 0; }
+.trend__list li { padding: 10px 0; border-top: 1px solid var(--rule); }
+.trend__list li:first-child { border-top: 0; }
+.trend__list a { color: var(--ink); text-decoration: none; font-weight: 650; font-size: 15px; line-height: 1.3; display: block; }
+.trend__list a:hover { color: var(--link); text-decoration: underline; }
+.trend__list span { display: block; font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+.trend__vid { display: inline-block; font-size: 10.5px; font-weight: 800; letter-spacing: .05em; color: #fff; background: #D8483F; border-radius: 4px; padding: 1px 6px; margin-right: 6px; vertical-align: 1px; }
+.trend__empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+/* Newsletter */
+.nl { border: 2px solid #4293B9; }
+.nl__form { display: grid; gap: 10px; margin-top: 10px; }
+.nl__freq { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.nl__freq label { position: relative; }
+.nl__freq input { position: absolute; opacity: 0; inset: 0; }
+.nl__freq span { display: block; text-align: center; padding: 9px 4px; border: 1px solid var(--rule); border-radius: 10px; font-size: 13.5px; font-weight: 700; color: var(--ink); cursor: pointer; background: var(--surface); }
+.nl__freq input:checked + span { background: #4293B9; border-color: #4293B9; color: #fff; }
+.nl__freq input:focus-visible + span { outline: 2px solid var(--link); outline-offset: 2px; }
+.nl__input { font: inherit; width: 100%; box-sizing: border-box; padding: 12px; border-radius: 10px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); }
+.nl__hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.nl__ok { display: flex; gap: 8px; align-items: flex-start; font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+.nl__ok input { margin-top: 2px; flex: none; }
+.nl__btn { width: 100%; }
+.nl__msg { font-size: 14px; font-weight: 650; min-height: 1.2em; margin: 0; }
+.nl__msg.is-ok { color: #1E9460; } .nl__msg.is-err { color: #D8483F; }
 /* Riquadro Telegram: in cima alla colonna laterale (desktop), subito dopo le notizie (tablet e telefono) */
 .tgbox { border: 2px solid #8FD0F0; background: var(--surface); padding: 14px 14px 18px; }
 .tgbox__img { display: block; margin-bottom: 14px; border-radius: 10px; overflow: hidden; background: #0E1222; }
@@ -575,6 +614,10 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 .about__inner { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 48px; padding-block: 56px 64px; align-items: start; }
 .about__text { max-width: 72ch; }
 .about__title { font-size: clamp(28px, 3vw, 38px); font-weight: 800; font-stretch: 76%; margin-bottom: 16px; }
+.about__founder { margin: -4px 0 18px; }
+.about__founder a { display: inline-flex; align-items: center; gap: 12px; color: var(--ink); font-weight: 700; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: #4293B9; text-decoration-thickness: 2px; }
+.about__founder a:hover { color: var(--link); }
+.about__founder img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px #4293B9; flex: none; }
 .about__lede { font-size: 19px; line-height: 1.55; color: var(--ink); margin-bottom: 8px; }
 .about h3 { font-size: 21px; font-weight: 750; font-stretch: 84%; margin: 32px 0 10px; }
 .about p { color: var(--muted); font-size: 16.5px; line-height: 1.65; }
