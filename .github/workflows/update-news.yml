@@ -1,16 +1,21 @@
+# FAIND — aggiorna le notizie e pubblica il sito
+# Gira a ogni push, ogni ora e a mano (Actions → "Aggiorna notizie" → Run workflow).
+# Requisito: Settings → Pages → Source = "GitHub Actions".
+
 name: Aggiorna notizie
 
 on:
   push:
     branches: [main]
   schedule:
-    - cron: "17 * * * *"
+    - cron: "17 * * * *"     # ogni ora al minuto 17 (orario UTC)
   workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
+  issues: write              # per le segnalazioni automatiche (es. chiave Buffer in scadenza)
 
 concurrency:
   group: pages
@@ -40,6 +45,13 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      - name: Pubblica su LinkedIn (tramite Buffer)
+        run: node scripts/linkedin.mjs
+        continue-on-error: true
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/upload-pages-artifact@v3
         with:
