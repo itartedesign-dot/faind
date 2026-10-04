@@ -366,6 +366,8 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 .intro__actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .intro__btn--tg { background: #229ED9; border-color: #229ED9; color: #fff; }
 .intro__btn--tg:hover { background: #1A8BC0; }
+.intro__btn--li { background: #0A66C2; border-color: #0A66C2; color: #fff; }
+.intro__btn--li:hover { background: #084E96; }
 .tgcta { display: block; text-decoration: none; background: #229ED9; color: #fff; border-radius: var(--radius-m); padding: 14px 16px; margin-bottom: 14px; }
 .tgcta:hover { background: #1A8BC0; }
 .tgcta__name { display: block; font-weight: 800; font-size: 17px; }
@@ -573,6 +575,8 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 .tgbox > p { margin-bottom: 14px; line-height: 1.5; }
 .tgbox__btn { display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; background: #229ED9; color: #fff; font-weight: 750; font-size: 16px; padding: 13px 16px; border-radius: 10px; }
 .tgbox__btn:hover { background: #1A8BC0; }
+.tgbox__btn--li { background: #0A66C2; margin-top: 10px; }
+.tgbox__btn--li:hover { background: #084E96; }
 .tgbox__btn svg { width: 22px; height: 22px; fill: currentColor; flex: none; }
 .panel__title { font-size: 21px; font-weight: 760; font-stretch: 82%; margin-bottom: 6px; }
 .panel__note { font-size: 13.5px !important; margin-bottom: 12px; }
