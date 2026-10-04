@@ -14,7 +14,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-const SITE = 'https://itartedesign-dot.github.io/faind/';
+const SITE = 'https://faind.org/';
 const DIR = 'approfondimenti/';
 const UPDATED = '2026-10-03';
 

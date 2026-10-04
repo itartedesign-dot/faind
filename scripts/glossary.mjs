@@ -17,7 +17,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-const SITE = 'https://itartedesign-dot.github.io/faind/';
+const SITE = 'https://faind.org/';
 export const GLOSSARY_PATH = { it: 'glossario/', en: 'glossario/en/', fr: 'glossario/fr/', de: 'glossario/de/' };
 
 export const TERMS = [

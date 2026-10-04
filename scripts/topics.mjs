@@ -21,7 +21,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { TOPICS_I18N } from './topics-i18n.mjs';
 
-const SITE = 'https://itartedesign-dot.github.io/faind/';
+const SITE = 'https://faind.org/';
 const TIMELINE_MAX = 180;      // giorni conservati nella cronologia
 const TIMELINE_SHOW = 60;      // righe mostrate in pagina
 const SEEN_MAX = 800;

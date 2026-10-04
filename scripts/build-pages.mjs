@@ -21,7 +21,7 @@ import { buildCompare } from './compare.mjs';
 import { buildArticles } from './articles.mjs';
 import { buildGlossary, termsIn, linkify, GLOSSARY_PATH } from './glossary.mjs';
 
-export const SITE = 'https://itartedesign-dot.github.io/faind/';
+export const SITE = 'https://faind.org/';
 const FEED_SIZE = 20;
 
 export const CATS = {

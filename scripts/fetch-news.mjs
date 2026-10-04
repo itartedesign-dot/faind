@@ -154,7 +154,7 @@ export function logoCandidates(html, base) {
   return out.slice(0, 6);
 }
 async function getBuf(url, ms = 8000) {
-  const res = await fetch(url, { signal: AbortSignal.timeout(ms), headers: { 'user-agent': 'Mozilla/5.0 (compatible; FAIND-news-bot/1.0; +https://itartedesign-dot.github.io/faind/)' } });
+  const res = await fetch(url, { signal: AbortSignal.timeout(ms), headers: { 'user-agent': 'Mozilla/5.0 (compatible; FAIND-news-bot/1.0; +https://faind.org/)' } });
   if (!res.ok) throw new Error('HTTP ' + res.status);
   const buf = Buffer.from(await res.arrayBuffer());
   if (buf.length > LOGO_MAX_BYTES) throw new Error('file troppo grande');
@@ -281,7 +281,7 @@ async function get(url, ms = 15000) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), ms);
   try {
-    const res = await fetch(url, { signal: ctrl.signal, headers: { 'user-agent': 'Mozilla/5.0 (compatible; FAIND-news-bot/1.0; +https://itartedesign-dot.github.io/faind/)', accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*' } });
+    const res = await fetch(url, { signal: ctrl.signal, headers: { 'user-agent': 'Mozilla/5.0 (compatible; FAIND-news-bot/1.0; +https://faind.org/)', accept: 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*' } });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     return await res.text();
   } finally { clearTimeout(t); }

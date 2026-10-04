@@ -17,7 +17,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-const SITE = 'https://itartedesign-dot.github.io/faind/';
+const SITE = 'https://faind.org/';
 export const COMPARE_DIR = { it: 'confronto/', en: 'confronto/en/', fr: 'confronto/fr/', de: 'confronto/de/' };
 const CHECKED = '2026-10-03';
 const PRICE_SOURCE = { name: 'AI Price Compare', url: 'https://aipricecompare.org/' };

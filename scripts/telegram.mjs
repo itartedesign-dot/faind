@@ -41,7 +41,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const SITE = 'https://itartedesign-dot.github.io/faind/';
+const SITE = 'https://faind.org/';
 const MAX_PER_RUN = 4;
 const FRESH_HOURS = 6;
 const VIDEO_HOURS = 12;
