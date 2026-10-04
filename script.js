@@ -892,7 +892,7 @@
   }
 
   /* ------------------------------ Condivisione ------------------------------ */
-  var SITE = 'https://itartedesign-dot.github.io/faind/';
+  var SITE = 'https://faind.org/';
   function shareLinks() {
     var u = encodeURIComponent(SITE), m = encodeURIComponent(t('share.msg'));
     var map = {
@@ -1159,7 +1159,7 @@
       if (nlForm.querySelector('[name="_honey"]').value) return;
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || !ok) { msg.className = 'nl__msg is-err'; msg.textContent = t('nl.bad'); return; }
       msg.className = 'nl__msg'; msg.textContent = t('nl.sending'); btn.disabled = true;
-      fetch('https://formsubmit.co/ajax/itartedesign@gmail.com', {
+      fetch('https://formsubmit.co/ajax/info@faind.org', {
         method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ _subject: 'FAIND newsletter: nuova iscrizione (' + freq + ')', email: email, frequenza: freq, lingua: state.lang,
           consenso: 'sì, ' + new Date().toISOString(), _template: 'table', _captcha: 'false' })
@@ -1187,7 +1187,7 @@
       var type = f.type.options[f.type.selectedIndex].text;
       var subject = '[FAIND] ' + type + ' — ' + name;
       var body = msg + '\n\n—\n' + name + ' <' + email + '>\n' + location.href;
-      window.location.href = 'mailto:itartedesign@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      window.location.href = 'mailto:info@faind.org?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
       status.textContent = t('form.ok');
     });
 

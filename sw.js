@@ -16,7 +16,7 @@ self.addEventListener('fetch', (e) => {
   if (e.request.mode === 'navigate') {
     e.respondWith(
       fetch(e.request)
-        .then((res) => { if (res.ok && new URL(e.request.url).pathname.endsWith('/faind/')) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put('./', copy)); } return res; })
+        .then((res) => { if (res.ok && new URL(e.request.url).pathname === '/') { const copy = res.clone(); caches.open(CACHE).then((c) => c.put('./', copy)); } return res; })
         .catch(() => caches.match('./'))
     );
   }
