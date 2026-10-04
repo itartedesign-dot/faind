@@ -368,13 +368,14 @@ async function maybeJobs(data, t, card) {
 }
 
 /* ---------- Feed per LinkedIn (feeds/linkedin.xml) ----------
-   Due post a settimana, già scritti come post social: un servizio esterno (es. dlvr.it)
+   Tre post a settimana, già scritti come post social: un servizio esterno (es. dlvr.it)
    legge questo feed e li pubblica da solo sulla pagina LinkedIn di FAIND.
    • lunedì dalle 10: la classifica dei lavori AI, con la grafica;
+   • mercoledì dalle LI_WED_FROM: un approfondimento, a rotazione;
    • venerdì dalle LI_FRIDAY_FROM: "La settimana dell'AI", le 5 notizie più riprese + un approfondimento.
    Ogni post: apertura che cambia, testo fisso su FAIND (a rotazione tra LI_INTRO), riepilogo, link, hashtag.
    Le voci già uscite sono conservate in news.json → tgState.linkedin. */
-const LI_FRIDAY_FROM = 9, LI_KEEP = 20;
+const LI_FRIDAY_FROM = 9, LI_WED_FROM = 12, LI_KEEP = 20;
 // Il testo fisso che spiega FAIND: cinque versioni, usate a rotazione
 const LI_INTRO = [
   'FAIND raccoglie ogni ora le notizie sull\'intelligenza artificiale da testate italiane e internazionali, sempre con la fonte. Gratis, senza pubblicità e senza registrazione.',
@@ -427,6 +428,15 @@ export function linkedinItems(data, t, rank) {
           `Tutte le notizie, con la fonte: ${SITE}`, `Da leggere con calma: ${a.title} ${SITE}approfondimenti/${a.slug}.html`, '', tags].join('\n') });
     }
     st.liWeek = t.day;
+  }
+  // Mercoledì: un approfondimento, a rotazione (parte da metà elenco, così non coincide con quello citato il venerdì)
+  if (t.weekday === 'Wed' && t.hour >= LI_WED_FROM && st.liWed !== t.day) {
+    const a = ARTICLES[((st.liArtW || 0) + Math.floor(ARTICLES.length / 2)) % ARTICLES.length]; st.liArtW = (st.liArtW || 0) + 1;
+    const tags = liTags([a.title, a.card, a.desc]);
+    out.push({ id: 'approfondimento-' + t.day, link: `${SITE}approfondimenti/${a.slug}.html`, date: new Date(t.now).toISOString(), img: `${SITE}og/${a.slug}.png`,   // card con il marchio FAIND, generata dall'automazione (come per le notizie)
+      title: `${a.title} ${tags}`,
+      text: [a.title, '', a.card, '', intro(), '', 'In breve:', ...a.brief.map(b => `→ ${b}`), '', `Leggi l'approfondimento: ${SITE}approfondimenti/${a.slug}.html`, '', tags].join('\n') });
+    st.liWed = t.day;
   }
   return out;
 }

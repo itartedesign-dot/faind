@@ -18,7 +18,7 @@ import vm from 'node:vm';
 import path from 'node:path';
 import { buildCards } from './cards.mjs';
 import { buildCompare } from './compare.mjs';
-import { buildArticles } from './articles.mjs';
+import { buildArticles, ARTICLES } from './articles.mjs';
 import { buildGlossary, termsIn, linkify, GLOSSARY_PATH } from './glossary.mjs';
 
 export const SITE = 'https://faind.org/';
@@ -269,6 +269,11 @@ export async function buildSite(out, root) {
   // Approfondimenti: gli articoli di fondo (cartella approfondimenti/)
   try { await buildArticles(root); }
   catch (e) { console.warn('Approfondimenti non generati:', e.message); }
+  // Card con il marchio FAIND anche per gli approfondimenti (og/<slug>.png): servono ai post social
+  try {
+    await buildCards(ARTICLES.map(a => ({ page: `approfondimenti/${a.slug}.html`, title: a.title, source: { name: 'faind.org' }, category: 'deep', date: '' })),
+      root, { cats: { deep: 'Approfondimenti' } });
+  } catch (e) { console.warn('Card degli approfondimenti non generate:', e.message); }
 
   console.log(`📄 pagine: ${news.length} (${news.filter(indexable).length} indicizzabili) · feed RSS: ${Object.keys(CATS).length}`);
 }
