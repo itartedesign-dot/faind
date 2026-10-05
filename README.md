@@ -134,12 +134,33 @@ Per provare tutto: `node scripts/fetch-news.mjs` e poi `python3 -m http.server`,
 
 ## Farsi trovare su Google
 
-1. Vai su https://search.google.com/search-console e aggiungi la proprietà **Prefisso URL**: `https://itartedesign-dot.github.io/faind/`.
+1. Vai su https://search.google.com/search-console e aggiungi la proprietà **Prefisso URL**: `https://faind.org/`.
 2. Scegli la verifica **Tag HTML**, copia il meta tag e incollalo in `index.html` al posto del commento "Google Search Console".
 3. Dopo la verifica: **Sitemap** → inserisci `sitemap.xml` → Invia. Poi **Controllo URL** → incolla l'indirizzo del sito → **Richiedi indicizzazione**.
 Google impiega da qualche giorno a qualche settimana per mostrare un sito nuovo. Link da social, forum e altri siti accelerano molto.
 
 ## Contatti e donazioni
 
-- "Scrivici" apre l'app di posta con il messaggio pronto verso `itartedesign@gmail.com`.
+- "Scrivici" apre l'app di posta con il messaggio pronto verso `info@faind.org`.
 - Il pulsante PayPal usa il link donazioni ufficiale verso `buono.p@alice.it`.
+
+## Aggiornamenti del 3–4 ottobre 2026
+
+- **Dominio:** il sito è su `https://faind.org` (dominio IONOS, record A verso GitHub Pages, custom domain nelle impostazioni Pages). Mail: `info@faind.org`.
+- **Le AI a confronto** (`confronto/`, quattro lingue): `scripts/compare.mjs`. Prezzi, schede e giudizi sono nel file; aggiornare `CHECKED` a ogni verifica.
+- **Approfondimenti** (`approfondimenti/`, solo italiano): `scripts/articles.mjs`, immagini `assets/art-NN.webp`. Le schede in home sono HTML statico in `index.html`.
+- **Controllo prezzi ogni 12 ore:** `scripts/prices.mjs` confronta `data.js` con aipricecompare.org; risultato in `news.json` → `priceCheck`. Non modifica mai i prezzi.
+- **Loghi delle fonti** per le notizie senza foto: `fetch-news.mjs` (`sourceLogos`), cache in `news.json` → `logos`.
+- **Trending Tool** (agenda a quattro linguette) e **domande sotto i titoli:** `script.js` (`renderTrending`, `renderQuestions`).
+- **Newsletter:** modulo in home, per ora via FormSubmit verso `info@faind.org`; previsto il passaggio a Mailjet.
+- **LinkedIn:** `scripts/telegram.mjs` scrive `feeds/linkedin.xml` (lunedì classifica lavori, venerdì "La settimana dell'AI"); stato in `news.json` → `tgState`. La pubblicazione sulla pagina è da definire.
+- **Versione dei file:** in `index.html` i link a `style.css`, `script.js`, `data.js`, `stats.js` hanno `?v=…`: va cambiato a ogni modifica di quei file.
+
+## Aggiornamenti del 5–6 ottobre 2026
+
+- **LinkedIn tramite Buffer:** `scripts/linkedin.mjs` consegna a Buffer i post preparati da `scripts/telegram.mjs` (`tgState.linkedin`). Tre post a settimana: lunedì classifica lavori, mercoledì un approfondimento (card `og/<slug>.png`), venerdì la settimana dell'AI. Segreto `BUFFER_API_KEY`.
+- **Card degli approfondimenti:** generate da `build-pages.mjs` con `buildCards`, come quelle delle notizie.
+- **Il punto delle 8 e il post del venerdì:** precedenza alle notizie in italiano (`italianFirst` in `telegram.mjs`).
+- **Lavori AI:** gli annunci si accumulano per `maxAgeDays`; ricerche mirate in `feeds.json` → `jobs.jobicyTags`.
+- **Home:** pulsanti e link alla pagina LinkedIn; newsletter solo settimanale.
+- **Automazione:** macchina fissata a `ubuntu-24.04`, perché card e grafiche dipendono dal Chrome preinstallato.
