@@ -265,6 +265,7 @@
         "lang": "en"
       }
     ],
+    "jobicyTags": ["ai", "machine learning", "data science", "data engineer"],
     "arbeitnow": {
       "url": "https://www.arbeitnow.com/api/job-board-api",
       "lang": "de"

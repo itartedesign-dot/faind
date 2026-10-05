@@ -158,12 +158,15 @@ export function awakeAge(date, now) {
   return age - silent;
 }
 
+// Prima le notizie in italiano, in ordine di importanza; l'inglese riempie solo i posti rimasti
+const italianFirst = (list, count) => [...list.filter(n => (n.lang || 'it') === 'it'), ...list.filter(n => (n.lang || 'it') !== 'it')].slice(0, count);
+
 export function pickDigest(items, now = Date.now()) {
   const rank = (a, b) => (isImportant(b) - isImportant(a)) || (b.coverage || 1) - (a.coverage || 1) || b.date.localeCompare(a.date);
   const within = (h) => items.filter(n => langOk(n) && n.title && n.link && n.link.url && now - new Date(n.date).getTime() < h * 36e5).sort(rank);
-  let list = within(24);
-  if (list.length < DIGEST_COUNT) list = within(48);   // giornata povera: allargo a 48 ore
-  return list.slice(0, DIGEST_COUNT);
+  let list = italianFirst(within(24), DIGEST_COUNT);
+  if (list.length < DIGEST_COUNT) list = italianFirst(within(48), DIGEST_COUNT);   // giornata povera: allargo a 48 ore
+  return list;
 }
 
 const NUM = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
@@ -398,8 +401,9 @@ export function liTags(texts, fallback = '#AIgenerativa') {
 }
 // Le notizie più riprese degli ultimi 7 giorni
 export function pickWeek(items, now, count = 5) {
-  return items.filter(n => langOk(n) && n.title && n.link && n.link.url && now - new Date(n.date).getTime() < 7 * 864e5)
-    .sort((a, b) => (b.coverage || 1) - (a.coverage || 1) || (isImportant(b) - isImportant(a)) || b.date.localeCompare(a.date)).slice(0, count);
+  const week = items.filter(n => langOk(n) && n.title && n.link && n.link.url && now - new Date(n.date).getTime() < 7 * 864e5)
+    .sort((a, b) => (b.coverage || 1) - (a.coverage || 1) || (isImportant(b) - isImportant(a)) || b.date.localeCompare(a.date));
+  return italianFirst(week, count);
 }
 
 export function linkedinItems(data, t, rank) {

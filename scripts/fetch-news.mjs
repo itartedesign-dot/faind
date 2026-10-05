@@ -487,7 +487,7 @@ function job(src, o) {
     date: new Date(o.date || Date.now()).toISOString()
   };
 }
-async function collectJobs(cfg, prevJson, now) {
+export async function collectJobs(cfg, prevJson, now) {
   const jc = cfg.jobs;
   if (!jc) return { jobs: [], jobsUpdated: null };
   if (prevJson.jobsUpdated && prevJson.jobs && now - new Date(prevJson.jobsUpdated).getTime() < (jc.refreshHours || 6) * 36e5) {
@@ -497,6 +497,11 @@ async function collectJobs(cfg, prevJson, now) {
   for (const g of jc.jobicy || []) tasks.push(['Jobicy ' + g.geo, async () => {
     const data = JSON.parse(await get(`https://jobicy.com/api/v2/remote-jobs?count=100&geo=${encodeURIComponent(g.geo)}`));
     return (data.jobs || []).map(j => job('Jobicy', { title: j.jobTitle, company: j.companyName, where: j.jobGeo, url: j.url, date: j.pubDate, lang: g.lang }));
+  }]);
+  // Ricerche per parola chiave, per trovare più annunci AI di quelli che compaiono tra gli ultimi 100 generici
+  for (const tag of jc.jobicyTags || []) tasks.push(['Jobicy #' + tag, async () => {
+    const data = JSON.parse(await get(`https://jobicy.com/api/v2/remote-jobs?count=100&tag=${encodeURIComponent(tag)}`));
+    return (data.jobs || []).map(j => job('Jobicy', { title: j.jobTitle, company: j.companyName, where: j.jobGeo, url: j.url, date: j.pubDate, lang: 'en' }));
   }]);
   if (jc.arbeitnow) tasks.push(['Arbeitnow', async () => {
     const data = JSON.parse(await get(jc.arbeitnow.url));
@@ -508,6 +513,9 @@ async function collectJobs(cfg, prevJson, now) {
   }]);
   const res = await Promise.allSettled(tasks.map(([, fn]) => fn()));
   const byId = new Map();
+  // Le fonti restituiscono solo gli annunci più recenti: tengo anche quelli già visti nei giri precedenti,
+  // finché rientrano nei maxAgeDays. Così la classifica poggia davvero sugli annunci degli ultimi 30 giorni.
+  for (const j of prevJson.jobs || []) if (j && j.id && j.role && j.url) byId.set(j.id, j);
   let ok = 0;
   res.forEach((r, i) => {
     if (r.status === 'fulfilled') { ok++; const list = r.value.filter(Boolean); list.forEach(j => byId.set(j.id, j)); console.log(`✓ 💼 ${tasks[i][0]}: ${list.length}`); }
