@@ -78,6 +78,14 @@ Cinque pagine permanenti e indicizzabili, una per tema del Focus, più un indice
 
 `scripts/glossary.mjs` genera il glossario in quattro lingue (`glossario/`, `glossario/en/`, `glossario/fr/`, `glossario/de/`). Nelle pagine notizia i termini trovati nel testo diventano link alla definizione e compaiono nel riquadro "Parole chiave"; sotto ogni termine del glossario ci sono le ultime notizie che lo citano. Per aggiungere un termine: una voce in `TERMS` (nome e definizione nelle quattro lingue, più la regola `re` per riconoscerlo).
 
+## Strano ma vero (cartella `strano-ma-vero/`)
+
+`scripts/strano.mjs` genera la rubrica delle curiosità sull'AI in quattro lingue (`strano-ma-vero/`, `strano-ma-vero/en/`, `strano-ma-vero/fr/`, `strano-ma-vero/de/`); la cartella non è nel repository.
+- Ogni edizione ha una pagina fissa con la data nel nome (es. `strano-ma-vero/2026-10-06.html`); la pagina principale della cartella mostra sempre l'ultima edizione.
+- **Nuova edizione:** aggiungere una voce in cima a `EDITIONS` (testi nelle quattro lingue e, in `sources`, il link a ogni fonte). Non serve toccare altro.
+- **Riquadro in home** (colonna laterale): è in `index.html`; i testi nelle quattro lingue sono in `script.js` (chiavi `smv.*` e `LOCAL_LINKS.strano`).
+- **Copertine:** `assets/strano-ma-vero-it.webp` con l'italiano, `assets/strano-ma-vero-en.webp` con le altre lingue.
+
 ## Card di condivisione (cartella `og/`)
 
 `scripts/cards.mjs` disegna per ogni pagina notizia un'immagine 1200×630 con logo, settore, titolo e fonte: è l'anteprima che compare quando il link viene condiviso. Usa il browser Chrome già presente sulle macchine di GitHub. Le card già fatte vengono riprese dal sito online; se ne creano al massimo 60 nuove per giro (`CARDS_PER_RUN`). Senza card, la pagina usa l'immagine della fonte o il logo.
