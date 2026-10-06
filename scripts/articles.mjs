@@ -9,10 +9,18 @@
    Per aggiungere o correggere un articolo: modificare ARTICLES qui sotto
    (i paragrafi sono HTML semplice) e aggiornare UPDATED.
    Le immagini stanno in assets/ con il nome indicato in "img".
+
+   Lingue: l'italiano è qui; inglese, francese e tedesco sono in
+   articles-en.mjs, articles-fr.mjs e articles-de.mjs (stesso "slug").
+   Le pagine tradotte escono in approfondimenti/en/, /fr/ e /de/.
+   Se si corregge un articolo qui, va corretto anche nelle traduzioni.
    ===================================================================== */
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import EN from './articles-en.mjs';
+import FR from './articles-fr.mjs';
+import DE from './articles-de.mjs';
 
 const SITE = 'https://faind.org/';
 const DIR = 'approfondimenti/';
@@ -182,18 +190,59 @@ export const ARTICLES = [
 ];
 
 const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const strip = (s = '') => String(s).replace(/<[^>]+>/g, '');
 
-function shell({ title, desc, url, image, jsonld, main, type = 'article' }) {
+/* ---------- lingue ---------- */
+const I18N = { en: EN, fr: FR, de: DE };
+export const ARTICLE_DIR = { it: 'approfondimenti/', en: 'approfondimenti/en/', fr: 'approfondimenti/fr/', de: 'approfondimenti/de/' };
+const LANGS = Object.keys(ARTICLE_DIR);
+const LANG_LABEL = { it: 'Italiano', en: 'English', fr: 'Français', de: 'Deutsch' };
+const UI = {
+  it: { locale: 'it-IT', name: 'Approfondimenti', back: '← Tutte le notizie', home: 'Torna alle notizie di FAIND', pageLang: 'Lingua della pagina',
+    by: 'A cura della <a href="{about}">redazione di FAIND</a>', updated: 'Aggiornato il', brief: 'In breve', faq: 'Domande frequenti', sources: 'Fonti', more: 'Altri approfondimenti',
+    idxH1: "Approfondimenti sull'intelligenza artificiale", idxTitle: "Approfondimenti sull'intelligenza artificiale: guide e risposte",
+    idxLede: "Le risposte alle domande che le persone si fanno più spesso sull'intelligenza artificiale: lavoro, rischi, costi, leggi, come iniziare. Scritte in modo semplice, con le fonti.",
+    idxDesc: "Guide e risposte alle domande più cercate sull'intelligenza artificiale: lavori a rischio, pericoli, come iniziare, costi, consumi, leggi nel mondo e come riconoscere i contenuti fatti con l'AI.",
+    foot: ['Chi siamo', 'Le AI a confronto', 'Glossario', 'Privacy e note legali'], about: 'redazione.html', cmp: 'confronto/', gloss: 'glossario/' },
+  en: { locale: 'en-GB', name: 'In depth', back: '← All the news', home: 'Back to FAIND news', pageLang: 'Page language',
+    by: 'By the <a href="{about}">FAIND newsroom</a>', updated: 'Updated on', brief: 'In brief', faq: 'Frequently asked questions', sources: 'Sources', more: 'More in-depth articles',
+    idxH1: 'Artificial intelligence in depth', idxTitle: 'Artificial intelligence in depth: guides and answers',
+    idxLede: 'Answers to the questions people ask most often about artificial intelligence: jobs, risks, costs, laws, how to get started. Written in plain language, with sources.',
+    idxDesc: 'Guides and answers to the most searched questions about artificial intelligence: jobs at risk, dangers, how to get started, costs, energy use, laws around the world and how to spot AI-made content.',
+    foot: ['About', 'AI assistants compared', 'Glossary', 'Privacy and legal notes'], about: 'about.html', cmp: 'confronto/en/', gloss: 'glossario/en/' },
+  fr: { locale: 'fr-FR', name: 'Dossiers', back: '← Toutes les actualités', home: 'Retour aux actualités de FAIND', pageLang: 'Langue de la page',
+    by: 'Par la <a href="{about}">rédaction de FAIND</a>', updated: 'Mis à jour le', brief: 'En bref', faq: 'Questions fréquentes', sources: 'Sources', more: 'Autres dossiers',
+    idxH1: "Dossiers sur l'intelligence artificielle", idxTitle: "Dossiers sur l'intelligence artificielle : guides et réponses",
+    idxLede: "Les réponses aux questions que l'on se pose le plus souvent sur l'intelligence artificielle : emploi, risques, coûts, lois, par où commencer. Écrites simplement, avec les sources.",
+    idxDesc: "Guides et réponses aux questions les plus recherchées sur l'intelligence artificielle : métiers menacés, dangers, comment débuter, coûts, consommation, lois dans le monde et comment reconnaître les contenus créés avec l'IA.",
+    foot: ['À propos', 'Les IA comparées', 'Glossaire', 'Confidentialité et mentions légales'], about: 'a-propos.html', cmp: 'confronto/fr/', gloss: 'glossario/fr/' },
+  de: { locale: 'de-DE', name: 'Hintergrund', back: '← Alle Nachrichten', home: 'Zurück zu den FAIND-Nachrichten', pageLang: 'Sprache der Seite',
+    by: 'Von der <a href="{about}">FAIND-Redaktion</a>', updated: 'Aktualisiert am', brief: 'Kurz gefasst', faq: 'Häufige Fragen', sources: 'Quellen', more: 'Weitere Hintergrundartikel',
+    idxH1: 'Hintergrund zur künstlichen Intelligenz', idxTitle: 'Hintergrund zur künstlichen Intelligenz: Leitfäden und Antworten',
+    idxLede: 'Antworten auf die Fragen, die sich Menschen am häufigsten zur künstlichen Intelligenz stellen: Arbeit, Risiken, Kosten, Gesetze, der Einstieg. Einfach geschrieben, mit Quellen.',
+    idxDesc: 'Leitfäden und Antworten auf die meistgesuchten Fragen zur künstlichen Intelligenz: gefährdete Berufe, Gefahren, der Einstieg, Kosten, Verbrauch, Gesetze weltweit und wie man mit KI erstellte Inhalte erkennt.',
+    foot: ['Über uns', 'KI-Assistenten im Vergleich', 'Glossar', 'Datenschutz und rechtliche Hinweise'], about: 'ueber-uns.html', cmp: 'confronto/de/', gloss: 'glossario/de/' }
+};
+// L'articolo nella lingua richiesta (null se la traduzione manca: la pagina non viene creata)
+const tr = (a, lang) => lang === 'it' ? a : (I18N[lang] && I18N[lang][a.slug] ? { ...a, ...I18N[lang][a.slug] } : null);
+const listFor = (lang) => ARTICLES.map(a => tr(a, lang)).filter(Boolean);
+const upOf = (lang) => lang === 'it' ? '../' : '../../';
+
+// file = nome della pagina dentro la cartella della lingua ('' per l'indice); langs = lingue in cui la pagina esiste
+function shell({ lang, file, langs, title, desc, image, jsonld, main, type = 'article' }) {
+  const u = UI[lang], up = upOf(lang), url = `${SITE}${ARTICLE_DIR[lang]}${file}`;
+  const alts = langs.length > 1 ? langs.map(k => `  <link rel="alternate" hreflang="${k}" href="${SITE}${ARTICLE_DIR[k]}${file}">`).join('\n') + `\n  <link rel="alternate" hreflang="x-default" href="${SITE}${ARTICLE_DIR.it}${file}">\n` : '';
+  const sw = langs.length > 1 ? `    <p class="lsw"><span class="lsw__lab">${u.pageLang}:</span> ${langs.map(k => k === lang
+    ? `<span class="lsw__on" aria-current="page">${LANG_LABEL[k]}</span>`
+    : `<a href="${up}${ARTICLE_DIR[k]}${file}" hreflang="${k}" lang="${k}">${LANG_LABEL[k]}</a>`).join(' ')}</p>\n` : '';
   return `<!doctype html>
-<html lang="it" data-theme="light">
+<html lang="${lang}" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>${esc(title)} | FAIND</title>
   <meta name="description" content="${esc(desc)}">
   <link rel="canonical" href="${url}">
-  <meta name="robots" content="index, follow, max-image-preview:large">
+${alts}  <meta name="robots" content="index, follow, max-image-preview:large">
   <meta property="og:type" content="${type}">
   <meta property="og:site_name" content="FAIND">
   <meta property="og:url" content="${url}">
@@ -201,14 +250,16 @@ function shell({ title, desc, url, image, jsonld, main, type = 'article' }) {
   <meta property="og:description" content="${esc(desc)}">
   <meta property="og:image" content="${image}">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="../assets/favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="../assets/icon-180.png">
-  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="icon" href="${up}assets/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="${up}assets/icon-180.png">
+  <link rel="manifest" href="${up}manifest.webmanifest">
   <script>(function(){var t=null;try{t=localStorage.getItem('faind-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
-  <link rel="stylesheet" href="../assets/fonts/archivo.css">
-  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="${up}assets/fonts/archivo.css">
+  <link rel="stylesheet" href="${up}style.css">
   <style>
     .legal.art { max-width: 800px; }
+    .lsw { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 13.5px; margin-bottom: 14px; }
+    .lsw__lab { color: var(--muted); } .lsw a { color: var(--ink); font-weight: 600; } .lsw__on { font-weight: 800; color: #4293B9; }
     .art__kick { display: inline-block; font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #fff; background: #4293B9; padding: 4px 10px; border-radius: 6px; margin-bottom: 12px; text-decoration: none; }
     .art .legal__title { line-height: 1.08; margin-bottom: 12px; }
     .art__img { width: 100%; height: auto; border-radius: 14px; display: block; margin: 18px 0 6px; }
@@ -225,95 +276,114 @@ function shell({ title, desc, url, image, jsonld, main, type = 'article' }) {
     @media (max-width: 620px) { .art__grid { grid-template-columns: 1fr; } }
   </style>
   <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>
-  <script src="../stats.js" defer></script>
+  <script src="${up}stats.js" defer></script>
 </head>
 <body class="np-page">
   <header class="masthead">
     <div class="masthead__bar wrap">
-      <a class="brand" href="../" aria-label="FAIND — Home"><img class="brand__img" src="../assets/logo.webp" width="510" height="180" alt="FAIND – Flash AI News Daily"></a>
-      <a class="np__back" href="../">← Tutte le notizie</a>
+      <a class="brand" href="${up}" aria-label="FAIND — Home"><img class="brand__img" src="${up}assets/logo.webp" width="510" height="180" alt="FAIND – Flash AI News Daily"></a>
+      <a class="np__back" href="${up}">${u.back}</a>
     </div>
   </header>
   <main class="wrap legal art">
-${main}
-    <p class="legal__back"><a class="btn btn--primary" href="../">Torna alle notizie di FAIND</a></p>
+${main.replace('<!--lsw-->\n', sw)}
+    <p class="legal__back"><a class="btn btn--primary" href="${up}">${u.home}</a></p>
   </main>
-  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="../#chi-siamo">Chi siamo</a> · <a href="./">Approfondimenti</a> · <a href="../confronto/">Le AI a confronto</a> · <a href="../glossario/">Glossario</a> · <a href="../privacy.html">Privacy e note legali</a></p></div></footer>
+  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="${up}#chi-siamo">${u.foot[0]}</a> · <a href="./">${u.name}</a> · <a href="${up}${u.cmp}">${u.foot[1]}</a> · <a href="${up}${u.gloss}">${u.foot[2]}</a> · <a href="${up}privacy.html">${u.foot[3]}</a></p></div></footer>
 </body>
 </html>
 `;
 }
 
-const cardHtml = (a, up) => `<a href="${up}${a.slug}.html"><img src="${up === '' ? '../' : ''}assets/${a.img}" alt="" loading="lazy" width="1024" height="576"><strong>${esc(a.title)}</strong><span>${esc(a.card)}</span></a>`;
+const cardHtml = (a, up) => `<a href="${a.slug}.html"><img src="${up}assets/${a.img}" alt="" loading="lazy" width="1024" height="576"><strong>${esc(a.title)}</strong><span>${esc(a.card)}</span></a>`;
 
-function articlePage(a) {
-  const url = `${SITE}${DIR}${a.slug}.html`, image = `${SITE}assets/${a.img}`;
-  const date = new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(UPDATED + 'T12:00:00Z'));
-  const others = ARTICLES.filter(x => x !== a).slice(0, 4);
+function articlePage(base, lang) {
+  const a = tr(base, lang), u = UI[lang], up = upOf(lang), file = `${a.slug}.html`;
+  const url = `${SITE}${ARTICLE_DIR[lang]}${file}`, image = `${SITE}assets/${a.img}`;
+  const langs = LANGS.filter(k => tr(base, k));
+  const date = new Intl.DateTimeFormat(u.locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(UPDATED + 'T12:00:00Z'));
+  const others = listFor(lang).filter(x => x.slug !== a.slug).slice(0, 4);
   const jsonld = { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'Article', '@id': url + '#article', headline: a.title, description: a.desc, image, inLanguage: 'it-IT', datePublished: UPDATED, dateModified: UPDATED, mainEntityOfPage: url,
-      author: { '@type': 'Organization', name: 'Redazione FAIND', url: SITE + 'redazione.html' }, publisher: { '@id': SITE + '#org' } },
-    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'FAIND', item: SITE }, { '@type': 'ListItem', position: 2, name: 'Approfondimenti', item: SITE + DIR }, { '@type': 'ListItem', position: 3, name: a.title, item: url }] },
+    { '@type': 'Article', '@id': url + '#article', headline: a.title, description: a.desc, image, inLanguage: u.locale, datePublished: UPDATED, dateModified: UPDATED, mainEntityOfPage: url,
+      author: { '@type': 'Organization', name: 'Redazione FAIND', url: SITE + u.about }, publisher: { '@id': SITE + '#org' } },
+    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'FAIND', item: SITE }, { '@type': 'ListItem', position: 2, name: u.name, item: SITE + ARTICLE_DIR[lang] }, { '@type': 'ListItem', position: 3, name: a.title, item: url }] },
     { '@type': 'FAQPage', mainEntity: a.faq.map(([q, r]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: r } })) }
   ] };
-  const main = `    <p class="np__crumb"><a href="../">FAIND</a> › <a href="./">Approfondimenti</a></p>
-    <a class="art__kick" href="./">Approfondimenti</a>
+  const main = `    <p class="np__crumb"><a href="${up}">FAIND</a> › <a href="./">${u.name}</a></p>
+<!--lsw-->
+    <a class="art__kick" href="./">${u.name}</a>
     <h1 class="legal__title">${esc(a.title)}</h1>
-    <p class="legal__updated">A cura della <a href="../redazione.html">redazione di FAIND</a> · Aggiornato il ${date}</p>
-    <img class="art__img" src="../assets/${a.img}" width="1024" height="576" alt="${esc(a.title)}">
+    <p class="legal__updated">${u.by.replace('{about}', up + u.about)} · ${u.updated} ${date}</p>
+    <img class="art__img" src="${up}assets/${a.img}" width="1024" height="576" alt="${esc(a.title)}">
     <p class="legal__lede">${a.lede}</p>
 
     <div class="art__brief">
-      <h2>In breve</h2>
+      <h2>${u.brief}</h2>
       <ul>${a.brief.map(b => `<li>${esc(b)}</li>`).join('')}</ul>
     </div>
 
 ${a.sections.map(([h, p]) => `    <section>\n      <h2>${esc(h)}</h2>\n      <p>${p}</p>\n    </section>`).join('\n')}
 
     <section>
-      <h2>Domande frequenti</h2>
+      <h2>${u.faq}</h2>
 ${a.faq.map(([q, r]) => `      <h3>${esc(q)}</h3>\n      <p>${esc(r)}</p>`).join('\n')}
     </section>
 ${a.sources.length ? `
     <section>
-      <h2>Fonti</h2>
+      <h2>${u.sources}</h2>
       <ul class="art__src">${a.sources.map(s => `<li>${esc(s)}</li>`).join('')}</ul>
     </section>
 ` : ''}
     <section>
-      <h2>Altri approfondimenti</h2>
-      <div class="art__grid">${others.map(o => cardHtml(o, '')).join('')}</div>
+      <h2>${u.more}</h2>
+      <div class="art__grid">${others.map(o => cardHtml(o, up)).join('')}</div>
     </section>
 `;
-  return shell({ title: a.title, desc: a.desc, url, image, jsonld, main });
+  return shell({ lang, file, langs, title: a.title, desc: a.desc, image, jsonld, main });
 }
 
-function indexPage() {
-  const url = SITE + DIR;
-  const jsonld = { '@context': 'https://schema.org', '@type': 'CollectionPage', '@id': url, url, name: 'Approfondimenti sull\'intelligenza artificiale', inLanguage: 'it-IT', dateModified: UPDATED, isPartOf: { '@id': SITE + '#website' },
-    hasPart: ARTICLES.map(a => ({ '@type': 'Article', headline: a.title, url: `${url}${a.slug}.html` })) };
-  const main = `    <p class="np__crumb"><a href="../">FAIND</a> › Approfondimenti</p>
-    <h1 class="legal__title">Approfondimenti sull'intelligenza artificiale</h1>
-    <p class="legal__lede">Le risposte alle domande che le persone si fanno più spesso sull'intelligenza artificiale: lavoro, rischi, costi, leggi, come iniziare. Scritte in modo semplice, con le fonti.</p>
-    <div class="art__grid">${ARTICLES.map(a => cardHtml(a, '')).join('')}</div>
+function indexPage(lang) {
+  const u = UI[lang], up = upOf(lang), url = SITE + ARTICLE_DIR[lang], items = listFor(lang);
+  const jsonld = { '@context': 'https://schema.org', '@type': 'CollectionPage', '@id': url, url, name: u.idxH1, inLanguage: u.locale, dateModified: UPDATED, isPartOf: { '@id': SITE + '#website' },
+    hasPart: items.map(a => ({ '@type': 'Article', headline: a.title, url: `${url}${a.slug}.html` })) };
+  const main = `    <p class="np__crumb"><a href="${up}">FAIND</a> › ${u.name}</p>
+<!--lsw-->
+    <h1 class="legal__title">${esc(u.idxH1)}</h1>
+    <p class="legal__lede">${esc(u.idxLede)}</p>
+    <div class="art__grid">${items.map(a => cardHtml(a, up)).join('')}</div>
 `;
-  return shell({ title: 'Approfondimenti sull\'intelligenza artificiale: guide e risposte', desc: 'Guide e risposte alle domande più cercate sull\'intelligenza artificiale: lavori a rischio, pericoli, come iniziare, costi, consumi, leggi nel mondo e come riconoscere i contenuti fatti con l\'AI.', url, image: SITE + 'assets/og-image.png', jsonld, main, type: 'website' });
+  return shell({ lang, file: '', langs: LANGS.filter(k => listFor(k).length), title: u.idxTitle, desc: u.idxDesc, image: SITE + 'assets/og-image.png', jsonld, main, type: 'website' });
 }
 
 // Schede per la home (HTML statico da incollare in index.html)
-export const homeCards = () => ARTICLES.map(a => `          <a class="deep__card" href="${DIR}${a.slug}.html"><img src="assets/${a.img}" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>${esc(a.title)}</strong><span>${esc(a.card)}</span></a>`).join('\n');
+export const homeCards = () => ARTICLES.map(a => `          <a class="deep__card" href="${DIR}${a.slug}.html" data-deep="${a.slug}"><img src="assets/${a.img}" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>${esc(a.title)}</strong><span>${esc(a.card)}</span></a>`).join('\n');
+
+// Titoli e sommari tradotti per le schede della home: finiscono in approfondimenti/cards.json, letto da script.js
+const homeI18n = () => Object.fromEntries(LANGS.filter(k => k !== 'it').map(k => [k, Object.fromEntries(listFor(k).map(a => [a.slug, [a.title, a.card]]))]));
 
 export async function buildArticles(root) {
-  const dir = path.join(root, DIR);
-  await mkdir(dir, { recursive: true });
-  const urls = [SITE + DIR];
-  await writeFile(path.join(dir, 'index.html'), indexPage());
-  for (const a of ARTICLES) { await writeFile(path.join(dir, `${a.slug}.html`), articlePage(a)); urls.push(`${SITE}${DIR}${a.slug}.html`); }
+  const urls = [];
+  let pages = 0;
+  for (const lang of LANGS) {
+    const items = listFor(lang);
+    if (!items.length) continue;
+    const dir = path.join(root, ARTICLE_DIR[lang]);
+    await mkdir(dir, { recursive: true });
+    await writeFile(path.join(dir, 'index.html'), indexPage(lang));
+    urls.push(SITE + ARTICLE_DIR[lang]);
+    for (const a of ARTICLES) {
+      if (!tr(a, lang)) continue;
+      await writeFile(path.join(dir, `${a.slug}.html`), articlePage(a, lang));
+      urls.push(`${SITE}${ARTICLE_DIR[lang]}${a.slug}.html`);
+      pages++;
+    }
+  }
+  await writeFile(path.join(root, ARTICLE_DIR.it, 'cards.json'), JSON.stringify(homeI18n()));
   try {
     const file = path.join(root, 'sitemap.xml');
     const xml = await readFile(file, 'utf8');
     const extra = urls.filter(u => !xml.includes(`<loc>${u}</loc>`)).map(u => `<url><loc>${u}</loc><lastmod>${UPDATED}</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>`).join('\n');
     if (extra) await writeFile(file, xml.replace('</urlset>', extra + '\n</urlset>'));
   } catch (e) { console.warn('  sitemap non aggiornata con gli approfondimenti:', e.message); }
-  console.log(`📚 approfondimenti: ${ARTICLES.length} articoli`);
+  console.log(`📚 approfondimenti: ${ARTICLES.length} articoli, ${pages} pagine in ${LANGS.length} lingue`);
 }
