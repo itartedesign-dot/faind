@@ -19,6 +19,7 @@ import path from 'node:path';
 import { buildCards } from './cards.mjs';
 import { buildCompare } from './compare.mjs';
 import { buildArticles, ARTICLES } from './articles.mjs';
+import { buildStrano } from './strano.mjs';
 import { buildGlossary, termsIn, linkify, GLOSSARY_PATH } from './glossary.mjs';
 
 export const SITE = 'https://faind.org/';
@@ -274,6 +275,10 @@ export async function buildSite(out, root) {
     await buildCards(ARTICLES.map(a => ({ page: `approfondimenti/${a.slug}.html`, title: a.title, source: { name: 'faind.org' }, category: 'deep', date: '' })),
       root, { cats: { deep: 'Approfondimenti' } });
   } catch (e) { console.warn('Card degli approfondimenti non generate:', e.message); }
+
+  // Strano ma vero: le curiosità sull'AI, in quattro lingue (cartella strano-ma-vero/)
+  try { await buildStrano(root); }
+  catch (e) { console.warn('Strano ma vero non generato:', e.message); }
 
   console.log(`📄 pagine: ${news.length} (${news.filter(indexable).length} indicizzabili) · feed RSS: ${Object.keys(CATS).length}`);
 }
