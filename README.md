@@ -78,6 +78,13 @@ Cinque pagine permanenti e indicizzabili, una per tema del Focus, più un indice
 
 `scripts/glossary.mjs` genera il glossario in quattro lingue (`glossario/`, `glossario/en/`, `glossario/fr/`, `glossario/de/`). Nelle pagine notizia i termini trovati nel testo diventano link alla definizione e compaiono nel riquadro "Parole chiave"; sotto ogni termine del glossario ci sono le ultime notizie che lo citano. Per aggiungere un termine: una voce in `TERMS` (nome e definizione nelle quattro lingue, più la regola `re` per riconoscerlo).
 
+## Approfondimenti in quattro lingue (cartella `approfondimenti/`)
+
+`scripts/articles.mjs` contiene i dieci articoli in italiano e costruisce le pagine; le traduzioni sono in `scripts/articles-en.mjs`, `articles-fr.mjs` e `articles-de.mjs` (stesso `slug` dell'articolo italiano). Le pagine tradotte escono in `approfondimenti/en/`, `/fr/` e `/de/`, con il selettore di lingua in ogni pagina.
+- **I quattro file vanno sempre caricati insieme:** `articles.mjs` legge gli altri tre, e se ne manca uno l'automazione si ferma.
+- **Correzioni:** un testo corretto in italiano va corretto anche nelle tre traduzioni.
+- **Schede in home:** restano HTML statico in `index.html` (italiano); nelle altre lingue `script.js` (`deepCards`) legge titoli e sommari da `approfondimenti/cards.json`, creato dall'automazione.
+
 ## Strano ma vero (cartella `strano-ma-vero/`)
 
 `scripts/strano.mjs` genera la rubrica delle curiosità sull'AI in quattro lingue (`strano-ma-vero/`, `strano-ma-vero/en/`, `strano-ma-vero/fr/`, `strano-ma-vero/de/`); la cartella non è nel repository.
