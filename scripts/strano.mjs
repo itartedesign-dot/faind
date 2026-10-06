@@ -27,19 +27,19 @@ const LANG_LABEL = { it: 'Italiano', en: 'English', fr: 'Français', de: 'Deutsc
 const UI = {
   it: { locale: 'it-IT', name: 'Strano ma vero', pageLang: 'Lingua della pagina', back: '← Tutte le notizie', home: 'Torna alle notizie di FAIND',
     issue: (d) => `Rassegna del ${d}`, by: 'A cura della <a href="{about}">redazione di FAIND</a>', source: 'Fonte', older: 'Edizioni precedenti',
-    alt: 'Punto interrogativo luminoso formato da connessioni digitali, con il titolo Curiosità sull’intelligenza artificiale.',
+    alt: 'Un robottino di latta con gli occhiali indica una lavagna con la scritta Strano ma vero.',
     foot: ['Chi siamo', 'Temi', 'Glossario', 'Feed RSS', 'Privacy e note legali'], about: 'redazione.html', topics: 'temi/', gloss: 'glossario/' },
   en: { locale: 'en-GB', name: 'Strange but true', pageLang: 'Page language', back: '← All the news', home: 'Back to FAIND news',
     issue: (d) => `Roundup of ${d}`, by: 'By the <a href="{about}">FAIND newsroom</a>', source: 'Source', older: 'Previous editions',
-    alt: 'Glowing question mark made of digital connections, with the title Fun facts about artificial intelligence.',
+    alt: 'A little tin robot with glasses points to a blackboard that reads Strange but true.',
     foot: ['About', 'Topics', 'Glossary', 'RSS feeds', 'Privacy and legal notes'], about: 'about.html', topics: 'temi/en/', gloss: 'glossario/en/' },
   fr: { locale: 'fr-FR', name: 'Incroyable mais vrai', pageLang: 'Langue de la page', back: '← Toutes les actualités', home: 'Retour aux actualités de FAIND',
     issue: (d) => `Revue du ${d}`, by: 'Par la <a href="{about}">rédaction de FAIND</a>', source: 'Source', older: 'Éditions précédentes',
-    alt: 'Point d’interrogation lumineux formé de connexions numériques, avec le titre en anglais « Fun facts about artificial intelligence ».',
+    alt: 'Un petit robot en métal à lunettes montre un tableau noir où est écrit en anglais « Strange but true ».',
     foot: ['À propos', 'Thèmes', 'Glossaire', 'Flux RSS', 'Confidentialité et mentions légales'], about: 'a-propos.html', topics: 'temi/fr/', gloss: 'glossario/fr/' },
   de: { locale: 'de-DE', name: 'Kurios, aber wahr', pageLang: 'Sprache der Seite', back: '← Alle Nachrichten', home: 'Zurück zu den FAIND-Nachrichten',
     issue: (d) => `Rückblick vom ${d}`, by: 'Von der <a href="{about}">FAIND-Redaktion</a>', source: 'Quelle', older: 'Frühere Ausgaben',
-    alt: 'Leuchtendes Fragezeichen aus digitalen Verbindungen, mit dem englischen Titel „Fun facts about artificial intelligence“.',
+    alt: 'Ein kleiner Blechroboter mit Brille zeigt auf eine Tafel mit der englischen Aufschrift „Strange but true“.',
     foot: ['Über uns', 'Themen', 'Glossar', 'RSS-Feeds', 'Datenschutz und rechtliche Hinweise'], about: 'ueber-uns.html', topics: 'temi/de/', gloss: 'glossario/de/' }
 };
 
