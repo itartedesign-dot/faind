@@ -551,7 +551,10 @@ async function main() {
   let previous = [], prevJson = {};
   const prevUrl = process.env.PREVIOUS_URL;
   if (prevUrl) {
-    try { prevJson = JSON.parse(await get(prevUrl, 10000)); previous = prevJson.items || []; console.log(`↺ storico: ${previous.length}`); }
+    // ?t=… chiede sempre la copia più recente: senza, due giri a pochi minuti di distanza potrebbero leggere
+    // lo stesso stato (il sito tiene le pagine in memoria per una decina di minuti) e ripetere un post su Telegram
+    const freshUrl = prevUrl + (prevUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+    try { prevJson = JSON.parse(await get(freshUrl, 10000)); previous = prevJson.items || []; console.log(`↺ storico: ${previous.length}`); }
     catch (e) { console.warn('↺ storico non disponibile:', e.message); }
   }
   // Lo storico conserva le fonti già raggruppate (also); i nuovi arrivi si aggiungono
