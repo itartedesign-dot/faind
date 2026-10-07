@@ -96,6 +96,7 @@ Cinque pagine permanenti e indicizzabili, una per tema del Focus, più un indice
 ## Card di condivisione (cartella `og/`)
 
 `scripts/cards.mjs` disegna per ogni pagina notizia un'immagine 1200×630 con logo, settore, titolo e fonte: è l'anteprima che compare quando il link viene condiviso. Usa il browser Chrome già presente sulle macchine di GitHub. Le card già fatte vengono riprese dal sito online; se ne creano al massimo 60 nuove per giro (`CARDS_PER_RUN`). Senza card, la pagina usa l'immagine della fonte o il logo.
+- **Approfondimenti:** la card è diversa, 1200×900: la copertina dell'articolo in alto e sotto una fascia con etichetta, titolo e logo. È l'immagine del post LinkedIn del mercoledì. La genera `photoCardHtml` in `scripts/cards.mjs`; la copertina è quella indicata in `img` in `scripts/articles.mjs`.
 
 ## Statistiche delle visite (GoatCounter)
 
