@@ -6,6 +6,8 @@
    • buildCards(): per ogni pagina notizia crea la "card" 1200×630 con il
      marchio FAIND (cartella og/), quella che compare quando il link viene
      condiviso su Telegram, WhatsApp, LinkedIn, Facebook…
+     Per gli approfondimenti la card è 1200×900: la copertina dell'articolo
+     in alto e, sotto, una fascia con titolo e logo (usata nei post LinkedIn).
 
    Le card già fatte vengono riprese dal sito online; a ogni giro se ne
    disegnano al massimo CARDS_PER_RUN nuove, così l'aggiornamento resta
@@ -110,6 +112,30 @@ h1 span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:${siz
 </body></html>`;
 }
 
+// Card con fotografia (approfondimenti): la copertina intera in alto (16:9, senza tagli) e sotto
+// una fascia scura con l'etichetta, il titolo e il logo FAIND. Formato 1200×900, pensato per i post social.
+const PHOTO_W = 1200, PHOTO_H = 900;
+function photoCardHtml(n, cat, up) {
+  const title = tx(n.title);
+  const size = title.length > 62 ? 38 : title.length > 44 ? 44 : 52;
+  return `<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="${up}assets/fonts/archivo.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#0E1222}
+body{width:${PHOTO_W}px;height:${PHOTO_H}px;overflow:hidden;background:#0E1222;color:#fff;font-family:Archivo,"Helvetica Neue",Arial,sans-serif;position:relative}
+.ph{position:absolute;left:0;top:0;width:1200px;height:675px;object-fit:cover;display:block}
+.band{position:absolute;left:0;right:0;top:675px;height:225px;border-top:6px solid #4293B9;display:flex;align-items:center;justify-content:space-between;gap:48px;padding:0 56px}
+.txt{min-width:0}
+.cat{font-size:20px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#8FD0F0;margin-bottom:10px}
+h1{font-size:${size}px;line-height:1.1;font-weight:800;font-stretch:80%;letter-spacing:-.01em;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.logo{flex:none;height:84px;width:auto;border-radius:8px}
+</style></head><body>
+<img class="ph" src="${up}${esc(n.photo)}" alt="">
+<div class="band"><div class="txt"><p class="cat">${esc(cat)}</p><h1>${esc(title)}</h1></div><img class="logo" src="${up}assets/logo.webp" alt=""></div>
+</body></html>`;
+}
+
 async function pool(list, size, fn) {
   let i = 0;
   await Promise.all(Array.from({ length: size }, async () => { while (i < list.length) { const x = list[i++]; await fn(x); } }));
@@ -142,8 +168,10 @@ export async function buildCards(news, root, { cats = {}, liveBase = '', importa
     if (chromeBin === null) return;
     const rel = fileOf(n), tmp = path.join(dir, '_' + path.basename(rel, '.png') + '.html');
     try {
-      await writeFile(tmp, cardHtml(n, cats[n.category] || 'Notizie AI', '../'));
-      await shot(tmp, path.join(root, rel), 1200, 630);
+      const cat = cats[n.category] || 'Notizie AI';
+      // con "photo" (percorso della copertina, es. assets/art-01.webp) si usa la card con fotografia
+      await writeFile(tmp, n.photo ? photoCardHtml(n, cat, '../') : cardHtml(n, cat, '../'));
+      await shot(tmp, path.join(root, rel), n.photo ? PHOTO_W : 1200, n.photo ? PHOTO_H : 630);
       n.og = rel; made++;
     } catch (e) { if (chromeBin === null) console.warn('  card non generate:', e.message); }
     finally { await rm(tmp, { force: true }); }
