@@ -15,9 +15,11 @@
    • feeds/<settore>.xml    un feed RSS per ogni settore + feeds/youtube.xml
    • sitemap.xml, robots.txt e la chiave IndexNow (avviso a Bing e agli
      altri motori che aderiscono, per le pagine nuove)
-   Indicizzabili da Google solo le notizie della redazione o riprese
-   da almeno 2 fonti: le altre sono "noindex" per non avere pagine
-   povere di contenuto, e spariscono dopo 7 giorni.
+   Indicizzabili da Google le notizie della redazione, quelle riprese
+   da almeno 2 fonti e (dal 9/10/2026, decisione di Paolo) anche quelle
+   con una sola fonte, purché abbiano un riassunto di almeno
+   INDEX_MIN_SUMMARY caratteri: le pagine quasi vuote restano "noindex"
+   e spariscono dopo 7 giorni.
    ===================================================================== */
 
 import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
@@ -109,7 +111,8 @@ async function loadEditorial(root) {
   } catch (e) { console.warn('data.js non leggibile:', e.message); return {}; }
 }
 
-const indexable = (n) => !!n.editorial || (n.coverage || 1) >= 2 || n.priority === 'alta';
+const INDEX_MIN_SUMMARY = 80;   // sotto questa lunghezza una notizia con una sola fonte non va su Google (pagina troppo povera)
+const indexable = (n) => !!n.editorial || (n.coverage || 1) >= 2 || n.priority === 'alta' || String(n.summary || '').trim().length >= INDEX_MIN_SUMMARY;
 
 // Titolo per Google: con almeno 2 fonti aggiunge "N fonti a confronto", se il titolo resta abbastanza corto
 // da non essere tagliato (Google mostra circa 60-70 caratteri); altrimenti il numero va solo nella descrizione

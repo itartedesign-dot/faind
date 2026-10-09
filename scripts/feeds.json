@@ -1,7 +1,7 @@
 {
   "_note": "Fonti lette dalla GitHub Action. 'filter': true = la fonte parla anche d'altro, quindi si tengono solo le notizie sull'AI. 'official': true = blog ufficiale dell'azienda. L'ordine conta: a parità di notizia vince la fonte più in alto.",
   "maxAgeDays": 7,
-  "maxItems": 160,
+  "maxItems": 400,
   "feeds": [
     {
       "name": "OpenAI News",
@@ -22,14 +22,68 @@
       "official": true
     },
     {
-      "name": "ANSA Tecnologia",
-      "url": "https://www.ansa.it/sito/notizie/tecnologia/tecnologia_rss.xml",
+      "name": "Il Sole 24 Ore Tecnologia",
+      "url": "https://www.ilsole24ore.com/rss/tecnologia.xml",
       "lang": "it",
       "filter": true
     },
     {
-      "name": "Wired Italia",
-      "url": "https://www.wired.it/feed/rss",
+      "name": "la Repubblica Tecnologia",
+      "url": "https://www.repubblica.it/rss/tecnologia/rss2.0.xml",
+      "lang": "it",
+      "filter": true
+    },
+    {
+      "name": "Il Post Tecnologia",
+      "url": "https://www.ilpost.it/tecnologia/feed/",
+      "lang": "it",
+      "filter": true
+    },
+    {
+      "name": "AGI Innovazione",
+      "url": "https://www.agi.it/innovazione/rss",
+      "lang": "it",
+      "filter": true
+    },
+    {
+      "name": "Hardware Upgrade",
+      "url": "https://feeds.hwupgrade.it/rss_hwup.xml",
+      "lang": "it",
+      "filter": true
+    },
+    {
+      "name": "DDay.it",
+      "url": "https://www.dday.it/rss",
+      "lang": "it",
+      "filter": true
+    },
+    {
+      "name": "Punto Informatico",
+      "url": "https://www.punto-informatico.it/feed/",
+      "lang": "it",
+      "filter": true
+    },
+    {
+      "name": "HDblog",
+      "url": "https://www.hdblog.it/feed/",
+      "lang": "it",
+      "filter": true
+    },
+    {
+      "name": "Tom's Hardware Italia",
+      "url": "https://www.tomshw.it/feed",
+      "lang": "it",
+      "filter": true
+    },
+    {
+      "name": "AI4Business",
+      "url": "https://www.ai4business.it/feed/",
+      "lang": "it",
+      "filter": true
+    },
+    {
+      "name": "Agenda Digitale",
+      "url": "https://www.agendadigitale.eu/feed/",
       "lang": "it",
       "filter": true
     },
@@ -49,14 +103,38 @@
       "lang": "en"
     },
     {
-      "name": "VentureBeat AI",
-      "url": "https://venturebeat.com/category/ai/feed/",
-      "lang": "en"
-    },
-    {
       "name": "The Decoder",
       "url": "https://the-decoder.com/feed/",
       "lang": "en"
+    },
+    {
+      "name": "The Guardian AI",
+      "url": "https://www.theguardian.com/technology/artificialintelligenceai/rss",
+      "lang": "en"
+    },
+    {
+      "name": "Ars Technica AI",
+      "url": "https://arstechnica.com/ai/feed/",
+      "lang": "en",
+      "filter": true
+    },
+    {
+      "name": "Wired AI",
+      "url": "https://www.wired.com/feed/tag/ai/latest/rss",
+      "lang": "en",
+      "filter": true
+    },
+    {
+      "name": "ZDNET AI",
+      "url": "https://www.zdnet.com/topic/artificial-intelligence/rss.xml",
+      "lang": "en",
+      "filter": true
+    },
+    {
+      "name": "BBC Technology",
+      "url": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+      "lang": "en",
+      "filter": true
     },
     {
       "name": "Heise KI",
@@ -65,8 +143,56 @@
       "filter": true
     },
     {
+      "name": "Spiegel Netzwelt",
+      "url": "https://www.spiegel.de/netzwelt/index.rss",
+      "lang": "de",
+      "filter": true
+    },
+    {
+      "name": "t3n",
+      "url": "https://t3n.de/rss.xml",
+      "lang": "de",
+      "filter": true
+    },
+    {
+      "name": "ComputerBase",
+      "url": "https://www.computerbase.de/rss/news.xml",
+      "lang": "de",
+      "filter": true
+    },
+    {
       "name": "Numerama",
       "url": "https://www.numerama.com/feed/",
+      "lang": "fr",
+      "filter": true
+    },
+    {
+      "name": "Le Monde Pixels",
+      "url": "https://www.lemonde.fr/pixels/rss_full.xml",
+      "lang": "fr",
+      "filter": true
+    },
+    {
+      "name": "Siècle Digital",
+      "url": "https://siecledigital.fr/feed/",
+      "lang": "fr",
+      "filter": true
+    },
+    {
+      "name": "ActuIA",
+      "url": "https://www.actuia.com/feed/",
+      "lang": "fr",
+      "filter": true
+    },
+    {
+      "name": "BFM Tech",
+      "url": "https://www.bfmtv.com/rss/tech/",
+      "lang": "fr",
+      "filter": true
+    },
+    {
+      "name": "01net",
+      "url": "https://www.01net.com/actualites/feed/",
       "lang": "fr",
       "filter": true
     },
@@ -199,8 +325,8 @@
         "keywords": "medic|health|salute|sanit|ospedal|hospital|patient|pazient|diagnos|cancer|cancro|tumor|tumour|\\bdrug|farmac|protein|alphafold|clinic|disease|malatti|surgery|chirurg|radiolog|genom|\\bdna\\b|vaccin|alzheimer|cardio|biotech|antibiot|infezion|infection|\\bvirus|therap|terapi|\\bcures?\\b|neuro|brain|cervello|biolog|molecol|molecul|medizin|médic|santé|gesundheit",
         "feeds": [
           {
-            "name": "ScienceDaily Medical Technology",
-            "url": "https://www.sciencedaily.com/rss/health_medicine/medical_technology.xml",
+            "name": "STAT Health Tech",
+            "url": "https://www.statnews.com/category/health-tech/feed/",
             "lang": "en"
           }
         ],
@@ -265,7 +391,12 @@
         "lang": "en"
       }
     ],
-    "jobicyTags": ["ai", "machine learning", "data science", "data engineer"],
+    "jobicyTags": [
+      "ai",
+      "machine learning",
+      "data science",
+      "data engineer"
+    ],
     "arbeitnow": {
       "url": "https://www.arbeitnow.com/api/job-board-api",
       "lang": "de"
