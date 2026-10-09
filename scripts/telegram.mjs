@@ -333,6 +333,99 @@ ${png ? '<img src="lavori-ai.png" alt="Classifica dei lavori AI più richiesti">
   return { rank, png };
 }
 
+/* ---------- Card del venerdì per LinkedIn ("La settimana dell'AI") ----------
+   Una grafica 1200×1500 (4:5, il formato che nel feed occupa più spazio) disegnata
+   da noi: niente foto delle testate, che appartengono a loro. In grande quante
+   testate hanno ripreso la notizia della settimana e il suo titolo, sotto le tre
+   notizie seguenti. Viene rigenerata a ogni giro in social/settimana-ai.png.
+   Buffer scarica l'immagine quando il post esce, cioè dopo la pubblicazione del
+   sito: per questo il post del venerdì usa l'elenco della card già online (giro
+   precedente, salvato in tgState.weekCard) e, una volta uscito, la card resta
+   ferma su quell'elenco fino a sera, così testo e immagine coincidono sempre. */
+const WEEK_CARD = 'social/settimana-ai.png';
+const WEEK_W = 1200, WEEK_H = 1500;
+const WEEK_FONT = 'https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&display=block';
+const dayMonth = (ms, year) => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'long', ...(year ? { year: 'numeric' } : {}) }).format(ms);
+// "3–9 ottobre 2026" oppure "28 settembre – 4 ottobre 2026"
+export function weekRange(now) {
+  const from = now - 6 * 864e5;
+  const m = (ms) => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', month: 'long' }).format(ms);
+  const d = (ms) => new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric' }).format(ms);
+  return m(from) === m(now) ? `${d(from)}–${dayMonth(now, true)}` : `${dayMonth(from)} – ${dayMonth(now, true)}`;
+}
+
+export function weekCardHtml(list, now) {
+  const [top, ...rest] = list;
+  const title = cut(String(top.title), 150);
+  const size = title.length > 115 ? 58 : title.length > 85 ? 66 : title.length > 55 ? 76 : 88;
+  const many = (top.coverage || 1) >= 2;
+  return `<!doctype html><html lang="it"><head><meta charset="utf-8">
+<link rel="stylesheet" href="${WEEK_FONT}">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:#0B0F1D}
+html,body{width:${WEEK_W}px;height:${WEEK_H}px;overflow:hidden}
+body{position:relative;display:flex;flex-direction:column;color:#fff;font-family:Archivo,"Helvetica Neue",Arial,sans-serif;padding:72px 76px 112px;
+  background:radial-gradient(900px 700px at 105% -8%,rgba(66,147,185,.55),transparent 62%),radial-gradient(700px 600px at -15% 108%,rgba(143,208,240,.16),transparent 60%),#0B0F1D}
+body:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.09) 1.4px,transparent 1.6px);background-size:28px 28px;
+  -webkit-mask-image:linear-gradient(180deg,#000 0,transparent 55%);pointer-events:none}
+.top{position:relative;display:flex;align-items:center;justify-content:space-between}
+.top img{height:70px;border-radius:9px}
+.when{text-align:right;line-height:1.25}
+.when b{display:block;font-size:24px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#8FD0F0}
+.when span{font-size:26px;font-weight:600;color:#c9d6ea}
+main{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;padding:40px 0 56px}
+.hero{display:flex;align-items:flex-end;gap:30px}
+.big{font-size:${many ? 330 : 250}px;line-height:.74;font-weight:900;font-stretch:62%;letter-spacing:-.03em;
+  background:linear-gradient(180deg,#BFE6FA 0%,#8FD0F0 55%,#4293B9 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.say{font-size:40px;line-height:1.12;font-weight:700;font-stretch:85%;color:#e6eef9;padding-bottom:4px}
+.say em{font-style:normal;color:#8FD0F0}
+h1{position:relative;margin-top:54px;padding-left:34px;border-left:10px solid #8FD0F0;font-size:${size}px;line-height:1.04;font-weight:800;font-stretch:78%;letter-spacing:-.012em;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;overflow:hidden}
+.src{margin:22px 0 0 44px;font-size:25px;font-weight:600;color:#9fb2cc}
+.more{position:relative;margin-top:62px}
+.more p{font-size:23px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#8FD0F0;margin-bottom:8px}
+.more li{list-style:none;display:grid;grid-template-columns:76px 1fr;align-items:baseline;padding:20px 0;border-top:1px solid rgba(191,230,250,.18)}
+.more i{font-style:normal;font-size:38px;font-weight:900;font-stretch:62%;color:#4293B9}
+.more span{font-size:31px;line-height:1.18;font-weight:650;font-stretch:90%;color:#fff;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.more small{font-size:23px;font-weight:600;color:#9fb2cc;white-space:nowrap}
+footer{position:absolute;left:0;right:0;top:${WEEK_H - 112}px;height:112px;background:#4293B9;display:flex;align-items:center;justify-content:space-between;padding:0 76px;font-size:29px;font-weight:700}
+footer b{font-weight:900;color:#0B0F1D;font-size:34px;letter-spacing:.01em}
+</style></head><body>
+<div class="top"><img src="../assets/logo.webp" alt=""><div class="when"><b>La settimana dell'AI</b><span>${esc(weekRange(now))}</span></div></div>
+<main><div class="hero"><div class="big">${many ? top.coverage : 'Nº1'}</div><div class="say">${many ? 'testate hanno raccontato<br><em>la notizia della settimana</em>' : 'la notizia AI<br><em>da non perdere questa settimana</em>'}</div></div>
+<h1>${esc(title)}</h1>
+<p class="src">Prima fonte: ${esc(top.source.name)}</p>
+${rest.length ? `<div class="more"><p>E poi</p><ol>${rest.slice(0, 3).map((n, i) => `<li><i>0${i + 2}</i><span>${esc(cut(String(n.title), 110))}${(n.coverage || 1) >= 2 ? ` <small>· ${n.coverage} testate</small>` : ''}</span></li>`).join('')}</ol></div>` : ''}
+</main>
+<footer><span>Ogni notizia con la sua fonte, ogni ora</span><b>faind.org</b></footer>
+</body></html>`;
+}
+
+// Elenco della card: quello già usato dal post di oggi (card ferma) oppure le notizie della settimana
+function weekCardList(data, t) {
+  const st = data.tgState, wc = st.weekCard;
+  if (wc && st.liWeek === t.day && wc.day === t.day) {
+    const byId = new Map(data.items.map(n => [n.id, n]));
+    const list = wc.ids.map(id => byId.get(id)).filter(Boolean);
+    if (list.length === wc.ids.length) return list;
+  }
+  return pickWeek(data.items, t.now);
+}
+
+async function buildWeekCard(data, t) {
+  const list = weekCardList(data, t);
+  if (list.length < DIGEST_MIN) return;
+  const dir = path.join(ROOT, 'social'), tmp = path.join(dir, '_settimana.html');
+  try {
+    await mkdir(dir, { recursive: true });
+    await writeFile(tmp, weekCardHtml(list, t.now));
+    await shot(tmp, path.join(ROOT, WEEK_CARD), WEEK_W, WEEK_H);
+    data.tgState.weekCard = { day: t.day, ids: list.map(n => n.id), made: new Date(t.now).toISOString() };
+  } catch (e) { console.warn('  card della settimana non generata:', e.message); }
+  finally { await rm(tmp, { force: true }); }
+}
+
 async function sendPhotoFile(file, text, reply_markup) {
   const form = new FormData();
   form.append('chat_id', CHAT);
@@ -421,11 +514,15 @@ export function linkedinItems(data, t, rank) {
   }
   // Venerdì: la settimana dell'AI
   if (t.weekday === 'Fri' && t.hour >= LI_FRIDAY_FROM && st.liWeek !== t.day) {
-    const list = pickWeek(data.items, t.now);
+    // Con la card già online (giro precedente) testo e immagine usano lo stesso elenco; altrimenti il logo
+    const wc = st.weekCard, byId = new Map(data.items.map(n => [n.id, n]));
+    const live = wc && t.now - new Date(wc.made).getTime() < 24 * 36e5 ? wc.ids.map(id => byId.get(id)).filter(Boolean) : [];
+    const ready = live.length >= DIGEST_MIN && live.length === wc.ids.length;
+    const list = ready ? live : pickWeek(data.items, t.now);
     if (list.length >= DIGEST_MIN) {
       const tags = liTags(list.map(n => n.title));
       const a = ARTICLES[(st.liArt || 0) % ARTICLES.length]; st.liArt = (st.liArt || 0) + 1;
-      out.push({ id: 'settimana-' + t.day, link: `${SITE}?settimana=${t.day}`, date: new Date(t.now).toISOString(), img: SITE + DIGEST_LOGO,
+      out.push({ id: 'settimana-' + t.day, link: `${SITE}?settimana=${t.day}`, date: new Date(t.now).toISOString(), img: SITE + (ready ? WEEK_CARD : DIGEST_LOGO),
         title: `La settimana dell'intelligenza artificiale: ${cut(list[0].title, 110).replace(/[.!?…]+$/, '')}. Le ${list.length} notizie AI da sapere, su FAIND ${tags}`,
         text: [`La settimana dell'intelligenza artificiale in ${list.length} notizie. La più ripresa: ${list[0].title}`, '', intro(), '',
           ...list.map((n, i) => `${i + 1}. ${n.title} (${n.source.name})`), '',
@@ -490,6 +587,8 @@ async function main() {
 
   // Feed con i post per LinkedIn (pubblicati da un servizio esterno che legge feeds/linkedin.xml)
   await linkedinFeed(data, t, card.rank);
+  // Card del venerdì: si rigenera dopo il feed, così il post usa quella già online
+  await buildWeekCard(data, t);
 
   // Ore di silenzio: non si pubblica e non si scarta nulla, si riprende al mattino
   const forced = process.env.TG_DIGEST === '1' || process.env.TG_JOBS === '1';

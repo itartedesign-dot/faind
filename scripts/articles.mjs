@@ -227,6 +227,29 @@ const tr = (a, lang) => lang === 'it' ? a : (I18N[lang] && I18N[lang][a.slug] ? 
 const listFor = (lang) => ARTICLES.map(a => tr(a, lang)).filter(Boolean);
 const upOf = (lang) => lang === 'it' ? '../' : '../../';
 
+/* ---------- collegamento dalle pagine notizia ---------- */
+// Parole che collegano una notizia all'approfondimento giusto (riquadro "Per capire di più" nelle pagine notizia).
+// Vince il primo che corrisponde: l'ordine va dal più specifico al più generale.
+const MATCH = [
+  ['come-riconoscere-audio-foto-video-intelligenza-artificiale', /deepfake|synthid|watermark|filigran|content credentials|voice clon|clonazione della voce|stimmklon|clonage de voix|\bdetector\b|rilevator|détecteur/i],
+  ['perche-intelligenza-artificiale-consuma-acqua-energia', /data ?cent(er|re)|rechenzentr|centres? de données|\benerg|\bstrom\b|électricit|elettricit|\bwater\b|\bacqua\b|\bwasser\b|nuclear|nucleare|nucléaire|gigawatt|\bGW\b/i],
+  ['leggi-intelligenza-artificiale-nel-mondo', /\bAI Act\b|regulat|regolament|réglement|verordnung|\blaw\b|\blaws\b|lawsuit|\bsues?\b|\bsued\b|causa contro|tribunal|\bcourt\b|gericht|\bklage|copyright|diritto d'autore|droit d'auteur|urheberrecht|antitrust|legge|\bloi\b|gesetz/i],
+  ['intelligenza-artificiale-gratis-o-a-pagamento', /\bpric(e|es|ing)\b|prezz|\bprix\b|\bpreis|subscription|abbonament|abonnement|\babo\b|free tier|\bgratis\b|kostenlos|gratuit|per month|al mese|par mois|pro monat/i],
+  ['intelligenza-artificiale-e-affidabile', /hallucinat|allucinaz|halluzin|misinformation|disinformazion|désinformation|desinformation|fact.?check|inaccura|accuracy|wrong answers|risposte sbagliate/i],
+  ['intelligenza-artificiale-e-pericolosa', /\bsafety\b|sicurezza dell|sécurité de l|sicherheit von ki|existential|alignment|allineamento|superintelligen|bioweapon|cyberattac|attacco informatico|\bhack|malware|jailbreak|misuse|abus/i],
+  ['intelligenza-artificiale-sostituira-uomo-lavori-a-rischio', /\bjobs?\b|layoff|licenzi|lavorator|workforce|employment|hiring|assunzion|\bemploi|chômage|arbeitspl|stellenabbau|entlass/i],
+  ['imparare-a-usare-intelligenza-artificiale', /how to use|come usare|tutorial|beginner|principiant|débutant|anfänger|\bcourse\b|\bcorso\b|\bkurs\b|workshop|\bprompts?\b/i],
+  ['guadagnare-con-intelligenza-artificiale', /make money|earn money|guadagn|side hustle|freelanc|gagner de l'argent|geld verdienen|monetiz/i]
+];
+// L'approfondimento collegato a un testo, nella lingua della pagina se è tradotto (altrimenti in italiano)
+export function articleFor(text, lang = 'it') {
+  const m = MATCH.find(([, re]) => re.test(text));
+  const a = m && ARTICLES.find(x => x.slug === m[0]);
+  if (!a) return null;
+  const l = tr(a, lang) ? lang : 'it';
+  return { title: tr(a, l).title, path: `${ARTICLE_DIR[l]}${a.slug}.html`, lang: l };
+}
+
 // file = nome della pagina dentro la cartella della lingua ('' per l'indice); langs = lingue in cui la pagina esiste
 function shell({ lang, file, langs, title, desc, image, jsonld, main, type = 'article' }) {
   const u = UI[lang], up = upOf(lang), url = `${SITE}${ARTICLE_DIR[lang]}${file}`;
@@ -277,6 +300,7 @@ ${alts}  <meta name="robots" content="index, follow, max-image-preview:large">
   </style>
   <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>
   <script src="${up}stats.js" defer></script>
+  <script src="${up}nav.js" defer></script>
 </head>
 <body class="np-page">
   <header class="masthead">

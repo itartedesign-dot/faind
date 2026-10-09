@@ -7,6 +7,9 @@
      trovati nel testo diventano link alla definizione (linkify) e
      compaiono nel riquadro "Parole chiave" (termsIn).
    • Sotto ogni termine, le ultime notizie che lo citano.
+   • Una pagina per termine e per lingua (glossario/<id>.html,
+     glossario/en/<id>.html…): definizione e tutte le notizie archiviate
+     che lo citano, quindi cresce da sola. I link dalle notizie portano lì.
 
    Per aggiungere un termine: una riga in TERMS con
      id  = ancora nella pagina (senza spazi)
@@ -16,6 +19,7 @@
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { shell, newsListHtml, footerHtml, alsoBand, ALSO_CSS } from './argomenti.mjs';
 
 const SITE = 'https://faind.org/';
 export const GLOSSARY_PATH = { it: 'glossario/', en: 'glossario/en/', fr: 'glossario/fr/', de: 'glossario/de/' };
@@ -61,6 +65,12 @@ export const TERMS = [
     en: ['AI agent', 'An AI system that does not just answer but carries out a task over several steps: it looks up information, uses software, fills in forms, writes and tests code, with more or less human supervision.'],
     fr: ['Agent IA', 'Un système d\'intelligence artificielle qui ne se contente pas de répondre mais accomplit une tâche en plusieurs étapes : il cherche des informations, utilise des logiciels, remplit des formulaires, écrit et teste du code, sous une supervision humaine plus ou moins étroite.'],
     de: ['KI-Agent', 'Ein KI-System, das nicht nur antwortet, sondern eine Aufgabe in mehreren Schritten erledigt: Es sucht Informationen, bedient Programme, füllt Formulare aus, schreibt und testet Code, mit mehr oder weniger menschlicher Aufsicht.'] },
+  // Fonti: LangChain, "Deep Agents" (blog, 30 luglio 2025) e documentazione ufficiale di Deep Agents (docs.langchain.com)
+  { id: 'deep-agents', re: /\bdeep ?agents?\b|\bdeepagents\b/i,
+    it: ['Deep agents', 'Agenti AI costruiti per compiti lunghi e complessi, che un agente semplice non riesce a portare a termine. Si basano su quattro elementi: istruzioni molto dettagliate, uno strumento per pianificare il lavoro in passi, la possibilità di affidare parti del compito a sotto-agenti e un archivio di file dove salvare appunti e risultati. Il termine è stato proposto nel 2025 da LangChain, che lo usa anche per la sua libreria Deep Agents; tra gli esempi cita Claude Code, Deep Research e Manus.'],
+    en: ['Deep agents', 'AI agents built for long, complex tasks that a simple agent cannot complete. They rely on four elements: very detailed instructions, a tool for planning the work in steps, the ability to hand parts of the task to sub-agents, and a file system for saving notes and results. The term was proposed in 2025 by LangChain, which also uses it for its Deep Agents library; the examples it cites include Claude Code, Deep Research and Manus.'],
+    fr: ['Deep agents (agents « profonds »)', 'Des agents IA conçus pour des tâches longues et complexes, qu\'un agent simple ne parvient pas à mener à bien. Ils reposent sur quatre éléments : des instructions très détaillées, un outil pour planifier le travail par étapes, la possibilité de confier des parties de la tâche à des sous-agents et un système de fichiers pour garder notes et résultats. Le terme a été proposé en 2025 par LangChain, qui l\'utilise aussi pour sa bibliothèque Deep Agents ; parmi les exemples cités figurent Claude Code, Deep Research et Manus.'],
+    de: ['Deep Agents', 'KI-Agenten für lange, komplexe Aufgaben, die ein einfacher Agent nicht bewältigt. Sie beruhen auf vier Bausteinen: sehr ausführlichen Anweisungen, einem Werkzeug, um die Arbeit in Schritten zu planen, der Möglichkeit, Teile der Aufgabe an Unteragenten abzugeben, und einem Dateisystem für Notizen und Ergebnisse. Den Begriff hat LangChain 2025 vorgeschlagen und nutzt ihn auch für seine Bibliothek Deep Agents; als Beispiele nennt es Claude Code, Deep Research und Manus.'] },
   { id: 'machine-learning', re: /machine learning|apprendimento automatico|apprentissage automatique|maschinelle[sn]? lernen/i,
     it: ['Machine learning (apprendimento automatico)', 'Il metodo con cui un programma impara dagli esempi invece di seguire regole scritte una per una. È la base di quasi tutta l\'intelligenza artificiale di oggi.'],
     en: ['Machine learning', 'The method by which a program learns from examples instead of following rules written one by one. It is the basis of almost all of today\'s artificial intelligence.'],
@@ -168,27 +178,30 @@ const UI = {
     desc: 'Che cosa significano LLM, prompt, token, allucinazione, agente AI, RAG, AGI? Il glossario di FAIND spiega in parole semplici i termini dell\'intelligenza artificiale, con le notizie che li citano.',
     lede: 'Le parole dell\'intelligenza artificiale, spiegate in modo semplice e senza giri di parole. Nelle pagine notizia di FAIND i termini del glossario sono collegati in automatico alla loro definizione.',
     news: 'Nelle notizie', back: '← Tutte le notizie', home: 'Torna alle notizie di FAIND', crumb: 'Glossario', index: 'Indice dei termini',
-    foot: ['Chi siamo', 'Temi', 'Glossario', 'Feed RSS', 'Privacy e note legali'], about: 'redazione.html', topics: 'temi/' },
+    foot: ['Chi siamo', 'Temi', 'Glossario', 'Feed RSS', 'Privacy e note legali'], about: 'redazione.html', topics: 'temi/', allNews: 'Tutte le notizie che lo citano', allTerms: 'Tutti i termini del glossario', what: "cos'è e cosa significa" },
   en: { locale: 'en', lang: 'Page language', title: 'Artificial intelligence glossary', seo: 'AI glossary: artificial intelligence terms explained simply',
     desc: 'What do LLM, prompt, token, hallucination, AI agent, RAG and AGI mean? The FAIND glossary explains artificial intelligence terms in plain words, with the news stories that mention them.',
     lede: 'The words of artificial intelligence, explained simply and without jargon. On FAIND news pages, glossary terms are linked automatically to their definition.',
     news: 'In the news', back: '← All news', home: 'Back to FAIND news', crumb: 'Glossary', index: 'Index of terms',
-    foot: ['About us', 'Topics', 'Glossary', 'RSS feed', 'Privacy and legal notes'], about: 'about.html', topics: 'temi/en/' },
+    foot: ['About us', 'Topics', 'Glossary', 'RSS feed', 'Privacy and legal notes'], about: 'about.html', topics: 'temi/en/', allNews: 'All the news that mentions it', allTerms: 'All glossary terms', what: 'what it is and what it means' },
   fr: { locale: 'fr', lang: 'Langue de la page', title: 'Glossaire de l\'intelligence artificielle', seo: 'Glossaire IA : les termes de l\'intelligence artificielle expliqués simplement',
     desc: 'Que signifient LLM, prompt, token, hallucination, agent IA, RAG, AGI ? Le glossaire de FAIND explique simplement les termes de l\'intelligence artificielle, avec les actualités qui les citent.',
     lede: 'Les mots de l\'intelligence artificielle, expliqués simplement et sans jargon. Dans les pages d\'actualité de FAIND, les termes du glossaire renvoient automatiquement à leur définition.',
     news: 'Dans l\'actualité', back: '← Toutes les actualités', home: 'Retour aux actualités de FAIND', crumb: 'Glossaire', index: 'Index des termes',
-    foot: ['Qui sommes-nous', 'Thèmes', 'Glossaire', 'Flux RSS', 'Confidentialité et mentions légales'], about: 'a-propos.html', topics: 'temi/fr/' },
+    foot: ['Qui sommes-nous', 'Thèmes', 'Glossaire', 'Flux RSS', 'Confidentialité et mentions légales'], about: 'a-propos.html', topics: 'temi/fr/', allNews: 'Toutes les actualités qui le citent', allTerms: 'Tous les termes du glossaire', what: 'définition et signification' },
   de: { locale: 'de', lang: 'Sprache der Seite', title: 'Glossar der künstlichen Intelligenz', seo: 'KI-Glossar: Begriffe der künstlichen Intelligenz einfach erklärt',
     desc: 'Was bedeuten LLM, Prompt, Token, Halluzination, KI-Agent, RAG und AGI? Das FAIND-Glossar erklärt die Begriffe der künstlichen Intelligenz in einfachen Worten, mit den Nachrichten, in denen sie vorkommen.',
     lede: 'Die Begriffe der künstlichen Intelligenz, einfach und ohne Fachjargon erklärt. Auf den Nachrichtenseiten von FAIND sind Glossarbegriffe automatisch mit ihrer Definition verknüpft.',
     news: 'In den Nachrichten', back: '← Alle Nachrichten', home: 'Zurück zu den FAIND-Nachrichten', crumb: 'Glossar', index: 'Verzeichnis der Begriffe',
-    foot: ['Über uns', 'Themen', 'Glossar', 'RSS-Feed', 'Datenschutz und rechtliche Hinweise'], about: 'ueber-uns.html', topics: 'temi/de/' }
+    foot: ['Über uns', 'Themen', 'Glossar', 'RSS-Feed', 'Datenschutz und rechtliche Hinweise'], about: 'ueber-uns.html', topics: 'temi/de/', allNews: 'Alle Nachrichten, die ihn erwähnen', allTerms: 'Alle Begriffe im Glossar', what: 'was es ist und was es bedeutet' }
 };
 const LANG_LABEL = { it: 'Italiano', en: 'English', fr: 'Français', de: 'Deutsch' };
 
 const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const tx = (v) => (v == null ? '' : typeof v === 'string' ? v : (v.it || v.en || ''));
+
+/* Pagina di un termine (relativa alla radice del sito) */
+export const termPath = (id, lang = 'it') => `${GLOSSARY_PATH[lang] || GLOSSARY_PATH.it}${id}.html`;
 
 /* Termini del glossario presenti in un testo */
 export function termsIn(text) {
@@ -207,7 +220,7 @@ export function linkify(escaped, base, lang = 'it', max = 4) {
       while (b < parts[i].length && /[\p{L}\p{N}]/u.test(parts[i][b])) b++;
       while (a > 0 && /[\p{L}\p{N}]/u.test(parts[i][a - 1])) a--;
       const word = parts[i].slice(a, b);
-      const link = `<a class="gl" href="${base}${GLOSSARY_PATH[lang] || GLOSSARY_PATH.it}#${t.id}" title="${esc((t[lang] || t.it)[1])}">${word}</a>`;
+      const link = `<a class="gl" href="${base}${termPath(t.id, lang)}" title="${esc((t[lang] || t.it)[1])}">${word}</a>`;
       parts.splice(i, 1, parts[i].slice(0, a), link, parts[i].slice(b));
       done++; break;
     }
@@ -227,7 +240,7 @@ function page(lang, news, now) {
     const hits = t.re ? news.filter(n => t.re.test(`${tx(n.title)} ${tx(n.summary) || ''}`)) : [];
     const pref = [...hits.filter(n => (n.lang || 'it') === lang), ...hits.filter(n => (n.lang || 'it') !== lang)].slice(0, 3);
     const list = pref.length ? `\n      <p class="gt__news"><b>${u.news}:</b> ${pref.map(n => `<a href="${esc(n.page ? up + n.page : n.link.url)}">${esc(tx(n.title))}</a>`).join(' · ')}</p>` : '';
-    return `    <section id="${t.id}" class="gt">\n      <h2>${esc(t.name)}</h2>\n      <p>${esc(t.def)}</p>${list}\n    </section>`;
+    return `    <section id="${t.id}" class="gt">\n      <h2><a href="${t.id}.html">${esc(t.name)}</a></h2>\n      <p>${esc(t.def)}</p>${list}\n    </section>`;
   }).join('\n');
   const jsonld = { '@context': 'https://schema.org', '@type': 'DefinedTermSet', '@id': url, url, name: u.title, inLanguage: u.locale, dateModified: new Date(now).toISOString(),
     isPartOf: { '@id': SITE + '#website' },
@@ -262,10 +275,14 @@ ${alts}
     .legal .gt p { color: var(--ink); }
     .legal .gt p.gt__news { font-size: 14px; color: var(--muted); margin-top: 8px; }
     .gt__news a { color: var(--link); }
+    .legal .gt h2 a { color: var(--ink); text-decoration: none; }
+    .legal .gt h2 a:hover { color: var(--link); text-decoration: underline; }
+${ALSO_CSS}
     .gt:target { background: rgba(66,147,185,.12); border-radius: 10px; padding: 16px 14px; margin-inline: -14px; }
   </style>
   <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>
   <script src="${up}stats.js" defer></script>
+  <script src="${up}nav.js" defer></script>
 </head>
 <body class="np-page">
   <header class="masthead">
@@ -282,12 +299,31 @@ ${alts}
       ${terms.map(t => `<a href="#${t.id}">${esc(t.name.replace(/ \(.*\)$/, ''))}</a>`).join('')}
     </nav>
 ${body}
+    ${alsoBand(lang, up)}
     <p class="legal__back"><a class="btn btn--primary" href="${up}">${u.home}</a></p>
   </main>
-  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="${up}#chi-siamo">${u.foot[0]}</a> · <a href="${up}${u.topics}">${u.foot[1]}</a> · <a href="${up}${GLOSSARY_PATH[lang]}">${u.foot[2]}</a> · <a href="${up}feed.xml">${u.foot[3]}</a> · <a href="${up}privacy.html">${u.foot[4]}</a></p></div></footer>
+  ${footerHtml(lang, up)}
 </body>
 </html>
 `;
+}
+
+// Pagina di un singolo termine: definizione e tutte le notizie (archivio compreso) che lo citano
+const TERM_MAX = 60;
+function termPage(t, lang, news, now) {
+  const u = UI[lang], up = lang === 'it' ? '../' : '../../';
+  const [name, def] = t[lang];
+  const url = SITE + termPath(t.id, lang);
+  const hits = t.re ? news.filter(n => t.re.test(`${tx(n.title)} ${tx(n.summary) || ''}`)) : [];
+  const short = name.replace(/ \(.*\)$/, '');
+  const jsonld = { '@context': 'https://schema.org', '@type': 'DefinedTerm', '@id': url, url, name, description: def, inLanguage: u.locale,
+    inDefinedTermSet: { '@type': 'DefinedTermSet', name: u.title, url: SITE + GLOSSARY_PATH[lang] }, dateModified: new Date(now).toISOString() };
+  const main = `    ${hits.length ? `<h2 class="al-month" style="border:0;margin-top:34px">${esc(u.allNews)}</h2>\n${newsListHtml(hits.slice(0, TERM_MAX), up, lang)}` : ''}
+    <p style="margin-top:28px"><a href="./">${esc(u.allTerms)} →</a></p>`;
+  return shell({ lang, up, url, title: `${short}: ${u.what} | ${u.crumb} FAIND`, desc: def.length > 155 ? def.slice(0, 152).replace(/\s+\S*$/, '') + '…' : def,
+    h1: name, lede: esc(def), main, jsonld,
+    alternates: Object.keys(GLOSSARY_PATH).map(l => ({ lang: l, url: SITE + termPath(t.id, l) })),
+    crumb: `<a href="${up}">FAIND</a> › <a href="./">${esc(u.crumb)}</a>` });
 }
 
 export async function buildGlossary(news, root, now = Date.now()) {
@@ -298,6 +334,10 @@ export async function buildGlossary(news, root, now = Date.now()) {
     await mkdir(dir, { recursive: true });
     await writeFile(path.join(dir, 'index.html'), page(lang, list, now));
     urls.push(SITE + GLOSSARY_PATH[lang]);
+    for (const t of TERMS) {
+      await writeFile(path.join(dir, `${t.id}.html`), termPage(t, lang, list, now));
+      urls.push(SITE + termPath(t.id, lang));
+    }
   }
   try {
     const file = path.join(root, 'sitemap.xml');
@@ -305,5 +345,5 @@ export async function buildGlossary(news, root, now = Date.now()) {
     const extra = urls.filter(u => !xml.includes(`<loc>${u}</loc>`)).map(u => `<url><loc>${u}</loc><changefreq>daily</changefreq><priority>0.7</priority></url>`).join('\n');
     if (extra) await writeFile(file, xml.replace('</urlset>', extra + '\n</urlset>'));
   } catch (e) { console.warn('  sitemap non aggiornata con il glossario:', e.message); }
-  console.log(`📖 glossario: ${TERMS.length} termini in ${urls.length} lingue`);
+  console.log(`📖 glossario: ${TERMS.length} termini in ${Object.keys(GLOSSARY_PATH).length} lingue, ${urls.length} pagine`);
 }

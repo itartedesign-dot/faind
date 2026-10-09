@@ -252,7 +252,7 @@ export function cluster(items) {
     const host = out.find(o => o.source.name !== it.source.name && similar(o._tk, tk) >= 0.45);
     if (host && host.also.some(a => a.name === it.source.name)) continue;   // già conteggiata
     if (host) {
-      host.also.push({ name: it.source.name, url: it.link.url });
+      host.also.push({ name: it.source.name, url: it.link.url, title: it.title });   // il titolo serve al confronto nella pagina notizia
       host.coverage = 1 + host.also.length;
       if (!host.image && it.image) host.image = it.image;
       if (it.tg && !host.tg) host.tg = it.tg;             // già uscita su Telegram con un'altra fonte
@@ -260,6 +260,28 @@ export function cluster(items) {
     } else out.push({ ...it, also: it.also ? [...it.also] : [], coverage: it.coverage || 1, _tk: tk });
   }
   return out.map(({ _tk, ...rest }) => rest);
+}
+
+/* ------------------------------ Archivio ------------------------------ */
+// Le pagine archiviate esistono solo nel sito pubblicato: se un giro pubblicasse senza averle rigenerate,
+// sparirebbero per sempre. Per questo, se il sito risponde ma l'archivio non si legge, il giro si ferma
+// (il sito online resta com'è e il giro dopo riprova). Solo un "404" con news.json che non conosce
+// nessun archivio vuol dire "primo giro": si parte da un archivio vuoto.
+async function readArchive(url, prevJson) {
+  let last;
+  for (let i = 0; i < 3; i++) {
+    try {
+      const json = JSON.parse(await get(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(), 20000));
+      if (!Array.isArray(json.items)) throw new Error('formato non valido');
+      console.log(`🗄  archivio letto: ${json.items.length} notizie`);
+      return json;
+    } catch (e) {
+      last = e;
+      if (/HTTP 404/.test(e.message) && !(prevJson.archiveCount > 0)) { console.log('🗄  archivio non ancora presente: si parte da zero'); return { items: [] }; }
+      await new Promise(r => setTimeout(r, 3000 * (i + 1)));
+    }
+  }
+  throw new Error(`archivio.json non leggibile (${last && last.message}): giro interrotto per non cancellare le pagine archiviate`);
 }
 
 /* ------------------------------ Utility ------------------------------ */
@@ -557,6 +579,9 @@ async function main() {
     try { prevJson = JSON.parse(await get(freshUrl, 10000)); previous = prevJson.items || []; console.log(`↺ storico: ${previous.length}`); }
     catch (e) { console.warn('↺ storico non disponibile:', e.message); }
   }
+  // Archivio delle pagine notizia permanenti (archivio.json, accanto a news.json): vedi readArchive()
+  const archive = prevUrl ? await readArchive(prevUrl.replace(/news\.json.*$/, 'archivio.json'), prevJson) : { items: [] };
+
   // Lo storico conserva le fonti già raggruppate (also); i nuovi arrivi si aggiungono
   const byId = new Map();
   for (const it of previous) {
@@ -621,8 +646,13 @@ async function main() {
   const out = { generated: new Date(now).toISOString(), sources: sources.size, count: items.length, items, videos, channels, spotlight, jobs: jobsData.jobs, jobsUpdated: jobsData.jobsUpdated, tgState: prevJson.tgState || {}, logos, priceCheck };   // tgState = promemoria del bot Telegram (ultimo Punto delle 8, ultima classifica lavori)
 
   // Pagine notizia, feed RSS e sitemap (aggiunge a ogni notizia il campo "page")
-  try { await buildSite(out, ROOT); }
-  catch (e) { console.warn('Pagine/feed non generati:', e.message); }
+  try { await buildSite(out, ROOT, { archive }); }
+  catch (e) {
+    console.warn('Pagine/feed non generati:', e.message);
+    // L'archivio non si perde: lo ripubblico com'era, e il giro dopo rigenera le pagine
+    await writeFile(path.join(ROOT, 'archivio.json'), JSON.stringify(archive));
+    out.archiveCount = archive.items.length;
+  }
 
   // Pagine tematiche permanenti (temi/): testo fisso + dati che si aggiornano + cronologia che cresce
   out.topics = prevJson.topics || {};
