@@ -609,7 +609,7 @@ export function linkedinItems(data, t, rank, canva = {}) {
         'Ci teniamo certe piccole cose umane: una calligrafia storta, un ricordo di quando l\'AI era solo fantascienza, il tempo perso per fare qualcosa di bello.', '',
         'Racconta la tua, magari chi legge non l\'ha mai vissuta.', '',
         `Le notizie sull'intelligenza artificiale, ogni ora e con la fonte: ${SITE}?${utm}`,
-        `Il canale Telegram: https://t.me/faindnews?${utm}`, '', tags].join('\n') });
+        'Il canale Telegram: https://t.me/faindnews', '', tags].join('\n') });
     st.liSat = t.day;
   }
   // Mercoledì: un approfondimento, a rotazione (parte da metà elenco, così non coincide con quello citato il venerdì)
