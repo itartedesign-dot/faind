@@ -17,7 +17,11 @@
    • se qualcosa va storto riprova al giro dopo e apre una segnalazione
      (issue) sul repository: GitHub avvisa per mail;
    • la chiave Buffer dura un anno: da WARN_DAYS giorni prima della scadenza
-     apre una segnalazione di promemoria, una a settimana.
+     apre una segnalazione di promemoria, una a settimana;
+   • card Canva: se alle CANVA_ALERT_FROM di lunedì, venerdì o sabato la card del
+     giorno non è arrivata (la routine di Claude ha fallito i suoi 3 tentativi),
+     apre una segnalazione; un'altra quando i mantra o le frasi del sabato sono
+     finiti e bisogna scriverne di nuovi.
 
    Serve (GitHub → Settings → Secrets and variables → Actions):
      BUFFER_API_KEY   chiave personale creata su Buffer (Impostazioni → API)
@@ -43,6 +47,7 @@ const KEY_DAYS = 365;            // durata della chiave Buffer (scegliere "1 yea
 const WARN_DAYS = 30;            // da quanti giorni prima della scadenza avvisare
 const ALERT_EVERY_DAYS = 7;      // la stessa segnalazione non si ripete prima di N giorni
 const DUP_HOURS = 72;            // finestra del controllo "già presente su Buffer"
+const CANVA_ALERT_FROM = 15;     // ora italiana dopo cui una card Canva mancante viene segnalata (vedi LI_CANVA_WAIT_UNTIL in telegram.mjs)
 
 const q = (s) => JSON.stringify(String(s));   // stringa pronta per GraphQL
 const norm = (s = '') => String(s).replace(/\s+/g, ' ').trim();
@@ -132,10 +137,10 @@ export async function deliver(ch, item) {
 }
 
 /* ---------- Segnalazioni sul repository (GitHub avvisa per mail) ---------- */
-async function alert(st, kind, title, body, now) {
+async function alert(st, kind, title, body, now, everyDays = ALERT_EVERY_DAYS) {
   st.liAlerts = st.liAlerts || {};
   const last = st.liAlerts[kind] ? new Date(st.liAlerts[kind]).getTime() : 0;
-  if (now - last < ALERT_EVERY_DAYS * 864e5) return;
+  if (now - last < everyDays * 864e5) return;
   const repo = process.env.GITHUB_REPOSITORY, token = process.env.GITHUB_TOKEN;
   if (DRY || !repo || !token) { console.log(`--- SEGNALAZIONE (non inviata) ---\n${title}\n${body}`); return; }
   try {
@@ -209,6 +214,38 @@ export async function run(data, now = Date.now()) {
   return { sent, todo: sent + list.filter(i => !i.buf).length };
 }
 
+/* ---------- Card Canva e liste di mantra e frasi ---------- */
+const CANVA_DAYS = { Mon: ['lavori', 'Lavoro AI', 'lunedì'], Fri: ['settimana', 'Notizie AI', 'venerdì'], Sat: ['mano', 'Scritto a mano', 'sabato'] };
+const readJson = async (rel) => { try { return JSON.parse(await readFile(path.join(ROOT, rel), 'utf8')); } catch { return null; } };
+const romeParts = (now) => Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23', weekday: 'short' })
+  .formatToParts(new Date(now)).map(x => [x.type, x.value]));
+// Quanti elementi di una lista (numerata da 1) non sono ancora stati usati
+export const freeCount = (list, used) => { const u = new Set((used || []).map(x => Number(x && x.n))); return (list || []).filter((_, i) => !u.has(i + 1)).length; };
+
+export async function canvaChecks(st, now) {
+  const p = romeParts(now), day = `${p.year}-${p.month}-${p.day}`, hour = Number(p.hour);
+  const card = CANVA_DAYS[p.weekday];
+  if (card && hour >= CANVA_ALERT_FROM) {
+    const [kind, name, dayName] = card;
+    const info = await readJson(`social/canva-${kind}.json`);
+    if (!info || info.day !== day) {
+      const effect = kind === 'mano' ? 'Oggi il post del sabato su LinkedIn non è uscito.' : 'Il post di oggi su LinkedIn è uscito lo stesso, con la grafica automatica del sito.';
+      await alert(st, 'canva-' + kind, `Card Canva "${name}" di ${dayName} non preparata`,
+        `La routine di Claude che compila la card "${name}" su Canva non ci è riuscita nei suoi 3 tentativi (8:40, 10:40 e 12:40). ${effect}\n\nDi solito vuol dire che Canva o GitHub si sono scollegati da Claude. Apri il Progetto FAIND su Claude e scrivi nel thread "Modello card venerdì su Canva" che la card di oggi non è uscita: Claude controlla cosa non va.`, now, 1);
+    }
+  }
+  const mantra = await readJson('social/mantra.json');
+  if (mantra && Array.isArray(mantra.mantra) && freeCount(mantra.mantra, mantra.usati) === 0) {
+    await alert(st, 'mantra-finiti', 'Card Canva: abbiamo usato l\'ultimo mantra, è ora di scriverne altri',
+      `Tutti i ${mantra.mantra.length} mantra delle card del lunedì (Lavoro AI) e del venerdì (Notizie AI) sono stati usati. Finché non ne arrivano di nuovi la routine si ferma e i post escono con la grafica automatica del sito.\n\nScrivi i nuovi mantra a Claude nel Progetto FAIND: li aggiunge in social/mantra.json.`, now);
+  }
+  const frasi = await readJson('social/frasi-mano.json');
+  if (frasi && Array.isArray(frasi.frasi) && freeCount(frasi.frasi, frasi.usati) === 0) {
+    await alert(st, 'frasi-finite', 'Card "Scritto a mano": abbiamo usato l\'ultima frase, è ora di scriverne altre',
+      `Tutte le ${frasi.frasi.length} frasi della card del sabato sono state usate. Senza frasi nuove il sabato non esce nessun post su LinkedIn.\n\nScrivi le nuove frasi a Claude nel Progetto FAIND: le aggiunge in social/frasi-mano.json.`, now);
+  }
+}
+
 async function main() {
   if (!DRY && !KEY) { console.log('LinkedIn (Buffer) non configurato: salto.'); return; }
   const file = path.join(ROOT, 'news.json');
@@ -216,6 +253,7 @@ async function main() {
   // LI_NOW serve solo per le prove (es. LI_NOW=2026-10-05T08:17:00Z)
   const now = process.env.LI_NOW ? new Date(process.env.LI_NOW).getTime() : Date.now();
   const r = await run(data, now);
+  try { await canvaChecks(data.tgState, now); } catch (e) { console.warn('  controllo card Canva non riuscito:', e.message); }
   if (!DRY) await writeFile(file, JSON.stringify(data));
   console.log(`→ LinkedIn: ${r.sent} pubblicat${r.sent === 1 ? 'o' : 'i'}, ${r.todo - r.sent} in attesa`);
 }

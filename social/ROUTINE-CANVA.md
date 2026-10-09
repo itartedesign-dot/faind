@@ -1,17 +1,22 @@
 # Routine settimanale: card LinkedIn da Canva
 
-Istruzioni per la routine di Claude che compila il modello Canva di Paolo. Gira il **venerdì alle 8:40**
-(card "Notizie AI"), il **sabato alle 8:40** (card "Scritto a mano") e il **lunedì alle 9:40**
-(card "Lavoro AI"), ora italiana, prima dei post che l'automazione del sito consegna a Buffer
-(venerdì e sabato dalle 9:17, lunedì dalle 10:17).
+Istruzioni per la routine di Claude che compila il modello Canva di Paolo. Gira il **venerdì** (card
+"Notizie AI"), il **sabato** (card "Scritto a mano") e il **lunedì** (card "Lavoro AI"), con **3 tentativi
+alle 8:40, 10:40 e 12:40** ora italiana. L'automazione del sito aspetta la card: il post esce al primo
+giro orario dopo il suo arrivo (sabato e venerdì dalle 9, lunedì dalle 10).
 
-Se un passo non riesce, **non scrivere nulla sul repository**: il venerdì e il lunedì il post esce
-lo stesso, con la grafica di sempre; il sabato senza card non esce nessun post. In quel caso spiega nel riepilogo finale cosa non ha funzionato.
+Se un passo non riesce, **non scrivere nulla sul repository**: ci riprova il tentativo successivo.
+Se alle 15 la card non c'è ancora, il venerdì e il lunedì il post esce con la grafica di sempre, il sabato
+non esce nessun post, e il sito apre una segnalazione su GitHub che arriva a Paolo per mail.
+Spiega nel riepilogo finale cosa non ha funzionato.
 
 ## 1. Che card serve oggi
 
 Guarda il giorno in Italia (Europe/Rome): venerdì → `settimana`, sabato → `mano`, lunedì → `lavori`.
 Altri giorni: fermati. Per `mano` salta il punto 2 e, al punto 3, usa le frasi al posto dei mantra.
+
+Leggi `social/canva-<card>.json` dal branch `main`: se esiste e il suo `day` è già la data di oggi,
+la card l'ha fatta un tentativo precedente. Fermati senza scrivere nulla.
 
 ## 2. Dati della settimana
 
@@ -20,17 +25,19 @@ l'ultima esecuzione riuscita di oggi e leggi il log del job `build`. Cerca la ri
 `CANVA_DATI ` e leggi il JSON che segue. Deve avere `day` uguale alla data di oggi (AAAA-MM-GG).
 
 - `settimana`: usa `settimana.ids` (tutti, nell'ordine) e `settimana.titoli` (i 3 titoli della card).
-- `lavori`: usa `lavori.ruoli` (i 3 ruoli più richiesti). Se `lavori` è `null`, fermati.
+- `lavori`: usa `lavori.ruoli` (i 3 ruoli più richiesti). Se `lavori` è `null`, fermati. Il lunedì la
+  classifica resta la stessa per tutto il giorno, quindi i ruoli coincidono con quelli del post.
 
 ## 3. Mantra
 
 Leggi `social/mantra.json` dal branch `main`. La lista `mantra` è numerata da 1.
 - Se `prossimi[<card>]` esiste, usa quel numero e poi toglilo da `prossimi`.
 - Altrimenti usa il primo numero che non compare né in `usati` né tra i valori di `prossimi`.
-- Se i mantra sono finiti, fermati e dillo nel riepilogo.
+- Se i mantra sono finiti, fermati e dillo nel riepilogo (il sito ha già mandato la mail a Paolo).
 
 Solo per `mano`: leggi invece `social/frasi-mano.json` (lista `frasi`, numerata da 1) e usa il primo
-numero che non compare in `usati`. Se le frasi sono finite, fermati e dillo nel riepilogo.
+numero che non compare in `usati`. Se le frasi sono finite, fermati e dillo nel riepilogo (il sito ha già
+mandato la mail a Paolo).
 
 ## 4. Canva
 
@@ -67,7 +74,7 @@ Messaggio del commit: `Card Canva <card> del <data>`.
 
 Il commit avvia subito l'automazione del sito, che scarica il PNG (il link di Canva scade dopo
 poche ore) e lo pubblica come `https://faind.org/social/canva-<card>.png`. Il post del giorno
-usa quella immagine. Il lunedì la usa solo se i 3 ruoli sono ancora i primi della classifica.
+usa quella immagine.
 
 ## 6. Riepilogo
 

@@ -477,6 +477,17 @@ function canvaWeekList(data, cc) {
 const canvaJobsOk = (cc, rank) => !!(cc && Array.isArray(cc.ruoli) && rank &&
   cc.ruoli.length === 3 && cc.ruoli.every((r, i) => rank.rows[i] && rank.rows[i].name === r));
 
+// Lunedì: la classifica usata per LinkedIn e per la card Canva si fissa al primo giro utile del giorno,
+// così la card compilata dalla routine e il testo del post riportano sempre gli stessi ruoli
+// (la classifica sul sito si aggiorna ogni 6 ore e potrebbe cambiare nel frattempo)
+export function jobsSnapshot(st, t, rank) {
+  if (t.weekday !== JOBS_WEEKDAY) return rank;
+  if (st.liRankSnap && st.liRankSnap.day === t.day) return st.liRankSnap;
+  if (!rank || rank.total < JOBS_MIN || rank.rows.length < 3) return rank;
+  st.liRankSnap = { day: t.day, total: rank.total, rows: rank.rows.slice(0, 5) };
+  return st.liRankSnap;
+}
+
 // Dati per la routine Canva (letti dal log di GitHub Actions)
 function canvaLog(data, t, rank) {
   try {
@@ -530,13 +541,19 @@ async function maybeJobs(data, t, card) {
 /* ---------- Feed per LinkedIn (feeds/linkedin.xml) ----------
    Tre post a settimana, già scritti come post social: un servizio esterno (es. dlvr.it)
    legge questo feed e li pubblica da solo sulla pagina LinkedIn di FAIND.
-   • lunedì dalle 10: la classifica dei lavori AI, con la grafica;
+   • lunedì dalle 10: la classifica dei lavori AI, con la card Canva appena è pronta (al più tardi alle
+     LI_CANVA_WAIT_UNTIL, con la grafica di riserva);
    • mercoledì dalle LI_WED_FROM: un approfondimento, a rotazione;
-   • venerdì dalle LI_FRIDAY_FROM: "La settimana dell'AI", le 5 notizie più riprese + un approfondimento.
+   • venerdì dalle LI_FRIDAY_FROM: "La settimana dell'AI", le 5 notizie più riprese + un approfondimento,
+     anche questo con la card Canva appena è pronta (al più tardi alle LI_CANVA_WAIT_UNTIL);
+   • sabato tra LI_SAT_FROM e LI_SAT_UNTIL: "Scritto a mano", solo con la card Canva.
    Ogni post: apertura che cambia, testo fisso su FAIND (a rotazione tra LI_INTRO), riepilogo, link, hashtag.
    Le voci già uscite sono conservate in news.json → tgState.linkedin. */
 const LI_FRIDAY_FROM = 9, LI_WED_FROM = 12, LI_KEEP = 20;
-const LI_SAT_FROM = 9, LI_SAT_UNTIL = 13;   // sabato: card "Scritto a mano" (esce solo se la routine Canva l'ha preparata)
+const LI_SAT_FROM = 9, LI_SAT_UNTIL = 17;   // sabato: card "Scritto a mano" (esce solo se la routine Canva l'ha preparata)
+// Lunedì e venerdì il post aspetta la card Canva fino a quest'ora: la routine fa 3 tentativi (8:40, 10:40, 12:40);
+// poi esce con la grafica di riserva (e linkedin.mjs manda una segnalazione per mail)
+export const LI_CANVA_WAIT_UNTIL = 15;
 // Il testo fisso che spiega FAIND: cinque versioni, usate a rotazione
 const LI_INTRO = [
   'FAIND raccoglie ogni ora le notizie sull\'intelligenza artificiale da testate italiane e internazionali, sempre con la fonte. Gratis, senza pubblicità e senza registrazione.',
@@ -568,7 +585,8 @@ export function linkedinItems(data, t, rank, canva = {}) {
   const st = data.tgState, out = [];
   const intro = () => { const i = (st.liIntro || 0) % LI_INTRO.length; st.liIntro = (st.liIntro || 0) + 1; return LI_INTRO[i]; };
   // Lunedì: classifica dei lavori AI
-  if (t.weekday === JOBS_WEEKDAY && t.hour >= JOBS_FROM && st.liJobs !== t.day && rank && rank.total >= JOBS_MIN && rank.rows.length >= 3) {
+  if (t.weekday === JOBS_WEEKDAY && t.hour >= JOBS_FROM && st.liJobs !== t.day && rank && rank.total >= JOBS_MIN && rank.rows.length >= 3
+    && (canva.lavori || t.hour >= LI_CANVA_WAIT_UNTIL)) {
     const tags = `${LI_TAGS.join(' ')} #LavoroAI #AIJobs`, top = rank.rows.slice(0, 5);
     const img = canvaJobsOk(canva.lavori, rank) ? canva.lavori.img : SITE + 'social/lavori-ai.png';
     out.push({ id: 'lavori-' + t.day, link: `${SITE}?lavori=${t.day}#job`, date: new Date(t.now).toISOString(), img,
@@ -579,7 +597,7 @@ export function linkedinItems(data, t, rank, canva = {}) {
     st.liJobs = t.day;
   }
   // Venerdì: la settimana dell'AI
-  if (t.weekday === 'Fri' && t.hour >= LI_FRIDAY_FROM && st.liWeek !== t.day) {
+  if (t.weekday === 'Fri' && t.hour >= LI_FRIDAY_FROM && st.liWeek !== t.day && (canva.settimana || t.hour >= LI_CANVA_WAIT_UNTIL)) {
     // Con la card già online (giro precedente) testo e immagine usano lo stesso elenco; altrimenti il logo
     const wc = st.weekCard, byId = new Map(data.items.map(n => [n.id, n]));
     const live = wc && t.now - new Date(wc.made).getTime() < 24 * 36e5 ? wc.ids.map(id => byId.get(id)).filter(Boolean) : [];
@@ -672,9 +690,10 @@ async function main() {
   // Grafica e testo "Lavoro AI" per i social: sempre aggiornati sul sito
   const card = await buildJobsCard(data, t);
 
-  canvaLog(data, t, card.rank);
+  const liRank = jobsSnapshot(data.tgState, t, card.rank);
+  canvaLog(data, t, liRank);
   // Feed con i post per LinkedIn (pubblicati da un servizio esterno che legge feeds/linkedin.xml)
-  await linkedinFeed(data, t, card.rank);
+  await linkedinFeed(data, t, liRank);
   // Dopo l'uscita la card Canva resta online per tutto il giorno (i giri seguenti la riprendono dal sito)
   if (t.weekday === 'Fri') await canvaCard('settimana', t);
   if (t.weekday === JOBS_WEEKDAY) await canvaCard('lavori', t);
