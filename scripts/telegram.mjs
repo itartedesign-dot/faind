@@ -426,6 +426,70 @@ async function buildWeekCard(data, t) {
   finally { await rm(tmp, { force: true }); }
 }
 
+/* ---------- Card disegnate su Canva (venerdì e lunedì) ----------
+   Una routine settimanale di Claude compila il modello Canva di Paolo (mantra + 3 titoli),
+   ne esporta il PNG e scrive su main social/canva-<tipo>.json con { day, url, ids|ruoli, mantra }.
+   Il link di Canva scade dopo poche ore: il primo giro lo scarica in social/canva-<tipo>.png,
+   che va online con il sito; i giri seguenti dello stesso giorno, se il link è scaduto,
+   riprendono la copia già online. Se manca qualcosa il post usa la grafica di sempre.
+   Ogni giro stampa nel log una riga CANVA_DATI con i dati che servono alla routine. */
+const CANVA = { settimana: 'social/canva-settimana', lavori: 'social/canva-lavori' };
+const canvaCache = {};
+
+async function fetchPng(url) {
+  const res = await fetch(url, { signal: AbortSignal.timeout(30000) });
+  if (!res.ok) throw new Error('risposta ' + res.status);
+  const buf = Buffer.from(await res.arrayBuffer());
+  if (buf.length < 1000 || buf.readUInt32BE(0) !== 0x89504e47) throw new Error('non è un PNG');
+  return buf;
+}
+
+// { ...json, img } se la card Canva di oggi è pronta, altrimenti null
+export async function canvaCard(kind, t) {
+  if (kind in canvaCache) return canvaCache[kind];
+  let card = null;
+  try {
+    const info = JSON.parse(await readFile(path.join(ROOT, CANVA[kind] + '.json'), 'utf8'));
+    if (info.day === t.day) {
+      let buf = null;
+      for (const url of [info.url, `${SITE}${CANVA[kind]}.png?d=${t.day}`].filter(Boolean)) {
+        try { buf = await fetchPng(url); break; } catch (e) { console.warn(`  card Canva (${kind}) non scaricata da ${url.split('?')[0]}:`, e.message); }
+      }
+      if (buf) {
+        await mkdir(path.join(ROOT, 'social'), { recursive: true });
+        await writeFile(path.join(ROOT, CANVA[kind] + '.png'), buf);
+        card = { ...info, img: SITE + CANVA[kind] + '.png' };
+        console.log(`✓ card Canva (${kind}) pronta per oggi`);
+      }
+    }
+  } catch (e) { if (e.code !== 'ENOENT') console.warn(`  card Canva (${kind}):`, e.message); }
+  return (canvaCache[kind] = card);
+}
+
+// Elenco del venerdì: quello scelto per la card Canva di oggi, se tutte le notizie ci sono ancora
+function canvaWeekList(data, cc) {
+  if (!cc || !Array.isArray(cc.ids)) return null;
+  const byId = new Map(data.items.map(n => [n.id, n]));
+  const list = cc.ids.map(id => byId.get(id)).filter(Boolean);
+  return list.length >= DIGEST_MIN && list.length === cc.ids.length ? list : null;
+}
+// Il lunedì la card Canva vale solo se i primi 3 ruoli sono ancora quelli della classifica
+const canvaJobsOk = (cc, rank) => !!(cc && Array.isArray(cc.ruoli) && rank &&
+  cc.ruoli.length === 3 && cc.ruoli.every((r, i) => rank.rows[i] && rank.rows[i].name === r));
+
+// Dati per la routine Canva (letti dal log di GitHub Actions)
+function canvaLog(data, t, rank) {
+  try {
+    const week = pickWeek(data.items, t.now);
+    const cut2 = (s) => cut(String(s), 110);
+    console.log('CANVA_DATI ' + JSON.stringify({
+      day: t.day, weekday: t.weekday, made: new Date(t.now).toISOString(),
+      settimana: { ids: week.map(n => n.id), titoli: week.slice(0, 3).map(n => cut2(n.title)) },
+      lavori: rank && rank.rows.length >= 3 ? { ruoli: rank.rows.slice(0, 3).map(r => r.name), totale: rank.total } : null
+    }));
+  } catch (e) { console.warn('  CANVA_DATI non scritti:', e.message); }
+}
+
 async function sendPhotoFile(file, text, reply_markup) {
   const form = new FormData();
   form.append('chat_id', CHAT);
@@ -499,13 +563,14 @@ export function pickWeek(items, now, count = 5) {
   return italianFirst(week, count);
 }
 
-export function linkedinItems(data, t, rank) {
+export function linkedinItems(data, t, rank, canva = {}) {
   const st = data.tgState, out = [];
   const intro = () => { const i = (st.liIntro || 0) % LI_INTRO.length; st.liIntro = (st.liIntro || 0) + 1; return LI_INTRO[i]; };
   // Lunedì: classifica dei lavori AI
   if (t.weekday === JOBS_WEEKDAY && t.hour >= JOBS_FROM && st.liJobs !== t.day && rank && rank.total >= JOBS_MIN && rank.rows.length >= 3) {
     const tags = `${LI_TAGS.join(' ')} #LavoroAI #AIJobs`, top = rank.rows.slice(0, 5);
-    out.push({ id: 'lavori-' + t.day, link: `${SITE}?lavori=${t.day}#job`, date: new Date(t.now).toISOString(), img: SITE + 'social/lavori-ai.png',
+    const img = canvaJobsOk(canva.lavori, rank) ? canva.lavori.img : SITE + 'social/lavori-ai.png';
+    out.push({ id: 'lavori-' + t.day, link: `${SITE}?lavori=${t.day}#job`, date: new Date(t.now).toISOString(), img,
       title: `Lavoro e intelligenza artificiale: ${top[0].name} è il ruolo più richiesto questa settimana. La classifica completa su FAIND ${tags}`,
       text: [`Quali sono i lavori più richiesti nell'intelligenza artificiale? Questa settimana in testa c'è ${top[0].name}.`, '', intro(), '',
         `La classifica (settimana del ${t.mondayLabel}):`, ...top.map((r, i) => `${i + 1}. ${r.name}: ${offers(r.n)}`), '',
@@ -518,11 +583,13 @@ export function linkedinItems(data, t, rank) {
     const wc = st.weekCard, byId = new Map(data.items.map(n => [n.id, n]));
     const live = wc && t.now - new Date(wc.made).getTime() < 24 * 36e5 ? wc.ids.map(id => byId.get(id)).filter(Boolean) : [];
     const ready = live.length >= DIGEST_MIN && live.length === wc.ids.length;
-    const list = ready ? live : pickWeek(data.items, t.now);
+    // La card Canva di oggi ha la precedenza: testo e immagine usano il suo elenco
+    const cl = canvaWeekList(data, canva.settimana);
+    const list = cl || (ready ? live : pickWeek(data.items, t.now));
     if (list.length >= DIGEST_MIN) {
       const tags = liTags(list.map(n => n.title));
       const a = ARTICLES[(st.liArt || 0) % ARTICLES.length]; st.liArt = (st.liArt || 0) + 1;
-      out.push({ id: 'settimana-' + t.day, link: `${SITE}?settimana=${t.day}`, date: new Date(t.now).toISOString(), img: SITE + (ready ? WEEK_CARD : DIGEST_LOGO),
+      out.push({ id: 'settimana-' + t.day, link: `${SITE}?settimana=${t.day}`, date: new Date(t.now).toISOString(), img: cl ? canva.settimana.img : SITE + (ready ? WEEK_CARD : DIGEST_LOGO),
         title: `La settimana dell'intelligenza artificiale: ${cut(list[0].title, 110).replace(/[.!?…]+$/, '')}. Le ${list.length} notizie AI da sapere, su FAIND ${tags}`,
         text: [`La settimana dell'intelligenza artificiale in ${list.length} notizie. La più ripresa: ${list[0].title}`, '', intro(), '',
           ...list.map((n, i) => `${i + 1}. ${n.title} (${n.source.name})`), '',
@@ -545,7 +612,11 @@ export function linkedinItems(data, t, rank) {
 async function linkedinFeed(data, t, rank) {
   try {
     const st = data.tgState;
-    const fresh = linkedinItems(data, t, rank);
+    // Le card Canva servono solo quando sta per uscire il post del giorno
+    const canva = {};
+    if (t.weekday === 'Fri' && st.liWeek !== t.day) canva.settimana = await canvaCard('settimana', t);
+    if (t.weekday === JOBS_WEEKDAY && st.liJobs !== t.day) canva.lavori = await canvaCard('lavori', t);
+    const fresh = linkedinItems(data, t, rank, canva);
     st.linkedin = [...fresh, ...(st.linkedin || [])].slice(0, LI_KEEP);
     const items = st.linkedin.map(i => `  <item>
     <title>${xml(i.title)}</title>
@@ -585,8 +656,12 @@ async function main() {
   // Grafica e testo "Lavoro AI" per i social: sempre aggiornati sul sito
   const card = await buildJobsCard(data, t);
 
+  canvaLog(data, t, card.rank);
   // Feed con i post per LinkedIn (pubblicati da un servizio esterno che legge feeds/linkedin.xml)
   await linkedinFeed(data, t, card.rank);
+  // Dopo l'uscita la card Canva resta online per tutto il giorno (i giri seguenti la riprendono dal sito)
+  if (t.weekday === 'Fri') await canvaCard('settimana', t);
+  if (t.weekday === JOBS_WEEKDAY) await canvaCard('lavori', t);
   // Card del venerdì: si rigenera dopo il feed, così il post usa quella già online
   await buildWeekCard(data, t);
 

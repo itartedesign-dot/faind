@@ -1,0 +1,64 @@
+# Routine settimanale: card LinkedIn da Canva
+
+Istruzioni per la routine di Claude che compila il modello Canva di Paolo. Gira il **venerdì alle 8:40**
+(card "Notizie AI") e il **lunedì alle 9:40** (card "Lavoro AI"), ora italiana, prima dei post
+che l'automazione del sito consegna a Buffer (venerdì dalle 9:17, lunedì dalle 10:17).
+
+Se un passo non riesce, **non scrivere nulla sul repository**: il post esce lo stesso, con la grafica
+di sempre. In quel caso spiega nel riepilogo finale cosa non ha funzionato.
+
+## 1. Che card serve oggi
+
+Guarda il giorno in Italia (Europe/Rome): venerdì → `settimana`, lunedì → `lavori`. Altri giorni: fermati.
+
+## 2. Dati della settimana
+
+Sul repository `itartedesign-dot/faind`, workflow "Aggiorna notizie" (`update-news.yml`): prendi
+l'ultima esecuzione riuscita di oggi e leggi il log del job `build`. Cerca la riga che inizia con
+`CANVA_DATI ` e leggi il JSON che segue. Deve avere `day` uguale alla data di oggi (AAAA-MM-GG).
+
+- `settimana`: usa `settimana.ids` (tutti, nell'ordine) e `settimana.titoli` (i 3 titoli della card).
+- `lavori`: usa `lavori.ruoli` (i 3 ruoli più richiesti). Se `lavori` è `null`, fermati.
+
+## 3. Mantra
+
+Leggi `social/mantra.json` dal branch `main`. La lista `mantra` è numerata da 1.
+- Se `prossimi[<card>]` esiste, usa quel numero e poi toglilo da `prossimi`.
+- Altrimenti usa il primo numero che non compare né in `usati` né tra i valori di `prossimi`.
+- Se i mantra sono finiti, fermati e dillo nel riepilogo.
+
+## 4. Canva
+
+Modello: design `DAHXhtwQhM4` ("FAIND – Card del venerdì (modello)"). Non modificarlo mai:
+usa `autofill-design` con `design_id`, che crea una copia. Titolo della copia: `FAIND <card> <data>`.
+
+- `settimana` (pagina 1 "Notizie Ai"): `MANTRA`, `TITOLO1`, `TITOLO2`, `TITOLO3`.
+- `lavori` (pagina 2 "Lavoro Ai"): `LAVORO_MANTRA`, `LAVORO1`, `LAVORO2`, `LAVORO3`.
+
+Il testo va inserito così com'è (niente virgolette aggiunte). Poi `export-design` in PNG della sola
+pagina giusta (`pages: [1]` per settimana, `[2]` per lavori) e tieni il link restituito.
+Controlla con `read-design` (miniatura) che i testi non escano dai riquadri.
+
+## 5. Scrittura sul repository
+
+Paolo ha autorizzato questa routine a scrivere su `main` **solo questi due file**, in un unico commit
+fatto con lo strumento GitHub `push_files` (non con git):
+
+1. `social/canva-<card>.json`:
+   ```json
+   { "day": "AAAA-MM-GG", "url": "<link PNG di Canva>", "design_id": "<copia>",
+     "mantra_n": 2, "mantra": "<testo>", "ids": ["…"] }
+   ```
+   Per `lavori` al posto di `ids` metti `"ruoli": ["…", "…", "…"]`, identici a `CANVA_DATI`.
+2. `social/mantra.json` aggiornato: numero aggiunto a `usati` come
+   `{ "n": 2, "card": "settimana", "day": "AAAA-MM-GG", "design_id": "<copia>" }`.
+
+Messaggio del commit: `Card Canva <card> del <data>`.
+
+Il commit avvia subito l'automazione del sito, che scarica il PNG (il link di Canva scade dopo
+poche ore) e lo pubblica come `https://faind.org/social/canva-<card>.png`. Il post del giorno
+usa quella immagine. Il lunedì la usa solo se i 3 ruoli sono ancora i primi della classifica.
+
+## 6. Riepilogo
+
+Chiudi con poche righe in italiano: card, mantra usato, i 3 titoli o ruoli, link alla copia su Canva.
