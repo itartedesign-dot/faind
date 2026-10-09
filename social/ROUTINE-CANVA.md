@@ -1,15 +1,17 @@
 # Routine settimanale: card LinkedIn da Canva
 
 Istruzioni per la routine di Claude che compila il modello Canva di Paolo. Gira il **venerdì alle 8:40**
-(card "Notizie AI") e il **lunedì alle 9:40** (card "Lavoro AI"), ora italiana, prima dei post
-che l'automazione del sito consegna a Buffer (venerdì dalle 9:17, lunedì dalle 10:17).
+(card "Notizie AI"), il **sabato alle 8:40** (card "Scritto a mano") e il **lunedì alle 9:40**
+(card "Lavoro AI"), ora italiana, prima dei post che l'automazione del sito consegna a Buffer
+(venerdì e sabato dalle 9:17, lunedì dalle 10:17).
 
-Se un passo non riesce, **non scrivere nulla sul repository**: il post esce lo stesso, con la grafica
-di sempre. In quel caso spiega nel riepilogo finale cosa non ha funzionato.
+Se un passo non riesce, **non scrivere nulla sul repository**: il venerdì e il lunedì il post esce
+lo stesso, con la grafica di sempre; il sabato senza card non esce nessun post. In quel caso spiega nel riepilogo finale cosa non ha funzionato.
 
 ## 1. Che card serve oggi
 
-Guarda il giorno in Italia (Europe/Rome): venerdì → `settimana`, lunedì → `lavori`. Altri giorni: fermati.
+Guarda il giorno in Italia (Europe/Rome): venerdì → `settimana`, sabato → `mano`, lunedì → `lavori`.
+Altri giorni: fermati. Per `mano` salta il punto 2 e, al punto 3, usa le frasi al posto dei mantra.
 
 ## 2. Dati della settimana
 
@@ -27,6 +29,9 @@ Leggi `social/mantra.json` dal branch `main`. La lista `mantra` è numerata da 1
 - Altrimenti usa il primo numero che non compare né in `usati` né tra i valori di `prossimi`.
 - Se i mantra sono finiti, fermati e dillo nel riepilogo.
 
+Solo per `mano`: leggi invece `social/frasi-mano.json` (lista `frasi`, numerata da 1) e usa il primo
+numero che non compare in `usati`. Se le frasi sono finite, fermati e dillo nel riepilogo.
+
 ## 4. Canva
 
 Modello: design `DAHXhtwQhM4` ("FAIND – Card del venerdì (modello)"). Non modificarlo mai:
@@ -34,9 +39,11 @@ usa `autofill-design` con `design_id`, che crea una copia. Titolo della copia: `
 
 - `settimana` (pagina 1 "Notizie Ai"): `MANTRA`, `TITOLO1`, `TITOLO2`, `TITOLO3`.
 - `lavori` (pagina 2 "Lavoro Ai"): `LAVORO_MANTRA`, `LAVORO1`, `LAVORO2`, `LAVORO3`.
+- `mano` (pagina 3 "Scritto a mano"): `MANO_FRASE` (la frase) e `MANO_DATA` (la data di oggi scritta
+  come "10 ottobre": giorno senza zero e mese in minuscolo, senza anno). La scritta "Faind" resta com'è.
 
 Il testo va inserito così com'è (niente virgolette aggiunte). Poi `export-design` in PNG della sola
-pagina giusta (`pages: [1]` per settimana, `[2]` per lavori) e tieni il link restituito.
+pagina giusta (`pages: [1]` per settimana, `[2]` per lavori, `[3]` per mano) e tieni il link restituito.
 Controlla con `read-design` (miniatura) che i testi non escano dai riquadri.
 
 ## 5. Scrittura sul repository
@@ -50,8 +57,11 @@ fatto con lo strumento GitHub `push_files` (non con git):
      "mantra_n": 2, "mantra": "<testo>", "ids": ["…"] }
    ```
    Per `lavori` al posto di `ids` metti `"ruoli": ["…", "…", "…"]`, identici a `CANVA_DATI`.
+   Per `mano` il file è `social/canva-mano.json` con `day`, `url`, `design_id`, `frase_n` e
+   `frase` (il testo esatto: il sito lo usa anche come testo del post).
 2. `social/mantra.json` aggiornato: numero aggiunto a `usati` come
    `{ "n": 2, "card": "settimana", "day": "AAAA-MM-GG", "design_id": "<copia>" }`.
+   Per `mano` invece `social/frasi-mano.json`, con `{ "n": 1, "day": "AAAA-MM-GG", "design_id": "<copia>" }`.
 
 Messaggio del commit: `Card Canva <card> del <data>`.
 
@@ -61,4 +71,4 @@ usa quella immagine. Il lunedì la usa solo se i 3 ruoli sono ancora i primi del
 
 ## 6. Riepilogo
 
-Chiudi con poche righe in italiano: card, mantra usato, i 3 titoli o ruoli, link alla copia su Canva.
+Chiudi con poche righe in italiano: card, mantra o frase usata, i 3 titoli o ruoli, link alla copia su Canva.

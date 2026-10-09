@@ -426,14 +426,14 @@ async function buildWeekCard(data, t) {
   finally { await rm(tmp, { force: true }); }
 }
 
-/* ---------- Card disegnate su Canva (venerdì e lunedì) ----------
+/* ---------- Card disegnate su Canva (venerdì, lunedì e sabato) ----------
    Una routine settimanale di Claude compila il modello Canva di Paolo (mantra + 3 titoli),
    ne esporta il PNG e scrive su main social/canva-<tipo>.json con { day, url, ids|ruoli, mantra }.
    Il link di Canva scade dopo poche ore: il primo giro lo scarica in social/canva-<tipo>.png,
    che va online con il sito; i giri seguenti dello stesso giorno, se il link è scaduto,
    riprendono la copia già online. Se manca qualcosa il post usa la grafica di sempre.
    Ogni giro stampa nel log una riga CANVA_DATI con i dati che servono alla routine. */
-const CANVA = { settimana: 'social/canva-settimana', lavori: 'social/canva-lavori' };
+const CANVA = { settimana: 'social/canva-settimana', lavori: 'social/canva-lavori', mano: 'social/canva-mano' };
 const canvaCache = {};
 
 async function fetchPng(url) {
@@ -536,6 +536,7 @@ async function maybeJobs(data, t, card) {
    Ogni post: apertura che cambia, testo fisso su FAIND (a rotazione tra LI_INTRO), riepilogo, link, hashtag.
    Le voci già uscite sono conservate in news.json → tgState.linkedin. */
 const LI_FRIDAY_FROM = 9, LI_WED_FROM = 12, LI_KEEP = 20;
+const LI_SAT_FROM = 9, LI_SAT_UNTIL = 13;   // sabato: card "Scritto a mano" (esce solo se la routine Canva l'ha preparata)
 // Il testo fisso che spiega FAIND: cinque versioni, usate a rotazione
 const LI_INTRO = [
   'FAIND raccoglie ogni ora le notizie sull\'intelligenza artificiale da testate italiane e internazionali, sempre con la fonte. Gratis, senza pubblicità e senza registrazione.',
@@ -597,6 +598,15 @@ export function linkedinItems(data, t, rank, canva = {}) {
     }
     st.liWeek = t.day;
   }
+  // Sabato: la card "Scritto a mano" disegnata su Canva (senza card non esce nulla)
+  const mano = canva.mano;
+  if (t.weekday === 'Sat' && t.hour >= LI_SAT_FROM && t.hour < LI_SAT_UNTIL && st.liSat !== t.day && mano && mano.frase) {
+    const tags = `${LI_TAGS.join(' ')} #ScrittoAMano`;
+    out.push({ id: 'mano-' + t.day, link: `${SITE}?mano=${t.day}`, date: new Date(t.now).toISOString(), img: mano.img,
+      title: `${mano.frase} ${tags}`,
+      text: [mano.frase, '', 'Il sabato di FAIND è scritto a mano. Tutto il resto della settimana: le notizie sull\'intelligenza artificiale, ogni ora e sempre con la fonte.', '', SITE, '', tags].join('\n') });
+    st.liSat = t.day;
+  }
   // Mercoledì: un approfondimento, a rotazione (parte da metà elenco, così non coincide con quello citato il venerdì)
   if (t.weekday === 'Wed' && t.hour >= LI_WED_FROM && st.liWed !== t.day) {
     const a = ARTICLES[((st.liArtW || 0) + Math.floor(ARTICLES.length / 2)) % ARTICLES.length]; st.liArtW = (st.liArtW || 0) + 1;
@@ -616,6 +626,7 @@ async function linkedinFeed(data, t, rank) {
     const canva = {};
     if (t.weekday === 'Fri' && st.liWeek !== t.day) canva.settimana = await canvaCard('settimana', t);
     if (t.weekday === JOBS_WEEKDAY && st.liJobs !== t.day) canva.lavori = await canvaCard('lavori', t);
+    if (t.weekday === 'Sat' && st.liSat !== t.day) canva.mano = await canvaCard('mano', t);
     const fresh = linkedinItems(data, t, rank, canva);
     st.linkedin = [...fresh, ...(st.linkedin || [])].slice(0, LI_KEEP);
     const items = st.linkedin.map(i => `  <item>
@@ -662,6 +673,7 @@ async function main() {
   // Dopo l'uscita la card Canva resta online per tutto il giorno (i giri seguenti la riprendono dal sito)
   if (t.weekday === 'Fri') await canvaCard('settimana', t);
   if (t.weekday === JOBS_WEEKDAY) await canvaCard('lavori', t);
+  if (t.weekday === 'Sat') await canvaCard('mano', t);
   // Card del venerdì: si rigenera dopo il feed, così il post usa quella già online
   await buildWeekCard(data, t);
 
