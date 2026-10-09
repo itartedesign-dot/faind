@@ -56,7 +56,7 @@ class BufferError extends Error {
   constructor(message, auth = false) { super(message); this.auth = auth; }
 }
 
-async function gql(query) {
+export async function gql(query) {
   let res;
   try {
     res = await fetch(API, {
@@ -137,7 +137,7 @@ export async function deliver(ch, item) {
 }
 
 /* ---------- Segnalazioni sul repository (GitHub avvisa per mail) ---------- */
-async function alert(st, kind, title, body, now, everyDays = ALERT_EVERY_DAYS) {
+export async function alert(st, kind, title, body, now, everyDays = ALERT_EVERY_DAYS) {
   st.liAlerts = st.liAlerts || {};
   const last = st.liAlerts[kind] ? new Date(st.liAlerts[kind]).getTime() : 0;
   if (now - last < everyDays * 864e5) return;
