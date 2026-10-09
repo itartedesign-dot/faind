@@ -1,0 +1,14 @@
+{
+  "_nota": "Coda degli short 'Dal cassetto di Faindo'. La prepara Claude: video = link MP4 esportato da Canva, scade = quando quel link smette di funzionare, dalle = da quando può uscire. scripts/youtube.mjs li consegna a Buffer e segna quelli usciti in news.json (tgState.yt). Gli short già usciti si possono lasciare qui: non escono due volte.",
+  "coda": [
+    {
+      "id": "dal-cassetto-01",
+      "aneddoto": 1,
+      "dalle": "2026-10-09T22:00:00Z",
+      "scade": "2026-10-09T23:22:40Z",
+      "video": "https://export-download.canva.com/fDbfE/DAHXjQfDbfE/-1/0-432864046693245278.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261009%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261009T103600Z&X-Amz-Expires=46000&X-Amz-Signature=98de63c439d14ac474ddf6a99be8e59690b0b1ae4cfabef3b4549e12cec4d04f&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Fri%2C%2009%20Oct%202026%2023%3A22%3A40%20GMT",
+      "titolo": "L'AI ha trovato un antibiotico nascosto: la storia di halicin #Shorts",
+      "testo": "Cercavano un nuovo antibiotico e l'intelligenza artificiale ha indicato una molecola studiata per tutt'altro: il diabete. Al MIT l'hanno provata e ha ucciso molti batteri, anche resistenti ai farmaci. L'hanno chiamata halicin, come HAL 9000 di \"2001: Odissea nello spazio\".\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Stokes et al., \"A Deep Learning Approach to Antibiotic Discovery\", Cell, 2020 (MIT)\nhttps://news.mit.edu/2020/artificial-intelligence-identifies-new-antibiotic-0220\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Antibiotici #Scienza #Halicin #MIT #DalCassetto #FAIND"
+    }
+  ]
+}
