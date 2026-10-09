@@ -7,10 +7,13 @@ Sito statico (HTML + CSS + JavaScript vanilla), zero dipendenze. Le notizie si a
 ```
 index.html                         pagina
 style.css                          stile (chiaro/scuro, responsive)
-script.js                          logica: sezioni, settori, filtri, lingue, tema, barra TG
+script.js                          logica: sezioni, settori, filtri, lingue, tema, barra TG, ritorno al punto esatto
+nav.js                             freccia "torna su" e ritorno alla pagina di prima (tutte le pagine)
 data.js                            contenuti della redazione: aperture, guide, prezzi, convenzioni
 scripts/feeds.json                 fonti RSS da cui raccogliere le notizie
 scripts/fetch-news.mjs             raccoglie, classifica e raggruppa le notizie → news.json
+scripts/build-pages.mjs            pagine notizia, archivio, feed, sitemap, robots.txt, IndexNow
+scripts/argomenti.mjs              pagine "Notizie su …" e archivio per mese
 .github/workflows/update-news.yml  esegue la raccolta ogni ora e pubblica il sito
 assets/                            logo scontornato (chiaro e scuro), favicon
 ```
@@ -42,6 +45,35 @@ Per le notizie scritte a mano in `data.js` aggiungi `image: "https://..."` se vu
 ## Pagine notizia, feed RSS e video
 
 - Ogni notizia ha una pagina sua in `n/` (generata a ogni giro orario da `scripts/build-pages.mjs`). Google indicizza solo quelle della redazione o riprese da almeno 2 fonti.
+- La pagina è nella lingua della notizia (testi, data, settore e lingua dichiarata a Google). Titolo e descrizione per Google riportano il numero di fonti ("…: 3 fonti a confronto"); il titolo lo mostra solo se resta entro 70 caratteri.
+- "Come la raccontano N testate": il titolo dato da ogni testata, salvato da `fetch-news.mjs` nel raggruppamento (`also[].title`).
+- "Per capire di più": parole del glossario, argomenti, tema (parole chiave dei temi in `feeds.json`) e approfondimento collegato (`MATCH` in `articles.mjs`). In fondo la fascia "Su FAIND trovi anche".
+- Scheda `NewsArticle` per Google e testo alternativo sull'immagine.
+
+## Archivio (`archivio.json`, cartella `archivio/`)
+
+- Le notizie indicizzabili (redazione o almeno 2 fonti) entrano in `archivio.json` e non ne escono più: le loro pagine restano online anche dopo i 7 giorni di `news.json`, sempre con lo stesso indirizzo.
+- Come `news.json`, l'archivio vive solo nel sito pubblicato: ogni giro lo rilegge da `faind.org/archivio.json` e lo riscrive.
+- **Protezione:** se il sito risponde ma l'archivio non si legge, `fetch-news.mjs` ferma il giro e non pubblica, così le pagine archiviate non spariscono. Il giro dopo riprova. Solo al primo giro in assoluto (nessun archivio e `news.json` senza `archiveCount`) si parte da zero.
+- `archivio/` elenca i mesi; `archivio/AAAA-MM.html` le notizie del mese, giorno per giorno.
+- Le pagine solo d'archivio non hanno la card `og/`: usano la foto della fonte o il logo.
+
+## Argomenti (cartella `argomenti/`)
+
+- `scripts/argomenti.mjs` crea una pagina "Notizie su …" per ogni nome che torna spesso nelle notizie archiviate: almeno 10 notizie da almeno 3 testate. Una volta nata resta (`archivio.json` → `subjects`).
+- I nomi arrivano da `SEED` (elenco di partenza: aziende, prodotti, modelli) e dalla scoperta automatica: parole con la maiuscola a metà frase nei sommari, quasi mai scritte in minuscolo. Le parole generiche si escludono con `STOP` e `SOLO`.
+- La pagina italiana elenca le notizie in tutte le lingue; le versioni in inglese, francese e tedesco nascono con almeno 5 notizie in quella lingua.
+- Nessun testo scritto dall'AI: solo nomi, notizie, fonti e date.
+
+## Google, Bing e robots.txt
+
+- A ogni giro si scrivono `robots.txt` (con l'indirizzo della sitemap) e il file della chiave IndexNow (`<chiave>.txt`, pubblico per regola del protocollo).
+- IndexNow: a ogni giro si avvisano Bing e gli altri motori che aderiscono delle pagine nate nel giro precedente (`archivio.json` → `pending`). Al primo giro si manda tutta la sitemap. Google non usa IndexNow.
+
+## Navigazione
+
+- `nav.js`, su tutte le pagine: piccola freccia in basso a destra, compare dopo la prima schermata e riporta in cima. In home sta sopra la barra "Live".
+- Ritorno al punto esatto: i link che riportano alla pagina di prima fanno come il tasto Indietro. La home ricorda punto, settore, ricerca e notizie aperte (`script.js`, "Ritorno") e li ripristina tornando indietro o da un link "Tutte le notizie".
 - Feed RSS gratuiti: `feed.xml` (tutte), `feeds/<settore>.xml`, `feeds/youtube.xml`. Si rigenerano ogni ora.
 - Video: i canali YouTube sono in `scripts/feeds.json` → `youtube`. Per aggiungerne uno: nome, `"handle": "@nomecanale"` (o `"id": "UC..."`), lingua e gruppo (`it`, `intl`, `official`).
 - Il filtro "Lingue notizie" in alto vale per notizie e video ed è separato dalla lingua dell'interfaccia.
@@ -76,7 +108,7 @@ Cinque pagine permanenti e indicizzabili, una per tema del Focus, più un indice
 
 ## Glossario AI (cartella `glossario/`)
 
-`scripts/glossary.mjs` genera il glossario in quattro lingue (`glossario/`, `glossario/en/`, `glossario/fr/`, `glossario/de/`). Nelle pagine notizia i termini trovati nel testo diventano link alla definizione e compaiono nel riquadro "Parole chiave"; sotto ogni termine del glossario ci sono le ultime notizie che lo citano. Per aggiungere un termine: una voce in `TERMS` (nome e definizione nelle quattro lingue, più la regola `re` per riconoscerlo).
+`scripts/glossary.mjs` genera il glossario in quattro lingue (`glossario/`, `glossario/en/`, `glossario/fr/`, `glossario/de/`), più una pagina per ogni termine (`glossario/<id>.html`, `glossario/en/<id>.html`…) con la definizione e tutte le notizie, archivio compreso, che lo citano. Nelle pagine notizia i termini trovati nel testo diventano link alla pagina del termine e compaiono nel riquadro "Per capire di più"; sotto ogni termine dell'indice ci sono le ultime notizie che lo citano. Per aggiungere un termine: una voce in `TERMS` (nome e definizione nelle quattro lingue, più la regola `re` per riconoscerlo).
 
 ## Approfondimenti in quattro lingue (cartella `approfondimenti/`)
 
@@ -177,6 +209,17 @@ Google impiega da qualche giorno a qualche settimana per mostrare un sito nuovo.
 - **LinkedIn tramite Buffer:** `scripts/linkedin.mjs` consegna a Buffer i post preparati da `scripts/telegram.mjs` (`tgState.linkedin`). Tre post a settimana: lunedì classifica lavori, mercoledì un approfondimento (card `og/<slug>.png`), venerdì la settimana dell'AI. Segreto `BUFFER_API_KEY`.
 - **Card degli approfondimenti:** generate da `build-pages.mjs` con `buildCards`, come quelle delle notizie.
 - **Il punto delle 8 e il post del venerdì:** precedenza alle notizie in italiano (`italianFirst` in `telegram.mjs`).
+- **Card del venerdì per LinkedIn:** `telegram.mjs` disegna a ogni giro `social/settimana-ai.png` (1200×1500): quante testate hanno ripreso la notizia della settimana, il suo titolo e le tre notizie seguenti. Niente foto delle testate (diritti). Buffer scarica l'immagine quando il post esce, dopo la pubblicazione del sito: per questo il post usa l'elenco della card già online (`tgState.weekCard`, giro precedente) e, uscito il post, la card resta ferma fino a sera. Senza card pronta il post esce con il logo.
 - **Lavori AI:** gli annunci si accumulano per `maxAgeDays`; ricerche mirate in `feeds.json` → `jobs.jobicyTags`.
 - **Home:** pulsanti e link alla pagina LinkedIn; newsletter solo settimanale.
 - **Automazione:** macchina fissata a `ubuntu-24.04`, perché card e grafiche dipendono dal Chrome preinstallato.
+
+## Aggiornamenti del 9 ottobre 2026
+
+- **Archivio permanente** delle pagine notizia con almeno 2 fonti, con protezione (vedi "Archivio").
+- **Pagine notizia** nella lingua della notizia, con numero di fonti nel titolo e nella descrizione, confronto dei titoli delle testate, "Per capire di più" e fascia "Su FAIND trovi anche".
+- **Argomenti** (`argomenti/`) e **archivio per mese** (`archivio/`), che crescono da soli.
+- **Glossario:** voce "Deep agents" (fonti: LangChain, blog del 30 luglio 2025 e documentazione ufficiale) e una pagina per termine.
+- **robots.txt e IndexNow.**
+- **Navigazione:** freccia "torna su" e ritorno al punto esatto (`nav.js`, `script.js`). Versione dei file in `index.html`: `20261009a`.
+- **LinkedIn, post del venerdì:** card disegnata con la notizia più ripresa della settimana al posto del logo (`social/settimana-ai.png`).

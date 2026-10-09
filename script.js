@@ -481,6 +481,7 @@
       $('#lead').removeAttribute('aria-busy'); $('#wire').removeAttribute('aria-busy');
       $('#lead').classList.remove('is-loading');
       renderAll();
+      finishReturn();
     });
   }
 
@@ -769,6 +770,9 @@
     compare: { it: ['confronto/', 'Le AI a confronto: pro, contro e prezzi'], en: ['confronto/en/', 'AI assistants compared: pros, cons and prices'], fr: ['confronto/fr/', 'Les IA comparées : avantages, inconvénients et prix'], de: ['confronto/de/', 'KI im Vergleich: Vorteile, Nachteile und Preise'] },
     gloss: { it: ['glossario/', 'Glossario'], en: ['glossario/en/', 'Glossary'], fr: ['glossario/fr/', 'Glossaire'], de: ['glossario/de/', 'Glossar'] },
     about: { it: ['redazione.html', 'Chi c\'è dietro FAIND'], en: ['about.html', 'Who is behind FAIND'], fr: ['a-propos.html', 'Qui est derrière FAIND'], de: ['ueber-uns.html', 'Wer hinter FAIND steht'] },
+    subjects: { it: ['argomenti/', 'Notizie per argomento'], en: ['argomenti/en/', 'News by subject'], fr: ['argomenti/fr/', 'Actualités par sujet'], de: ['argomenti/de/', 'Nachrichten nach Stichwort'] },
+    archive: { it: ['archivio/', 'Archivio'], en: ['archivio/', 'Archive'], fr: ['archivio/', 'Archives'], de: ['archivio/', 'Archiv'] },
+    deep: { it: ['approfondimenti/', 'Approfondimenti'], en: ['approfondimenti/en/', 'In depth'], fr: ['approfondimenti/fr/', 'Dossiers'], de: ['approfondimenti/de/', 'Hintergrund'] },
     strano: { it: ['strano-ma-vero/', 'Leggi le curiosità'], en: ['strano-ma-vero/en/', 'Read the fun facts'], fr: ['strano-ma-vero/fr/', 'Lire les curiosités'], de: ['strano-ma-vero/de/', 'Kuriositäten lesen'] }
   };
   /* Approfondimenti in home: titoli, sommari e link nella lingua dell'interfaccia.
@@ -1296,6 +1300,46 @@
     $$('time[data-rel]').forEach(function (el) { el.textContent = relTime(el.getAttribute('data-rel')); });
   }
 
+  /* ------------------------------ Ritorno ------------------------------ */
+  // Quando si lascia la home, la home ricorda dove si era: punto della pagina, settore, ricerca,
+  // quante notizie e quanti video erano aperti. Tornando con il tasto Indietro, o con un link
+  // "torna alla home" delle altre pagine (nav.js), riapre tutto com'era.
+  var RETURN_KEY = 'faind-return', pendingReturn = null;
+  function saveReturn() {
+    session.set(RETURN_KEY, JSON.stringify({ y: Math.round(window.scrollY), sector: state.sector, type: state.type, query: state.query,
+      readsShown: state.readsShown, videosShown: state.videosShown, videoGroup: state.videoGroup, at: Date.now() }));
+  }
+  function startReturn() {
+    var nav = window.performance && performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+    var back = nav ? nav.type === 'back_forward' : !!(window.performance && performance.navigation && performance.navigation.type === 2);
+    var flag = session.get('faind-restore') === '1';
+    try { sessionStorage.removeItem('faind-restore'); } catch (e) {}
+    if (!(back || flag) || location.hash) return;
+    try { pendingReturn = JSON.parse(session.get(RETURN_KEY) || 'null'); } catch (e) { pendingReturn = null; }
+    if (!pendingReturn || Date.now() - pendingReturn.at > 6 * 36e5) { pendingReturn = null; return; }
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    ['sector', 'type', 'videoGroup'].forEach(function (k) { if (typeof pendingReturn[k] === 'string') state[k] = pendingReturn[k]; });
+    ['readsShown', 'videosShown'].forEach(function (k) { if (pendingReturn[k] > 0) state[k] = pendingReturn[k]; });
+    if (pendingReturn.query) { state.query = pendingReturn.query; $('#search').value = pendingReturn.query; }
+  }
+  function finishReturn() {
+    if (!pendingReturn) return;
+    var y = pendingReturn.y; pendingReturn = null;
+    // dopo il disegno delle sezioni; un secondo tentativo se la pagina si è allungata nel frattempo
+    // senza lo scorrimento animato del sito: la pagina si riapre già al suo posto
+    function jump() {
+      var root = document.documentElement, prev = root.style.scrollBehavior;
+      root.style.scrollBehavior = 'auto';
+      window.scrollTo(0, y);
+      root.style.scrollBehavior = prev;
+    }
+    requestAnimationFrame(function () {
+      jump();
+      setTimeout(function () { if (Math.abs(window.scrollY - y) > 40) jump(); }, 400);
+    });
+  }
+  window.addEventListener('pagehide', saveReturn);
+
   /* ------------------------------ Avvio ------------------------------ */
   applyTheme(document.documentElement.getAttribute('data-theme') || 'light', false);
   setTicker(session.get('faind-bticker') !== 'off', false);
@@ -1304,6 +1348,7 @@
   syncLangf();
   applyLang(state.lang);
   $('#year').textContent = new Date().getFullYear();
+  startReturn();
   load();
   setInterval(tickTimes, 60000);
   setInterval(refresh, 10 * 60000);
