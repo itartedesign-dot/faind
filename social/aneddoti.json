@@ -1,0 +1,132 @@
+{
+  "_nota": "Aneddoti della rubrica video di Faindo (short di lunedì e giovedì). Testi di Paolo, preparati con ChatGPT il 9 ottobre 2026: prima di ogni puntata Claude verifica i fatti sulla fonte originale e mette 'verificato' a true con il link. Quando Paolo dice che ne ha usato uno, Claude lo aggiunge a 'usati' come { \"n\": 3, \"day\": \"AAAA-MM-GG\" }. Quando sono finiti l'automazione apre una segnalazione (mail).",
+  "aneddoti": [
+    {
+      "titolo": "Un antibiotico nascosto sotto un altro nome",
+      "testo": "Cercavano un antibiotico. L’AI ha indicato una molecola studiata per tutt’altro: il diabete. Al MIT l’hanno provata e hanno scoperto che poteva uccidere diversi batteri, anche resistenti. L’hanno chiamata halicin, in omaggio al computer di “2001: Odissea nello spazio”. Una scoperta sperimentale partita da un candidato inatteso.",
+      "fonte": "MIT",
+      "verificato": false
+    },
+    {
+      "titolo": "Il batterio difficile e la ricerca mirata",
+      "testo": "Non tutti gli antibiotici devono colpire tutto. Un’AI ha aiutato i ricercatori a individuare abaucin, una molecola particolarmente mirata contro un batterio difficile da trattare: Acinetobacter baumannii. Ha funzionato anche su infezioni sperimentali nei topi. Per arrivare ai pazienti serve altro lavoro, ma il bersaglio è stato trovato.",
+      "fonte": "MIT",
+      "verificato": false
+    },
+    {
+      "titolo": "Cercare medicine dentro di noi",
+      "testo": "E se alcuni candidati antibiotici fossero nascosti nel nostro stesso corpo? I ricercatori hanno usato l’AI per cercare piccoli frammenti potenzialmente antimicrobici tra le proteine umane. Alcuni hanno mostrato attività contro i batteri negli esperimenti. Il corpo, a quanto pare, conserva ancora parecchie carpette da aprire.",
+      "fonte": "NIH",
+      "verificato": false
+    },
+    {
+      "titolo": "Molecole nuove, invece di candidati già esistenti",
+      "testo": "Questa volta l’AI non ha soltanto cercato tra molecole già note: ha aiutato a progettarne di nuove. Al MIT sono stati sviluppati candidati antibiotici contro batteri resistenti, poi verificati sperimentalmente. Non sono medicinali pronti in farmacia. Sono nuove possibilità da mettere alla prova, una molecola alla volta.",
+      "fonte": "MIT, ricerca del 2025",
+      "verificato": false
+    },
+    {
+      "titolo": "Duecento milioni di indizi",
+      "testo": "Una proteina cambia comportamento anche in base alla sua forma. Capire quella forma può richiedere molto lavoro. AlphaFold ha reso disponibili previsioni per oltre duecento milioni di strutture proteiche. Non sostituiscono tutti gli esperimenti, ma offrono ai ricercatori un enorme punto di partenza. Il mio archivio, al confronto, è un comodino.",
+      "fonte": "Google DeepMind",
+      "verificato": false
+    },
+    {
+      "titolo": "Una voce dopo diciotto anni",
+      "testo": "Ann aveva perso la capacità di parlare dopo un ictus. Diciotto anni dopo, in una sperimentazione, un impianto e un’AI hanno trasformato i segnali cerebrali legati al tentativo di parlare in una voce sintetica. Il sistema animava anche un volto digitale. Per lei, comunicare ha ritrovato una forma più naturale.",
+      "fonte": "Università della California, San Francisco",
+      "verificato": false
+    },
+    {
+      "titolo": "Un ponte per tornare a camminare",
+      "testo": "Un uomo con una lesione al midollo spinale è tornato a stare in piedi e camminare con un sistema sperimentale. Un ponte digitale interpretava i segnali del cervello e regolava la stimolazione del midollo. Non una cura universale: un risultato concreto ottenuto collegando intenzione, tecnologia e riabilitazione.",
+      "fonte": "studio pubblicato su Nature",
+      "verificato": false
+    },
+    {
+      "titolo": "Aiutare a capire chi ha più urgenza",
+      "testo": "In oculistica, riconoscere un problema è importante. Capire quanto sia urgente lo è altrettanto. Con il Moorfields Eye Hospital, i ricercatori hanno sviluppato un’AI capace di analizzare scansioni della retina e suggerire la priorità del rinvio allo specialista. Un progetto per aiutare a far arrivare prima le persone che ne hanno bisogno.",
+      "fonte": "Google DeepMind e Moorfields",
+      "verificato": false
+    },
+    {
+      "titolo": "Cercare i segnali prima del peggioramento",
+      "testo": "Una scansione dell’occhio può contenere indizi sul suo futuro. In uno studio con il Moorfields Eye Hospital, un’AI ha cercato di prevedere l’evoluzione verso una forma grave di degenerazione maculare. Non legge il destino: stima un rischio. E studiare quel rischio può aiutare a organizzare controlli più mirati.",
+      "fonte": "Google DeepMind",
+      "verificato": false
+    },
+    {
+      "titolo": "Rileggere una TAC con un altro obiettivo",
+      "testo": "Una TAC viene fatta per rispondere a una domanda precisa. Ma nelle immagini potrebbero esserci altri indizi utili. Una ricerca finanziata dai NIH ha sviluppato un’AI per analizzare le scansioni e cercare anche segnali di malattie croniche. L’obiettivo è ricavare più informazioni dagli esami già disponibili.",
+      "fonte": "NIH",
+      "verificato": false
+    },
+    {
+      "titolo": "Più tumori individuati, ma anche più richiami",
+      "testo": "In uno studio spagnolo su oltre trentamila donne, un percorso di screening assistito dall’AI ha individuato più tumori al seno e ridotto le letture dei radiologi. Però ha anche aumentato i richiami per ulteriori esami. È un risultato promettente con un compromesso da valutare. Le storie utili hanno anche queste righe.",
+      "fonte": "studio pubblicato su Nature Medicine, 2026",
+      "verificato": false
+    },
+    {
+      "titolo": "Un fiume, sette giorni prima",
+      "testo": "Un’alluvione non si ferma con una previsione. Ma una previsione può dare tempo per prepararsi. Google ha sviluppato modelli AI capaci di prevedere piene fluviali fino a sette giorni prima. Incrociano dati e imparano dal comportamento dei fiumi. Il risultato utile è il tempo guadagnato per decidere.",
+      "fonte": "Google Research",
+      "verificato": false
+    },
+    {
+      "titolo": "Allagamenti anche lontano dai fiumi",
+      "testo": "Per allagare una strada non serve sempre un fiume vicino. Piogge intense possono mettere in crisi anche una città. Google ha sviluppato un modello AI dedicato agli allagamenti improvvisi urbani, con previsioni fino a ventiquattro ore. Un problema diverso dalle piene fluviali, che richiede un modello diverso.",
+      "fonte": "Google Research",
+      "verificato": false
+    },
+    {
+      "titolo": "Le scie che si possono evitare",
+      "testo": "Le scie degli aerei possono contribuire al riscaldamento climatico. In settanta voli di prova, previsioni AI hanno aiutato i piloti a evitare le condizioni che le formano: le scie sono diminuite del cinquantaquattro per cento. Quei voli hanno consumato un po’ più carburante. Il beneficio climatico va valutato considerando entrambi gli effetti.",
+      "fonte": "Google Research, sperimentazione con American Airlines",
+      "verificato": false
+    },
+    {
+      "titolo": "Semafori che si parlano meglio",
+      "testo": "A volte il problema non è quante auto ci sono, ma come le facciamo fermare. Project Green Light usa l’AI per suggerire agli ingegneri comunali modifiche ai tempi dei semafori. L’obiettivo è ridurre fermate e ripartenze inutili. Prima di costruire una strada nuova, si può provare a coordinare meglio quella esistente.",
+      "fonte": "Google Research",
+      "verificato": false
+    },
+    {
+      "titolo": "Sapere quanto vento arriverà",
+      "testo": "Una turbina produce energia quando arriva il vento. La rete elettrica, però, deve organizzarsi prima. DeepMind ha sperimentato un’AI che prevedeva la produzione eolica trentasei ore in anticipo, usando meteo e dati delle turbine. Sapere prima quanta energia aspettarsi rende più semplice programmare la sua fornitura.",
+      "fonte": "Google DeepMind",
+      "verificato": false
+    },
+    {
+      "titolo": "Raffreddare i computer con meno energia",
+      "testo": "Anche i computer hanno caldo. Google ha usato l’AI per migliorare il raffreddamento dei propri centri dati, riportando una riduzione fino al quaranta per cento dell’energia usata per raffreddarli. Attenzione: del raffreddamento, non dell’intero centro dati. Una distinzione piccola nel testo, enorme nei numeri.",
+      "fonte": "Google DeepMind",
+      "verificato": false
+    },
+    {
+      "titolo": "Dieci giorni di meteo in poco tempo",
+      "testo": "Per prevedere il meteo servono calcoli enormi. GraphCast ha mostrato che un’AI può produrre previsioni globali a dieci giorni e superare un importante modello tradizionale su molti dei parametri valutati. Non significa indovinare ogni pioggia. Significa offrire ai meteorologi un altro strumento potente da confrontare e usare.",
+      "fonte": "Google DeepMind",
+      "verificato": false
+    },
+    {
+      "titolo": "Prevedere più futuri possibili",
+      "testo": "Il meteo non ha un solo futuro possibile. GenCast genera diversi scenari, per stimare anche la probabilità di condizioni estreme. È un modo per dire non soltanto “potrebbe succedere”, ma quanto sia plausibile. Per chi deve prepararsi, conoscere l’incertezza può essere utile quanto conoscere la previsione.",
+      "fonte": "Google DeepMind e studio su Nature",
+      "verificato": false
+    },
+    {
+      "titolo": "Disegnare il confine di un incendio",
+      "testo": "Durante un incendio, capire dove arrivano le fiamme è essenziale. Google usa AI e immagini satellitari per stimare i confini dei grandi incendi e mostrarli sulle mappe. Non sostituisce gli avvisi delle autorità, ma aiuta a rendere visibile una situazione che cambia. Una mappa utile deve anche sapersi aggiornare.",
+      "fonte": "Google Research",
+      "verificato": false
+    },
+    {
+      "titolo": "Cercare un incendio appena nato",
+      "testo": "Un punto caldo visto dallo spazio non è automaticamente un incendio. Il progetto FireSat punta a usare l’AI per confrontare immagini, condizioni meteo e osservazioni precedenti, distinguendo i segnali sospetti. L’obiettivo è individuare gli incendi quando sono ancora piccoli. Prima di spegnerli, bisogna riuscire a vederli.",
+      "fonte": "progetto FireSat, Google Research",
+      "verificato": false
+    }
+  ],
+  "usati": []
+}
