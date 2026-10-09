@@ -148,7 +148,7 @@ export async function alert(st, kind, title, body, now, everyDays = ALERT_EVERY_
     const res = await fetch(`https://api.github.com/repos/${repo}/issues`, {
       method: 'POST',
       headers: { authorization: `Bearer ${token}`, accept: 'application/vnd.github+json', 'content-type': 'application/json', 'user-agent': 'faind-bot' },
-      body: JSON.stringify({ title, body: `@${owner}\n\n${body}\n\n_Messaggio automatico di scripts/linkedin.mjs. Quando hai sistemato puoi chiudere questa segnalazione._` })
+      body: JSON.stringify({ title: 'FAIND · ' + title, body: `@${owner}\n\n${body}\n\n_Messaggio automatico di scripts/linkedin.mjs. Quando hai sistemato puoi chiudere questa segnalazione._` })
     });
     if (!res.ok) throw new Error('GitHub ' + res.status);
     st.liAlerts[kind] = new Date(now).toISOString();

@@ -16,7 +16,13 @@
    • il link di Canva scade (vedi "scade"): Buffer scarica il video quando
      pubblica, quindi lo short esce pochi minuti dopo la consegna e, se il
      link è scaduto o non risponde, non si consegna e si apre una
-     segnalazione (issue) sul repository: GitHub avvisa per mail.
+     segnalazione (issue) sul repository: GitHub avvisa per mail;
+   • dopo la consegna controlla su Buffer che lo short sia uscito davvero:
+     se Buffer segna un errore, o dopo CHECK_LATE_H ore non risulta uscito,
+     apre una segnalazione;
+   • lunedì e giovedì (SHORT_DAYS), se alle SHORT_ALERT_FROM nessuno short
+     è stato consegnato in giornata (la routine di Claude non ci è riuscita),
+     apre una segnalazione.
 
    Serve lo stesso BUFFER_API_KEY di linkedin.mjs.
    Prova senza pubblicare:  YT_DRY=1 node scripts/youtube.mjs
@@ -35,6 +41,10 @@ const CHANNEL_NAME = /faind/i;
 const DELAY_MIN = 5;             // lo short esce qualche minuto dopo la consegna a Buffer
 const MARGIN_MIN = 30;           // non consegno un video il cui link scade entro questo margine
 const CATEGORY = '28';           // YouTube: Science & Technology
+const CHECK_AFTER_MIN = 20;      // dopo quanto controllo su Buffer che lo short sia uscito
+const CHECK_LATE_H = 3;          // oltre questo ritardo uno short non uscito viene segnalato
+const SHORT_DAYS = ['Mon', 'Thu'];
+const SHORT_ALERT_FROM = 17;     // ora italiana dopo cui uno short mancante viene segnalato
 
 const q = (s) => JSON.stringify(String(s));
 
@@ -71,9 +81,48 @@ async function createPost(ch, s) {
   return r.post;
 }
 
+const romeParts = (now) => Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23', weekday: 'short' })
+  .formatToParts(new Date(now)).map(x => [x.type, x.value]));
+const romeDay = (t) => { const p = romeParts(t); return `${p.year}-${p.month}-${p.day}`; };
+
+// Controlla su Buffer gli short consegnati: usciti, in errore o in ritardo
+async function checkSent(st, now) {
+  const todo = Object.entries(st.yt).filter(([, v]) => v && v.post && !v.esito && now - new Date(v.at).getTime() > CHECK_AFTER_MIN * 60e3);
+  if (!todo.length) return;
+  const ch = await findChannel();
+  const data = await gql(`query { posts(first: 20, input: { organizationId: ${q(ch.organizationId)}, sort: [{ field: createdAt, direction: desc }], filter: { channelIds: [${q(ch.id)}] } }) { edges { node { id status error { message } } } } }`);
+  const nodes = new Map(((data.posts && data.posts.edges) || []).map(({ node }) => [node.id, node]));
+  for (const [id, v] of todo) {
+    const n = nodes.get(v.post);
+    if (n && n.status === 'sent') { v.esito = 'sent'; console.log('✓ YouTube: short uscito:', id); continue; }
+    const late = now - new Date(v.at).getTime() > CHECK_LATE_H * 36e5;
+    if ((n && n.status === 'error') || late) {
+      v.esito = n ? n.status : 'sparito';
+      const why = n && n.status === 'error' ? `Buffer segna un errore: \`${(n.error && n.error.message) || 'senza dettagli'}\``
+        : n ? `dopo ${CHECK_LATE_H} ore Buffer lo dà ancora come "${n.status}"` : 'su Buffer non lo trovo più';
+      await alert(st, 'short-uscita-' + id, 'Short di Faindo non uscito su YouTube',
+        `Lo short "${id}" era stato consegnato a Buffer ma non risulta pubblicato: ${why}.\n\nGuarda su https://publish.buffer.com e scrivi a Claude nel Progetto FAIND che lo short non è uscito.`, now, 1);
+    }
+  }
+}
+
+// Lunedì e giovedì: avviso se in giornata nessuno short è stato consegnato
+async function missingShort(st, now) {
+  const p = romeParts(now);
+  if (!SHORT_DAYS.includes(p.weekday) || Number(p.hour) < SHORT_ALERT_FROM) return;
+  const today = romeDay(now);
+  if (Object.values(st.yt).some(v => v && v.at && romeDay(new Date(v.at).getTime()) === today)) return;
+  await alert(st, 'short-mancante', 'Short di Faindo di oggi non preparato',
+    `Oggi doveva uscire uno short "Dal cassetto di Faindo" su YouTube, ma la routine di Claude non l'ha preparato.\n\nScrivi a Claude nel Progetto FAIND, nel thread degli short, che oggi lo short non è uscito.`, now, 1);
+}
+
 export async function run(data, queue, now = Date.now()) {
   const st = data.tgState = data.tgState || {};
   st.yt = st.yt || {};
+  if (!DRY) {
+    try { await checkSent(st, now); } catch (e) { console.warn('  YouTube: controllo uscita non riuscito:', e.message); }
+    await missingShort(st, now);
+  }
   const due = (queue || []).filter(s => s && s.id && !st.yt[s.id] && new Date(s.dalle).getTime() <= now);
   if (!due.length) { console.log('→ YouTube: nessuno short da pubblicare in questo giro.'); return 0; }
   if (DRY) {
