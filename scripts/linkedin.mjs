@@ -20,7 +20,7 @@
      apre una segnalazione di promemoria, una a settimana;
    • card Canva: se alle CANVA_ALERT_FROM di lunedì, venerdì o sabato la card del
      giorno non è arrivata (la routine di Claude ha fallito i suoi 3 tentativi),
-     apre una segnalazione; un'altra quando i mantra o le frasi del sabato sono
+     apre una segnalazione; un'altra quando i mantra, le frasi del sabato o gli aneddoti di Faindo sono
      finiti e bisogna scriverne di nuovi.
 
    Serve (GitHub → Settings → Secrets and variables → Actions):
@@ -243,6 +243,11 @@ export async function canvaChecks(st, now) {
   if (frasi && Array.isArray(frasi.frasi) && freeCount(frasi.frasi, frasi.usati) === 0) {
     await alert(st, 'frasi-finite', 'Card "Scritto a mano": abbiamo usato l\'ultima frase, è ora di scriverne altre',
       `Tutte le ${frasi.frasi.length} frasi della card del sabato sono state usate. Senza frasi nuove il sabato non esce nessun post su LinkedIn.\n\nScrivi le nuove frasi a Claude nel Progetto FAIND: le aggiunge in social/frasi-mano.json.`, now);
+  }
+  const aneddoti = await readJson('social/aneddoti.json');
+  if (aneddoti && Array.isArray(aneddoti.aneddoti) && freeCount(aneddoti.aneddoti, aneddoti.usati) === 0) {
+    await alert(st, 'aneddoti-finiti', 'Short di Faindo: abbiamo usato l\'ultimo aneddoto, è ora di prepararne altri',
+      `Tutti i ${aneddoti.aneddoti.length} aneddoti della rubrica video di Faindo sono stati usati.\n\nPreparane di nuovi e mandali a Claude nel Progetto FAIND: li verifica e li aggiunge in social/aneddoti.json.`, now);
   }
 }
 
