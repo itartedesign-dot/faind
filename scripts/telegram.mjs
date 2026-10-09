@@ -598,13 +598,18 @@ export function linkedinItems(data, t, rank, canva = {}) {
     }
     st.liWeek = t.day;
   }
-  // Sabato: la card "Scritto a mano" disegnata su Canva (senza card non esce nulla)
+  // Sabato: la card "Scritto a mano" disegnata su Canva (senza card non esce nulla). Testo di Paolo.
   const mano = canva.mano;
   if (t.weekday === 'Sat' && t.hour >= LI_SAT_FROM && t.hour < LI_SAT_UNTIL && st.liSat !== t.day && mano && mano.frase) {
-    const tags = `${LI_TAGS.join(' ')} #ScrittoAMano`;
-    out.push({ id: 'mano-' + t.day, link: `${SITE}?mano=${t.day}`, date: new Date(t.now).toISOString(), img: mano.img,
+    const utm = `utm_source=linkedin&utm_medium=social&utm_campaign=scritto-a-mano&utm_content=${t.day}`;
+    const tags = '#FAIND #IntelligenzaArtificiale #Ricordi #AI #ScrittoAMano #Nostalgia #TecnologiaUmana';
+    out.push({ id: 'mano-' + t.day, link: `${SITE}?${utm}`, date: new Date(t.now).toISOString(), img: mano.img,
       title: `${mano.frase} ${tags}`,
-      text: [mano.frase, '', 'Il sabato di FAIND è scritto a mano. Tutto il resto della settimana: le notizie sull\'intelligenza artificiale, ogni ora e sempre con la fonte.', '', SITE, '', tags].join('\n') });
+      text: ['Il sabato, su FAIND, il futuro può aspettare un momento.', '',
+        'Ci teniamo certe piccole cose umane: una calligrafia storta, un ricordo di quando l\'AI era solo fantascienza, il tempo perso per fare qualcosa di bello.', '',
+        'Racconta la tua, magari chi legge non l\'ha mai vissuta.', '',
+        `Le notizie sull'intelligenza artificiale, ogni ora e con la fonte: ${SITE}?${utm}`,
+        `Il canale Telegram: https://t.me/faindnews?${utm}`, '', tags].join('\n') });
     st.liSat = t.day;
   }
   // Mercoledì: un approfondimento, a rotazione (parte da metà elenco, così non coincide con quello citato il venerdì)
