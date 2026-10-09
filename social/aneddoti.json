@@ -5,7 +5,7 @@
       "titolo": "Un antibiotico nascosto sotto un altro nome",
       "testo": "Cercavano un antibiotico. L’AI ha indicato una molecola studiata per tutt’altro: il diabete. Al MIT l’hanno provata e hanno scoperto che poteva uccidere diversi batteri, anche resistenti. L’hanno chiamata halicin, in omaggio al computer di “2001: Odissea nello spazio”. Una scoperta sperimentale partita da un candidato inatteso.",
       "fonte": "MIT",
-      "verificato": false
+      "verificato": true
     },
     {
       "titolo": "Il batterio difficile e la ricerca mirata",
@@ -128,5 +128,10 @@
       "verificato": false
     }
   ],
-  "usati": []
+  "usati": [
+    {
+      "n": 1,
+      "day": "2026-10-10"
+    }
+  ]
 }
