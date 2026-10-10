@@ -1440,10 +1440,25 @@
   }
   window.addEventListener('pagehide', saveReturn);
 
+  /* Strano ma vero: sul telefono la colonna laterale finisce in fondo alla pagina,
+     quindi il riquadro si sposta sopra gli Approfondimenti (richiesta di Paolo, 10 ottobre 2026) */
+  function placeSmv() {
+    var smv = $('#strano-ma-vero'), deep = $('#approfondimenti'), nl = $('#newsletter');
+    if (!smv || !deep || !nl || !window.matchMedia) return;
+    var mq = window.matchMedia('(max-width: 720px)');
+    function move() {
+      if (mq.matches) { if (smv.nextElementSibling !== deep) deep.parentNode.insertBefore(smv, deep); smv.classList.add('smv--main'); }
+      else { if (nl.nextElementSibling !== smv) nl.parentNode.insertBefore(smv, nl.nextElementSibling); smv.classList.remove('smv--main'); }
+    }
+    move();
+    if (mq.addEventListener) mq.addEventListener('change', move); else if (mq.addListener) mq.addListener(move);
+  }
+
   /* ------------------------------ Avvio ------------------------------ */
   applyTheme(document.documentElement.getAttribute('data-theme') || 'light', false);
   setTicker(session.get('faind-bticker') !== 'off', false);
   bind();
+  placeSmv();
   initInstall();
   syncLangf();
   applyLang(state.lang);
