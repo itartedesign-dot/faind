@@ -73,9 +73,19 @@ Esempi scritti da Paolo per halicin:
 - "HAL 9000 una volta sembrava fantascienza. Speriamo solo che rimanga un film 😂!"
 - "Questo è solo l'inizio. L'AI troverà altri farmaci nascosti tra quelli che già conosciamo. 💊"
 
-## 7. Riepilogo
+## 7. Promemoria del commento e riepilogo
 
-Aggiorna la checklist del thread. Quando lo short è in coda, rispondi nel thread in poche righe: il titolo
-dello short, che esce a minuti su YouTube e il commento da incollare e fissare. Se fallisce anche il
-tentativo delle 15:40, rispondi dicendo in due righe cosa non ha funzionato. Se hai dovuto saltare un
-aneddoto non verificato, dillo nella stessa risposta.
+Titolo e testo di pubblicazione li scrive Claude (punto 4) ed escono da soli: a Paolo non si chiede
+nulla su quelli. Paolo vuole solo un **promemoria quando il video è uscito**, con il commento pronto.
+
+1. Dopo il commit, guarda l'esecuzione di "Aggiorna notizie" partita dal push (`update-news.yml`, evento
+   `push`) e, quando è finita, leggi nel log del job `build` la riga
+   `✓ YouTube: short consegnato a Buffer (dal-cassetto-NN), esce alle HH:MM`.
+2. Con `send_later` programma in questa stessa sessione un messaggio per 5 minuti dopo quell'orario.
+   Quando arriva, rispondi nel thread in due o tre righe: lo short è uscito su YouTube
+   (https://www.youtube.com/@faindnews), aggiungi e fissa in alto questo commento: «…» (punto 6).
+3. Se nel log la riga non c'è, o c'è un errore, rispondi subito nel thread dicendo cosa non ha
+   funzionato (il sito ha già mandato o manderà la mail di avviso).
+
+Aggiorna la checklist del thread. Se fallisce anche il tentativo delle 15:40, rispondi dicendo in due
+righe cosa non ha funzionato. Se hai dovuto saltare un aneddoto non verificato, dillo nel promemoria.
