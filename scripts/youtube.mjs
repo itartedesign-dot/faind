@@ -46,6 +46,9 @@ const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TG_CHAT = process.env.TELEGRAM_CHAT_ID;
 const CHANNEL_URL = 'https://www.youtube.com/@faindnews';
 const CHANNEL_ID = 'UC55g-PlOm5OfpmydT7Yu0dA';   // canale "FAIND - FLASH AI NEWS DAILY"
+const TG_OPEN = 'Nuova storia sul nostro canale YouTube:';
+const TG_SERIES = '"Dal cassetto di Faindo" 🗄️';
+const TG_CLOSE = 'Due storie a settimana, il lunedì e il giovedì. Faindo ci tiene se vi iscrivete 😄';
 const LINK_WAIT_H = 3;           // per quante ore cerco il link dello short prima di usare quello del canale
 const TG_API = process.env.TELEGRAM_API_URL || 'https://api.telegram.org';   // TELEGRAM_API_URL serve solo per le prove
 const DRY = process.env.YT_DRY === '1';
@@ -147,7 +150,8 @@ async function announce(st, queue, now) {
     // il link lo dà Buffer; se manca lo cerco sul feed del canale, e solo dopo LINK_WAIT_H ore uso quello del canale
     if (!v.link) v.link = await shortLink(s.titolo);
     if (!v.link && now - new Date(v.at).getTime() < LINK_WAIT_H * 36e5) { console.log('  Telegram: link dello short non ancora nel feed, riprovo al giro dopo:', id); continue; }
-    const text = `${escHtml(s.telegram)}\n\n👉 ${v.link || CHANNEL_URL}`;
+    // modello di Paolo (10 ottobre 2026): paragrafi separati, una frase sulla scoperta, link, chiusura fissa
+    const text = [TG_OPEN, TG_SERIES, escHtml(s.telegram), `👉 ${v.link || CHANNEL_URL}`, TG_CLOSE].join('\n\n');
     try {
       const res = await fetch(`${TG_API}/bot${TG_TOKEN}/sendMessage`, {
         method: 'POST', headers: { 'content-type': 'application/json' },
