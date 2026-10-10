@@ -17,7 +17,10 @@
      news.json → tgState.fb;
    • si porta su Facebook un post LinkedIn solo dal giro dopo la sua consegna
      a Buffer, così la sua immagine è già online sul sito;
-   • niente arretrati: oltre MAX_AGE_HOURS ore un post non viene più portato;
+   • solo nello stesso giorno (ora italiana) del post LinkedIn: le card Canva
+     (social/canva-*.png) restano online solo nel loro giorno e le altre
+     grafiche vengono ridisegnate a ogni giro; prima di consegnare controllo
+     che l'immagine sia raggiungibile, altrimenti riprovo al giro dopo;
    • un solo post al giorno sulla Pagina (regola del Contesto: due nello
      stesso giorno si tolgono visibilità): se ce n'è più d'uno in attesa
      esce il più recente, gli altri vengono saltati;
@@ -35,13 +38,13 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { alert } from './linkedin.mjs';
 
+const romeDay = (t) => new Date(t).toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const API = process.env.ZERNIO_API_URL || 'https://zernio.com/api/v1';   // ZERNIO_API_URL serve solo per le prove
 const KEY = process.env.ZERNIO_API_KEY;
 const DRY = process.env.FB_DRY === '1';
 const SITE = 'https://faind.org/';
 
-const MAX_AGE_HOURS = 48;        // oltre questa età un post LinkedIn non viene più portato su Facebook
 const AFTER_LI_MIN = 20;         // aspetto che il sito con l'immagine sia online (pubblicato a fine giro)
 const DELAY_MIN = 5;             // il primo post esce qualche minuto dopo la consegna a Zernio
 const CHECK_AFTER_MIN = 30;      // dopo quanto controllo su Zernio che il post sia uscito
@@ -95,12 +98,18 @@ export function pending(st, now) {
   const out = [];
   for (const i of [...(st.linkedin || [])].reverse()) {
     if (!i || !i.buf || i.buf === 'skip' || st.fb['li-' + i.id]) continue;
-    if (now - new Date(i.date).getTime() > MAX_AGE_HOURS * 36e5) continue;
+    if (romeDay(i.date) !== romeDay(now)) continue;   // passato il giorno, la sua immagine non è più quella giusta
     const at = new Date(i.buf === 'dup' ? i.date : i.buf).getTime();
     if (!(at < now - AFTER_LI_MIN * 60e3)) continue;   // consegnato a LinkedIn in questo giro: al giro dopo
     out.push(postFromLinkedin(i));
   }
   return out;
+}
+
+// L'immagine deve essere online: Zernio la scarica quando pubblica
+async function reachable(url) {
+  try { const res = await fetch(url, { method: 'HEAD', redirect: 'manual', signal: AbortSignal.timeout(15000) }); return res.ok; }
+  catch { return false; }
 }
 
 async function createPost(acc, p, delayMin, withImage) {
@@ -133,7 +142,12 @@ async function checkSent(st, now) {
   for (const [key, v] of todo) {
     let p = null;
     try { const d = await api('GET', '/posts/' + v.post); p = d.post || d; }
-    catch (e) { if (e.auth) throw e; console.warn('  Facebook: stato del post non leggibile:', key, e.message); }
+    catch (e) {
+      if (e.auth) throw e;
+      // Post cancellato a mano su Zernio: niente segnalazione
+      if (/Zernio 404/.test(e.message)) { v.esito = 'cancellato'; console.log('→ Facebook: post cancellato su Zernio:', key); continue; }
+      console.warn('  Facebook: stato del post non leggibile:', key, e.message);
+    }
     const status = String((p && p.status) || '');
     if (/^published$/i.test(status)) {
       const pl = ((p.platforms || []).find(x => /facebook/i.test(x.platform || '')) || {});
@@ -152,7 +166,6 @@ async function checkSent(st, now) {
 export async function run(data, now = Date.now()) {
   const st = data.tgState = data.tgState || {};
   st.fb = st.fb || {};
-  const romeDay = (t) => new Date(t).toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
   let todo = pending(st, now);
   // Un post al giorno: esce il più recente, quelli più vecchi non usciranno più
   if (todo.length > 1) for (const p of todo.slice(0, -1)) { st.fb[p.key] = { skip: true }; console.log('→ Facebook: c\'è un post più recente, salto:', p.key); }
@@ -170,6 +183,7 @@ export async function run(data, now = Date.now()) {
       if (!st.fbOk) console.log(`✓ Facebook: collegamento con Zernio riuscito. Pagina "${acc.name}".`);
       st.fbOk = true;
       for (const p of todo) {
+        if (p.img && !(await reachable(p.img))) { console.log('→ Facebook: immagine non ancora online, riprovo al giro dopo:', p.img); continue; }
         const post = await deliver(acc, p, DELAY_MIN);
         st.fb[p.key] = { post: post.id, at: new Date(now).toISOString() };
         st.fbDay = romeDay(now);
@@ -181,7 +195,7 @@ export async function run(data, now = Date.now()) {
   } catch (e) {
     console.warn('✗ Facebook:', e.message);
     if (e.auth) { st.fbOk = false; await alert(st, 'fb-chiave', 'Facebook: la chiave Zernio non funziona più', 'Zernio ha rifiutato la chiave: probabilmente è stata cancellata. I post su Facebook sono fermi finché non viene sostituita (gli altri canali continuano a funzionare).\n\nCrea una nuova chiave su https://zernio.com (API Keys) e mettila su GitHub → Settings → Secrets and variables → Actions → ZERNIO_API_KEY.', now); }
-    else await alert(st, 'fb-errore', 'Facebook: pubblicazione non riuscita', `L'automazione non è riuscita a consegnare un post a Zernio. Riproverà da sola ogni ora per ${MAX_AGE_HOURS} ore.\n\nErrore: \`${e.message}\`\n\nControlla su https://zernio.com (Connections) che la Pagina Facebook "FAIND - Flash AI News Daily" sia collegata (se chiede di ricollegarla, basta un clic su "Reconnect").`, now);
+    else await alert(st, 'fb-errore', 'Facebook: pubblicazione non riuscita', `L'automazione non è riuscita a consegnare un post a Zernio. Riproverà da sola ogni ora fino a fine giornata.\n\nErrore: \`${e.message}\`\n\nControlla su https://zernio.com (Connections) che la Pagina Facebook "FAIND - Flash AI News Daily" sia collegata (se chiede di ricollegarla, basta un clic su "Reconnect").`, now);
   }
   console.log(`→ Facebook: ${sent} post consegnat${sent === 1 ? 'o' : 'i'}`);
   return sent;
