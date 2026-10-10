@@ -622,6 +622,18 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 
 .panel--support { background: linear-gradient(160deg, var(--surface) 55%, color-mix(in srgb, #0070E0 9%, var(--surface))); }
 .panel--support > p:first-of-type { margin-bottom: 16px; }
+.social__label { font-size: 13.5px; font-weight: 700; color: var(--ink); margin: 16px 0 8px !important; }
+.social { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.social__btn { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; text-decoration: none; transition: transform .15s ease, filter .15s ease; }
+.social__btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.social__btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.social__btn svg { width: 22px; height: 22px; fill: currentColor; }
+.social__btn--yt { background: #E62117; } .social__btn--li { background: #0A66C2; } .social__btn--tg { background: #229ED9; } .social__btn--pin { background: #E60023; }
+.social--foot { margin-top: 16px; gap: 8px; }
+.social--foot .social__btn { width: 36px; height: 36px; background: var(--ink); color: var(--surface); }
+.social--foot .social__btn svg { width: 18px; height: 18px; }
+.social--foot .social__btn--yt:hover { background: #E62117; color: #fff; } .social--foot .social__btn--li:hover { background: #0A66C2; color: #fff; }
+.social--foot .social__btn--tg:hover { background: #229ED9; color: #fff; } .social--foot .social__btn--pin:hover { background: #E60023; color: #fff; }
 .copyline { font-size: 13.5px; color: var(--muted); margin-top: 12px !important; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
 .copy { border: 0; background: none; padding: 2px 4px; margin: -2px -4px; color: var(--link); font-weight: 600; border-radius: 4px; }
 .copy:hover { background: var(--surface-2); }
