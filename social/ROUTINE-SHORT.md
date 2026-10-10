@@ -61,7 +61,21 @@ fatto con lo strumento GitHub `push_files` (non con git). Rileggili da `main` su
 
 Messaggio del commit: `Short di Faindo: aneddoto N`.
 
-## 6. Riepilogo
+## 6. Primo commento da suggerire a Paolo
 
-Aggiorna la checklist del thread. Rispondi nel thread solo se fallisce anche il tentativo delle 15:40,
-dicendo in due righe cosa non ha funzionato, oppure se hai dovuto saltare un aneddoto non verificato.
+Paolo mette e fissa in alto un suo primo commento sotto ogni short. Preparagli il testo, nello stile
+che ha scelto il 10 ottobre 2026: **umano, non da AI**. Una o due frasi brevi, come le direbbe lui:
+un pensiero personale, un po' di ironia, al massimo un'emoji. Niente frasi fatte o enfatiche
+("affascinante", "il futuro è qui", "rivoluzionario"), niente elenchi, niente hashtag. Una domanda
+facile alla fine è benvenuta, ma non obbligatoria. Non aggiungere fatti che non sono nella fonte.
+
+Esempi scritti da Paolo per halicin:
+- "HAL 9000 una volta sembrava fantascienza. Speriamo solo che rimanga un film 😂!"
+- "Questo è solo l'inizio. L'AI troverà altri farmaci nascosti tra quelli che già conosciamo. 💊"
+
+## 7. Riepilogo
+
+Aggiorna la checklist del thread. Quando lo short è in coda, rispondi nel thread in poche righe: il titolo
+dello short, che esce a minuti su YouTube e il commento da incollare e fissare. Se fallisce anche il
+tentativo delle 15:40, rispondi dicendo in due righe cosa non ha funzionato. Se hai dovuto saltare un
+aneddoto non verificato, dillo nella stessa risposta.
