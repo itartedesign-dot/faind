@@ -132,6 +132,10 @@ In `index.html` (`#nlPop`) e `script.js` (`nlPopup`): entra dal bordo sinistro a
 
 `scripts/pinterest.mjs` gira dopo `youtube.mjs` e porta su Pinterest tutto ciò che esce su LinkedIn e YouTube: i post LinkedIn diventano Pin con la stessa immagine (quelli con la grafica di riserva, senza card Canva, non vanno su Pinterest), un titolo (max 100 caratteri), il testo accorciato (max 500) con gli hashtag e il link al sito; gli short di Faindo diventano Pin video finché il link di Canva è valido, poi Pin con l'anteprima dello short. Usa lo stesso `BUFFER_API_KEY`, l'unico canale Pinterest collegato a Buffer e la bacheca "FAIND - Flash AI News Daily". I Pin consegnati sono segnati in `news.json` → `tgState.pin`. Prova senza pubblicare: `PIN_DRY=1 node scripts/pinterest.mjs`.
 
+## Facebook (tramite Zernio)
+
+`scripts/facebook.mjs` gira dopo `pinterest.mjs` e porta sulla Pagina Facebook ([FAIND - Flash AI News Daily](https://www.facebook.com/profile.php?id=61595199334147)) i post usciti su LinkedIn: stessa immagine e stesso testo, senza le righe con i link; il link al sito va nel primo commento, con `utm_source=facebook`. Un post LinkedIn passa su Facebook al giro dopo la sua consegna a Buffer, così l'immagine è già online. Usa Zernio (piano gratuito, 2 account: Facebook e, in futuro, TikTok) perché i 3 canali gratuiti di Buffer sono già occupati. Segreto `ZERNIO_API_KEY`; l'account Facebook dev'essere l'unico collegato a Zernio. I post consegnati sono segnati in `news.json` → `tgState.fb`. Prova senza pubblicare: `FB_DRY=1 node scripts/facebook.mjs`.
+
 ## Strano ma vero (cartella `strano-ma-vero/`)
 
 `scripts/strano.mjs` genera la rubrica delle curiosità sull'AI in quattro lingue (`strano-ma-vero/`, `strano-ma-vero/en/`, `strano-ma-vero/fr/`, `strano-ma-vero/de/`); la cartella non è nel repository.
