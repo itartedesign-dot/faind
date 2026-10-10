@@ -546,10 +546,13 @@ async function maybeJobs(data, t, card) {
    • mercoledì dalle LI_WED_FROM: un approfondimento, a rotazione;
    • venerdì dalle LI_FRIDAY_FROM: "La settimana dell'AI", le 5 notizie più riprese + un approfondimento,
      anche questo con la card Canva appena è pronta (al più tardi alle LI_CANVA_WAIT_UNTIL);
-   • sabato tra LI_SAT_FROM e LI_SAT_UNTIL: "Scritto a mano", solo con la card Canva.
+   • sabato tra LI_SAT_FROM e LI_SAT_UNTIL: "Scritto a mano", solo con la card Canva;
+   • domenica dalle LI_SUN_FROM: lo short di Faindo più recente della settimana (link a YouTube,
+     immagine = anteprima dello short); senza short usciti negli ultimi 7 giorni non esce nulla.
    Ogni post: apertura che cambia, testo fisso su FAIND (a rotazione tra LI_INTRO), riepilogo, link, hashtag.
    Le voci già uscite sono conservate in news.json → tgState.linkedin. */
 const LI_FRIDAY_FROM = 9, LI_WED_FROM = 12, LI_KEEP = 20;
+const LI_SUN_FROM = 11;   // domenica: lo short della settimana (deciso da Paolo il 10 ottobre 2026)
 const LI_SAT_FROM = 9, LI_SAT_UNTIL = 17;   // sabato: card "Scritto a mano" (esce solo se la routine Canva l'ha preparata)
 // Lunedì e venerdì il post aspetta la card Canva fino a quest'ora: la routine fa 3 tentativi (8:40, 10:40, 12:40);
 // poi esce con la grafica di riserva (e linkedin.mjs manda una segnalazione per mail)
@@ -581,7 +584,19 @@ export function pickWeek(items, now, count = 5) {
   return italianFirst(week, count);
 }
 
-export function linkedinItems(data, t, rank, canva = {}) {
+// Lo short di Faindo uscito più di recente negli ultimi 7 giorni, con il suo link YouTube
+export function weekShort(st, queue, now) {
+  let best = null;
+  for (const [id, v] of Object.entries(st.yt || {})) {
+    if (!v || v.esito !== 'sent' || !v.at || now - new Date(v.at).getTime() > 7 * 864e5) continue;
+    const vid = (String(v.link || '').match(/(?:shorts\/|[?&]v=|youtu\.be\/)([\w-]{6,})/) || [])[1];
+    const s = (queue || []).find(x => x && x.id === id);
+    if (vid && s && (!best || v.at > best.at)) best = { ...s, at: v.at, vid, link: v.link };
+  }
+  return best;
+}
+
+export function linkedinItems(data, t, rank, canva = {}, shorts = []) {
   const st = data.tgState, out = [];
   const intro = () => { const i = (st.liIntro || 0) % LI_INTRO.length; st.liIntro = (st.liIntro || 0) + 1; return LI_INTRO[i]; };
   // Lunedì: classifica dei lavori AI
@@ -630,6 +645,21 @@ export function linkedinItems(data, t, rank, canva = {}) {
         'Il canale Telegram: https://t.me/faindnews', '', tags].join('\n') });
     st.liSat = t.day;
   }
+  // Domenica: lo short di Faindo più recente della settimana
+  if (t.weekday === 'Sun' && t.hour >= LI_SUN_FROM && st.liSun !== t.day) {
+    const sh = weekShort(st, shorts, t.now);
+    if (sh) {
+      const tags = '#FAIND #DalCassetto #Faindo #IntelligenzaArtificiale #AI #Scienza';
+      const title = String(sh.titolo || '').replace(/#\S+/g, '').replace(/\s+/g, ' ').trim();
+      const story = sh.telegram || String(sh.testo || '').split('\n')[0];
+      out.push({ id: 'domenica-' + t.day, link: sh.link, date: new Date(t.now).toISOString(), img: `https://i.ytimg.com/vi/${sh.vid}/hqdefault.jpg`,
+        title: `${title} ${tags}`,
+        text: [`La storia della settimana dal cassetto di Faindo: ${title}`, '', story, '',
+          'Ogni lunedì e giovedì Faindo apre un cassetto del suo archivio e racconta in meno di un minuto una storia vera di intelligenza artificiale e scienza.', '',
+          `Guarda lo short: ${sh.link}`, `Tutte le storie: ${SITE}dal-cassetto-di-faindo/`, '', tags].join('\n') });
+    } else console.log('→ LinkedIn: domenica senza short usciti negli ultimi 7 giorni, nessun post.');
+    st.liSun = t.day;
+  }
   // Mercoledì: un approfondimento, a rotazione (parte da metà elenco, così non coincide con quello citato il venerdì)
   if (t.weekday === 'Wed' && t.hour >= LI_WED_FROM && st.liWed !== t.day) {
     const a = ARTICLES[((st.liArtW || 0) + Math.floor(ARTICLES.length / 2)) % ARTICLES.length]; st.liArtW = (st.liArtW || 0) + 1;
@@ -650,7 +680,9 @@ async function linkedinFeed(data, t, rank) {
     if (t.weekday === 'Fri' && st.liWeek !== t.day) canva.settimana = await canvaCard('settimana', t);
     if (t.weekday === JOBS_WEEKDAY && st.liJobs !== t.day) canva.lavori = await canvaCard('lavori', t);
     if (t.weekday === 'Sat' && st.liSat !== t.day) canva.mano = await canvaCard('mano', t);
-    const fresh = linkedinItems(data, t, rank, canva);
+    let shorts = [];
+    if (t.weekday === 'Sun' && st.liSun !== t.day) try { shorts = JSON.parse(await readFile(path.join(ROOT, 'social/shorts.json'), 'utf8')).coda || []; } catch {}
+    const fresh = linkedinItems(data, t, rank, canva, shorts);
     st.linkedin = [...fresh, ...(st.linkedin || [])].slice(0, LI_KEEP);
     const items = st.linkedin.map(i => `  <item>
     <title>${xml(i.title)}</title>

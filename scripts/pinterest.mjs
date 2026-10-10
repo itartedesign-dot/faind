@@ -161,6 +161,7 @@ export function pending(st, queue, now) {
   const out = [];
   for (const i of [...(st.linkedin || [])].reverse()) {
     if (!i || !i.buf || i.buf === 'skip' || st.pin['li-' + i.id] || !fresh(i.date) || !i.img) continue;
+    if (/^domenica-/.test(i.id)) continue;   // lo short della domenica è già su Pinterest come Pin dello short
     // Regola di Paolo (10 ottobre 2026): su Pinterest niente post con la grafica di riserva
     if (isFallback(i.img)) { st.pin['li-' + i.id] = { riserva: true }; console.log('→ Pinterest: post con la grafica di riserva, non lo porto:', i.id); continue; }
     out.push({ at: i.date, pin: pinFromLinkedin(i) });

@@ -225,7 +225,7 @@ Google impiega da qualche giorno a qualche settimana per mostrare un sito nuovo.
 
 ## Aggiornamenti del 5–6 ottobre 2026
 
-- **LinkedIn tramite Buffer:** `scripts/linkedin.mjs` consegna a Buffer i post preparati da `scripts/telegram.mjs` (`tgState.linkedin`). Tre post a settimana: lunedì classifica lavori, mercoledì un approfondimento (card `og/<slug>.png`), venerdì la settimana dell'AI. Segreto `BUFFER_API_KEY`.
+- **LinkedIn tramite Buffer:** `scripts/linkedin.mjs` consegna a Buffer i post preparati da `scripts/telegram.mjs` (`tgState.linkedin`). Cinque post a settimana: lunedì classifica lavori, mercoledì un approfondimento (card `og/<slug>.png`), venerdì la settimana dell'AI, sabato "Scritto a mano" e domenica lo short di Faindo più recente della settimana (link a YouTube, immagine = anteprima dello short; senza short usciti negli ultimi 7 giorni non esce nulla). Segreto `BUFFER_API_KEY`.
 - **Card degli approfondimenti:** generate da `build-pages.mjs` con `buildCards`, come quelle delle notizie.
 - **Il punto delle 8 e il post del venerdì:** precedenza alle notizie in italiano (`italianFirst` in `telegram.mjs`).
 - **Card del venerdì per LinkedIn:** `telegram.mjs` disegna a ogni giro `social/settimana-ai.png` (1200×1500): quante testate hanno ripreso la notizia della settimana, il suo titolo e le tre notizie seguenti. Niente foto delle testate (diritti). Buffer scarica l'immagine quando il post esce, dopo la pubblicazione del sito: per questo il post usa l'elenco della card già online (`tgState.weekCard`, giro precedente) e, uscito il post, la card resta ferma fino a sera. Senza card pronta il post esce con il logo.
