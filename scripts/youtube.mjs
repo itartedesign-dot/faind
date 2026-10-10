@@ -20,11 +20,16 @@
    • dopo la consegna controlla su Buffer che lo short sia uscito davvero:
      se Buffer segna un errore, o dopo CHECK_LATE_H ore non risulta uscito,
      apre una segnalazione;
+   • quando Buffer conferma che lo short è uscito, ne annuncia il link sul
+     canale Telegram con la frase scritta da Claude nel campo "telegram"
+     della coda (senza quel campo non annuncia nulla); mai nelle ore di
+     silenzio di Telegram (23-7);
    • lunedì e giovedì (SHORT_DAYS), se alle SHORT_ALERT_FROM nessuno short
      è stato consegnato in giornata (la routine di Claude non ci è riuscita),
      apre una segnalazione.
 
-   Serve lo stesso BUFFER_API_KEY di linkedin.mjs.
+   Serve lo stesso BUFFER_API_KEY di linkedin.mjs; per Telegram gli stessi
+   TELEGRAM_BOT_TOKEN e TELEGRAM_CHAT_ID di telegram.mjs.
    Prova senza pubblicare:  YT_DRY=1 node scripts/youtube.mjs
    ===================================================================== */
 
@@ -32,9 +37,14 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { gql, alert, alreadyOnBuffer } from './linkedin.mjs';
+import { isQuiet } from './telegram.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const KEY = process.env.BUFFER_API_KEY;
+const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TG_CHAT = process.env.TELEGRAM_CHAT_ID;
+const CHANNEL_URL = 'https://www.youtube.com/@faindnews';
+const TG_API = process.env.TELEGRAM_API_URL || 'https://api.telegram.org';   // TELEGRAM_API_URL serve solo per le prove
 const DRY = process.env.YT_DRY === '1';
 
 const CHANNEL_NAME = /faind/i;
@@ -90,11 +100,11 @@ async function checkSent(st, now) {
   const todo = Object.entries(st.yt).filter(([, v]) => v && v.post && !v.esito && now - new Date(v.at).getTime() > CHECK_AFTER_MIN * 60e3);
   if (!todo.length) return;
   const ch = await findChannel();
-  const data = await gql(`query { posts(first: 20, input: { organizationId: ${q(ch.organizationId)}, sort: [{ field: createdAt, direction: desc }], filter: { channelIds: [${q(ch.id)}] } }) { edges { node { id status error { message } } } } }`);
+  const data = await gql(`query { posts(first: 20, input: { organizationId: ${q(ch.organizationId)}, sort: [{ field: createdAt, direction: desc }], filter: { channelIds: [${q(ch.id)}] } }) { edges { node { id status externalLink error { message } } } } }`);
   const nodes = new Map(((data.posts && data.posts.edges) || []).map(({ node }) => [node.id, node]));
   for (const [id, v] of todo) {
     const n = nodes.get(v.post);
-    if (n && n.status === 'sent') { v.esito = 'sent'; console.log('✓ YouTube: short uscito:', id); continue; }
+    if (n && n.status === 'sent') { v.esito = 'sent'; v.link = n.externalLink || null; console.log('✓ YouTube: short uscito:', id, v.link || ''); continue; }
     const late = now - new Date(v.at).getTime() > CHECK_LATE_H * 36e5;
     if ((n && n.status === 'error') || late) {
       v.esito = n ? n.status : 'sparito';
@@ -103,6 +113,28 @@ async function checkSent(st, now) {
       await alert(st, 'short-uscita-' + id, 'Short di Faindo non uscito su YouTube',
         `Lo short "${id}" era stato consegnato a Buffer ma non risulta pubblicato: ${why}.\n\nGuarda su https://publish.buffer.com e scrivi a Claude nel Progetto FAIND che lo short non è uscito.`, now, 1);
     }
+  }
+}
+
+// Annuncio su Telegram degli short usciti (una volta sola, fuori dalle ore di silenzio)
+const escHtml = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+async function announce(st, queue, now) {
+  if (!TG_TOKEN || !TG_CHAT || isQuiet(Number(romeParts(now).hour))) return;
+  for (const [id, v] of Object.entries(st.yt)) {
+    if (!v || v.esito !== 'sent' || v.tg) continue;
+    const s = (queue || []).find(x => x && x.id === id);
+    if (!s || !s.telegram) { v.tg = 'no'; continue; }
+    const text = `${escHtml(s.telegram)}\n\n👉 ${v.link || CHANNEL_URL}`;
+    try {
+      const res = await fetch(`${TG_API}/bot${TG_TOKEN}/sendMessage`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ chat_id: TG_CHAT, text, parse_mode: 'HTML' }), signal: AbortSignal.timeout(30000)
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!json.ok) throw new Error(json.description || res.status);
+      v.tg = new Date(now).toISOString();
+      console.log('✓ Telegram: annunciato lo short', id);
+    } catch (e) { console.warn('  Telegram: annuncio dello short non riuscito:', e.message); }
   }
 }
 
@@ -121,6 +153,7 @@ export async function run(data, queue, now = Date.now()) {
   st.yt = st.yt || {};
   if (!DRY) {
     try { await checkSent(st, now); } catch (e) { console.warn('  YouTube: controllo uscita non riuscito:', e.message); }
+    await announce(st, queue, now);
     await missingShort(st, now);
   }
   const due = (queue || []).filter(s => s && s.id && !st.yt[s.id] && new Date(s.dalle).getTime() <= now);

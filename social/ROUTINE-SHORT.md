@@ -48,13 +48,19 @@ quando scade: `X-Amz-Date` + `X-Amz-Expires` secondi (in UTC).
   5. 7-9 hashtag: sempre `#Shorts #IntelligenzaArtificiale #AI`, alla fine `#DalCassetto #FAIND`,
      in mezzo quelli del tema.
 
+- `telegram`: due righe per il canale Telegram di FAIND, nello stesso stile umano del primo commento
+  (punto 6): cosa ha trovato Faindo detto in modo semplice, un po' di ironia, al massimo un'emoji.
+  Niente link e niente hashtag: il link dello short lo aggiunge il sito quando Buffer conferma che è
+  uscito. Esempio di Paolo: "Si parte con un antibiotico trovato dall'AI e battezzato come HAL 9000.
+  Sì, proprio lui."
+
 ## 5. Scrittura sul repository
 
 Paolo ha autorizzato questa routine a scrivere su `main` **solo questi due file**, in un unico commit
 fatto con lo strumento GitHub `push_files` (non con git). Rileggili da `main` subito prima.
 
 - `social/shorts.json`: aggiungi in fondo alla `coda`
-  `{"id": "dal-cassetto-NN", "aneddoto": N, "dalle": <adesso, ISO UTC>, "scade": <scadenza del link, ISO UTC>, "video": <link MP4>, "titolo": ..., "testo": ...}`
+  `{"id": "dal-cassetto-NN", "aneddoto": N, "dalle": <adesso, ISO UTC>, "scade": <scadenza del link, ISO UTC>, "video": <link MP4>, "titolo": ..., "testo": ..., "telegram": ...}`
   (`NN` = numero dell'aneddoto a due cifre). Non togliere gli short già usciti.
 - `social/aneddoti.json`: aggiungi `{"n": N, "day": "AAAA-MM-GG"}` a `usati` e metti
   `"verificato": true` sull'aneddoto. Lascia il resto com'è.
