@@ -247,6 +247,34 @@
   /* Popup newsletter (Paolo, 10 ottobre 2026): entra da sinistra dopo 1 minuto sulla pagina; chiuso con la X o
      scorrendo a sinistra, torna una seconda e ultima volta 3 minuti dopo; poi non si vede per 7 giorni.
      Chi si iscrive non lo vede più. Il ricordo sta nel browser (localStorage 'faind-nlpop'). */
+  /* Ding all'uscita del popup: una nota breve generata dal browser (Web Audio), nessun file da scaricare.
+     I browser lasciano suonare una pagina solo dopo che la persona l'ha toccata o ha premuto un tasto:
+     l'audio si sblocca a quel primo gesto; se non c'è stato, il popup esce in silenzio. */
+  var ding = (function () {
+    var ctx = null;
+    function unlock() {
+      if (ctx) return;
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      try { ctx = new AC(); ctx.resume(); } catch (e) { ctx = null; }
+    }
+    ['pointerdown', 'keydown', 'touchend'].forEach(function (ev) {
+      document.addEventListener(ev, unlock, { capture: true, passive: true });
+    });
+    return function () {
+      if (!ctx || ctx.state !== 'running') return;
+      var t = ctx.currentTime;
+      [[1318.5, 0, .16], [2637, 0, .05]].forEach(function (n) {   // mi6 con un'armonica leggera: suono di campanella
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sine'; o.frequency.value = n[0];
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(n[2], t + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 1.1);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(t); o.stop(t + 1.15);
+      });
+    };
+  })();
   var nlPopup = (function () {
     var FIRST = 60e3, AGAIN = 180e3, PAUSE = 7 * 864e5, KEY = 'faind-nlpop';
     var el, timer = null, shown = 0, open = false;
@@ -261,13 +289,16 @@
       if (!$('#drawer').hidden || !$('#appSheet').hidden || (a && /INPUT|TEXTAREA|SELECT/.test(a.tagName) && !el.contains(a))) { schedule(15e3); return; }
       shown++; open = true;
       el.hidden = false;
-      el.offsetWidth;   // fa partire l'animazione di entrata
+      el.classList.remove('is-out');
+      el.offsetWidth;   // fa partire l'animazione di entrata (lenta, 1,6 secondi)
       el.classList.add('is-in');
+      ding();
     }
     function close(silent) {
       if (!el || !open) return;
       open = false;
       el.classList.remove('is-in', 'is-typing', 'is-drag');
+      el.classList.add('is-out');   // l'uscita resta rapida
       el.style.removeProperty('--dx');
       setTimeout(function () { if (!open) el.hidden = true; }, 450);
       if (silent) return;
@@ -1307,6 +1338,7 @@
         function () {
           // al posto del modulo: "Scelta invidiabile." e il grazie di Faindo; si chiude da solo dopo qualche secondo
           nlPopForm.hidden = true; $('#nlPopDone').hidden = false;
+          var img = $('#nlPopImg'); if (img && img.dataset.okSrc) img.src = img.dataset.okSrc;   // Faindo che fa l'occhiolino col pollice in su (Paolo, 10 ottobre 2026)
           var title = $('#nlPopTitle'); title.setAttribute('data-i18n', 'nlp.in'); title.textContent = t('nlp.in'); $('#nlPop').classList.remove('is-typing');
           setTimeout(function () { nlPopup.close(true); }, 9000);
         });
