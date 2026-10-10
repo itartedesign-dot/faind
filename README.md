@@ -15,7 +15,7 @@ scripts/fetch-news.mjs             raccoglie, classifica e raggruppa le notizie 
 scripts/build-pages.mjs            pagine notizia, archivio, feed, sitemap, robots.txt, IndexNow
 scripts/argomenti.mjs              pagine "Notizie su …" e archivio per mese
 .github/workflows/update-news.yml  esegue la raccolta ogni ora e pubblica il sito
-assets/                            logo scontornato (chiaro e scuro), favicon
+assets/                            logo 3D (logo.webp; in testata e piè di pagina logo-payoff-light/-dark.webp, scritta blu notte o bianca secondo il tema), favicon
 ```
 
 ## Messa online (una volta sola)
