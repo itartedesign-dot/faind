@@ -117,6 +117,13 @@ Cinque pagine permanenti e indicizzabili, una per tema del Focus, più un indice
 - **Correzioni:** un testo corretto in italiano va corretto anche nelle tre traduzioni.
 - **Schede in home:** restano HTML statico in `index.html` (italiano); nelle altre lingue `script.js` (`deepCards`) legge titoli e sommari da `approfondimenti/cards.json`, creato dall'automazione.
 
+## Short di Faindo su YouTube (cartella `dal-cassetto-di-faindo/`)
+
+`scripts/faindo.mjs`, chiamato da `scripts/youtube.mjs` a ogni giro, genera la pagina degli short "Dal cassetto di Faindo" già usciti in quattro lingue (`dal-cassetto-di-faindo/`, `/en/`, `/fr/`, `/de/`); la cartella non è nel repository.
+- Per ogni short: data di uscita, anteprima con il link allo short e la stessa frase dell'annuncio Telegram (campo `telegram` in `social/shorts.json`; traduzioni facoltative in `telegram_en`, `telegram_fr`, `telegram_de`).
+- I due più recenti finiscono in `news.json` → `shorts` e compaiono in home nel riquadro YouTube della sezione "L'AI in video", con il tasto "Vedi i precedenti".
+- **Immagini del riquadro:** `assets/faindo-youtube-it.webp` con l'italiano, `assets/faindo-youtube-en.webp` con le altre lingue; cliccando si apre il canale YouTube.
+
 ## Strano ma vero (cartella `strano-ma-vero/`)
 
 `scripts/strano.mjs` genera la rubrica delle curiosità sull'AI in quattro lingue (`strano-ma-vero/`, `strano-ma-vero/en/`, `strano-ma-vero/fr/`, `strano-ma-vero/de/`); la cartella non è nel repository.

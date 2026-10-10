@@ -29,6 +29,10 @@
      è stato consegnato in giornata (la routine di Claude non ci è riuscita),
      apre una segnalazione.
 
+   • a ogni giro aggiorna la pagina degli short usciti
+     (dal-cassetto-di-faindo/) e i due più recenti mostrati in home
+     (news.json → shorts): vedi scripts/faindo.mjs.
+
    Serve lo stesso BUFFER_API_KEY di linkedin.mjs; per Telegram gli stessi
    TELEGRAM_BOT_TOKEN e TELEGRAM_CHAT_ID di telegram.mjs.
    Prova senza pubblicare:  YT_DRY=1 node scripts/youtube.mjs
@@ -39,6 +43,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { gql, alert, alreadyOnBuffer } from './linkedin.mjs';
 import { isQuiet } from './telegram.mjs';
+import { publishedShorts, homeShorts, buildFaindo } from './faindo.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const KEY = process.env.BUFFER_API_KEY;
@@ -125,11 +130,15 @@ async function checkSent(st, now) {
 // Link dello short preso dal feed pubblico del canale, cercando il video con lo stesso titolo
 const plain = (t = '') => String(t).replace(/&amp;/g, '&').replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"')
   .replace(/#\S+/g, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLowerCase();
+let feedXml = null;      // il feed si scarica una volta sola per giro
 async function shortLink(titolo) {
   try {
-    const res = await fetch(process.env.YT_FEED_URL || `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`, { signal: AbortSignal.timeout(30000) });
-    if (!res.ok) return null;
-    const xml = await res.text();
+    if (feedXml === null) {
+      const res = await fetch(process.env.YT_FEED_URL || `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`, { signal: AbortSignal.timeout(30000) });
+      if (!res.ok) return null;
+      feedXml = await res.text();
+    }
+    const xml = feedXml;
     for (const block of xml.split('<entry>').slice(1)) {
       const id = (block.match(/<yt:videoId>([\w-]{6,})<\/yt:videoId>/) || [])[1];
       const title = (block.match(/<title>([\s\S]*?)<\/title>/) || [])[1];
@@ -215,14 +224,22 @@ export async function run(data, queue, now = Date.now()) {
   return sent;
 }
 
+// Pagina degli short usciti e i due più recenti per la home (news.json → shorts)
+export async function pages(data, queue, root = ROOT) {
+  const list = await publishedShorts(data.tgState, queue, shortLink);
+  data.shorts = homeShorts(list);
+  await buildFaindo(root, list);
+}
+
 async function main() {
-  if (!DRY && !KEY) { console.log('YouTube (Buffer) non configurato: salto.'); return; }
   const file = path.join(ROOT, 'news.json');
   const data = JSON.parse(await readFile(file, 'utf8'));
   let queue = [];
   try { queue = JSON.parse(await readFile(path.join(ROOT, 'social/shorts.json'), 'utf8')).coda || []; } catch {}
   const now = process.env.YT_NOW ? new Date(process.env.YT_NOW).getTime() : Date.now();
-  await run(data, queue, now);
+  if (!DRY && !KEY) console.log('YouTube (Buffer) non configurato: salto la consegna.');
+  else await run(data, queue, now);
+  try { await pages(data, queue); } catch (e) { console.warn('  Pagina degli short non generata:', e.message); }
   if (!DRY) await writeFile(file, JSON.stringify(data));
 }
 
