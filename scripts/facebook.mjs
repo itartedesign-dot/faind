@@ -90,7 +90,7 @@ export function postFromLinkedin(i) {
   const text = String(i.text || '').split('\n').filter(l => !/https?:\/\//.test(l)).join('\n').replace(/\n{3,}/g, '\n\n').trim();
   const link = withUtm(i.link || SITE, kind);
   return { key: 'li-' + i.id, text, img: i.img ? i.img + (i.img.includes('?') ? '&' : '?') + 'd=' + i.id : null,
-    comment: `Leggi su FAIND: ${link}` };
+    comment: kind === 'domenica' ? `Guarda lo short: ${link}` : `Leggi su FAIND: ${link}` };
 }
 
 // Cosa portare su Facebook in questo giro (dal più vecchio al più recente)
