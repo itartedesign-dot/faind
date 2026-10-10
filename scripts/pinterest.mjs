@@ -6,7 +6,8 @@
    su YouTube (deciso da Paolo il 10 ottobre 2026):
    • i post LinkedIn (news.json → tgState.linkedin) diventano Pin con la
      stessa immagine, un titolo, il testo accorciato con gli hashtag e il
-     link alla pagina del sito;
+     link alla pagina del sito; quelli usciti con la grafica di riserva
+     (card Canva non pronta) non vanno su Pinterest;
    • gli short di Faindo (news.json → tgState.yt e social/shorts.json)
      diventano Pin video finché il link del video di Canva è valido;
      dopo, un Pin con l'anteprima del video che porta allo short.
@@ -150,12 +151,19 @@ async function checkSent(st, ch, now) {
   }
 }
 
+// Grafiche di riserva usate su LinkedIn quando la card Canva non è pronta (vedi telegram.mjs)
+const FALLBACK = ['social/lavori-ai.png', 'social/settimana-ai.png', 'assets/og-image.png'];
+export const isFallback = (img = '') => FALLBACK.some(f => String(img).split('?')[0] === SITE + f);
+
 // Cosa portare su Pinterest in questo giro (dal più vecchio al più recente)
 export function pending(st, queue, now) {
   const fresh = (t) => t && now - new Date(t).getTime() < MAX_AGE_HOURS * 36e5;
   const out = [];
   for (const i of [...(st.linkedin || [])].reverse()) {
-    if (i && i.buf && i.buf !== 'skip' && !st.pin['li-' + i.id] && fresh(i.date) && i.img) out.push({ at: i.date, pin: pinFromLinkedin(i) });
+    if (!i || !i.buf || i.buf === 'skip' || st.pin['li-' + i.id] || !fresh(i.date) || !i.img) continue;
+    // Regola di Paolo (10 ottobre 2026): su Pinterest niente post con la grafica di riserva
+    if (isFallback(i.img)) { st.pin['li-' + i.id] = { riserva: true }; console.log('→ Pinterest: post con la grafica di riserva, non lo porto:', i.id); continue; }
+    out.push({ at: i.date, pin: pinFromLinkedin(i) });
   }
   for (const [id, v] of Object.entries(st.yt || {})) {
     if (!v || !v.post || st.pin['yt-' + id] || !fresh(v.at) || (v.esito && v.esito !== 'sent')) continue;
