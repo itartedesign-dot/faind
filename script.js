@@ -1338,6 +1338,7 @@
         function () {
           // al posto del modulo: "Scelta invidiabile." e il grazie di Faindo; si chiude da solo dopo qualche secondo
           nlPopForm.hidden = true; $('#nlPopDone').hidden = false;
+          var img = $('#nlPopImg'); if (img && img.dataset.okSrc) img.src = img.dataset.okSrc;   // Faindo che fa l'occhiolino col pollice in su (Paolo, 10 ottobre 2026)
           var title = $('#nlPopTitle'); title.setAttribute('data-i18n', 'nlp.in'); title.textContent = t('nlp.in'); $('#nlPop').classList.remove('is-typing');
           setTimeout(function () { nlPopup.close(true); }, 9000);
         });
