@@ -117,6 +117,10 @@ Cinque pagine permanenti e indicizzabili, una per tema del Focus, più un indice
 - **Correzioni:** un testo corretto in italiano va corretto anche nelle tre traduzioni.
 - **Schede in home:** restano HTML statico in `index.html` (italiano); nelle altre lingue `script.js` (`deepCards`) legge titoli e sommari da `approfondimenti/cards.json`, creato dall'automazione.
 
+## Popup della newsletter (home)
+
+In `index.html` (`#nlPop`) e `script.js` (`nlPopup`): entra dal bordo sinistro a metà altezza (sul telefono in basso a sinistra) dopo 1 minuto sulla pagina. Si chiude con la X, con Esc o scorrendo verso sinistra; torna una seconda volta 3 minuti dopo, poi non si vede per 7 giorni. Chi si iscrive (dal popup o dal modulo nella colonna) non lo vede più. Il ricordo sta nel browser (`localStorage`, chiave `faind-nlpop`). Quando si tocca il campo email il popup si allarga e il testo diventa grande. L'iscrizione usa lo stesso invio del modulo (FormSubmit verso info@faind.org) con `fonte: popup`. Immagine: `assets/faindo-newsletter.webp`.
+
 ## Short di Faindo su YouTube (cartella `dal-cassetto-di-faindo/`)
 
 `scripts/faindo.mjs`, chiamato da `scripts/youtube.mjs` a ogni giro, genera la pagina degli short "Dal cassetto di Faindo" già usciti in quattro lingue (`dal-cassetto-di-faindo/`, `/en/`, `/fr/`, `/de/`); la cartella non è nel repository.
