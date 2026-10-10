@@ -130,7 +130,7 @@ In `index.html` (`#nlPop`) e `script.js` (`nlPopup`): entra dal bordo sinistro a
 
 ## Pinterest (tramite Buffer)
 
-`scripts/pinterest.mjs` gira dopo `youtube.mjs` e porta su Pinterest tutto ciò che esce su LinkedIn e YouTube: i post LinkedIn diventano Pin con la stessa immagine, un titolo (max 100 caratteri), il testo accorciato (max 500) con gli hashtag e il link al sito; gli short di Faindo diventano Pin video finché il link di Canva è valido, poi Pin con l'anteprima dello short. Usa lo stesso `BUFFER_API_KEY`, l'unico canale Pinterest collegato a Buffer e la bacheca "FAIND - Flash AI News Daily". I Pin consegnati sono segnati in `news.json` → `tgState.pin`. Prova senza pubblicare: `PIN_DRY=1 node scripts/pinterest.mjs`.
+`scripts/pinterest.mjs` gira dopo `youtube.mjs` e porta su Pinterest tutto ciò che esce su LinkedIn e YouTube: i post LinkedIn diventano Pin con la stessa immagine (quelli con la grafica di riserva, senza card Canva, non vanno su Pinterest), un titolo (max 100 caratteri), il testo accorciato (max 500) con gli hashtag e il link al sito; gli short di Faindo diventano Pin video finché il link di Canva è valido, poi Pin con l'anteprima dello short. Usa lo stesso `BUFFER_API_KEY`, l'unico canale Pinterest collegato a Buffer e la bacheca "FAIND - Flash AI News Daily". I Pin consegnati sono segnati in `news.json` → `tgState.pin`. Prova senza pubblicare: `PIN_DRY=1 node scripts/pinterest.mjs`.
 
 ## Strano ma vero (cartella `strano-ma-vero/`)
 
