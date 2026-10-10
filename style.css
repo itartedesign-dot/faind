@@ -110,8 +110,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .masthead__bar { display: flex; align-items: center; gap: 24px; height: var(--header-h); }
 
 .brand { display: flex; align-items: center; gap: 16px; text-decoration: none; color: inherit; flex-shrink: 0; }
-.brand__img { height: 42px; width: auto; border-radius: 4px; }
-:root[data-theme="dark"] .brand__img { box-shadow: 0 0 0 1px rgba(255, 255, 255, .1); }
+.brand__img { height: 42px; width: auto; }
 .brand__img--dark { display: none; }
 :root[data-theme="dark"] .brand__img--light { display: none; }
 :root[data-theme="dark"] .brand__img--dark { display: block; }

@@ -446,7 +446,7 @@
     return '<button type="button" class="save" data-save="' + esc(id) + '" aria-pressed="' + on + '" aria-label="' + esc(on ? t('unsave') : t('save')) + '" title="' + esc(on ? t('unsave') : t('save')) + '">' + BOOKMARK + '</button>';
   }
   /* Immagine della notizia; senza immagine (o se non si carica) compare il logo FAIND */
-  var PH = '<img class="thumb__logo" src="assets/logo.webp" alt="" width="510" height="180">';
+  var PH = '<img class="thumb__logo" src="assets/logo.webp" alt="" width="578" height="180">';
   function phHtml(size) {
     var big = size === 'lead' || size === 'wide';
     return '<span class="thumb__ph">' + PH + (big ? '<span class="thumb__cap">' + esc(t('img.na')) + '</span>' : '') + '</span>';

@@ -236,7 +236,7 @@ ${NP_CSS}
 <body class="np-page">
   <header class="masthead">
     <div class="masthead__bar wrap">
-      <a class="brand" href="../" aria-label="FAIND — Home"><img class="brand__img" src="../assets/logo.webp" width="510" height="180" alt="FAIND – Flash AI News Daily"></a>
+      <a class="brand" href="../" aria-label="FAIND — Home"><img class="brand__img" src="../assets/logo.webp" width="578" height="180" alt="FAIND – Flash AI News Daily"></a>
       <a class="np__back" href="../">${esc(u.back)}</a>
     </div>
   </header>
