@@ -20,7 +20,8 @@
    • dopo la consegna controlla su Buffer che lo short sia uscito davvero:
      se Buffer segna un errore, o dopo CHECK_LATE_H ore non risulta uscito,
      apre una segnalazione;
-   • quando Buffer conferma che lo short è uscito, ne annuncia il link sul
+   • quando Buffer conferma che lo short è uscito, ne annuncia il link (da
+     Buffer o, se manca, dal feed pubblico del canale, cercando lo stesso titolo) sul
      canale Telegram con la frase scritta da Claude nel campo "telegram"
      della coda (senza quel campo non annuncia nulla); mai nelle ore di
      silenzio di Telegram (23-7);
@@ -44,6 +45,8 @@ const KEY = process.env.BUFFER_API_KEY;
 const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TG_CHAT = process.env.TELEGRAM_CHAT_ID;
 const CHANNEL_URL = 'https://www.youtube.com/@faindnews';
+const CHANNEL_ID = 'UC55g-PlOm5OfpmydT7Yu0dA';   // canale "FAIND - FLASH AI NEWS DAILY"
+const LINK_WAIT_H = 3;           // per quante ore cerco il link dello short prima di usare quello del canale
 const TG_API = process.env.TELEGRAM_API_URL || 'https://api.telegram.org';   // TELEGRAM_API_URL serve solo per le prove
 const DRY = process.env.YT_DRY === '1';
 
@@ -116,6 +119,23 @@ async function checkSent(st, now) {
   }
 }
 
+// Link dello short preso dal feed pubblico del canale, cercando il video con lo stesso titolo
+const plain = (t = '') => String(t).replace(/&amp;/g, '&').replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"')
+  .replace(/#\S+/g, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLowerCase();
+async function shortLink(titolo) {
+  try {
+    const res = await fetch(process.env.YT_FEED_URL || `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`, { signal: AbortSignal.timeout(30000) });
+    if (!res.ok) return null;
+    const xml = await res.text();
+    for (const block of xml.split('<entry>').slice(1)) {
+      const id = (block.match(/<yt:videoId>([\w-]{6,})<\/yt:videoId>/) || [])[1];
+      const title = (block.match(/<title>([\s\S]*?)<\/title>/) || [])[1];
+      if (id && title && plain(title) === plain(titolo)) return `https://www.youtube.com/shorts/${id}`;
+    }
+  } catch (e) { console.warn('  YouTube: feed del canale non letto:', e.message); }
+  return null;
+}
+
 // Annuncio su Telegram degli short usciti (una volta sola, fuori dalle ore di silenzio)
 const escHtml = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 async function announce(st, queue, now) {
@@ -124,6 +144,9 @@ async function announce(st, queue, now) {
     if (!v || v.esito !== 'sent' || v.tg) continue;
     const s = (queue || []).find(x => x && x.id === id);
     if (!s || !s.telegram) { v.tg = 'no'; continue; }
+    // il link lo dà Buffer; se manca lo cerco sul feed del canale, e solo dopo LINK_WAIT_H ore uso quello del canale
+    if (!v.link) v.link = await shortLink(s.titolo);
+    if (!v.link && now - new Date(v.at).getTime() < LINK_WAIT_H * 36e5) { console.log('  Telegram: link dello short non ancora nel feed, riprovo al giro dopo:', id); continue; }
     const text = `${escHtml(s.telegram)}\n\n👉 ${v.link || CHANNEL_URL}`;
     try {
       const res = await fetch(`${TG_API}/bot${TG_TOKEN}/sendMessage`, {
