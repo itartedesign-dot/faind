@@ -119,7 +119,7 @@ Cinque pagine permanenti e indicizzabili, una per tema del Focus, più un indice
 
 ## Popup della newsletter (home)
 
-In `index.html` (`#nlPop`) e `script.js` (`nlPopup`): entra dal bordo sinistro a metà altezza (sul telefono in basso a sinistra) dopo 1 minuto sulla pagina. Si chiude con la X, con Esc o scorrendo verso sinistra; torna una seconda volta 3 minuti dopo, poi non si vede per 7 giorni. Chi si iscrive (dal popup o dal modulo nella colonna) non lo vede più. Il ricordo sta nel browser (`localStorage`, chiave `faind-nlpop`). Quando si tocca il campo email il popup si allarga e il testo diventa grande. L'iscrizione usa lo stesso invio del modulo (FormSubmit verso info@faind.org) con `fonte: popup`. Immagine: `assets/faindo-newsletter.webp`.
+In `index.html` (`#nlPop`) e `script.js` (`nlPopup`): entra dal bordo sinistro a metà altezza (sul telefono in basso a sinistra) dopo 1 minuto sulla pagina. Si chiude con la X, con Esc o scorrendo verso sinistra; torna una seconda volta 3 minuti dopo, poi non si vede per 7 giorni. Chi si iscrive (dal popup o dal modulo nella colonna) non lo vede più; dal popup, al posto del modulo compaiono "Scelta invidiabile." e il grazie di Faindo, poi si chiude da solo dopo 9 secondi. Il ricordo sta nel browser (`localStorage`, chiave `faind-nlpop`). Quando si tocca il campo email il popup si allarga e il testo diventa grande. L'iscrizione usa lo stesso invio del modulo (FormSubmit verso info@faind.org) con `fonte: popup`. Immagine: `assets/faindo-newsletter.webp`.
 
 ## Short di Faindo su YouTube (cartella `dal-cassetto-di-faindo/`)
 

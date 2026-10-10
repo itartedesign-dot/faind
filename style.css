@@ -1058,6 +1058,9 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 .nlpop__btn:disabled { opacity: .7; cursor: default; }
 .nlpop__msg { font-size: 13.5px; font-weight: 700; min-height: 1.1em; margin: 0; text-align: center; }
 .nlpop__msg.is-ok { color: #1E9460; } .nlpop__msg.is-err { color: #D8483F; }
+.nlpop__done { display: grid; gap: 12px; position: relative; z-index: 1; }
+.nlpop__wow { margin: 0; text-align: center; font-size: 24px; font-weight: 850; font-stretch: 90%; color: #0E1A33; border: 2px solid #13BCEB; border-radius: 14px; padding: 14px 10px; background: #fff; }
+.nlpop__thanks { margin: 0 4px 4px; text-align: center; font-size: 15px; line-height: 1.4; font-weight: 600; color: #0E1A33; }
 /* Mentre scrive l'email: popup più largo e testo grande, per controllare di averla scritta giusta */
 .nlpop.is-typing { width: 460px; }
 .nlpop.is-typing .nlpop__img { width: 46%; }
