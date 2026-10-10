@@ -13,7 +13,7 @@
 
    Regole:
    • pubblica SOLO sull'unico canale Pinterest collegato a Buffer, sulla
-     bacheca che ha "FAIND" nel nome (o sull'unica bacheca, se è una sola);
+     bacheca "FAIND - Flash AI News Daily" (o sull'unica con "FAIND" nel nome);
    • un Pin non esce mai due volte: quelli consegnati vengono segnati in
      news.json → tgState.pin e prima si controlla che su Buffer non ci sia
      già lo stesso testo;
@@ -38,6 +38,7 @@ const SITE = 'https://faind.org/';
 const KEY = process.env.BUFFER_API_KEY;
 const DRY = process.env.PIN_DRY === '1';
 
+const BOARD_MAIN = /flash ai news/i;  // la bacheca delle notizie: "FAIND - Flash AI News Daily"
 const BOARD_NAME = /faind/i;
 const MAX_AGE_HOURS = 48;        // oltre questa età un contenuto non viene più portato su Pinterest
 const DELAY_MIN = 5;             // il primo Pin esce qualche minuto dopo la consegna a Buffer
@@ -114,8 +115,10 @@ async function findBoard() {
   const list = seen.length ? seen.join(', ') : 'nessuno';
   if (found.length !== 1) throw new Error(found.length ? `su Buffer ci sono più canali Pinterest: ne serve uno solo. Canali collegati: ${list}` : `su Buffer non c'è un canale Pinterest. Canali collegati: ${list}`);
   const ch = found[0], boards = (ch.metadata && ch.metadata.boards) || [];
+  // Paolo ha anche altre bacheche FAIND (es. "Famous masterpieces reimagined by AI"): si usa quella delle notizie
+  const main = boards.filter(b => BOARD_MAIN.test(b.name || ''));
   const named = boards.filter(b => BOARD_NAME.test(b.name || ''));
-  const board = named.length === 1 ? named[0] : boards.length === 1 ? boards[0] : null;
+  const board = main.length === 1 ? main[0] : named.length === 1 ? named[0] : boards.length === 1 ? boards[0] : null;
   if (!board) throw new Error(boards.length ? `su Pinterest serve una sola bacheca con "FAIND" nel nome. Bacheche: ${boards.map(b => b.name).join(', ')}` : 'il canale Pinterest su Buffer non ha bacheche');
   return { ...ch, board };
 }
