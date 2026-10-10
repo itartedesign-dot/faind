@@ -128,6 +128,10 @@ In `index.html` (`#nlPop`) e `script.js` (`nlPopup`): entra dal bordo sinistro a
 - I due più recenti finiscono in `news.json` → `shorts` e compaiono in home nel riquadro YouTube della sezione "L'AI in video", con il tasto "Vedi i precedenti".
 - **Immagini del riquadro:** `assets/faindo-youtube-it.webp` con l'italiano, `assets/faindo-youtube-en.webp` con le altre lingue; cliccando si apre il canale YouTube.
 
+## Pinterest (tramite Buffer)
+
+`scripts/pinterest.mjs` gira dopo `youtube.mjs` e porta su Pinterest tutto ciò che esce su LinkedIn e YouTube: i post LinkedIn diventano Pin con la stessa immagine, un titolo (max 100 caratteri), il testo accorciato (max 500) con gli hashtag e il link al sito; gli short di Faindo diventano Pin video finché il link di Canva è valido, poi Pin con l'anteprima dello short. Usa lo stesso `BUFFER_API_KEY`, l'unico canale Pinterest collegato a Buffer e la bacheca con "FAIND" nel nome. I Pin consegnati sono segnati in `news.json` → `tgState.pin`. Prova senza pubblicare: `PIN_DRY=1 node scripts/pinterest.mjs`.
+
 ## Strano ma vero (cartella `strano-ma-vero/`)
 
 `scripts/strano.mjs` genera la rubrica delle curiosità sull'AI in quattro lingue (`strano-ma-vero/`, `strano-ma-vero/en/`, `strano-ma-vero/fr/`, `strano-ma-vero/de/`); la cartella non è nel repository.
