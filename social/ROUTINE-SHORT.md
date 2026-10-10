@@ -48,11 +48,21 @@ quando scade: `X-Amz-Date` + `X-Amz-Expires` secondi (in UTC).
   5. 7-9 hashtag: sempre `#Shorts #IntelligenzaArtificiale #AI`, alla fine `#DalCassetto #FAIND`,
      in mezzo quelli del tema.
 
-- `telegram`: due righe per il canale Telegram di FAIND, nello stesso stile umano del primo commento
-  (punto 6): cosa ha trovato Faindo detto in modo semplice, un po' di ironia, al massimo un'emoji.
-  Niente link e niente hashtag: il link dello short lo aggiunge il sito quando Buffer conferma che è
-  uscito. Esempio di Paolo: "Si parte con un antibiotico trovato dall'AI e battezzato come HAL 9000.
-  Sì, proprio lui."
+- `telegram`: **una sola frase** sulla scoperta, per il canale Telegram di FAIND, nello stile di Paolo:
+  semplice e diretta, con un dettaglio curioso, senza enfasi. Niente link, emoji o hashtag: il resto
+  del messaggio lo compone il sito, a paragrafi separati, così (modello di Paolo del 10 ottobre 2026):
+
+  ```
+  Nuova storia sul nostro canale YouTube:
+
+  "Dal cassetto di Faindo" 🗄️
+
+  L'AI scopre un nuovo tipo di antibiotico per caso, poi battezzato come HAL 9000.
+
+  👉 <link dello short>
+
+  Due storie a settimana, il lunedì e il giovedì. Faindo ci tiene se vi iscrivete 😄
+  ```
 
 ## 5. Scrittura sul repository
 
