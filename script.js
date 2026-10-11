@@ -37,6 +37,7 @@
       'form.t.report': 'Segnalazione notizia', 'form.t.fix': 'Correzione', 'form.t.deal': 'Proposta di convenzione', 'form.t.collab': 'Collaborazione',
       'form.err': 'Compila nome, email valida e messaggio.', 'form.ok': 'Si apre la tua app di posta con il messaggio già pronto: premi Invia per completare.',
       'footer.policy': 'Ogni notizia riporta la fonte originale e il link per verificarla. FAIND non è affiliato ai marchi citati.',
+      'sources.title': "Le fonti che leggiamo ogni giorno", 'sources.lede': "Ogni ora FAIND legge le grandi testate internazionali e ti porta all'articolo originale.", 'sources.note': "Marchi dei rispettivi proprietari, citati come fonti delle notizie.",
       'footer.rights': 'Tutti i diritti riservati.', 'footer.updated': 'Aggiornato il',
       'today': 'oggi'
     },
@@ -67,6 +68,7 @@
       'form.t.report': 'News tip', 'form.t.fix': 'Correction', 'form.t.deal': 'Deal proposal', 'form.t.collab': 'Collaboration',
       'form.err': 'Please fill in your name, a valid email and a message.', 'form.ok': 'Your mail app opens with the message ready: press Send to finish.',
       'footer.policy': 'Every story cites its original source with a link to verify it. FAIND is not affiliated with the brands mentioned.',
+      'sources.title': "The sources we read every day", 'sources.lede': "Every hour FAIND reads the major international newsrooms and takes you to the original article.", 'sources.note': "Trademarks belong to their owners and are shown as news sources.",
       'footer.rights': 'All rights reserved.', 'footer.updated': 'Updated on',
       'today': 'today'
     },
@@ -97,6 +99,7 @@
       'form.t.report': 'Signaler une info', 'form.t.fix': 'Correction', 'form.t.deal': "Proposition d'offre", 'form.t.collab': 'Collaboration',
       'form.err': 'Indiquez votre nom, un e-mail valide et un message.', 'form.ok': "Votre messagerie s'ouvre avec le message prêt : appuyez sur Envoyer.",
       'footer.policy': "Chaque actualité cite sa source originale avec un lien pour la vérifier. FAIND n'est affilié à aucune des marques citées.",
+      'sources.title': "Les sources que nous lisons chaque jour", 'sources.lede': "Chaque heure, FAIND lit les grandes rédactions internationales et vous renvoie à l'article original.", 'sources.note': "Marques de leurs propriétaires respectifs, citées comme sources d'information.",
       'footer.rights': 'Tous droits réservés.', 'footer.updated': 'Mis à jour le',
       'today': "aujourd'hui"
     },
@@ -127,6 +130,7 @@
       'form.t.report': 'Nachricht melden', 'form.t.fix': 'Korrektur', 'form.t.deal': 'Angebotsvorschlag', 'form.t.collab': 'Zusammenarbeit',
       'form.err': 'Bitte Name, gültige E-Mail und Nachricht ausfüllen.', 'form.ok': 'Dein Mailprogramm öffnet sich mit der fertigen Nachricht: auf Senden tippen.',
       'footer.policy': 'Jede Meldung nennt die Originalquelle mit Link zur Überprüfung. FAIND ist mit den genannten Marken nicht verbunden.',
+      'sources.title': "Die Quellen, die wir täglich lesen", 'sources.lede': "Jede Stunde liest FAIND die großen internationalen Redaktionen und führt dich zum Originalartikel.", 'sources.note': "Marken ihrer jeweiligen Inhaber, als Nachrichtenquellen genannt.",
       'footer.rights': 'Alle Rechte vorbehalten.', 'footer.updated': 'Aktualisiert am',
       'today': 'heute'
     }
