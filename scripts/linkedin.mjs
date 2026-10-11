@@ -108,6 +108,23 @@ export async function alreadyOnBuffer(ch, text, now) {
     node && norm(node.text).slice(0, 40) === head && now - new Date(node.createdAt).getTime() < DUP_HOURS * 36e5);
 }
 
+// Miniatura degli short: hqdefault è 480×360, il fotogramma verticale piccolo con ai lati
+// la sua copia ingrandita e sfocata. Per gli short YouTube ha quasi sempre anche la versione
+// verticale nitida (oardefault); se manca provo le altre, dalla più grande. Il resto
+// dell'indirizzo (es. ?d=…) resta com'è. Senza rete o senza alternative torna l'originale.
+const YT_HQ = /(https:\/\/i\.ytimg\.com\/vi\/[\w-]+\/)hqdefault\.jpg/;
+export async function sharpImage(url) {
+  const m = String(url || '').match(YT_HQ);
+  if (!m) return url;
+  for (const f of ['oardefault', 'maxresdefault', 'sddefault']) {
+    try {
+      const res = await fetch(m[1] + f + '.jpg', { method: 'HEAD', signal: AbortSignal.timeout(10000) });
+      if (res.ok) return url.replace(m[0], m[1] + f + '.jpg');
+    } catch {}
+  }
+  return url;
+}
+
 async function createPost(ch, item, withImage, delayMin) {
   // l'orario parte dal momento della consegna, non dall'inizio del giro
   const dueAt = new Date(Date.now() + delayMin * 60e3).toISOString();
@@ -201,6 +218,7 @@ export async function run(data, now = Date.now()) {
     }
     for (const i of todo) {
       if (await alreadyOnBuffer(ch, i.text, now)) { i.buf = 'dup'; console.log('→ LinkedIn: già presente su Buffer, non lo ripeto:', i.id); continue; }
+      if (i.img) i.img = await sharpImage(i.img);   // resta salvata: Facebook e Pinterest riprendono questa
       const post = await deliver(ch, i);
       i.buf = new Date(now).toISOString();
       sent++;

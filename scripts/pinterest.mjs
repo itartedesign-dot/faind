@@ -31,7 +31,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { gql, alert, alreadyOnBuffer } from './linkedin.mjs';
+import { gql, alert, alreadyOnBuffer, sharpImage } from './linkedin.mjs';
 import { videoIdOf } from './faindo.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -126,6 +126,7 @@ async function findBoard() {
 
 async function createPin(ch, p, delayMin) {
   const dueAt = new Date(Date.now() + delayMin * 60e3).toISOString();
+  if (p.img) p.img = await sharpImage(p.img);
   const asset = p.video ? `{ video: { url: ${q(p.video)} } }` : `{ image: { url: ${q(p.img)} } }`;
   const data = await gql(`mutation { createPost(input: { text: ${q(p.text)}, channelId: ${q(ch.id)}, schedulingType: automatic, mode: customScheduled, dueAt: ${q(dueAt)}, assets: [${asset}], metadata: { pinterest: { boardServiceId: ${q(ch.board.serviceId)}, title: ${q(p.title)}, url: ${q(p.url)} } } }) { ... on PostActionSuccess { post { id dueAt } } ... on MutationError { message } } }`);
   const r = data.createPost || {};

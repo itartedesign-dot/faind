@@ -36,7 +36,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { alert } from './linkedin.mjs';
+import { alert, sharpImage } from './linkedin.mjs';
 
 const romeDay = (t) => new Date(t).toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -183,6 +183,7 @@ export async function run(data, now = Date.now()) {
       if (!st.fbOk) console.log(`✓ Facebook: collegamento con Zernio riuscito. Pagina "${acc.name}".`);
       st.fbOk = true;
       for (const p of todo) {
+        if (p.img) p.img = await sharpImage(p.img);
         if (p.img && !(await reachable(p.img))) { console.log('→ Facebook: immagine non ancora online, riprovo al giro dopo:', p.img); continue; }
         const post = await deliver(acc, p, DELAY_MIN);
         st.fb[p.key] = { post: post.id, at: new Date(now).toISOString() };
