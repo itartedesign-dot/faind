@@ -1,0 +1,34 @@
+name: Faind Modifiche Urgenti
+
+# Promemoria per Paolo: la routine di Claude che controlla rischi e scadenze
+# (registro nella cartella promemoria del Progetto Claude) avvia questo workflow
+# con il testo da mandare. Il workflow apre una segnalazione su GitHub con il titolo
+# "Faind Modifiche Urgenti" e GitHub la manda per mail a Paolo.
+on:
+  workflow_dispatch:
+    inputs:
+      testo:
+        description: "Testo del promemoria"
+        required: true
+        type: string
+
+permissions:
+  issues: write
+
+jobs:
+  promemoria:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Apri la segnalazione
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TESTO: ${{ inputs.testo }}
+          REPO: ${{ github.repository }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          body=$(printf '@%s\n\n%s\n\n_Promemoria automatico di Claude (rischi e scadenze di FAIND). Quando hai sistemato puoi chiudere questa segnalazione._' "$OWNER" "$TESTO")
+          jq -n --arg title "Faind Modifiche Urgenti" --arg body "$body" '{title: $title, body: $body}' |
+            curl -sS --fail-with-body -X POST \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$REPO/issues" -d @-
