@@ -12,7 +12,7 @@
   var I18N = {
     it: {
       'a11y.skip': 'Vai ai contenuti',
-      'brand.tagline': "Tutta l'AI, in un solo posto.",
+      'brand.tagline': "Tutta l'AI,\nin un solo posto.",
       'nav.home': 'Home', 'nav.news': 'News', 'nav.guides': 'Tool & Guide', 'nav.prices': 'Prezzi', 'nav.deals': 'Convenzioni', 'nav.contact': 'Contatti',
       'theme.toggle': 'Cambia modalità giorno/notte',
       'menu.open': 'Apri menu', 'menu.close': 'Chiudi menu', 'menu.title': 'Menu',
@@ -42,7 +42,7 @@
     },
     en: {
       'a11y.skip': 'Skip to content',
-      'brand.tagline': 'All of AI, in one place.',
+      'brand.tagline': 'All of AI,\nin one place.',
       'nav.home': 'Home', 'nav.news': 'News', 'nav.guides': 'Tools & Guides', 'nav.prices': 'Prices', 'nav.deals': 'Deals', 'nav.contact': 'Contact',
       'theme.toggle': 'Toggle day/night mode',
       'menu.open': 'Open menu', 'menu.close': 'Close menu', 'menu.title': 'Menu',
@@ -72,7 +72,7 @@
     },
     fr: {
       'a11y.skip': 'Aller au contenu',
-      'brand.tagline': "Toute l'IA, au même endroit.",
+      'brand.tagline': "Toute l'IA,\nau même endroit.",
       'nav.home': 'Accueil', 'nav.news': 'Actus', 'nav.guides': 'Outils & Guides', 'nav.prices': 'Prix', 'nav.deals': 'Offres', 'nav.contact': 'Contact',
       'theme.toggle': 'Basculer mode jour/nuit',
       'menu.open': 'Ouvrir le menu', 'menu.close': 'Fermer le menu', 'menu.title': 'Menu',
@@ -102,7 +102,7 @@
     },
     de: {
       'a11y.skip': 'Zum Inhalt springen',
-      'brand.tagline': 'Alles über KI, an einem Ort.',
+      'brand.tagline': 'Alles über KI,\nan einem Ort.',
       'nav.home': 'Start', 'nav.news': 'News', 'nav.guides': 'Tools & Anleitungen', 'nav.prices': 'Preise', 'nav.deals': 'Angebote', 'nav.contact': 'Kontakt',
       'theme.toggle': 'Tag-/Nachtmodus umschalten',
       'menu.open': 'Menü öffnen', 'menu.close': 'Menü schließen', 'menu.title': 'Menü',
