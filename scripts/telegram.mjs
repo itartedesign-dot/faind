@@ -42,6 +42,8 @@ import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://faind.org/';
+// Link al sito dai messaggi Telegram, con la provenienza: Telegram non la dice da solo e GoatCounter le conterebbe "senza provenienza"
+const tg = (p = '') => { const [path, hash] = p.split('#'); return `${SITE}${path}?utm_source=telegram${hash ? '#' + hash : ''}`; };
 const MAX_PER_RUN = 4;
 const FRESH_HOURS = 6;
 const VIDEO_HOURS = 12;
@@ -97,10 +99,10 @@ export function caption(n) {
 function buttons(n) {
   if (n.kind === 'video') return { inline_keyboard: [[
     { text: '▶️ Guarda il video', url: n.link.url },
-    { text: 'Altri video su FAIND', url: SITE + '#video' }
+    { text: 'Altri video su FAIND', url: tg('#video') }
   ]] };
   return { inline_keyboard: [[
-    { text: 'Leggi su FAIND', url: n.page ? SITE + n.page : SITE },
+    { text: 'Leggi su FAIND', url: tg(n.page || '') },
     { text: 'Fonte originale', url: n.link.url }
   ]] };
 }
@@ -179,7 +181,7 @@ export function digestCaption(list, label) {
     `<i>${esc(label)} · le ${list.length} notizie AI da sapere oggi</i>`,
     '',
     ...list.map((n, i) => {
-      const url = n.page ? SITE + n.page : n.link.url;
+      const url = n.page ? tg(n.page) : n.link.url;
       const more = n.also && n.also.length ? ` · +${n.also.length} ${n.also.length === 1 ? 'fonte' : 'fonti'}` : '';
       return `${NUM[i] || '•'} <a href="${esc(url)}">${esc(cut(n.title, max))}</a>\n     <i>${esc(n.source.name)}${more}</i>\n`;
     }),
@@ -193,8 +195,8 @@ export function digestCaption(list, label) {
 async function sendDigest(list, label) {
   const text = digestCaption(list, label);
   const reply_markup = { inline_keyboard: [[
-    { text: 'Tutte le notizie su FAIND', url: SITE },
-    { text: 'Lavoro AI', url: SITE + '#job' }
+    { text: 'Tutte le notizie su FAIND', url: tg() },
+    { text: 'Lavoro AI', url: tg('#job') }
   ]] };
   if (DRY) { console.log('--- DRY · Il punto delle 8 ---\n' + text + `\n[${visible(text).length} caratteri]`); return; }
   try {
@@ -523,7 +525,7 @@ async function maybeJobs(data, t, card) {
   const { rank, png } = card;
   if (rank.total < JOBS_MIN || rank.rows.length < 3) { console.log(`→ Classifica lavori: solo ${rank.total} offerte, salto.`); return; }
   const text = jobsCaption(rank);
-  const reply_markup = { inline_keyboard: [[{ text: 'Vedi le offerte su FAIND', url: SITE + '#job' }]] };
+  const reply_markup = { inline_keyboard: [[{ text: 'Vedi le offerte su FAIND', url: tg('#job') }]] };
   try {
     if (DRY) console.log('--- DRY · Classifica lavori ---\n' + text + `\n[${visible(text).length} caratteri] [img] ${png || '—'}`);
     else {
