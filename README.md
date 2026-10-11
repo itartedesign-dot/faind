@@ -244,3 +244,7 @@ Google impiega da qualche giorno a qualche settimana per mostrare un sito nuovo.
 - **robots.txt e IndexNow.**
 - **Navigazione:** freccia "torna su" e ritorno al punto esatto (`nav.js`, `script.js`). Versione dei file in `index.html`: `20261009a`.
 - **LinkedIn, post del venerdì:** card disegnata con la notizia più ripresa della settimana al posto del logo (`social/settimana-ai.png`).
+
+## Promemoria "Faind Modifiche Urgenti"
+
+`.github/workflows/promemoria.yml` si avvia solo a mano o da Claude (workflow_dispatch, campo `testo`). Apre una segnalazione con il titolo "Faind Modifiche Urgenti" e la menzione del titolare, così GitHub la manda per mail. La usa la routine di Claude che controlla rischi e scadenze (registro nella cartella `faind/promemoria/` del Progetto Claude): scrive 24 ore prima per le scadenze note, subito per i problemi imprevisti.

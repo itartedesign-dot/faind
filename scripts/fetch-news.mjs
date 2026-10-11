@@ -33,6 +33,11 @@ export function stripHtml(s = '') {
   // due passaggi: alcuni feed contengono HTML codificato come entità
   return decode(decode(s).replace(/<[^>]+>/g, ' ')).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 }
+// Toglie la riga di firma che WordPress aggiunge ai feed ("The post … appeared first on …",
+// "L'articolo … proviene da …"): finiva nel riassunto delle notizie e su Telegram
+export function noFooter(s = '') {
+  return s.replace(/\s*(?:The post\s.+?\sappeared(?:\s+first on\s.*)?|L['’]articolo\s.+?\sproviene da(?:\s.*)?)[\s.…]*$/is, '').trim();
+}
 function tag(block, names) {
   for (const n of names) {
     const m = block.match(new RegExp(`<${n}(?:\\s[^>]*)?>([\\s\\S]*?)</${n}>`, 'i'));
@@ -198,7 +203,7 @@ export function parseFeed(xml) {
     let link = isAtom ? atomLink(block) : decode(tag(block, ['link'])).trim();
     if (!link) link = decode(tag(block, ['guid', 'id'])).trim();
     const date = tag(block, ['pubDate', 'published', 'updated', 'dc:date']);
-    const summary = stripHtml(tag(block, ['description', 'summary', 'content']));
+    const summary = noFooter(stripHtml(tag(block, ['description', 'summary', 'content'])));
     const image = feedImage(block, link);
     if (title && /^https?:\/\//.test(link)) items.push({ title, link, date: decode(date), summary, image });
   }
