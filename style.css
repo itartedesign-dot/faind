@@ -946,7 +946,7 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 .sources { background: var(--bg); border-top: 1px solid var(--rule); padding-block: 52px 44px; text-align: center; }
 .sources__title { font-size: clamp(24px, 2.6vw, 32px); font-weight: 800; font-stretch: 80%; letter-spacing: -.01em; }
 .sources__title::after { content: ""; display: block; width: 44px; height: 3px; border-radius: 3px; background: var(--ai); margin: 12px auto 0; }
-.sources__lede { color: var(--muted); font-size: 15.5px; max-width: 60ch; margin: 12px auto 26px; }
+.sources__lede { color: var(--muted); font-size: 15.5px; max-width: none; margin: 12px auto 26px; }
 .sources__band { max-width: 1080px; margin-inline: auto; border: 1.5px solid var(--ai); border-radius: 22px; background: linear-gradient(135deg, #1A3A66 0%, #12284A 55%, #0E1E3A 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 18px 40px -24px rgba(14, 30, 58, .55); overflow: hidden; }
 .sources__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .sources__item { position: relative; }
