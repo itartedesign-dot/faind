@@ -1479,6 +1479,7 @@
   /* Strano ma vero: sul telefono la colonna laterale finisce in fondo alla pagina,
      quindi il riquadro si sposta sopra gli Approfondimenti (richiesta di Paolo, 10 ottobre 2026) */
   function placeSmv() {
+    if (document.documentElement.classList.contains('home2')) return;   // nella home a icone la posizione la decide home2.js
     var smv = $('#strano-ma-vero'), deep = $('#approfondimenti'), nl = $('#newsletter');
     if (!smv || !deep || !nl || !window.matchMedia) return;
     var mq = window.matchMedia('(max-width: 720px)');
