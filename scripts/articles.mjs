@@ -107,10 +107,10 @@ export const ARTICLES = [
     sources: [] },
 
   { slug: 'perche-intelligenza-artificiale-consuma-acqua-energia', img: 'art-06.webp',
-    title: 'Perché l\'intelligenza artificiale consuma acqua ed energia?',
+    title: 'Perché l\'intelligenza artificiale consuma acqua ed energia? La risposta in breve',
     card: 'Data center, elettricità e raffreddamento: quanto inquina davvero l\'AI.',
-    desc: 'Perché l\'intelligenza artificiale consuma acqua ed energia elettrica? Come funzionano i data center, quanto consumano, perché l\'AI inquina e come può aiutare il risparmio energetico.',
-    lede: '"Perché l\'AI consuma acqua" e "perché l\'AI inquina" sono tra le domande più cercate. La risposta sta in edifici che quasi nessuno vede: i data center.',
+    desc: 'L\'AI (o IA) consuma acqua perché i data center che la fanno funzionare si scaldano e vanno raffreddati, e consuma energia per miliardi di calcoli. Quanto consumano, perché inquina e cosa si sta facendo.',
+    lede: 'In breve: l\'intelligenza artificiale (AI o IA) gira in enormi edifici pieni di computer, i data center. Quei computer consumano molta elettricità e si scaldano, e per raffreddarli si usa acqua, che in parte evapora. Altra acqua la consumano le centrali che producono l\'energia.',
     brief: ['L\'AI gira in data center che consumano molta elettricità.', 'L\'acqua serve a raffreddare i computer, direttamente o tramite le centrali elettriche.', 'L\'impatto dipende da quale energia alimenta gli impianti.'],
     sections: [
       ['Perché l\'intelligenza artificiale consuma energia elettrica', 'Ogni risposta di un chatbot è il risultato di miliardi di calcoli eseguiti da processori molto potenti, le <a href="../glossario/#gpu">GPU</a>, ospitati in <a href="../glossario/#data-center">data center</a>. L\'energia serve in due momenti: l\'<a href="../glossario/#addestramento">addestramento</a> dei modelli, che dura settimane, e l\'uso quotidiano, che consuma meno per singola richiesta ma si ripete miliardi di volte.'],
@@ -123,10 +123,10 @@ export const ARTICLES = [
     sources: ['Agenzia internazionale dell\'energia (IEA), "Energy and AI" (2025)'] },
 
   { slug: 'intelligenza-artificiale-e-affidabile', img: 'art-07.webp',
-    title: 'L\'intelligenza artificiale è affidabile? Quando può sbagliare',
+    title: 'L\'intelligenza artificiale è affidabile? Quanto è attendibile e quando sbaglia',
     card: 'Perché l\'AI sbaglia con tono sicuro e come capire quando fidarsi.',
-    desc: 'L\'intelligenza artificiale è affidabile e sicura? Perché può sbagliare, cosa sono le allucinazioni, quando fidarsi e come verificare le risposte di ChatGPT, Claude e Gemini.',
-    lede: '"L\'intelligenza artificiale è affidabile?" e "può sbagliare?" sono due delle domande più cercate. La risposta onesta: è affidabile per alcune cose, per altre no, e non avvisa quando sbaglia.',
+    desc: 'L\'intelligenza artificiale è affidabile per riassumere, tradurre e spiegare, molto meno su numeri, date e citazioni, dove può inventare. Quanto è attendibile, quando fidarsi e come verificare ChatGPT, Claude e Gemini.',
+    lede: 'In breve: l\'intelligenza artificiale è attendibile quando lavora su testi che le dai tu (riassumere, tradurre, riscrivere), molto meno quando deve ricordare fatti, numeri, date e citazioni, che a volte inventa con tono sicuro. E non avvisa quando sbaglia: la verifica resta a chi la usa.',
     brief: ['L\'AI può inventare fatti, date e citazioni: si chiamano allucinazioni.', 'È più affidabile su testi che le fornisci tu che su fatti che deve ricordare.', 'La verifica resta sempre a chi la usa.'],
     sections: [
       ['Perché l\'intelligenza artificiale può sbagliare', 'Un modello linguistico non consulta un archivio di fatti: genera la risposta più plausibile. Quando non sa, non dice "non lo so": costruisce una risposta verosimile. È ciò che si chiama <a href="../glossario/#allucinazione">allucinazione</a>. Il caso più citato è quello di alcuni avvocati sanzionati negli Stati Uniti per aver depositato atti con precedenti inesistenti, inventati da un chatbot.'],
