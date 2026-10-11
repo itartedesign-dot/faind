@@ -97,6 +97,8 @@ Classifica dei ruoli AI e dati più presenti negli annunci degli ultimi 30 giorn
 Orari e quantità sono in cima al file (`DIGEST_*`, `JOBS_*`, `QUIET_FROM`, `QUIET_TO`). Il promemoria di ciò che è già uscito è in `news.json` → `tgState`.
 Segreti necessari: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
 
+I link al sito nei messaggi (tasti "Leggi su FAIND", "Tutte le notizie su FAIND", "Lavoro AI", "Altri video su FAIND", "Vedi le offerte su FAIND" e i titoli del Punto delle 8) portano `?utm_source=telegram`: Telegram non dice da dove arriva la visita, e senza questo GoatCounter la conterebbe "senza provenienza".
+
 ## Pagine tematiche (cartella `temi/`)
 
 Cinque pagine permanenti e indicizzabili, una per tema del Focus, più un indice, in quattro lingue: `temi/` (italiano), `temi/en/`, `temi/fr/`, `temi/de/`. Le genera `scripts/topics.mjs` a ogni giro orario; la cartella non è nel repository.
