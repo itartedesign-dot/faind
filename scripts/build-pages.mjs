@@ -36,7 +36,8 @@ import { buildArgomenti, buildArchivePages, addToSitemap, subjectsIn, footerHtml
 export const SITE = 'https://faind.org/';
 const FEED_SIZE = 20;
 // Chiave IndexNow: non è un segreto, per regola del protocollo sta in chiaro in un file del sito (faind.org/<chiave>.txt)
-const INDEXNOW_KEY = '3c5c38b66b5c83946d0ecdac40fbc2da';
+// Chiave cambiata l'11 ottobre: la prima, mandata a Bing prima che il suo file fosse online, era rifiutata con 403.
+const INDEXNOW_KEY = '0299cefd2895db2cc4ab9effaf2d48d5';
 const INDEXNOW_URL = 'https://www.bing.com/indexnow';
 
 export const CATS = {
@@ -339,13 +340,20 @@ function slim(n) {
 // Si mandano le pagine nate nel giro precedente, che a questo punto sono già online. Solo su GitHub.
 async function pingIndexNow(urls) {
   if (!process.env.GITHUB_ACTIONS || !urls.length) return urls.length ? false : true;
+  const keyLocation = `${SITE}${INDEXNOW_KEY}.txt`;
   try {
+    // Bing controlla subito il file della chiave: se non è ancora online (es. chiave appena cambiata) la segna come
+    // non valida e risponde 403. In quel caso aspetto il giro dopo, quando il file è pubblicato.
+    const online = await fetch(keyLocation, { signal: AbortSignal.timeout(15000) }).then(r => r.ok ? r.text() : '').catch(() => '');
+    if (online.trim() !== INDEXNOW_KEY) { console.log(`🔔 IndexNow: chiave non ancora online, avviso rimandato (${urls.length} indirizzi)`); return false; }
     const res = await fetch(INDEXNOW_URL, {
       method: 'POST', headers: { 'content-type': 'application/json; charset=utf-8' }, signal: AbortSignal.timeout(15000),
-      body: JSON.stringify({ host: new URL(SITE).host, key: INDEXNOW_KEY, keyLocation: `${SITE}${INDEXNOW_KEY}.txt`, urlList: urls.slice(0, 10000) })
+      body: JSON.stringify({ host: new URL(SITE).host, key: INDEXNOW_KEY, keyLocation, urlList: urls.slice(0, 10000) })
     });
-    console.log(`🔔 IndexNow: ${urls.length} indirizzi → risposta ${res.status}`);
-    return res.status === 200 || res.status === 202;
+    const ok = res.status === 200 || res.status === 202;
+    const why = ok ? '' : ` · ${(await res.text().catch(() => '')).slice(0, 300)}`;
+    console.log(`🔔 IndexNow: ${urls.length} indirizzi → risposta ${res.status}${why}`);
+    return ok;
   } catch (e) { console.warn('🔔 IndexNow non raggiunto:', e.message); return false; }
 }
 

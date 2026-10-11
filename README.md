@@ -68,7 +68,7 @@ Per le notizie scritte a mano in `data.js` aggiungi `image: "https://..."` se vu
 ## Google, Bing e robots.txt
 
 - A ogni giro si scrivono `robots.txt` (con l'indirizzo della sitemap) e il file della chiave IndexNow (`<chiave>.txt`, pubblico per regola del protocollo).
-- IndexNow: a ogni giro si avvisano Bing e gli altri motori che aderiscono delle pagine nate nel giro precedente (`archivio.json` → `pending`). Al primo giro si manda tutta la sitemap. Google non usa IndexNow.
+- IndexNow: a ogni giro si avvisano Bing e gli altri motori che aderiscono delle pagine nate nel giro precedente (`archivio.json` → `pending`). Al primo giro si manda tutta la sitemap. Prima di avvisare si controlla che il file della chiave sia già online: se manca (chiave nuova) l'avviso aspetta il giro dopo, perché Bing altrimenti rifiuta la chiave con 403. Google non usa IndexNow.
 
 ## Navigazione
 
