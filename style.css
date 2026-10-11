@@ -942,6 +942,41 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 @media (prefers-reduced-motion: reduce) { .appsheet__panel { animation: none; } }
 
 /* ------------------------------ Footer ------------------------------ */
+/* Fonti: banner con i loghi delle testate che FAIND legge */
+.sources { background: var(--bg); border-top: 1px solid var(--rule); padding-block: 52px 44px; text-align: center; }
+.sources__title { font-size: clamp(24px, 2.6vw, 32px); font-weight: 800; font-stretch: 80%; letter-spacing: -.01em; }
+.sources__title::after { content: ""; display: block; width: 44px; height: 3px; border-radius: 3px; background: var(--ai); margin: 12px auto 0; }
+.sources__lede { color: var(--muted); font-size: 15.5px; max-width: 60ch; margin: 12px auto 26px; }
+.sources__band { max-width: 1080px; margin-inline: auto; border: 1.5px solid var(--ai); border-radius: 22px; background: linear-gradient(135deg, #1A3A66 0%, #12284A 55%, #0E1E3A 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 18px 40px -24px rgba(14, 30, 58, .55); overflow: hidden; }
+.sources__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.sources__item { position: relative; }
+.sources__item + .sources__item::before { content: ""; position: absolute; left: 0; top: 30%; bottom: 30%; width: 1px; background: rgba(255, 255, 255, .22); }
+.sources__link { display: flex; align-items: center; justify-content: center; height: 112px; padding: 0 18px; }
+.sources__logo { display: block; width: auto; max-width: 100%; opacity: .9; -webkit-mask-image: linear-gradient(to bottom, #000 40%, rgba(0, 0, 0, .3) 100%); mask-image: linear-gradient(to bottom, #000 40%, rgba(0, 0, 0, .3) 100%); transition: opacity .2s ease, transform .2s ease; }
+.sources__link:hover .sources__logo, .sources__link:focus-visible .sources__logo { opacity: 1; transform: translateY(-2px); }
+.sources__link:focus-visible { outline: 2px solid var(--ai); outline-offset: -6px; border-radius: 14px; }
+.sources__logo--bbc { height: 26px; }
+.sources__logo--guardian { height: 30px; }
+.sources__logo--spiegel { height: 17px; }
+.sources__logo--wired { height: 24px; }
+.sources__logo--techcrunch { height: 28px; }
+.sources__logo--arstechnica { height: 40px; }
+.sources__note { color: var(--muted); font-size: 12.5px; margin-top: 14px; }
+@media (max-width: 720px) {
+  .sources { padding-block: 40px 34px; }
+  .sources__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sources__item:nth-child(3n + 1)::before { display: none; }
+  .sources__item:nth-child(n + 4)::after { content: ""; position: absolute; top: 0; left: 18%; right: 18%; height: 1px; background: rgba(255, 255, 255, .22); }
+  .sources__link { height: 86px; padding: 0 12px; }
+  .sources__logo--bbc { height: 20px; }
+  .sources__logo--guardian { height: 24px; }
+  .sources__logo--spiegel { height: 12px; }
+  .sources__logo--wired { height: 18px; }
+  .sources__logo--techcrunch { height: 22px; }
+  .sources__logo--arstechnica { height: 32px; }
+}
+@media (prefers-reduced-motion: reduce) { .sources__logo { transition: none; } }
+
 .footer { background: var(--surface); border-top: 1px solid var(--rule); }
 .footer__inner { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px 40px; padding-block: 36px; }
 .footer__brand .brand__img { height: 88px; width: auto; margin-bottom: 14px; }
