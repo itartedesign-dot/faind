@@ -312,8 +312,8 @@ ${LANGS.map(k => `  <link rel="alternate" hreflang="${k}" href="${esc(alts[k])}"
   <meta property="og:description" content="${esc(desc)}">
   <meta property="og:image" content="${SITE}assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="${up}assets/favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="${up}assets/icon-180.png">
+  <link rel="icon" href="${up}assets/favicon.png?v=3" type="image/png">
+  <link rel="apple-touch-icon" href="${up}assets/icon-180.png?v=3">
   <link rel="manifest" href="${up}manifest.webmanifest">
   <link rel="alternate" type="application/rss+xml" title="FAIND – Notizie AI" href="${up}feed.xml">
   <script>(function(){var t=null;try{t=localStorage.getItem('faind-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>

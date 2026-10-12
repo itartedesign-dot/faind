@@ -220,7 +220,7 @@ function pageHtml(n, related, sameCat, ctx) {
   <meta property="og:image:alt" content="${esc(title)}">
   <meta property="article:published_time" content="${iso}">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="../assets/favicon.png" type="image/png">
+  <link rel="icon" href="../assets/favicon.png?v=3" type="image/png">
   <link rel="alternate" type="application/rss+xml" title="FAIND – Notizie AI" href="../feed.xml">
   <script>(function(){var t=null;try{t=localStorage.getItem('faind-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
   <link rel="stylesheet" href="../assets/fonts/archivo.css">
@@ -229,7 +229,7 @@ function pageHtml(n, related, sameCat, ctx) {
 ${NP_CSS}
   </style>
   <link rel="manifest" href="../manifest.webmanifest">
-  <link rel="apple-touch-icon" href="../assets/icon-180.png">
+  <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
   <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>
   <script src="../stats.js" defer></script>
   <script src="../nav.js" defer></script>
