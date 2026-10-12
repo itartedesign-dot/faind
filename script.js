@@ -298,6 +298,7 @@
       // non sopra un altro riquadro aperto (installazione app) né mentre si scrive in un altro modulo
       var a = document.activeElement;
       if (!$('#drawer').hidden || !$('#appSheet').hidden || (a && /INPUT|TEXTAREA|SELECT/.test(a.tagName) && !el.contains(a))) { schedule(15e3); return; }
+      if (HOME2 && window.matchMedia && matchMedia('(min-width: 721px)').matches) { schedule(60e3); return; }   // da computer il riquadro di Faindo sta fisso nella colonna (home2.js)
       if (HOME2 && (document.documentElement.classList.contains('h2-open') || formInView())) { schedule(30e3); return; }
       shown++; open = true;
       el.hidden = false;

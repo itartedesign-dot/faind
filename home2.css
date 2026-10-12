@@ -174,3 +174,15 @@
 }
 @media (prefers-reduced-motion: reduce) { .h2app__tile, .h2app:hover .h2app__tile { transform: perspective(700px) rotateY(-8deg); } }
 .h2panel:not(.h2panel--notizie) .h2panel__body > :first-child > .block__head { border-bottom: 0; padding-bottom: 0; margin-bottom: 14px; }
+
+/* Newsletter da computer: il riquadro di Faindo (quello del popup) fisso in cima alla colonna */
+.nlpop.nlpop--fixed {
+  position: relative; z-index: auto; left: auto; top: auto; bottom: auto; width: auto; max-width: none;
+  transform: none; transition: none; border: 2px solid #0E1A33; border-radius: 22px; box-shadow: var(--shadow); padding: 28px 18px 16px;
+}
+.nlpop.nlpop--fixed::before { border-radius: 20px 20px 0 0; }
+.nlpop.nlpop--fixed .nlpop__x { display: none; }
+.nlpop.nlpop--fixed.is-typing { width: auto; }
+.nlpop.nlpop--fixed.is-typing .nlpop__img { width: 82%; }
+.nlpop.nlpop--fixed.is-typing .nlpop__input { font-size: 18px; padding: 12px 14px; }
+@media (max-width: 1120px) { .nlpop.nlpop--fixed { align-self: start; } }

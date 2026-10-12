@@ -137,16 +137,39 @@
     .forEach(function (id) { var n = document.getElementById(id); if (n) store.appendChild(n); });
 
   // Telefono: curiosità e newsletter scendono tra le anteprime, nell'ordine Strano ma vero → Approfondimenti → newsletter
-  var side = $('.side'), smv = $('#strano-ma-vero'), nl = $('#newsletter');
+  var side = $('.side'), smv = $('#strano-ma-vero'), nl = $('#newsletter'), pop = $('#nlPop');
+  // Da computer la newsletter è il riquadro di Faindo, fisso nella colonna; sul telefono resta il popup (Paolo, 12 ottobre 2026)
+  var popHome = pop ? pop.parentNode : null, popNext = pop ? pop.nextSibling : null;
+  function placePop(desktop) {
+    if (!pop || !side) return;
+    if (desktop) {
+      if (!pop.classList.contains('nlpop--fixed')) {
+        pop.classList.remove('is-in', 'is-out', 'is-drag'); pop.classList.add('nlpop--fixed');
+        pop.setAttribute('role', 'region');
+      }
+      if (nl && nl.parentNode !== store) store.appendChild(nl);
+      if (pop.parentNode !== side || side.firstElementChild !== pop) side.insertBefore(pop, side.firstChild);
+      pop.hidden = false;
+      var r = {}; try { r = JSON.parse(localStorage.getItem('faind-nlpop') || '{}') || {}; } catch (e) {}
+      if (r.done) {   // già iscritto: Faindo ringrazia invece di chiedere di nuovo
+        var f = $('#nlPopForm'), d = $('#nlPopDone'), img = $('#nlPopImg');
+        if (f) f.hidden = true; if (d) d.hidden = false; if (img && img.dataset.okSrc) img.src = img.dataset.okSrc;
+      }
+    } else if (pop.classList.contains('nlpop--fixed')) {
+      pop.classList.remove('nlpop--fixed'); pop.setAttribute('role', 'dialog'); pop.hidden = true;
+      popHome.insertBefore(pop, popNext && popNext.parentNode === popHome ? popNext : null);
+    }
+  }
   var mq = window.matchMedia ? matchMedia('(max-width: 720px)') : { matches: false };
   function place() {
     var inPanel = function (n) { return n && panel.contains(n); };
     if (mq.matches) {
+      placePop(false);
       if (smv && !inPanel(smv)) more.insertBefore(smv, more.firstChild);
       if (nl) more.appendChild(nl);
     } else {
-      if (nl) side.insertBefore(nl, side.firstChild);
-      if (smv && !inPanel(smv)) side.insertBefore(smv, nl ? nl.nextSibling : side.firstChild);
+      placePop(true);
+      if (smv && !inPanel(smv)) side.insertBefore(smv, pop ? pop.nextSibling : side.firstChild);
     }
     if (deep && !inPanel(deep) && deep.parentNode !== more) more.insertBefore(deep, mq.matches && smv && smv.parentNode === more ? smv.nextSibling : more.firstChild);
   }
