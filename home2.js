@@ -208,6 +208,17 @@
     $$('[data-h2-aria]').forEach(function (el) { el.setAttribute('aria-label', t(el.getAttribute('data-h2-aria'))); });
     if (current) ptitle.textContent = t('t_' + current);
     drawSmv();
+    setTimeout(smvLede, 0);   // dopo che script.js ha scritto il testo nella lingua scelta
+  }
+  // Curiosità: il testo di Strano ma vero diventa due righe in grassetto, centrate accanto alla foto (Paolo, 12 ottobre 2026)
+  function smvLede() {
+    var box = $('#strano-ma-vero'), src = box && $(':scope > p', box); if (!src) return;
+    var lede = $('.h2smv-lede', box);
+    if (!lede) { lede = document.createElement('p'); lede.className = 'h2smv-lede'; src.parentNode.insertBefore(lede, src.nextSibling); }
+    var txt = src.textContent.trim(), cut = txt.search(/[.!?]\s/);
+    var a = cut > 0 ? txt.slice(0, cut + 1) : txt, b = cut > 0 ? txt.slice(cut + 2) : '';
+    lede.textContent = '';
+    [a, b].forEach(function (x) { if (!x) return; var sp = document.createElement('span'); sp.textContent = x; lede.appendChild(sp); });
   }
   if (window.MutationObserver) new MutationObserver(label).observe(root, { attributes: true, attributeFilter: ['lang'] });
 
