@@ -23,7 +23,8 @@
 .h2app__lbl { font-size: 14px; font-weight: 600; line-height: 1.2; text-align: center; white-space: nowrap; color: var(--ink); }
 @media (hover: hover) { .h2app:hover .h2app__tile { transform: translateY(-2px); } }
 .h2app:active .h2app__tile { transform: scale(.96); }
-.h2app:focus-visible { outline: none; }
+.h2app:focus, .h2app:focus-visible { outline: none; }
+.h2app:focus:not(:focus-visible) .h2app__tile { outline: none; }
 .h2app:focus-visible .h2app__tile { outline: 3px solid var(--focus); outline-offset: 1px; }
 /* selezione: contorno ciano sottile attorno alla faccia del bottone. Il bottone è in prospettiva e il contorno no:
    dalla metà del lato superiore e del lato destro il contorno sfuma nello sfondo (idea di Paolo, 12 ottobre 2026) */
