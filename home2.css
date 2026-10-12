@@ -99,7 +99,7 @@
   .h2app__lbl { font-size: 13px; }
 }
 @media (max-width: 900px) {
-  .home2 #wire .wire__item:nth-child(n+6) { display: none; }      /* sul telefono una prima selezione, non l'intero archivio */
+  .home2 .h2news #wire .wire__item:nth-child(n+6) { display: none; }      /* sul telefono una prima selezione, non l'intero archivio */
   .h2more #approfondimenti .deep { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .h2more #approfondimenti .deep__card:nth-child(n+3) { display: none; }
 }

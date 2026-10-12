@@ -47,7 +47,7 @@
 
   // Le sezioni: le prime otto hanno un'icona, le altre si aprono dai richiami e dai link del menu
   var PANELS = [
-    { k: 'notizie', ids: ['importanti', 'letture', 'focus'], icon: true },
+    { k: 'notizie', ids: ['h2front', 'importanti', 'focus', 'letture'], icon: true },   // si apre su Apertura + Appena uscite (Paolo, 12 ottobre 2026)
     { k: 'video', ids: ['video'], icon: true },
     { k: 'impara', ids: ['approfondimenti'], icon: true },
     { k: 'curiosita', ids: ['h2smv'], mobileIds: ['strano-ma-vero', 'h2smv'], icon: true },   // sul telefono in testa il blocco di Strano ma vero (Paolo, 12 ottobre 2026)
@@ -64,6 +64,7 @@
 
   /* ------------------------------ Costruzione ------------------------------ */
   var support = $('.panel--support'); if (support) support.id = 'sostieni';
+  var front = $('#homeView > .front'); if (front && !front.id) front.id = 'h2front';
 
   var intro = $('.intro'), h1 = $('.intro__title');
   if (h1) h1.removeAttribute('data-i18n');          // il testo lo scrive questo file, in tutte le lingue
