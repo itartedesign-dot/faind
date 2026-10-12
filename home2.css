@@ -65,6 +65,10 @@
 .h2panel__body .tgbox__img, .h2panel__body .smv__img { display: block; max-width: 380px; }
 .h2panel__body .tgbox__btn { max-width: 380px; }
 .h2panel__body #strano-ma-vero .btn, .h2panel__body #prezzi .btn { display: inline-flex; }
+/* Curiosità sul telefono: il blocco di Strano ma vero apre la scheda e la lista segue subito; il pulsante è già in fondo alla lista */
+.h2panel--curiosita .h2panel__body > #strano-ma-vero { padding-top: 14px; }
+.h2panel--curiosita .h2panel__body > #strano-ma-vero .btn { display: none; }
+.h2panel--curiosita .h2panel__body > #strano-ma-vero + .h2smv { margin-top: 6px; border-top: 1px solid var(--rule); }
 .h2empty { color: var(--muted); padding-top: 22px; }
 
 .h2-in { animation: h2in .32s cubic-bezier(.2, .7, .2, 1); }
