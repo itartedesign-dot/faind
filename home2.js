@@ -50,7 +50,7 @@
     { k: 'notizie', ids: ['importanti', 'letture', 'focus'], icon: true },
     { k: 'video', ids: ['video'], icon: true },
     { k: 'impara', ids: ['approfondimenti'], icon: true },
-    { k: 'curiosita', ids: ['h2smv'], icon: true },
+    { k: 'curiosita', ids: ['h2smv'], mobileIds: ['strano-ma-vero', 'h2smv'], icon: true },   // sul telefono in testa il blocco di Strano ma vero (Paolo, 12 ottobre 2026)
     { k: 'prezzi', ids: ['prezzi', 'convenzioni'], icon: true },
     { k: 'lavoro', ids: ['job'], icon: true },
     { k: 'strumenti', ids: ['guide', 'trending'], icon: true },   // prima gli strumenti da usare, poi le notizie
@@ -236,7 +236,7 @@
     if (!switching) { savedY = window.scrollY; opener = from || null; }
     giveBack();
     var shown = 0;
-    p.ids.forEach(function (id) {
+    ((mq.matches && p.mobileIds) || p.ids).forEach(function (id) {
       var n = document.getElementById(id); if (!n) return;
       var ph = document.createComment('h2 ' + id);
       n.parentNode.insertBefore(ph, n); n._h2ph = ph;
