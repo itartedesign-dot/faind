@@ -435,7 +435,8 @@ async function buildWeekCard(data, t) {
    che va online con il sito; i giri seguenti dello stesso giorno, se il link è scaduto,
    riprendono la copia già online. Se manca qualcosa il post usa la grafica di sempre.
    Ogni giro stampa nel log una riga CANVA_DATI con i dati che servono alla routine. */
-const CANVA = { settimana: 'social/canva-settimana', lavori: 'social/canva-lavori', mano: 'social/canva-mano' };
+const CANVA = { settimana: 'social/canva-settimana', lavori: 'social/canva-lavori', mano: 'social/canva-mano',
+  quiz: 'social/canva-quiz', soluzione: 'social/canva-soluzione' };   // quiz e soluzione: gioco "Il punto di vista dell'AI" (vedi social/ROUTINE-QUIZ.md)
 const canvaCache = {};
 
 async function fetchPng(url) {
@@ -556,6 +557,10 @@ async function maybeJobs(data, t, card) {
 const LI_FRIDAY_FROM = 9, LI_WED_FROM = 12, LI_KEEP = 20;
 const LI_SUN_FROM = 11;   // domenica: lo short della settimana (deciso da Paolo il 10 ottobre 2026)
 const LI_SAT_FROM = 9, LI_SAT_UNTIL = 17;   // sabato: card "Scritto a mano" (esce solo se la routine Canva l'ha preparata)
+// Gioco "Il punto di vista dell'AI" (deciso da Paolo il 12 ottobre 2026): martedì il quiz, giovedì la soluzione.
+// Immagini dal file Canva di Paolo, testi scritti dalla routine di Claude; senza card non esce nulla.
+const LI_QUIZ = { Tue: ['quiz', 'liQuiz', 'punto-di-vista-ai'], Thu: ['soluzione', 'liSol', 'punto-di-vista-ai-soluzione'] };
+const LI_QUIZ_FROM = 9, LI_QUIZ_UNTIL = 17;
 // Lunedì e venerdì il post aspetta la card Canva fino a quest'ora: la routine fa 3 tentativi (8:40, 10:40, 12:40);
 // poi esce con la grafica di riserva (e linkedin.mjs manda una segnalazione per mail)
 export const LI_CANVA_WAIT_UNTIL = 15;
@@ -647,6 +652,15 @@ export function linkedinItems(data, t, rank, canva = {}, shorts = []) {
         'Il canale Telegram: https://t.me/faindnews', '', tags].join('\n') });
     st.liSat = t.day;
   }
+  // Martedì e giovedì: quiz e soluzione del gioco "Il punto di vista dell'AI" (testo della routine)
+  const qd = LI_QUIZ[t.weekday], qc = qd && canva[qd[0]];
+  if (qd && t.hour >= LI_QUIZ_FROM && t.hour < LI_QUIZ_UNTIL && st[qd[1]] !== t.day && qc && qc.testo) {
+    const utm = `utm_source=linkedin&utm_medium=social&utm_campaign=${qd[2]}&utm_content=${t.day}`;
+    const text = String(qc.testo).trim();
+    out.push({ id: qd[0] + '-' + t.day, link: `${SITE}?${utm}`, date: new Date(t.now).toISOString(), img: qc.img,
+      title: cut(text.split('\n').filter(Boolean).slice(0, 2).join(' '), 200) + ' #PuntoDiVistaAI', text });
+    st[qd[1]] = t.day;
+  }
   // Domenica: lo short di Faindo più recente della settimana
   if (t.weekday === 'Sun' && t.hour >= LI_SUN_FROM && st.liSun !== t.day) {
     const sh = weekShort(st, shorts, t.now);
@@ -682,6 +696,8 @@ async function linkedinFeed(data, t, rank) {
     if (t.weekday === 'Fri' && st.liWeek !== t.day) canva.settimana = await canvaCard('settimana', t);
     if (t.weekday === JOBS_WEEKDAY && st.liJobs !== t.day) canva.lavori = await canvaCard('lavori', t);
     if (t.weekday === 'Sat' && st.liSat !== t.day) canva.mano = await canvaCard('mano', t);
+    const qd = LI_QUIZ[t.weekday];
+    if (qd && st[qd[1]] !== t.day) canva[qd[0]] = await canvaCard(qd[0], t);
     let shorts = [];
     if (t.weekday === 'Sun' && st.liSun !== t.day) try { shorts = JSON.parse(await readFile(path.join(ROOT, 'social/shorts.json'), 'utf8')).coda || []; } catch {}
     const fresh = linkedinItems(data, t, rank, canva, shorts);
@@ -732,6 +748,7 @@ async function main() {
   if (t.weekday === 'Fri') await canvaCard('settimana', t);
   if (t.weekday === JOBS_WEEKDAY) await canvaCard('lavori', t);
   if (t.weekday === 'Sat') await canvaCard('mano', t);
+  if (LI_QUIZ[t.weekday]) await canvaCard(LI_QUIZ[t.weekday][0], t);
   // Card del venerdì: si rigenera dopo il feed, così il post usa quella già online
   await buildWeekCard(data, t);
 
