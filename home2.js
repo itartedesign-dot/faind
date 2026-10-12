@@ -25,22 +25,22 @@
     it: { intro: "Le notizie sull'intelligenza artificiale, aggiornate ogni ora da fonti italiane e internazionali. E poi video, glossario, approfondimenti e curiosità.",
       nav: 'Le sezioni di FAIND', close: 'Chiudi', all: 'Tutte le notizie', empty: 'Al momento non ci sono contenuti in questa sezione.',
       notizie: 'Notizie', video: 'Video', impara: "Impara l'AI", curiosita: 'Curiosità', prezzi: 'Prezzi', lavoro: 'Lavoro', strumenti: 'Strumenti', telegram: 'Telegram',
-      contatti: 'Contatti', sostieni: 'Sostieni FAIND', feed: 'Feed RSS', more: 'Leggi tutto', less: 'Mostra meno', gloss: 'Glossario →',
+      contatti: 'Contatti', sostieni: 'Sostieni FAIND', feed: 'Feed RSS', change: 'Cambia sezione', smvAll: 'Tutte le curiosità', source: 'Fonte', more: 'Leggi tutto', less: 'Mostra meno', gloss: 'Glossario →',
       t_notizie: 'Tutte le notizie', t_video: "L'AI in video", t_impara: "Impara l'AI", t_curiosita: 'Curiosità', t_prezzi: 'Prezzi e offerte', t_lavoro: "Lavoro nell'AI", t_strumenti: 'Strumenti e guide', t_telegram: 'FAIND su Telegram', t_contatti: 'Scrivici', t_sostieni: 'Sostieni FAIND', t_feed: 'Feed RSS' },
     en: { intro: 'Artificial intelligence news, updated every hour from Italian and international sources. Plus videos, a glossary, in-depth articles and fun facts.',
       nav: 'FAIND sections', close: 'Close', all: 'All news', empty: 'Nothing in this section right now.',
       notizie: 'News', video: 'Video', impara: 'Learn AI', curiosita: 'Fun facts', prezzi: 'Prices', lavoro: 'Jobs', strumenti: 'Tools', telegram: 'Telegram',
-      contatti: 'Contact', sostieni: 'Support FAIND', feed: 'RSS feeds', more: 'Read more', less: 'Show less', gloss: 'Glossary →',
+      contatti: 'Contact', sostieni: 'Support FAIND', feed: 'RSS feeds', change: 'Change section', smvAll: 'All the fun facts', source: 'Source', more: 'Read more', less: 'Show less', gloss: 'Glossary →',
       t_notizie: 'All news', t_video: 'AI on video', t_impara: 'Learn AI', t_curiosita: 'Fun facts', t_prezzi: 'Prices and deals', t_lavoro: 'AI jobs', t_strumenti: 'Tools and guides', t_telegram: 'FAIND on Telegram', t_contatti: 'Contact us', t_sostieni: 'Support FAIND', t_feed: 'RSS feeds' },
     fr: { intro: "L'actualité de l'intelligence artificielle, mise à jour chaque heure à partir de sources italiennes et internationales. Et aussi des vidéos, un glossaire, des dossiers et des curiosités.",
       nav: 'Les rubriques de FAIND', close: 'Fermer', all: 'Toutes les actus', empty: 'Rien dans cette rubrique pour le moment.',
       notizie: 'Actus', video: 'Vidéo', impara: "Apprendre l'IA", curiosita: 'Curiosités', prezzi: 'Prix', lavoro: 'Emploi', strumenti: 'Outils', telegram: 'Telegram',
-      contatti: 'Contact', sostieni: 'Soutenir FAIND', feed: 'Flux RSS', more: 'Lire la suite', less: 'Réduire', gloss: 'Glossaire →',
+      contatti: 'Contact', sostieni: 'Soutenir FAIND', feed: 'Flux RSS', change: 'Changer de rubrique', smvAll: 'Toutes les curiosités', source: 'Source', more: 'Lire la suite', less: 'Réduire', gloss: 'Glossaire →',
       t_notizie: 'Toutes les actus', t_video: "L'IA en vidéo", t_impara: "Apprendre l'IA", t_curiosita: 'Curiosités', t_prezzi: 'Prix et offres', t_lavoro: "Emplois dans l'IA", t_strumenti: 'Outils et guides', t_telegram: 'FAIND sur Telegram', t_contatti: 'Écrivez-nous', t_sostieni: 'Soutenir FAIND', t_feed: 'Flux RSS' },
     de: { intro: 'Nachrichten über künstliche Intelligenz, stündlich aktualisiert aus italienischen und internationalen Quellen. Dazu Videos, ein Glossar, Hintergründe und Kurioses.',
       nav: 'Die Bereiche von FAIND', close: 'Schließen', all: 'Alle Nachrichten', empty: 'In diesem Bereich gibt es gerade nichts.',
       notizie: 'News', video: 'Video', impara: 'KI lernen', curiosita: 'Kurioses', prezzi: 'Preise', lavoro: 'Jobs', strumenti: 'Tools', telegram: 'Telegram',
-      contatti: 'Kontakt', sostieni: 'FAIND unterstützen', feed: 'RSS-Feeds', more: 'Weiterlesen', less: 'Weniger', gloss: 'Glossar →',
+      contatti: 'Kontakt', sostieni: 'FAIND unterstützen', feed: 'RSS-Feeds', change: 'Bereich wechseln', smvAll: 'Alle Kuriositäten', source: 'Quelle', more: 'Weiterlesen', less: 'Weniger', gloss: 'Glossar →',
       t_notizie: 'Alle Nachrichten', t_video: 'KI im Video', t_impara: 'KI lernen', t_curiosita: 'Kurioses', t_prezzi: 'Preise und Angebote', t_lavoro: 'KI-Jobs', t_strumenti: 'Tools und Anleitungen', t_telegram: 'FAIND auf Telegram', t_contatti: 'Schreib uns', t_sostieni: 'FAIND unterstützen', t_feed: 'RSS-Feeds' }
   };
   function t(k) { var l = (root.lang || 'it').slice(0, 2); return (L[l] && L[l][k]) || L.it[k] || k; }
@@ -50,10 +50,10 @@
     { k: 'notizie', ids: ['importanti', 'letture', 'focus'], icon: true },
     { k: 'video', ids: ['video'], icon: true },
     { k: 'impara', ids: ['approfondimenti'], icon: true },
-    { k: 'curiosita', ids: ['strano-ma-vero'], icon: true },
+    { k: 'curiosita', ids: ['h2smv'], icon: true },
     { k: 'prezzi', ids: ['prezzi', 'convenzioni'], icon: true },
     { k: 'lavoro', ids: ['job'], icon: true },
-    { k: 'strumenti', ids: ['trending', 'guide'], icon: true },
+    { k: 'strumenti', ids: ['guide', 'trending'], icon: true },   // prima gli strumenti da usare, poi le notizie
     { k: 'telegram', ids: ['telegram'], icon: true },
     { k: 'contatti', ids: ['contatti'] },
     { k: 'sostieni', ids: ['sostieni'] },
@@ -92,10 +92,29 @@
   panel.className = 'h2panel'; panel.id = 'h2panel'; panel.hidden = true;
   panel.setAttribute('aria-labelledby', 'h2panelTitle');
   panel.innerHTML = '<div class="h2panel__head"><h2 class="h2panel__title" id="h2panelTitle" tabindex="-1"></h2>' +
+    '<button type="button" class="h2panel__change" data-h2-aria="change"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg><span data-h2="change"></span></button>' +
     '<button type="button" class="h2panel__x" data-h2-aria="close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
     '<div class="h2panel__body"></div>';
   stage.appendChild(panel);
-  var body = $('.h2panel__body', panel), ptitle = $('#h2panelTitle'), xBtn = $('.h2panel__x', panel);
+  var body = $('.h2panel__body', panel), ptitle = $('#h2panelTitle'), xBtn = $('.h2panel__x', panel), changeBtn = $('.h2panel__change', panel);
+
+  // Curiosità: le storie dell'ultima edizione di Strano ma vero (strano-ma-vero/ultime.json, scritto da scripts/strano.mjs)
+  var smvList = document.createElement('section'); smvList.id = 'h2smv'; smvList.className = 'h2smv';
+  var smvData = null;
+  function drawSmv() {
+    var l = (root.lang || 'it').slice(0, 2), d = smvData && (smvData[l] || smvData.it);
+    var esc = function (x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+    var fallback = $('#strano-ma-vero .btn');
+    var allHref = d ? d.url : (fallback ? fallback.getAttribute('href') : 'strano-ma-vero/');
+    smvList.innerHTML = (d ? '<ol class="h2smv__list">' + d.items.slice(0, 3).map(function (it) {
+      return '<li class="h2smv__item"><h3 class="h2smv__h"><a href="' + esc(it.url) + '">' + esc(it.h) + '</a></h3>' +
+        '<p class="h2smv__p">' + esc(it.p) + '</p><p class="h2smv__src">' + esc(t('source')) + ': <strong>' + esc(it.src) + '</strong></p></li>';
+    }).join('') + '</ol>' : '') +
+      '<a class="btn btn--primary h2smv__all" href="' + esc(allHref) + '">' + esc(t('smvAll')) + ' →</a>';
+  }
+  drawSmv();
+  if (window.fetch) fetch('strano-ma-vero/ultime.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) { if (j) { smvData = j; drawSmv(); } }).catch(function () {});
 
   // Sotto il pannello: le anteprime che restano sempre (sul computer curiosità e newsletter stanno nella colonna)
   var more = document.createElement('div'); more.className = 'h2more';
@@ -113,20 +132,44 @@
   // Le sezioni che non sono in vista finché non si aprono: restano nella pagina, nascoste
   var store = document.createElement('div'); store.id = 'h2store'; store.hidden = true;
   $('main').appendChild(store);
+  store.appendChild(smvList);
   ['importanti', 'letture', 'focus', 'video', 'trending', 'job', 'guide', 'telegram', 'prezzi', 'convenzioni', 'feed', 'sostieni', 'contatti']
     .forEach(function (id) { var n = document.getElementById(id); if (n) store.appendChild(n); });
 
   // Telefono: curiosità e newsletter scendono tra le anteprime, nell'ordine Strano ma vero → Approfondimenti → newsletter
-  var side = $('.side'), smv = $('#strano-ma-vero'), nl = $('#newsletter');
+  var side = $('.side'), smv = $('#strano-ma-vero'), nl = $('#newsletter'), pop = $('#nlPop');
+  // Da computer la newsletter è il riquadro di Faindo, fisso nella colonna; sul telefono resta il popup (Paolo, 12 ottobre 2026)
+  var popHome = pop ? pop.parentNode : null, popNext = pop ? pop.nextSibling : null;
+  function placePop(desktop) {
+    if (!pop || !side) return;
+    if (desktop) {
+      if (!pop.classList.contains('nlpop--fixed')) {
+        pop.classList.remove('is-in', 'is-out', 'is-drag'); pop.classList.add('nlpop--fixed');
+        pop.setAttribute('role', 'region');
+      }
+      if (nl && nl.parentNode !== store) store.appendChild(nl);
+      if (pop.parentNode !== side || side.firstElementChild !== pop) side.insertBefore(pop, side.firstChild);
+      pop.hidden = false;
+      var r = {}; try { r = JSON.parse(localStorage.getItem('faind-nlpop') || '{}') || {}; } catch (e) {}
+      if (r.done) {   // già iscritto: Faindo ringrazia invece di chiedere di nuovo
+        var f = $('#nlPopForm'), d = $('#nlPopDone'), img = $('#nlPopImg');
+        if (f) f.hidden = true; if (d) d.hidden = false; if (img && img.dataset.okSrc) img.src = img.dataset.okSrc;
+      }
+    } else if (pop.classList.contains('nlpop--fixed')) {
+      pop.classList.remove('nlpop--fixed'); pop.setAttribute('role', 'dialog'); pop.hidden = true;
+      popHome.insertBefore(pop, popNext && popNext.parentNode === popHome ? popNext : null);
+    }
+  }
   var mq = window.matchMedia ? matchMedia('(max-width: 720px)') : { matches: false };
   function place() {
     var inPanel = function (n) { return n && panel.contains(n); };
     if (mq.matches) {
+      placePop(false);
       if (smv && !inPanel(smv)) more.insertBefore(smv, more.firstChild);
       if (nl) more.appendChild(nl);
     } else {
-      if (nl) side.insertBefore(nl, side.firstChild);
-      if (smv && !inPanel(smv)) side.insertBefore(smv, nl ? nl.nextSibling : side.firstChild);
+      placePop(true);
+      if (smv && !inPanel(smv)) side.insertBefore(smv, pop ? pop.nextSibling : side.firstChild);
     }
     if (deep && !inPanel(deep) && deep.parentNode !== more) more.insertBefore(deep, mq.matches && smv && smv.parentNode === more ? smv.nextSibling : more.firstChild);
   }
@@ -159,6 +202,7 @@
     $$('[data-h2]').forEach(function (el) { el.textContent = t(el.getAttribute('data-h2')); });
     $$('[data-h2-aria]').forEach(function (el) { el.setAttribute('aria-label', t(el.getAttribute('data-h2-aria'))); });
     if (current) ptitle.textContent = t('t_' + current);
+    drawSmv();
   }
   if (window.MutationObserver) new MutationObserver(label).observe(root, { attributes: true, attributeFilter: ['lang'] });
 
@@ -203,6 +247,7 @@
     if (!shown) { empty = document.createElement('p'); empty.className = 'h2empty'; empty.textContent = t('empty'); body.appendChild(empty); }
     current = k;
     ptitle.textContent = t('t_' + k);
+    panel.className = 'h2panel h2panel--' + k;
     news.hidden = true; panel.hidden = false;
     root.classList.add('h2-open');
     pressed(); place(); play(panel);
@@ -225,9 +270,11 @@
       if (pushed) { pushed = false; history.back(); }
       else history.replaceState(null, '', location.pathname + location.search);
     } else pushed = false;
-    // si torna al punto in cui si stava leggendo
+    // si torna alla fila di icone e all'inizio delle notizie (o resta più in alto, se si era lì)
     var root2 = document.documentElement, prev = root2.style.scrollBehavior;
-    root2.style.scrollBehavior = 'auto'; window.scrollTo(0, savedY); root2.style.scrollBehavior = prev;
+    root2.style.scrollBehavior = 'auto';
+    window.scrollTo(0, Math.max(0, Math.min(savedY, apps.getBoundingClientRect().top + window.scrollY - headerH() - 8)));
+    root2.style.scrollBehavior = prev;
     if (opener && document.body.contains(opener)) { try { opener.focus({ preventScroll: true }); } catch (e) {} }
     opener = null;
   }
@@ -239,6 +286,16 @@
   });
   allBtn.addEventListener('click', function () { open('notizie', allBtn); });
   xBtn.addEventListener('click', function () { close(); });
+  // "Cambia sezione" compare solo quando la fila di icone è uscita dallo schermo
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { panel.classList.toggle('h2-apps-away', !en[0].isIntersecting); },
+      { rootMargin: '-' + Math.round(headerH()) + 'px 0px 0px 0px' }).observe(apps);
+  } else panel.classList.add('h2-apps-away');
+  changeBtn.addEventListener('click', function () {
+    var top = apps.getBoundingClientRect().top + window.scrollY - headerH() - 8;
+    window.scrollTo({ top: Math.max(0, top), behavior: reduce ? 'auto' : 'smooth' });
+    var b = $('.h2app[aria-pressed="true"]') || $('.h2app'); if (b) { try { b.focus({ preventScroll: true }); } catch (e) {} }
+  });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && current && !$('#appSheet:not([hidden])') && !$('#drawer:not([hidden])')) close(); });
 
   // I link interni (menu, piè di pagina, richiami) aprono il pannello giusto invece di scorrere la pagina

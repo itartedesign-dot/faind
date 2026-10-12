@@ -38,20 +38,23 @@
       try { t = localStorage.getItem('faind-theme'); } catch (e) {}
       if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', t);
-      // Home a icone in prova: faind.org/?home=nuova la accende, ?home=classica torna alla home di sempre (home2.js)
+      // Home a icone per tutti dal 12 ottobre 2026 (home2.js). Piano B: faind.org/?home=classica riporta la home di prima
+      // e il dispositivo se lo ricorda; ?home=nuova torna alla home a icone.
+      var h2on = true;
       try {
         var hv = new URLSearchParams(location.search).get('home');
-        if (hv === 'nuova') localStorage.setItem('faind-home', 'nuova');
-        else if (hv === 'classica') localStorage.removeItem('faind-home');
-        if (localStorage.getItem('faind-home') === 'nuova') document.documentElement.classList.add('home2');
+        if (hv === 'classica') localStorage.setItem('faind-home', 'classica');
+        else if (hv === 'nuova') localStorage.removeItem('faind-home');
+        if (localStorage.getItem('faind-home') === 'classica') h2on = false;
       } catch (e) {}
+      if (h2on) document.documentElement.classList.add('home2');
     })();
   </script>
 
   <!-- Caratteri serviti da FAIND (nessun contatto con Google Fonts) -->
   <link rel="stylesheet" href="assets/fonts/archivo.css">
   <link rel="stylesheet" href="style.css?v=20261011c">
-  <link rel="stylesheet" href="home2.css?v=20261012a">
+  <link rel="stylesheet" href="home2.css?v=20261012c">
 
   <!-- App sul telefono: "Aggiungi alla schermata Home" -->
   <link rel="manifest" href="manifest.webmanifest">
@@ -678,9 +681,9 @@ in un solo posto.</span>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="data.js?v=20261011a" defer></script>
-  <script src="script.js?v=20261012a" defer></script>
+  <script src="script.js?v=20261012c" defer></script>
   <script src="nav.js?v=20261011a" defer></script>
-  <script src="home2.js?v=20261012a" defer></script>
+  <script src="home2.js?v=20261012c" defer></script>
   <!-- Popup newsletter: entra da sinistra dopo 1 minuto, una seconda volta 3 minuti dopo la chiusura, poi pausa di 7 giorni (script.js → nlPopup) -->
   <aside class="nlpop" id="nlPop" role="dialog" aria-modal="false" aria-labelledby="nlPopTitle" hidden>
     <button type="button" class="nlpop__x" id="nlPopClose" data-i18n-aria="nlp.close" aria-label="Chiudi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>

@@ -256,7 +256,7 @@ function page(ed, lang, asIndex) {
       citation: ed.sources },
     { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'FAIND', item: SITE }, { '@type': 'ListItem', position: 2, name: u.name, item: SITE + STRANO_DIR[lang] }, { '@type': 'ListItem', position: 3, name: date, item: url }] }
   ] };
-  const items = x.items.map((it, i) => `    <section class="smv__item">
+  const items = x.items.map((it, i) => `    <section class="smv__item" id="c${i + 1}">
       <h2><span class="smv__n" aria-hidden="true">${i + 1}</span><span>${esc(it.h)}</span></h2>
 ${it.p.map(p => `      <p>${esc(p)}</p>`).join('\n')}
       <p class="smv__src">${u.source}: <a href="${esc(ed.sources[i])}" target="_blank" rel="noopener noreferrer">${esc(it.src)}</a></p>
@@ -370,6 +370,12 @@ export async function buildStrano(root) {
       urls.push([`${SITE}${STRANO_DIR[lang]}${ed.date}.html`, ed.date]);
     }
   }
+  // Le curiosità dell'ultima edizione, per il pannello "Curiosità" della home a icone (home2.js)
+  const ed = EDITIONS[0], latest = { date: ed.date };
+  for (const lang of LANGS) {
+    latest[lang] = { url: STRANO_DIR[lang], items: ed[lang].items.map((it, i) => ({ h: it.h, p: it.p[0] || '', src: it.src, url: `${STRANO_DIR[lang]}#c${i + 1}` })) };
+  }
+  await writeFile(path.join(root, 'strano-ma-vero', 'ultime.json'), JSON.stringify(latest));
   try {
     const file = path.join(root, 'sitemap.xml');
     const xml = await readFile(file, 'utf8');
