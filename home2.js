@@ -79,7 +79,7 @@
     nav.appendChild(track);
     nav.classList.add('h2apps--loop');
 
-    var first = true, setW = 0, step = 0, pos = 0, vel = 0, raf = 0, last = 0, tick = null, lastBuzz = 0, touchy = false;
+    var first = true, base = 0, setW = 0, step = 0, pos = 0, vel = 0, raf = 0, last = 0, tick = null, lastBuzz = 0, touchy = false;
     function measure() {
       var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
       if (matchMedia('(min-width: 721px)').matches) {
@@ -92,6 +92,7 @@
         first = false;
         var ref = nav.previousElementSibling;
         if (ref) pos = -Math.max(0, ref.getBoundingClientRect().left - nav.getBoundingClientRect().left);
+        base = pos;
       }
       draw();
     }
@@ -116,22 +117,29 @@
       }
       sw.click();
     }
+    // Slancio come una ruota: dopo il rilascio la fila continua alla velocità del dito e rallenta piano
+    // (attrito simile allo scorrimento di iPhone), poi si ferma con un'icona allineata, come una roulette
+    function target() { return base + Math.round((pos - base) / step) * step; }
     function glide(t) {
-      var dt = last ? Math.min(48, t - last) : 16; last = t;
-      pos += vel * dt; vel *= Math.pow(0.994, dt);
+      var dt = last ? Math.min(40, t - last) : 16; last = t;
+      if (Math.abs(vel) > 0.18) { pos += vel * dt; vel *= Math.pow(0.9975, dt); }
+      else {   // ultimo tratto: si posa sull'icona più vicina
+        vel = 0;
+        var d = target() - pos; pos += d * Math.min(1, dt * 0.012);
+        if (Math.abs(d) < 0.4) { pos = target(); draw(); raf = 0; last = 0; touchy = false; return; }
+      }
       draw();
-      if (Math.abs(vel) > 0.02) raf = requestAnimationFrame(glide);
-      else { raf = 0; last = 0; vel = 0; touchy = false; }
+      raf = requestAnimationFrame(glide);
     }
     function stop() { if (raf) cancelAnimationFrame(raf); raf = 0; last = 0; vel = 0; }
 
-    // Trascinamento: in verticale la pagina scorre come sempre, in orizzontale gira la fila
-    var down = null, dragging = false, moved = false, hist = [];
+    // Trascinamento: in verticale la pagina scorre come sempre, in orizzontale la fila segue il dito 1:1
+    var down = null, dragging = false, moved = false, hist = [], pend = 0, wheelT = 0;
     nav.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       stop();
       down = { x: e.clientX, y: e.clientY, id: e.pointerId, p: pos, touch: e.pointerType !== 'mouse' };
-      dragging = false; moved = false; hist = [{ x: e.clientX, t: e.timeStamp }];
+      dragging = false; moved = false; hist = [];
     });
     nav.addEventListener('pointermove', function (e) {
       if (!down || e.pointerId !== down.id) return;
@@ -139,24 +147,33 @@
       if (!dragging) {
         if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) { if (Math.abs(dy) > 10) down = null; return; }
         dragging = true; moved = true; touchy = down.touch; nav.classList.add('is-rolling');
+        down.x = e.clientX; down.p = pos; dx = 0;   // si parte da dove è il dito, senza scatto iniziale
         try { nav.setPointerCapture(e.pointerId); } catch (er) {}
       }
-      pos = down.p - dx; draw();
-      hist.push({ x: e.clientX, t: e.timeStamp }); if (hist.length > 6) hist.shift();
+      // tutti i punti toccati (anche quelli raggruppati dal browser) per misurare bene la velocità
+      var evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+      (evs.length ? evs : [e]).forEach(function (c) { hist.push({ x: c.clientX, t: c.timeStamp || e.timeStamp }); });
+      var now = e.timeStamp; while (hist.length > 2 && now - hist[0].t > 100) hist.shift();
+      pos = down.p - dx;
+      if (!pend) pend = requestAnimationFrame(function () { pend = 0; draw(); });
     });
     function up(e) {
       if (!down || (e && e.pointerId !== down.id)) return;
       down = null; nav.classList.remove('is-rolling');
       if (!dragging) return;
       dragging = false;
-      var a = hist[0], b = hist[hist.length - 1], dt = b.t - a.t;
-      vel = dt > 0 && dt < 160 ? -(b.x - a.x) / dt : 0;
-      vel = Math.max(-4, Math.min(4, vel));
-      if (Math.abs(vel) > 0.05) raf = requestAnimationFrame(glide); else touchy = false;
+      if (pend) { cancelAnimationFrame(pend); pend = 0; draw(); }
+      // velocità degli ultimi 100 ms; se il dito si era fermato prima di alzarsi, niente slancio
+      var t = e && e.timeStamp ? e.timeStamp : performance.now(), b = hist[hist.length - 1], a = hist[0];
+      vel = 0;
+      if (b && a && t - b.t < 70 && b.t > a.t) vel = -(b.x - a.x) / (b.t - a.t);
+      vel = Math.max(-7, Math.min(7, vel));
+      raf = requestAnimationFrame(glide);
     }
     nav.addEventListener('pointerup', up);
     nav.addEventListener('pointercancel', up);
-    nav.addEventListener('lostpointercapture', up);
+    // (la cattura passa dal bottone toccato alla fila: quella perdita non è un rilascio)
+    nav.addEventListener('lostpointercapture', function (e) { if (e.target === nav) up(e); });
     // dopo un trascinamento il rilascio non apre la sezione sotto il dito
     nav.addEventListener('click', function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
     nav.addEventListener('dragstart', function (e) { e.preventDefault(); });
@@ -164,6 +181,7 @@
     nav.addEventListener('wheel', function (e) {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault(); stop(); pos += e.deltaX; draw();
+      clearTimeout(wheelT); wheelT = setTimeout(function () { raf = requestAnimationFrame(glide); }, 140);
     }, { passive: false });
     // tastiera: l'icona che prende il fuoco entra in vista
     nav.addEventListener('focusin', function (e) {
