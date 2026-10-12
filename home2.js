@@ -63,6 +63,120 @@
   var byKey = {}, alias = {};
   PANELS.forEach(function (p) { byKey[p.k] = p; alias[p.k] = p.k; p.ids.forEach(function (id) { alias[id] = p.k; }); });
 
+  /* ------------------------------ Fila di icone in loop ------------------------------
+     La fila sta ferma e gira solo quando la si rolla (col dito, trascinando col mouse o col trackpad),
+     in loop continuo senza inizio né fine: le icone sono ripetute tre volte e la posizione ricomincia
+     da capo a ogni giro. Su telefono e tablet ogni icona che passa dà un piccolo colpo di vibrazione,
+     come i selettori di data (Paolo, 12 ottobre 2026). */
+  function roll(nav) {
+    var orig = $$('.h2app', nav), n = orig.length; if (!n) return;
+    var track = document.createElement('div'); track.className = 'h2apps__track';
+    for (var c = 0; c < 3; c++) orig.forEach(function (b) {
+      var x = c === 1 ? b : b.cloneNode(true);
+      if (c !== 1) { x.setAttribute('tabindex', '-1'); x.setAttribute('aria-hidden', 'true'); x.removeAttribute('aria-controls'); }
+      track.appendChild(x);
+    });
+    nav.appendChild(track);
+    nav.classList.add('h2apps--loop');
+
+    var first = true, setW = 0, step = 0, pos = 0, vel = 0, raf = 0, last = 0, tick = null, lastBuzz = 0, touchy = false;
+    function measure() {
+      var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      if (matchMedia('(min-width: 721px)').matches) {
+        // da tablet e computer le nove icone riempiono la riga come prima: a riposo si vedono tutte, una volta sola
+        nav.style.setProperty('--h2w', Math.max(64, (nav.clientWidth - gap * (n - 1)) / n) + 'px');
+      } else nav.style.removeProperty('--h2w');
+      var k = track.children;
+      setW = k[n].offsetLeft - k[0].offsetLeft; step = setW / n;
+      if (first && setW) {   // sul telefono la prima icona parte allineata al testo sopra, non attaccata al bordo
+        first = false;
+        var ref = nav.previousElementSibling;
+        if (ref) pos = -Math.max(0, ref.getBoundingClientRect().left - nav.getBoundingClientRect().left);
+      }
+      draw();
+    }
+    function draw() {
+      if (!setW) return;
+      pos = ((pos % setW) + setW) % setW;
+      track.style.transform = 'translate3d(' + (-(setW + pos)) + 'px,0,0)';
+      var i = Math.floor((pos + step / 2) / step);
+      if (tick !== null && i !== tick && touchy) buzz();
+      tick = i;
+    }
+    // Vibrazione: Android usa navigator.vibrate; su iPhone (Safari 18 e successivi) l'unico modo è un interruttore
+    // nascosto, che fa il suo piccolo scatto quando lo si tocca
+    var sw = null;
+    function buzz() {
+      var now = Date.now(); if (now - lastBuzz < 35) return; lastBuzz = now;
+      if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} return; }
+      if (!sw) {
+        sw = document.createElement('label'); sw.className = 'h2buzz'; sw.setAttribute('aria-hidden', 'true');
+        sw.innerHTML = '<input type="checkbox" switch tabindex="-1">';
+        document.body.appendChild(sw);
+      }
+      sw.click();
+    }
+    function glide(t) {
+      var dt = last ? Math.min(48, t - last) : 16; last = t;
+      pos += vel * dt; vel *= Math.pow(0.994, dt);
+      draw();
+      if (Math.abs(vel) > 0.02) raf = requestAnimationFrame(glide);
+      else { raf = 0; last = 0; vel = 0; touchy = false; }
+    }
+    function stop() { if (raf) cancelAnimationFrame(raf); raf = 0; last = 0; vel = 0; }
+
+    // Trascinamento: in verticale la pagina scorre come sempre, in orizzontale gira la fila
+    var down = null, dragging = false, moved = false, hist = [];
+    nav.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      stop();
+      down = { x: e.clientX, y: e.clientY, id: e.pointerId, p: pos, touch: e.pointerType !== 'mouse' };
+      dragging = false; moved = false; hist = [{ x: e.clientX, t: e.timeStamp }];
+    });
+    nav.addEventListener('pointermove', function (e) {
+      if (!down || e.pointerId !== down.id) return;
+      var dx = e.clientX - down.x, dy = e.clientY - down.y;
+      if (!dragging) {
+        if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) { if (Math.abs(dy) > 10) down = null; return; }
+        dragging = true; moved = true; touchy = down.touch; nav.classList.add('is-rolling');
+        try { nav.setPointerCapture(e.pointerId); } catch (er) {}
+      }
+      pos = down.p - dx; draw();
+      hist.push({ x: e.clientX, t: e.timeStamp }); if (hist.length > 6) hist.shift();
+    });
+    function up(e) {
+      if (!down || (e && e.pointerId !== down.id)) return;
+      down = null; nav.classList.remove('is-rolling');
+      if (!dragging) return;
+      dragging = false;
+      var a = hist[0], b = hist[hist.length - 1], dt = b.t - a.t;
+      vel = dt > 0 && dt < 160 ? -(b.x - a.x) / dt : 0;
+      vel = Math.max(-4, Math.min(4, vel));
+      if (Math.abs(vel) > 0.05) raf = requestAnimationFrame(glide); else touchy = false;
+    }
+    nav.addEventListener('pointerup', up);
+    nav.addEventListener('pointercancel', up);
+    nav.addEventListener('lostpointercapture', up);
+    // dopo un trascinamento il rilascio non apre la sezione sotto il dito
+    nav.addEventListener('click', function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+    nav.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    // trackpad: lo scorrimento orizzontale gira la fila, quello verticale resta alla pagina
+    nav.addEventListener('wheel', function (e) {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault(); stop(); pos += e.deltaX; draw();
+    }, { passive: false });
+    // tastiera: l'icona che prende il fuoco entra in vista
+    nav.addEventListener('focusin', function (e) {
+      var b = e.target.closest('.h2app'); if (!b) return;
+      var x = b.offsetLeft - setW - pos, w = b.offsetWidth;
+      if (x < 0) pos += x - 4; else if (x + w > nav.clientWidth) pos += x + w - nav.clientWidth + 4;
+      nav.scrollLeft = 0; draw();
+    });
+    window.addEventListener('resize', measure);
+    if (window.ResizeObserver) new ResizeObserver(measure).observe(nav);
+    measure();
+  }
+
   /* ------------------------------ Costruzione ------------------------------ */
   var support = $('.panel--support'); if (support) support.id = 'sostieni';
   var front = $('#homeView > .front'); if (front && !front.id) front.id = 'h2front';
@@ -78,6 +192,7 @@
       '<span class="h2app__lbl" data-h2="' + p.k + '"></span></button>';
   }).join('');
   intro.parentNode.insertBefore(apps, intro.nextSibling);
+  roll(apps);
 
   // Lo spazio che cambia: le notizie oppure il pannello della sezione scelta
   var stage = document.createElement('div'); stage.className = 'h2stage'; stage.id = 'h2stage';

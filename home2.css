@@ -36,6 +36,17 @@
 }
 .h2app[aria-pressed="true"] .h2app__lbl { color: var(--link); font-weight: 700; }
 
+/* Fila in loop (home2.js → roll): la fila resta ferma e gira solo quando la si rolla, senza inizio né fine */
+.h2apps.h2apps--loop {
+  display: block; overflow: hidden; position: relative; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none;
+  padding: 4px 0 6px; margin-top: 0;
+}
+.h2apps--loop.is-rolling { cursor: grabbing; }
+.h2apps__track { display: flex; gap: 14px; width: max-content; will-change: transform; }
+.h2apps--loop .h2app { flex: 0 0 var(--h2w, 104px); width: var(--h2w, 104px); }
+.h2apps--loop.is-rolling .h2app__tile { transform: none; transition: none; }
+.h2buzz { position: fixed; left: -200px; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden; }
+
 /* ------------------------------ Spazio che cambia ------------------------------ */
 .h2news[hidden], .h2panel[hidden] { display: none; }
 .h2all { display: flex; margin: 22px auto 0; }
@@ -106,6 +117,7 @@
 /* ------------------------------ Tablet e telefono ------------------------------ */
 @media (max-width: 1120px) {
   .h2apps { gap: 10px; }
+  .h2apps__track { gap: 10px; }
   .h2app__lbl { font-size: 13px; }
 }
 @media (max-width: 900px) {
@@ -124,6 +136,12 @@
   }
   .h2apps::-webkit-scrollbar { display: none; }
   .h2app { flex: 0 0 72px; scroll-snap-align: start; }
+  /* in loop: la fila va da bordo a bordo dello schermo e sfuma appena ai lati */
+  .h2apps.h2apps--loop { overflow: hidden; padding: 4px 0 6px; margin: 2px calc(var(--gutter) * -1) 14px;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%); }
+  .h2apps__track { gap: 12px; }
+  .h2apps--loop .h2app { flex: 0 0 72px; width: 72px; }
   .h2app__lbl { font-size: 12.5px; }
   .h2panel { margin-inline: calc(var(--gutter) * -1 + 6px); }
   .h2panel__body { padding: 0 16px 22px; }
