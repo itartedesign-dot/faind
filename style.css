@@ -951,7 +951,20 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 .sources__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .sources__item { position: relative; }
 .sources__item + .sources__item::before { content: ""; position: absolute; left: 0; top: 30%; bottom: 30%; width: 1px; background: rgba(255, 255, 255, .22); }
-.sources__link { display: flex; align-items: center; justify-content: center; height: 112px; padding: 0 18px; }
+.sources__link { display: flex; align-items: center; justify-content: center; height: 112px; padding: 0 18px; position: relative; }
+/* Puntino che passa da un logo all'altro: compare in 1s, svanisce piano, poi tocca al logo successivo (6 loghi x 2,5s) */
+.sources__link::after { content: ""; position: absolute; left: 50%; bottom: 24px; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px 2px rgba(255, 255, 255, .45); opacity: 0; animation: sources-dot 15s linear infinite; pointer-events: none; }
+.sources__item:nth-child(2) .sources__link::after { animation-delay: 2.5s; }
+.sources__item:nth-child(3) .sources__link::after { animation-delay: 5s; }
+.sources__item:nth-child(4) .sources__link::after { animation-delay: 7.5s; }
+.sources__item:nth-child(5) .sources__link::after { animation-delay: 10s; }
+.sources__item:nth-child(6) .sources__link::after { animation-delay: 12.5s; }
+@keyframes sources-dot {
+  0% { opacity: 0; transform: scale(.4); animation-timing-function: ease-out; }
+  6.667% { opacity: 1; transform: scale(1); animation-timing-function: ease-in-out; }
+  18% { opacity: 0; transform: scale(1); }
+  100% { opacity: 0; }
+}
 .sources__logo { display: block; width: auto; max-width: 100%; opacity: .9; -webkit-mask-image: linear-gradient(to bottom, #000 40%, rgba(0, 0, 0, .3) 100%); mask-image: linear-gradient(to bottom, #000 40%, rgba(0, 0, 0, .3) 100%); transition: opacity .2s ease, transform .2s ease; }
 .sources__link:hover .sources__logo, .sources__link:focus-visible .sources__logo { opacity: 1; transform: translateY(-2px); }
 .sources__link:focus-visible { outline: 2px solid var(--ai); outline-offset: -6px; border-radius: 14px; }
@@ -968,6 +981,7 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
   .sources__item:nth-child(3n + 1)::before { display: none; }
   .sources__item:nth-child(n + 4)::after { content: ""; position: absolute; top: 0; left: 18%; right: 18%; height: 1px; background: rgba(255, 255, 255, .22); }
   .sources__link { height: 86px; padding: 0 12px; }
+  .sources__link::after { bottom: 14px; width: 6px; height: 6px; margin-left: -3px; }
   .sources__logo--bbc { height: 20px; }
   .sources__logo--guardian { height: 24px; }
   .sources__logo--spiegel { height: 12px; }
@@ -975,7 +989,7 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
   .sources__logo--techcrunch { height: 22px; }
   .sources__logo--arstechnica { height: 32px; }
 }
-@media (prefers-reduced-motion: reduce) { .sources__logo { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .sources__logo { transition: none; } .sources__link::after { display: none; } }
 
 .footer { background: var(--surface); border-top: 1px solid var(--rule); }
 .footer__inner { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px 40px; padding-block: 36px; }
