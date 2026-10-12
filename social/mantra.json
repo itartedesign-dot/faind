@@ -54,8 +54,9 @@
     "Il prossimo grande cambiamento potrebbe arrivare con un piccolo aggiornamento."
   ],
   "prossimi": {
-    "settimana": 1,
-    "lavori": 4
+    "settimana": 1
   },
-  "usati": []
+  "usati": [
+    { "n": 4, "card": "lavori", "day": "2026-10-12", "design_id": "DAHXxgSqVl0" }
+  ]
 }
