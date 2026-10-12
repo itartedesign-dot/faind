@@ -36,14 +36,13 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { alert, sharpImage } from './linkedin.mjs';
+import { alert, sharpImage, firstComment } from './linkedin.mjs';
 
 const romeDay = (t) => new Date(t).toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const API = process.env.ZERNIO_API_URL || 'https://zernio.com/api/v1';   // ZERNIO_API_URL serve solo per le prove
 const KEY = process.env.ZERNIO_API_KEY;
 const DRY = process.env.FB_DRY === '1';
-const SITE = 'https://faind.org/';
 
 const AFTER_LI_MIN = 20;         // aspetto che il sito con l'immagine sia online (pubblicato a fine giro)
 const DELAY_MIN = 5;             // il primo post esce qualche minuto dopo la consegna a Zernio
@@ -80,17 +79,11 @@ async function findAccount() {
   return { id: fb[0]._id || fb[0].id, name: fb[0].displayName || fb[0].username || 'Facebook' };
 }
 
-const withUtm = (url, c) => !url.startsWith(SITE) ? url
-  : /utm_source=/.test(url) ? url.replace(/utm_source=[^&#]*/, 'utm_source=facebook')
-  : url.replace(/#|$/, (m) => `${url.includes('?') ? '&' : '?'}utm_source=facebook&utm_medium=social&utm_campaign=${c}${m}`);
-
 // Post Facebook da un post LinkedIn: le righe con un link escono dal testo, il link va nel primo commento
 export function postFromLinkedin(i) {
-  const kind = String(i.id).replace(/-\d{4}-\d{2}-\d{2}$/, '');
   const text = String(i.text || '').split('\n').filter(l => !/https?:\/\//.test(l)).join('\n').replace(/\n{3,}/g, '\n\n').trim();
-  const link = withUtm(i.link || SITE, kind);
   return { key: 'li-' + i.id, text, img: i.img ? i.img + (i.img.includes('?') ? '&' : '?') + 'd=' + i.id : null,
-    comment: kind === 'domenica' ? `Guarda lo short: ${link}` : `Leggi su FAIND: ${link}` };
+    comment: firstComment(i, 'facebook') };
 }
 
 // Cosa portare su Facebook in questo giro (dal più vecchio al più recente)

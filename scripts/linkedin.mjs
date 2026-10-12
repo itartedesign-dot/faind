@@ -14,6 +14,8 @@
      (campo "buf") e, per sicurezza, prima di pubblicare si controlla che
      su Buffer non ci sia già lo stesso post;
    • niente arretrati: le voci più vecchie di MAX_AGE_HOURS vengono scartate;
+   • sotto ogni post un primo commento con il link al sito (utm_source=linkedin),
+     come su Facebook; se Buffer lo rifiuta il post esce lo stesso, senza commento;
    • se qualcosa va storto riprova al giro dopo e apre una segnalazione
      (issue) sul repository: GitHub avvisa per mail;
    • la chiave Buffer dura un anno: da WARN_DAYS giorni prima della scadenza
@@ -125,20 +127,35 @@ export async function sharpImage(url) {
   return url;
 }
 
-async function createPost(ch, item, withImage, delayMin) {
+// Link al sito con il canale che porta la visita (es. utm_source=linkedin), per contarla in GoatCounter
+const SITE = 'https://faind.org/';
+export const withUtm = (url, source, campaign) => !url.startsWith(SITE) ? url
+  : /utm_source=/.test(url) ? url.replace(/utm_source=[^&#]*/, 'utm_source=' + source)
+  : url.replace(/#|$/, (m) => `${url.includes('?') ? '&' : '?'}utm_source=${source}&utm_medium=social&utm_campaign=${campaign}${m}`);
+
+// Primo commento con il link, come su Facebook (chiesto da Paolo il 12 ottobre 2026)
+export function firstComment(i, source) {
+  const kind = String(i.id).replace(/-\d{4}-\d{2}-\d{2}$/, '');
+  const link = withUtm(i.link || SITE, source, kind);
+  return kind === 'domenica' ? `Guarda lo short: ${link}` : `Leggi su FAIND: ${link}`;
+}
+
+async function createPost(ch, item, withImage, delayMin, withComment = true) {
   // l'orario parte dal momento della consegna, non dall'inizio del giro
   const dueAt = new Date(Date.now() + delayMin * 60e3).toISOString();
   // ?d=… evita che venga usata una copia vecchia dell'immagine
   const img = withImage && item.img ? `, assets: [{ image: { url: ${q(item.img + (item.img.includes('?') ? '&' : '?') + 'd=' + item.id)} } }]` : '';
-  const data = await gql(`mutation { createPost(input: { text: ${q(item.text)}, channelId: ${q(ch.id)}, schedulingType: automatic, mode: customScheduled, dueAt: ${q(dueAt)}${img} }) { ... on PostActionSuccess { post { id dueAt } } ... on MutationError { message } } }`);
+  const comment = withComment ? `, metadata: { linkedin: { firstComment: ${q(firstComment(item, 'linkedin'))} } }` : '';
+  const data = await gql(`mutation { createPost(input: { text: ${q(item.text)}, channelId: ${q(ch.id)}, schedulingType: automatic, mode: customScheduled, dueAt: ${q(dueAt)}${img}${comment} }) { ... on PostActionSuccess { post { id dueAt } } ... on MutationError { message } } }`);
   const r = data.createPost || {};
   if (!r.post) throw new BufferError(r.message || 'post non creato');
   return r.post;
 }
 
-// Consegna con tre tentativi: 1) con l'immagine tra DELAY_MIN minuti; 2) se Buffer rifiuta, di nuovo
-// con l'immagine ma con un margine più largo (RETRY_DELAY_MIN), nel caso il problema fosse l'orario;
-// 3) solo allora senza immagine. Una chiave rifiutata interrompe subito i tentativi.
+// Consegna a tentativi: 1) con immagine e primo commento tra DELAY_MIN minuti; 2) se Buffer rifiuta,
+// di nuovo ma con un margine più largo (RETRY_DELAY_MIN), nel caso il problema fosse l'orario;
+// 3) senza il primo commento (il link resta comunque nel testo); 4) solo allora anche senza immagine.
+// Una chiave rifiutata interrompe subito i tentativi.
 export async function deliver(ch, item) {
   try { return await createPost(ch, item, true, DELAY_MIN); }
   catch (e) {
@@ -147,10 +164,15 @@ export async function deliver(ch, item) {
   }
   try { return await createPost(ch, item, true, RETRY_DELAY_MIN); }
   catch (e) {
+    if (e.auth) throw e;
+    console.warn('  rifiutata anche così, riprovo senza il primo commento:', e.message);
+  }
+  try { return { ...(await createPost(ch, item, true, RETRY_DELAY_MIN, false)), noComment: true }; }
+  catch (e) {
     if (e.auth || !item.img) throw e;
     console.warn('  rifiutata anche così, pubblico solo il testo:', e.message);
   }
-  return await createPost(ch, item, false, RETRY_DELAY_MIN);
+  return { ...(await createPost(ch, item, false, RETRY_DELAY_MIN, false)), noComment: true };
 }
 
 /* ---------- Segnalazioni sul repository (GitHub avvisa per mail) ---------- */
@@ -202,7 +224,7 @@ export async function run(data, now = Date.now()) {
 
   if (DRY) {
     if (!todo.length) console.log('→ LinkedIn (prova): nessun post da pubblicare in questo giro.');
-    for (const i of todo) console.log(`--- DRY · LinkedIn · ${i.id} ---\n${i.text}\n[${i.text.length} caratteri] [img] ${i.img || '—'}`);
+    for (const i of todo) console.log(`--- DRY · LinkedIn · ${i.id} ---\n${i.text}\n[${i.text.length} caratteri] [img] ${i.img || '—'}\n[primo commento] ${firstComment(i, 'linkedin')}`);
     return { sent: 0, todo: todo.length };
   }
 
@@ -222,6 +244,7 @@ export async function run(data, now = Date.now()) {
       const post = await deliver(ch, i);
       i.buf = new Date(now).toISOString();
       sent++;
+      if (post.noComment) await alert(st, 'commento', 'LinkedIn: post uscito senza il primo commento col link', `Buffer ha rifiutato il primo commento del post "${i.id}", che è uscito lo stesso (il link al sito è comunque nel testo). Scrivi a Claude nel Progetto FAIND che su LinkedIn il primo commento non esce.`, now);
       console.log(`✓ LinkedIn: post consegnato a Buffer (${i.id}), esce alle ${new Date(post.dueAt || Date.now()).toLocaleTimeString('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' })}`);
     }
   } catch (e) {
