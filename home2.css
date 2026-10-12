@@ -13,14 +13,16 @@
   display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; color: var(--ink);
   -webkit-tap-highlight-color: transparent; min-width: 0;
 }
-/* Riquadro dritto e frontale (riferimento di Paolo, 12 ottobre 2026): angoli contenuti, faccia piatta,
-   una costa sottile a sinistra e sotto, un piccolo riflesso in alto a sinistra e un'ombra compatta vicino alla base. */
+/* Riquadro come nel riferimento di Paolo (12 ottobre 2026): angoli contenuti, faccia piatta appena orientata in prospettiva
+   (stessa intensità e direzione della prima versione), costa sottile a sinistra e sotto, piccolo riflesso, ombra compatta.
+   Nessuna rotazione nel piano: i bottoni restano allineati e l'etichetta resta dritta, fuori dalla trasformazione. */
 .h2app__tile {
   position: relative; display: grid; place-items: center; width: 100%; max-width: 104px; aspect-ratio: 1; border-radius: 17%;
   background: linear-gradient(180deg, #1D2D4E 0%, #15223D 50%, #0F1930 100%);
   box-shadow: inset 1px 1px 0 rgba(150, 190, 240, .14),
     -2px 2px 0 #26395C, -3px 3px 0 #1A2944,
     -2px 7px 9px -4px rgba(6, 12, 28, .55);
+  transform: perspective(700px) rotateY(-8deg);
   transition: transform .18s ease, box-shadow .2s ease;
 }
 .h2app__tile::after {   /* piccolo riflesso sul bordo in alto a sinistra */
@@ -29,8 +31,8 @@
 }
 .h2app__tile img { width: 58%; height: 58%; object-fit: contain; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .35)); pointer-events: none; user-select: none; -webkit-user-drag: none; }
 .h2app__lbl { font-size: 14px; font-weight: 600; line-height: 1.2; text-align: center; white-space: nowrap; color: var(--ink); }
-@media (hover: hover) { .h2app:hover .h2app__tile { transform: translateY(-2px); } }
-.h2app:active .h2app__tile { transform: scale(.96); }
+@media (hover: hover) { .h2app:hover .h2app__tile { transform: perspective(700px) rotateY(-5deg) translateY(-2px); } }
+.h2app:active .h2app__tile { transform: perspective(700px) rotateY(-8deg) scale(.96); }
 .h2app:focus-visible { outline: none; }
 .h2app:focus-visible .h2app__tile { outline: 3px solid var(--focus); outline-offset: 3px; }
 .h2app[aria-pressed="true"] .h2app__tile { box-shadow: inset 1px 1px 0 rgba(150, 190, 240, .14), 0 0 0 1.5px #3FB8E6,
@@ -172,7 +174,7 @@
   .h2panel__change svg { width: 18px; height: 18px; }
   .h2smv__item { padding-left: 40px; }
 }
-@media (prefers-reduced-motion: reduce) { .h2app__tile, .h2app:hover .h2app__tile, .h2app:active .h2app__tile { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .h2app__tile, .h2app:hover .h2app__tile, .h2app:active .h2app__tile { transform: perspective(700px) rotateY(-8deg); } }
 .h2panel:not(.h2panel--notizie) .h2panel__body > :first-child > .block__head { border-bottom: 0; padding-bottom: 0; margin-bottom: 14px; }
 
 /* Newsletter da computer: il riquadro di Faindo (quello del popup) fisso in cima alla colonna */
