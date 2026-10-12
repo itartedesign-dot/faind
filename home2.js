@@ -213,6 +213,9 @@
 
   /* ------------------------------ Apertura e chiusura ------------------------------ */
   var current = null, opener = null, savedY = 0, pushed = false, moved = [];
+  var viaKeys = false;   // l'ultima azione è arrivata dalla tastiera?
+  document.addEventListener('keydown', function () { viaKeys = true; }, true);
+  document.addEventListener('pointerdown', function () { viaKeys = false; }, true);
 
   function headerH() { var m = $('.masthead'); return m ? m.getBoundingClientRect().height : 64; }
   function giveBack() {
@@ -280,7 +283,9 @@
     root2.style.scrollBehavior = 'auto';
     window.scrollTo(0, Math.max(0, Math.min(savedY, apps.getBoundingClientRect().top + window.scrollY - headerH() - 8)));
     root2.style.scrollBehavior = prev;
-    if (opener && document.body.contains(opener)) { try { opener.focus({ preventScroll: true }); } catch (e) {} }
+    // il fuoco torna al bottone solo per chi usa la tastiera: col dito o col mouse Safari ci disegnerebbe un rettangolo
+    if (viaKeys && opener && document.body.contains(opener)) { try { opener.focus({ preventScroll: true }); } catch (e) {} }
+    else if (document.activeElement && document.activeElement.blur && apps.contains(document.activeElement)) document.activeElement.blur();
     opener = null;
   }
 
