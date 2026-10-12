@@ -72,7 +72,7 @@
   apps.className = 'h2apps';
   apps.innerHTML = PANELS.filter(function (p) { return p.icon; }).map(function (p) {
     return '<button type="button" class="h2app" data-panel="' + p.k + '" aria-pressed="false" aria-controls="h2panel">' +
-      '<span class="h2app__tile"><img src="assets/icone/' + p.k + '.webp" width="256" height="256" alt="" decoding="async"></span>' +
+      '<span class="h2app__tile"><img src="assets/icone/' + p.k + '.webp?v=2" width="256" height="256" alt="" decoding="async"></span>' +
       '<span class="h2app__lbl" data-h2="' + p.k + '"></span></button>';
   }).join('');
   intro.parentNode.insertBefore(apps, intro.nextSibling);
