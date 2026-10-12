@@ -19,9 +19,10 @@
   position: relative; display: grid; place-items: center; width: 100%; max-width: 104px; aspect-ratio: 1; border-radius: 24%;
   background: linear-gradient(165deg, #1C2B49 0%, #121C33 55%, #0D1528 100%);
   border: 1px solid rgba(110, 160, 220, .16);
-  transform: perspective(700px) rotateY(-8deg);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), inset 0 -6px 14px rgba(0, 0, 0, .25),
-    -3px 3px 0 #0A1020, -3px 3px 0 1px rgba(110, 160, 220, .10), -6px 12px 20px -8px rgba(8, 14, 30, .55);
+  transform: perspective(420px) rotateY(-20deg);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07), inset 0 -6px 14px rgba(0, 0, 0, .25),
+    -2px 2px 0 #142039, -4px 4px 0 #0F1930, -6px 6px 0 #0A1020, -6px 6px 0 1px rgba(110, 160, 220, .12),
+    -10px 16px 22px -8px rgba(8, 14, 30, .6);
   transition: transform .18s ease, box-shadow .2s ease, border-color .2s ease;
 }
 .h2app__tile::after {   /* riflesso contenuto in alto */
@@ -30,11 +31,11 @@
 }
 .h2app__tile img { width: 66%; height: 66%; object-fit: contain; filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .35)); pointer-events: none; user-select: none; -webkit-user-drag: none; }
 .h2app__lbl { font-size: 14px; font-weight: 650; line-height: 1.2; text-align: center; white-space: nowrap; }
-@media (hover: hover) { .h2app:hover .h2app__tile { transform: perspective(700px) rotateY(-4deg) translateY(-2px); border-color: rgba(110, 175, 235, .34); } }
-.h2app:active .h2app__tile { transform: perspective(700px) rotateY(-8deg) scale(.95); }
+@media (hover: hover) { .h2app:hover .h2app__tile { transform: perspective(420px) rotateY(-12deg) translateY(-2px); border-color: rgba(110, 175, 235, .34); } }
+.h2app:active .h2app__tile { transform: perspective(420px) rotateY(-20deg) scale(.95); }
 .h2app:focus-visible { outline: none; }
 .h2app:focus-visible .h2app__tile { outline: 3px solid var(--focus); outline-offset: 3px; }
-.h2app[aria-pressed="true"] .h2app__tile { border-color: var(--ai); box-shadow: 0 0 0 2px var(--ai), -3px 3px 0 1px #0A1020, 0 10px 22px -10px rgba(66, 147, 185, .65); }
+.h2app[aria-pressed="true"] .h2app__tile { border-color: var(--ai); box-shadow: 0 0 0 2px var(--ai), -4px 4px 0 #0F1930, -6px 6px 0 #0A1020, 0 10px 22px -10px rgba(66, 147, 185, .65); }
 .h2app[aria-pressed="true"] .h2app__lbl { color: var(--link); font-weight: 750; }
 
 /* ------------------------------ Spazio che cambia ------------------------------ */
@@ -172,7 +173,7 @@
   .h2panel__change svg { width: 18px; height: 18px; }
   .h2smv__item { padding-left: 40px; }
 }
-@media (prefers-reduced-motion: reduce) { .h2app__tile, .h2app:hover .h2app__tile { transform: perspective(700px) rotateY(-8deg); } }
+@media (prefers-reduced-motion: reduce) { .h2app__tile, .h2app:hover .h2app__tile { transform: perspective(420px) rotateY(-20deg); } }
 .h2panel:not(.h2panel--notizie) .h2panel__body > :first-child > .block__head { border-bottom: 0; padding-bottom: 0; margin-bottom: 14px; }
 
 /* Newsletter da computer: il riquadro di Faindo (quello del popup) fisso in cima alla colonna */
