@@ -153,8 +153,18 @@ const LIST_CSS = `.al-month{font-size:20px;font-weight:750;font-stretch:84%;marg
 .chips a{display:inline-block;padding:6px 12px;border:1px solid var(--rule);border-radius:999px;background:var(--surface);color:var(--ink);text-decoration:none;font-size:14px;font-weight:600}
 .chips small{color:var(--muted);font-weight:500}`;
 
+// Righe con miniatura: foto a sinistra (in 16:10), titolo e fonti a destra; senza foto un riquadro col marchio FAIND
+const thumbCss = (up) => `.al li.al__row{display:grid;grid-template-columns:132px minmax(0,1fr);gap:14px;align-items:center}
+.al__th{display:block;aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:var(--surface-2)}
+.al__th img{display:block;width:100%;height:100%;object-fit:cover}
+.al__th--ph{background:var(--surface-2) url(${up}assets/logo-mark-light.webp) center/34% no-repeat}
+:root[data-theme="dark"] .al__th--ph{background-image:url(${up}assets/logo-mark-dark.webp)}
+.al__txt{display:grid;gap:3px;min-width:0}
+@media (max-width:560px){.al li.al__row{grid-template-columns:96px minmax(0,1fr);gap:12px}}`;
+
 // Elenco di notizie raggruppate per mese (o per giorno), con data, fonti e link alla pagina FAIND
-export function newsListHtml(list, up, lang, group = 'month') {
+// thumbs: accanto a ogni titolo la miniatura della foto dell'articolo (pagina con tutte le notizie, Paolo 12 ottobre 2026)
+export function newsListHtml(list, up, lang, group = 'month', { thumbs = false } = {}) {
   const u = UI[lang] || UI.it;
   const out = []; let cur = '';
   for (const n of list) {
@@ -166,7 +176,11 @@ export function newsListHtml(list, up, lang, group = 'month') {
     }
     const names = [n.source.name, ...(n.also || []).map(a => a.name)];
     const href = n.page ? up + n.page : n.link.url;
-    out.push(`<li><a href="${esc(href)}" hreflang="${esc(n.lang || 'it')}">${esc(tx(n.title))}</a><small>${group === 'day' ? '' : esc(fmtDay(n.date, lang, 'short')) + ' · '}${esc(names.slice(0, 4).join(', '))}${names.length > 4 ? '…' : ''} · ${esc(u.sources(names.length))}</small></li>`);
+    const line = `<a href="${esc(href)}" hreflang="${esc(n.lang || 'it')}">${esc(tx(n.title))}</a><small>${group === 'day' ? '' : esc(fmtDay(n.date, lang, 'short')) + ' · '}${esc(names.slice(0, 4).join(', '))}${names.length > 4 ? '…' : ''} · ${esc(u.sources(names.length))}</small>`;
+    if (!thumbs) { out.push(`<li>${line}</li>`); continue; }
+    const img = n.image && /^https:\/\//.test(n.image)
+      ? `<img src="${esc(n.image)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('al__th--ph');this.remove()">` : '';
+    out.push(`<li class="al__row"><a class="al__th${img ? '' : ' al__th--ph'}" href="${esc(href)}" tabindex="-1" aria-hidden="true">${img}</a><div class="al__txt">${line}</div></li>`);
   }
   if (cur) out.push('</ol>');
   return out.join('\n');
@@ -441,7 +455,7 @@ export async function buildArchivePages(items, root) {
   if (all.length) {
     const allUrl = `${SITE}${ARCHIVE_DIR}tutte.html`;
     await writeFile(path.join(dir, 'tutte.html'), shell({ lang: 'it', up, url: allUrl, title: `${u.allSeo} | FAIND`, desc: u.allDesc(all.length),
-      h1: u.allH1, lede: esc(u.allLede(all.length)), main: newsListHtml(all, up, 'it', 'day'),
+      h1: u.allH1, lede: esc(u.allLede(all.length)), main: newsListHtml(all, up, 'it', 'day', { thumbs: true }), css: thumbCss(up),
       crumb: `<a href="${up}">FAIND</a> › <a href="./">${esc(u.arcH1)}</a>` }));
     urls.push({ url: allUrl, lastmod: romeDay(all[0].date) });
   }
