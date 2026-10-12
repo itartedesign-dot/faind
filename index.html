@@ -27,9 +27,9 @@
   <meta name="twitter:description" content="Notizie AI ogni ora con la fonte, video, lavoro nell'AI e approfondimenti su robot, medicina e clima.">
   <meta name="twitter:image" content="https://faind.org/assets/og-image.png">
 
-  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="icon" href="assets/favicon.png?v=2" type="image/png">
   <link rel="alternate" type="application/rss+xml" title="FAIND – Notizie AI" href="feed.xml">
-  <link rel="apple-touch-icon" href="assets/icon-180.png">
+  <link rel="apple-touch-icon" href="assets/icon-180.png?v=2">
 
   <!-- Applica il tema prima del rendering: niente lampo bianco in dark mode -->
   <script>
@@ -48,13 +48,16 @@
         if (localStorage.getItem('faind-home') === 'classica') h2on = false;
       } catch (e) {}
       if (h2on) document.documentElement.classList.add('home2');
+      // Nella scheda del browser solo "FAIND", così si ritrova subito (Safari toglie il nome del sito dal titolo lungo).
+      // I motori di ricerca continuano a leggere il titolo completo scritto sopra.
+      if (!/bot|crawl|spider|slurp|lighthouse/i.test(navigator.userAgent)) document.title = 'FAIND';
     })();
   </script>
 
   <!-- Caratteri serviti da FAIND (nessun contatto con Google Fonts) -->
   <link rel="stylesheet" href="assets/fonts/archivo.css">
   <link rel="stylesheet" href="style.css?v=20261011c">
-  <link rel="stylesheet" href="home2.css?v=20261012d">
+  <link rel="stylesheet" href="home2.css?v=20261012e">
 
   <!-- App sul telefono: "Aggiungi alla schermata Home" -->
   <link rel="manifest" href="manifest.webmanifest">
