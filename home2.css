@@ -13,20 +13,28 @@
   display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; color: var(--ink);
   -webkit-tap-highlight-color: transparent; min-width: 0;
 }
+/* Riquadro scuro leggermente ruotato in prospettiva, con un sottile spessore sul lato (scelta di Paolo, 12 ottobre 2026).
+   L'etichetta resta fuori dalla trasformazione: dritta e allineata. */
 .h2app__tile {
   position: relative; display: grid; place-items: center; width: 100%; max-width: 104px; aspect-ratio: 1; border-radius: 24%;
   background: linear-gradient(165deg, #1C2B49 0%, #121C33 55%, #0D1528 100%);
   border: 1px solid rgba(110, 160, 220, .16);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), inset 0 -6px 14px rgba(0, 0, 0, .25), 0 8px 18px -10px rgba(8, 14, 30, .55);
-  transition: transform .16s ease, box-shadow .2s ease, border-color .2s ease;
+  transform: perspective(700px) rotateY(-8deg);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), inset 0 -6px 14px rgba(0, 0, 0, .25),
+    -3px 3px 0 #0A1020, -3px 3px 0 1px rgba(110, 160, 220, .10), -6px 12px 20px -8px rgba(8, 14, 30, .55);
+  transition: transform .18s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.h2app__tile::after {   /* riflesso contenuto in alto */
+  content: ""; position: absolute; inset: 1px 1px 55% 1px; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .06), transparent);
 }
 .h2app__tile img { width: 66%; height: 66%; object-fit: contain; filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .35)); pointer-events: none; user-select: none; -webkit-user-drag: none; }
 .h2app__lbl { font-size: 14px; font-weight: 650; line-height: 1.2; text-align: center; white-space: nowrap; }
-@media (hover: hover) { .h2app:hover .h2app__tile { transform: translateY(-2px); border-color: rgba(110, 175, 235, .34); } }
-.h2app:active .h2app__tile { transform: scale(.95); }
+@media (hover: hover) { .h2app:hover .h2app__tile { transform: perspective(700px) rotateY(-4deg) translateY(-2px); border-color: rgba(110, 175, 235, .34); } }
+.h2app:active .h2app__tile { transform: perspective(700px) rotateY(-8deg) scale(.95); }
 .h2app:focus-visible { outline: none; }
 .h2app:focus-visible .h2app__tile { outline: 3px solid var(--focus); outline-offset: 3px; }
-.h2app[aria-pressed="true"] .h2app__tile { border-color: var(--ai); box-shadow: 0 0 0 2px var(--ai), 0 10px 22px -10px rgba(66, 147, 185, .65); }
+.h2app[aria-pressed="true"] .h2app__tile { border-color: var(--ai); box-shadow: 0 0 0 2px var(--ai), -3px 3px 0 1px #0A1020, 0 10px 22px -10px rgba(66, 147, 185, .65); }
 .h2app[aria-pressed="true"] .h2app__lbl { color: var(--link); font-weight: 750; }
 
 /* ------------------------------ Spazio che cambia ------------------------------ */
@@ -41,6 +49,13 @@
   padding: 14px 16px 14px 22px; background: var(--surface); border-bottom: 1px solid var(--rule); border-radius: var(--radius-l) var(--radius-l) 0 0;
 }
 .h2panel__title { font-size: 23px; font-weight: 800; font-stretch: 84%; letter-spacing: -.01em; outline: none; }
+.h2panel__change {
+  display: none; margin-left: auto; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; cursor: pointer; font: inherit;
+  font-size: 14px; font-weight: 650; border: 1px solid var(--rule); background: var(--bg); color: var(--ink); white-space: nowrap;
+}
+.h2panel__change svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.h2panel__change:hover { border-color: var(--link); color: var(--link); }
+.h2panel.h2-apps-away .h2panel__change { display: inline-flex; }
 .h2panel__x {
   flex-shrink: 0; width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; cursor: pointer;
   border: 1px solid var(--rule); background: var(--bg); color: var(--ink);
@@ -122,3 +137,40 @@
   .h2panel__body > #telegram > :not(.tgbox__img), .h2panel__body > #strano-ma-vero > :not(.smv__img) { grid-column: 2; }
   .h2panel__body > #telegram .tgbox__btn, .h2panel__body > #strano-ma-vero .btn { justify-self: start; }
 }
+
+/* Un solo titolo per sezione: quello del pannello (le Notizie tengono i sottotitoli Importanti, Letture…) */
+.h2panel:not(.h2panel--notizie) .h2panel__body > :first-child > .block__head > .block__title,
+.h2panel:not(.h2panel--notizie) .h2panel__body > :first-child > .panel__title,
+.h2panel:not(.h2panel--notizie) .h2panel__body > :first-child .jobs__title,
+.h2panel:not(.h2panel--notizie) .h2panel__body > :first-child .jobs__ico { display: none; }
+.h2panel:not(.h2panel--notizie) .h2panel__body > .block:first-child { margin-top: 16px; }
+.h2panel:not(.h2panel--notizie) .h2panel__body > .panel:first-child { padding-top: 16px; }
+.h2panel__body > .block:first-child > .block__head:empty { display: none; }
+
+/* Curiosità: le ultime storie, poi il link a tutte */
+.h2smv { padding-top: 6px; }
+.h2smv__list { list-style: none; margin: 0; padding: 0; counter-reset: smv; }
+.h2smv__item { counter-increment: smv; position: relative; padding: 20px 0 20px 48px; border-bottom: 1px solid var(--rule); }
+.h2smv__item::before { content: counter(smv); position: absolute; left: 0; top: 16px; font-size: 34px; font-weight: 800; font-stretch: 76%; line-height: 1; color: var(--ai); }
+.h2smv__h { font-size: 19px; line-height: 1.25; font-weight: 760; margin-bottom: 6px; }
+.h2smv__h a { color: var(--ink); text-decoration: none; }
+.h2smv__h a:hover { text-decoration: underline; }
+.h2smv__p { color: var(--muted); font-size: 15.5px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.h2smv__src { font-size: 13.5px; color: var(--muted); margin-top: 8px; }
+.h2smv__src strong { color: var(--ink); font-weight: 650; }
+.h2smv__all { margin-top: 22px; display: inline-flex; }
+
+/* Computer: con una sezione aperta il pannello prende tutta la larghezza, niente colonna vuota a destra */
+@media (min-width: 1121px) {
+  .home2.h2-open .layout { grid-template-columns: minmax(0, 1fr); }
+  .home2.h2-open .side { display: none; }
+  .home2.h2-open .h2apps { max-width: 1040px; }
+}
+@media (max-width: 720px) {
+  .h2panel__change { padding: 8px 11px; font-size: 13px; }
+  .h2panel__change span { display: none; }
+  .h2panel__change svg { width: 18px; height: 18px; }
+  .h2smv__item { padding-left: 40px; }
+}
+@media (prefers-reduced-motion: reduce) { .h2app__tile, .h2app:hover .h2app__tile { transform: perspective(700px) rotateY(-8deg); } }
+.h2panel:not(.h2panel--notizie) .h2panel__body > :first-child > .block__head { border-bottom: 0; padding-bottom: 0; margin-bottom: 14px; }

@@ -281,6 +281,13 @@
   })();
   var nlPopup = (function () {
     var FIRST = 60e3, AGAIN = 180e3, PAUSE = 7 * 864e5, KEY = 'faind-nlpop';
+    // Home a icone: il popup aspetta una lettura più lunga e non copre i pannelli né il modulo già in vista (Paolo, 12 ottobre 2026)
+    var HOME2 = document.documentElement.classList.contains('home2');
+    if (HOME2) FIRST = 180e3;
+    function formInView() {
+      var f = document.getElementById('newsletter'); if (!f || !f.offsetParent) return false;
+      var r = f.getBoundingClientRect(); return r.bottom > 0 && r.top < window.innerHeight;
+    }
     var el, timer = null, shown = 0, open = false;
     function rec() { try { return JSON.parse(store.get(KEY) || '{}') || {}; } catch (e) { return {}; } }
     function save(r) { store.set(KEY, JSON.stringify(r)); }
@@ -291,6 +298,7 @@
       // non sopra un altro riquadro aperto (installazione app) né mentre si scrive in un altro modulo
       var a = document.activeElement;
       if (!$('#drawer').hidden || !$('#appSheet').hidden || (a && /INPUT|TEXTAREA|SELECT/.test(a.tagName) && !el.contains(a))) { schedule(15e3); return; }
+      if (HOME2 && (document.documentElement.classList.contains('h2-open') || formInView())) { schedule(30e3); return; }
       shown++; open = true;
       el.hidden = false;
       el.classList.remove('is-out');
