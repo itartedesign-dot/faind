@@ -24,36 +24,37 @@
   var L = {
     it: { intro: "Le notizie sull'intelligenza artificiale, aggiornate ogni ora da fonti italiane e internazionali. E poi video, glossario, approfondimenti e curiosità.",
       nav: 'Le sezioni di FAIND', close: 'Chiudi', all: 'Tutte le notizie', empty: 'Al momento non ci sono contenuti in questa sezione.',
-      notizie: 'Notizie', video: 'Video', impara: "Impara l'AI", curiosita: 'Curiosità', prezzi: 'Prezzi', lavoro: 'Lavoro', strumenti: 'Strumenti', telegram: 'Telegram',
+      notizie: 'Notizie', video: 'Video', impara: "Impara l'AI", curiosita: 'Curiosità', prezzi: 'Prezzi', lavoro: 'Lavoro', strumenti: 'Strumenti', telegram: 'Telegram', uomoai: 'Uomo e AI',
       contatti: 'Contatti', sostieni: 'Sostieni FAIND', feed: 'Feed RSS', change: 'Cambia sezione', smvAll: 'Tutte le curiosità', source: 'Fonte', more: 'Leggi tutto', less: 'Mostra meno', gloss: 'Glossario →',
-      t_notizie: 'Tutte le notizie', t_video: "L'AI in video", t_impara: "Impara l'AI", t_curiosita: 'Curiosità', t_prezzi: 'Prezzi e offerte', t_lavoro: "Lavoro nell'AI", t_strumenti: 'Strumenti e guide', t_telegram: 'FAIND su Telegram', t_contatti: 'Scrivici', t_sostieni: 'Sostieni FAIND', t_feed: 'Feed RSS' },
+      t_notizie: 'Tutte le notizie', t_video: "L'AI in video", t_impara: "Impara l'AI", t_curiosita: 'Curiosità', t_prezzi: 'Prezzi e offerte', t_lavoro: "Lavoro nell'AI", t_strumenti: 'Strumenti e guide', t_uomoai: 'Uomo e AI', t_telegram: 'FAIND su Telegram', t_contatti: 'Scrivici', t_sostieni: 'Sostieni FAIND', t_feed: 'Feed RSS' },
     en: { intro: 'Artificial intelligence news, updated every hour from Italian and international sources. Plus videos, a glossary, in-depth articles and fun facts.',
       nav: 'FAIND sections', close: 'Close', all: 'All news', empty: 'Nothing in this section right now.',
-      notizie: 'News', video: 'Video', impara: 'Learn AI', curiosita: 'Fun facts', prezzi: 'Prices', lavoro: 'Jobs', strumenti: 'Tools', telegram: 'Telegram',
+      notizie: 'News', video: 'Video', impara: 'Learn AI', curiosita: 'Fun facts', prezzi: 'Prices', lavoro: 'Jobs', strumenti: 'Tools', telegram: 'Telegram', uomoai: 'Humans and AI',
       contatti: 'Contact', sostieni: 'Support FAIND', feed: 'RSS feeds', change: 'Change section', smvAll: 'All the fun facts', source: 'Source', more: 'Read more', less: 'Show less', gloss: 'Glossary →',
-      t_notizie: 'All news', t_video: 'AI on video', t_impara: 'Learn AI', t_curiosita: 'Fun facts', t_prezzi: 'Prices and deals', t_lavoro: 'AI jobs', t_strumenti: 'Tools and guides', t_telegram: 'FAIND on Telegram', t_contatti: 'Contact us', t_sostieni: 'Support FAIND', t_feed: 'RSS feeds' },
+      t_notizie: 'All news', t_video: 'AI on video', t_impara: 'Learn AI', t_curiosita: 'Fun facts', t_prezzi: 'Prices and deals', t_lavoro: 'AI jobs', t_strumenti: 'Tools and guides', t_uomoai: 'Humans and AI', t_telegram: 'FAIND on Telegram', t_contatti: 'Contact us', t_sostieni: 'Support FAIND', t_feed: 'RSS feeds' },
     fr: { intro: "L'actualité de l'intelligence artificielle, mise à jour chaque heure à partir de sources italiennes et internationales. Et aussi des vidéos, un glossaire, des dossiers et des curiosités.",
       nav: 'Les rubriques de FAIND', close: 'Fermer', all: 'Toutes les actus', empty: 'Rien dans cette rubrique pour le moment.',
-      notizie: 'Actus', video: 'Vidéo', impara: "Apprendre l'IA", curiosita: 'Curiosités', prezzi: 'Prix', lavoro: 'Emploi', strumenti: 'Outils', telegram: 'Telegram',
+      notizie: 'Actus', video: 'Vidéo', impara: "Apprendre l'IA", curiosita: 'Curiosités', prezzi: 'Prix', lavoro: 'Emploi', strumenti: 'Outils', telegram: 'Telegram', uomoai: "L'humain et l'IA",
       contatti: 'Contact', sostieni: 'Soutenir FAIND', feed: 'Flux RSS', change: 'Changer de rubrique', smvAll: 'Toutes les curiosités', source: 'Source', more: 'Lire la suite', less: 'Réduire', gloss: 'Glossaire →',
-      t_notizie: 'Toutes les actus', t_video: "L'IA en vidéo", t_impara: "Apprendre l'IA", t_curiosita: 'Curiosités', t_prezzi: 'Prix et offres', t_lavoro: "Emplois dans l'IA", t_strumenti: 'Outils et guides', t_telegram: 'FAIND sur Telegram', t_contatti: 'Écrivez-nous', t_sostieni: 'Soutenir FAIND', t_feed: 'Flux RSS' },
+      t_notizie: 'Toutes les actus', t_video: "L'IA en vidéo", t_impara: "Apprendre l'IA", t_curiosita: 'Curiosités', t_prezzi: 'Prix et offres', t_lavoro: "Emplois dans l'IA", t_strumenti: 'Outils et guides', t_uomoai: "L'humain et l'IA", t_telegram: 'FAIND sur Telegram', t_contatti: 'Écrivez-nous', t_sostieni: 'Soutenir FAIND', t_feed: 'Flux RSS' },
     de: { intro: 'Nachrichten über künstliche Intelligenz, stündlich aktualisiert aus italienischen und internationalen Quellen. Dazu Videos, ein Glossar, Hintergründe und Kurioses.',
       nav: 'Die Bereiche von FAIND', close: 'Schließen', all: 'Alle Nachrichten', empty: 'In diesem Bereich gibt es gerade nichts.',
-      notizie: 'News', video: 'Video', impara: 'KI lernen', curiosita: 'Kurioses', prezzi: 'Preise', lavoro: 'Jobs', strumenti: 'Tools', telegram: 'Telegram',
+      notizie: 'News', video: 'Video', impara: 'KI lernen', curiosita: 'Kurioses', prezzi: 'Preise', lavoro: 'Jobs', strumenti: 'Tools', telegram: 'Telegram', uomoai: 'Mensch und KI',
       contatti: 'Kontakt', sostieni: 'FAIND unterstützen', feed: 'RSS-Feeds', change: 'Bereich wechseln', smvAll: 'Alle Kuriositäten', source: 'Quelle', more: 'Weiterlesen', less: 'Weniger', gloss: 'Glossar →',
-      t_notizie: 'Alle Nachrichten', t_video: 'KI im Video', t_impara: 'KI lernen', t_curiosita: 'Kurioses', t_prezzi: 'Preise und Angebote', t_lavoro: 'KI-Jobs', t_strumenti: 'Tools und Anleitungen', t_telegram: 'FAIND auf Telegram', t_contatti: 'Schreib uns', t_sostieni: 'FAIND unterstützen', t_feed: 'RSS-Feeds' }
+      t_notizie: 'Alle Nachrichten', t_video: 'KI im Video', t_impara: 'KI lernen', t_curiosita: 'Kurioses', t_prezzi: 'Preise und Angebote', t_lavoro: 'KI-Jobs', t_strumenti: 'Tools und Anleitungen', t_uomoai: 'Mensch und KI', t_telegram: 'FAIND auf Telegram', t_contatti: 'Schreib uns', t_sostieni: 'FAIND unterstützen', t_feed: 'RSS-Feeds' }
   };
   function t(k) { var l = (root.lang || 'it').slice(0, 2); return (L[l] && L[l][k]) || L.it[k] || k; }
 
   // Le sezioni: le prime otto hanno un'icona, le altre si aprono dai richiami e dai link del menu
   var PANELS = [
-    { k: 'notizie', ids: ['h2front', 'importanti', 'focus', 'letture'], icon: true },   // si apre su Apertura + Appena uscite (Paolo, 12 ottobre 2026)
+    { k: 'notizie', ids: ['h2front', 'importanti', 'letture'], icon: true },   // si apre su Apertura + Appena uscite (Paolo, 12 ottobre 2026)
     { k: 'video', ids: ['video'], icon: true },
     { k: 'impara', ids: ['approfondimenti'], icon: true },
-    { k: 'curiosita', ids: ['h2smv'], mobileIds: ['strano-ma-vero', 'h2smv'], icon: true },   // sul telefono in testa il blocco di Strano ma vero (Paolo, 12 ottobre 2026)
+    { k: 'curiosita', ids: ['strano-ma-vero', 'h2smv'], icon: true },   // in testa il blocco di Strano ma vero, poi la lista (Paolo, 12 ottobre 2026)
     { k: 'prezzi', ids: ['prezzi', 'convenzioni'], icon: true },
     { k: 'lavoro', ids: ['job'], icon: true },
-    { k: 'strumenti', ids: ['guide', 'trending'], icon: true },   // prima gli strumenti da usare, poi le notizie
+    { k: 'strumenti', ids: ['trending', 'guide'], icon: true },   // prima i trending tool, poi gli strumenti da scaricare (Paolo, 12 ottobre 2026)
+    { k: 'uomoai', ids: ['focus'], icon: true },   // l'ex sezione Focus: robot, casa, medicina, lavoro e clima
     { k: 'telegram', ids: ['telegram'], icon: true },
     { k: 'contatti', ids: ['contatti'] },
     { k: 'sostieni', ids: ['sostieni'] },
@@ -240,7 +241,7 @@
     if (!switching) { savedY = window.scrollY; opener = from || null; }
     giveBack();
     var shown = 0;
-    ((mq.matches && p.mobileIds) || p.ids).forEach(function (id) {
+    p.ids.forEach(function (id) {
       var n = document.getElementById(id); if (!n) return;
       var ph = document.createComment('h2 ' + id);
       n.parentNode.insertBefore(ph, n); n._h2ph = ph;
@@ -291,10 +292,13 @@
   allBtn.addEventListener('click', function () { open('notizie', allBtn); });
   xBtn.addEventListener('click', function () { close(); });
   // "Cambia sezione" compare solo quando la fila di icone è uscita dallo schermo
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (en) { panel.classList.toggle('h2-apps-away', !en[0].isIntersecting); },
-      { rootMargin: '-' + Math.round(headerH()) + 'px 0px 0px 0px' }).observe(apps);
-  } else panel.classList.add('h2-apps-away');
+  var awayTick = false;
+  function checkAway() {
+    awayTick = false;
+    panel.classList.toggle('h2-apps-away', apps.getBoundingClientRect().bottom < headerH() + 4);
+  }
+  window.addEventListener('scroll', function () { if (!awayTick) { awayTick = true; requestAnimationFrame(checkAway); } }, { passive: true });
+  window.addEventListener('resize', checkAway);
   changeBtn.addEventListener('click', function () {
     var top = apps.getBoundingClientRect().top + window.scrollY - headerH() - 8;
     window.scrollTo({ top: Math.max(0, top), behavior: reduce ? 'auto' : 'smooth' });
