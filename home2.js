@@ -154,6 +154,9 @@
       if (r.done) {   // già iscritto: Faindo ringrazia invece di chiedere di nuovo
         var f = $('#nlPopForm'), d = $('#nlPopDone'), img = $('#nlPopImg');
         if (f) f.hidden = true; if (d) d.hidden = false; if (img && img.dataset.okSrc) img.src = img.dataset.okSrc;
+        // titolo per chi è già iscritto: "Newsletter: sei dei nostri!" (Paolo, 12 ottobre 2026)
+        var tt = $('#nlPopTitle'), L = { it: 'Newsletter: sei dei nostri!', en: 'Newsletter: you’re one of us!', fr: 'Newsletter : vous êtes des nôtres !', de: 'Newsletter: Du bist dabei!' };
+        if (tt && tt.getAttribute('data-i18n') !== 'nlp.in') { tt.setAttribute('data-i18n', 'nlp.member'); tt.textContent = L[document.documentElement.lang] || L.it; }
       }
     } else if (pop.classList.contains('nlpop--fixed')) {
       pop.classList.remove('nlpop--fixed'); pop.setAttribute('role', 'dialog'); pop.hidden = true;
