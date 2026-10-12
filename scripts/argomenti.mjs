@@ -69,7 +69,10 @@ export const UI = {
     arcDesc: 'Tutte le notizie sull\'intelligenza artificiale riprese da almeno due testate, mese per mese, con le fonti.',
     arcLede: 'Le notizie riprese da almeno due testate e quelle della redazione restano qui per sempre, mese per mese, ognuna con le sue fonti.',
     arcMonth: (m) => `Notizie sull'AI di ${m}`, arcMonthDesc: (m, n) => `Le ${n} notizie sull'intelligenza artificiale di ${m} riprese da almeno due testate, giorno per giorno, con le fonti.`,
-    months: 'Mesi', prev: '← Mese precedente', next: 'Mese successivo →'
+    months: 'Mesi', prev: '← Mese precedente', next: 'Mese successivo →',
+    allH1: 'Tutte le notizie', allSeo: 'Tutte le notizie sull\'intelligenza artificiale', allLink: 'Tutte le notizie in un\'unica pagina →',
+    allDesc: (n) => `Le ${n} notizie sull'intelligenza artificiale raccolte da FAIND, dalla più recente, giorno per giorno, con le fonti.`,
+    allLede: (n) => `Le ${n} notizie raccolte da FAIND, dalla più recente. L'elenco si allunga da solo a ogni aggiornamento.`
   },
   en: {
     back: '← All news', pageLang: 'Page language', home: 'Back to FAIND news',
@@ -432,7 +435,17 @@ export async function buildArchivePages(items, root) {
       crumb: `<a href="${up}">FAIND</a> › <a href="./">${esc(u.arcH1)}</a>` }));
     urls.push({ url, lastmod: romeDay(list[0].date) });
   }
-  const main = `<ul class="chips">${months.map(m => `<li><a href="${m}.html">${esc(fmtMonth(m, 'it'))} <small>${esc(u.count(byMonth.get(m).length))}</small></a></li>`).join('')}</ul>`;
+  // Tutte le notizie in un'unica pagina, dalla più recente: è dove porta "Mostra altre" delle letture secondarie
+  // in home, che lì si fermano a 8 (Paolo, 12 ottobre 2026). Si allunga da sola a ogni aggiornamento.
+  const all = [...items].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  if (all.length) {
+    const allUrl = `${SITE}${ARCHIVE_DIR}tutte.html`;
+    await writeFile(path.join(dir, 'tutte.html'), shell({ lang: 'it', up, url: allUrl, title: `${u.allSeo} | FAIND`, desc: u.allDesc(all.length),
+      h1: u.allH1, lede: esc(u.allLede(all.length)), main: newsListHtml(all, up, 'it', 'day'),
+      crumb: `<a href="${up}">FAIND</a> › <a href="./">${esc(u.arcH1)}</a>` }));
+    urls.push({ url: allUrl, lastmod: romeDay(all[0].date) });
+  }
+  const main = `<p class="np__crumb"><a href="tutte.html">${esc(u.allLink)}</a></p>\n<ul class="chips">${months.map(m => `<li><a href="${m}.html">${esc(fmtMonth(m, 'it'))} <small>${esc(u.count(byMonth.get(m).length))}</small></a></li>`).join('')}</ul>`;
   await writeFile(path.join(dir, 'index.html'), shell({ lang: 'it', up, url: SITE + ARCHIVE_DIR, title: `${u.arcSeo} | FAIND`, desc: u.arcDesc, h1: u.arcH1, lede: esc(u.arcLede), main,
     robots: months.length ? 'index, follow' : 'noindex, follow' }));
   if (months.length) urls.push({ url: SITE + ARCHIVE_DIR, lastmod: '' });

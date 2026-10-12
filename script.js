@@ -358,7 +358,7 @@
     type: 'all',
     query: '',
     saved: readSaved(),
-    readsShown: 12,
+    readsShown: 8,   // letture secondarie: 8 in home, le altre in archivio/tutte.html (Paolo, 12 ottobre 2026)
     videosShown: 6,
     videoGroup: 'all',
     langs: readLangs(),
@@ -1260,7 +1260,6 @@
       if ((el = e.target.closest('a[href^="#"]')) && inResults() && el.getAttribute('href') !== '#main') resetFilters();
     });
 
-    $('#moreReads').addEventListener('click', function () { state.readsShown += 12; renderReads(); });
     $('#moreVideos').addEventListener('click', function () { state.videosShown += 6; renderVideos(); });
 
     // Filtro lingue delle notizie (indipendente dalla lingua dell'interfaccia)
@@ -1277,7 +1276,7 @@
         try { localStorage.setItem('faind-news-langs', JSON.stringify(chosen)); } catch (e) {}
         syncLangf();
         applyLangFilter();
-        state.readsShown = 12; state.videosShown = 6;
+        state.readsShown = 8; state.videosShown = 6;
         renderNews();
       });
     });
@@ -1466,7 +1465,7 @@
     if (!pendingReturn || Date.now() - pendingReturn.at > 6 * 36e5) { pendingReturn = null; return; }
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     ['sector', 'type', 'videoGroup'].forEach(function (k) { if (typeof pendingReturn[k] === 'string') state[k] = pendingReturn[k]; });
-    ['readsShown', 'videosShown'].forEach(function (k) { if (pendingReturn[k] > 0) state[k] = pendingReturn[k]; });
+    ['videosShown'].forEach(function (k) { if (pendingReturn[k] > 0) state[k] = pendingReturn[k]; });   // le letture restano 8: le altre sono in archivio/tutte.html
     if (pendingReturn.query) { state.query = pendingReturn.query; $('#search').value = pendingReturn.query; }
   }
   function finishReturn() {
