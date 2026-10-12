@@ -79,7 +79,7 @@
     nav.appendChild(track);
     nav.classList.add('h2apps--loop');
 
-    var first = true, base = 0, setW = 0, step = 0, pos = 0, vel = 0, raf = 0, last = 0, tick = null, lastBuzz = 0, touchy = false;
+    var first = true, setW = 0, step = 0, pos = 0, vel = 0, raf = 0, last = 0, tick = null, lastBuzz = 0, touchy = false;
     function measure() {
       var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
       if (matchMedia('(min-width: 721px)').matches) {
@@ -92,7 +92,6 @@
         first = false;
         var ref = nav.previousElementSibling;
         if (ref) pos = -Math.max(0, ref.getBoundingClientRect().left - nav.getBoundingClientRect().left);
-        base = pos;
       }
       draw();
     }
@@ -117,24 +116,19 @@
       }
       sw.click();
     }
-    // Slancio come una ruota: dopo il rilascio la fila continua alla velocità del dito e rallenta piano
-    // (attrito simile allo scorrimento di iPhone), poi si ferma con un'icona allineata, come una roulette
-    function target() { return base + Math.round((pos - base) / step) * step; }
+    // Slancio come una ruota: dopo il rilascio la fila continua alla velocità del dito e rallenta per attrito
+    // (simile allo scorrimento di iPhone) fino a fermarsi dove capita, senza agganci (Paolo, 12 ottobre 2026)
     function glide(t) {
       var dt = last ? Math.min(40, t - last) : 16; last = t;
-      if (Math.abs(vel) > 0.18) { pos += vel * dt; vel *= Math.pow(0.9975, dt); }
-      else {   // ultimo tratto: si posa sull'icona più vicina
-        vel = 0;
-        var d = target() - pos; pos += d * Math.min(1, dt * 0.012);
-        if (Math.abs(d) < 0.4) { pos = target(); draw(); raf = 0; last = 0; touchy = false; return; }
-      }
+      pos += vel * dt; vel *= Math.pow(0.9975, dt);
       draw();
-      raf = requestAnimationFrame(glide);
+      if (Math.abs(vel) > 0.004) raf = requestAnimationFrame(glide);
+      else { raf = 0; last = 0; vel = 0; touchy = false; }
     }
     function stop() { if (raf) cancelAnimationFrame(raf); raf = 0; last = 0; vel = 0; }
 
     // Trascinamento: in verticale la pagina scorre come sempre, in orizzontale la fila segue il dito 1:1
-    var down = null, dragging = false, moved = false, hist = [], pend = 0, wheelT = 0;
+    var down = null, dragging = false, moved = false, hist = [], pend = 0;
     nav.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       stop();
@@ -168,7 +162,7 @@
       vel = 0;
       if (b && a && t - b.t < 70 && b.t > a.t) vel = -(b.x - a.x) / (b.t - a.t);
       vel = Math.max(-7, Math.min(7, vel));
-      raf = requestAnimationFrame(glide);
+      if (vel) raf = requestAnimationFrame(glide); else touchy = false;
     }
     nav.addEventListener('pointerup', up);
     nav.addEventListener('pointercancel', up);
@@ -181,7 +175,6 @@
     nav.addEventListener('wheel', function (e) {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault(); stop(); pos += e.deltaX; draw();
-      clearTimeout(wheelT); wheelT = setTimeout(function () { raf = requestAnimationFrame(glide); }, 140);
     }, { passive: false });
     // tastiera: l'icona che prende il fuoco entra in vista
     nav.addEventListener('focusin', function (e) {
