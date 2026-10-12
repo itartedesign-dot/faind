@@ -218,7 +218,18 @@
     var txt = src.textContent.trim(), cut = txt.search(/[.!?]\s/);
     var a = cut > 0 ? txt.slice(0, cut + 1) : txt, b = cut > 0 ? txt.slice(cut + 2) : '';
     lede.textContent = '';
-    [a, b].forEach(function (x) { if (!x) return; var sp = document.createElement('span'); sp.textContent = x; lede.appendChild(sp); });
+    var m, k = -1, re = /\s(?:e|and|et|und)\s/g; while ((m = re.exec(a))) k = m.index;
+    var parts = k > 0 ? [a.slice(0, k), a.slice(k + 1), b] : [a, b];
+    parts.forEach(function (x) { if (!x) return; var sp = document.createElement('span'); sp.textContent = x; lede.appendChild(sp); });
+    if (!lede.h2ro && window.ResizeObserver) { lede.h2ro = new ResizeObserver(function () { fitLede(lede); }); lede.h2ro.observe(lede); }
+    fitLede(lede);
+  }
+  // da tablet in su ogni riga resta intera: se non entra, il font scende fino a 15px
+  function fitLede(l) {
+    l.style.fontSize = '';
+    if (!l.clientWidth || !matchMedia('(min-width: 721px)').matches) return;
+    var f = parseFloat(getComputedStyle(l).fontSize);
+    while (f > 15 && l.scrollWidth > l.clientWidth + 1) { f -= 0.5; l.style.fontSize = f + 'px'; }
   }
   if (window.MutationObserver) new MutationObserver(label).observe(root, { attributes: true, attributeFilter: ['lang'] });
 
