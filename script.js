@@ -1046,6 +1046,8 @@
     Object.keys(SECQ).forEach(function (id) {
       var h = document.getElementById(id); if (!h) return;
       var head = h.closest('.block__head'), anchor = head || h;
+      // un banner subito sotto il titolo resta tra il titolo e la domanda (Prezzi, Paolo 12 ottobre 2026)
+      if (anchor.nextElementSibling && anchor.nextElementSibling.classList.contains('secbanner')) anchor = anchor.nextElementSibling;
       var q = anchor.nextElementSibling && anchor.nextElementSibling.classList.contains('secq') ? anchor.nextElementSibling : null;
       if (!q) { q = document.createElement('p'); q.className = 'secq'; anchor.parentNode.insertBefore(q, anchor.nextSibling); }
       q.textContent = t(SECQ[id]);
