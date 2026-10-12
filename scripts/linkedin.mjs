@@ -137,7 +137,20 @@ export const withUtm = (url, source, campaign) => !url.startsWith(SITE) ? url
 export function firstComment(i, source) {
   const kind = String(i.id).replace(/-\d{4}-\d{2}-\d{2}$/, '');
   const link = withUtm(i.link || SITE, source, kind);
-  return kind === 'domenica' ? `Guarda lo short: ${link}` : `Leggi su FAIND: ${link}`;
+  if (kind === 'domenica') return `Guarda lo short: ${link}`;
+  if (kind === 'quiz' || kind === 'soluzione') return `Le notizie sull'intelligenza artificiale, ogni ora e con la fonte: ${link}`;
+  return `Leggi su FAIND: ${link}`;
+}
+
+// Gioco "Il punto di vista dell'AI": vero se su Buffer c'è già un post #PuntoDiVistaAI in uscita
+// oggi (ora italiana), per esempio programmato a mano da Paolo prima dell'automazione
+const romeDay = (d) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome' }).format(new Date(d));
+export async function quizOnBuffer(ch, now) {
+  let data;
+  try { data = await gql(`query { posts(first: 30, input: { organizationId: ${q(ch.organizationId)}, sort: [{ field: createdAt, direction: desc }], filter: { channelIds: [${q(ch.id)}] } }) { edges { node { id text dueAt } } } }`); }
+  catch (e) { if (e.auth) throw e; console.warn('  controllo post del gioco già programmati non riuscito:', e.message); return false; }
+  return ((data.posts && data.posts.edges) || []).some(({ node }) =>
+    node && /#PuntoDiVistaAI/i.test(node.text || '') && node.dueAt && romeDay(node.dueAt) === romeDay(now));
 }
 
 async function createPost(ch, item, withImage, delayMin, withComment = true) {
@@ -240,6 +253,7 @@ export async function run(data, now = Date.now()) {
     }
     for (const i of todo) {
       if (await alreadyOnBuffer(ch, i.text, now)) { i.buf = 'dup'; console.log('→ LinkedIn: già presente su Buffer, non lo ripeto:', i.id); continue; }
+      if (/^(quiz|soluzione)-/.test(i.id) && await quizOnBuffer(ch, now)) { i.buf = 'dup'; console.log('→ LinkedIn: oggi su Buffer c\'è già un post #PuntoDiVistaAI, non ne aggiungo un altro:', i.id); continue; }
       if (i.img) i.img = await sharpImage(i.img);   // resta salvata: Facebook e Pinterest riprendono questa
       const post = await deliver(ch, i);
       i.buf = new Date(now).toISOString();
@@ -256,7 +270,8 @@ export async function run(data, now = Date.now()) {
 }
 
 /* ---------- Card Canva e liste di mantra e frasi ---------- */
-const CANVA_DAYS = { Mon: ['lavori', 'Lavoro AI', 'lunedì'], Fri: ['settimana', 'Notizie AI', 'venerdì'], Sat: ['mano', 'Scritto a mano', 'sabato'] };
+const CANVA_DAYS = { Mon: ['lavori', 'Lavoro AI', 'lunedì'], Fri: ['settimana', 'Notizie AI', 'venerdì'], Sat: ['mano', 'Scritto a mano', 'sabato'],
+  Tue: ['quiz', 'Il punto di vista dell\'AI (quiz)', 'martedì'], Thu: ['soluzione', 'Il punto di vista dell\'AI (soluzione)', 'giovedì'] };
 const readJson = async (rel) => { try { return JSON.parse(await readFile(path.join(ROOT, rel), 'utf8')); } catch { return null; } };
 const romeParts = (now) => Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23', weekday: 'short' })
   .formatToParts(new Date(now)).map(x => [x.type, x.value]));
@@ -270,8 +285,11 @@ export async function canvaChecks(st, now) {
     const [kind, name, dayName] = card;
     const info = await readJson(`social/canva-${kind}.json`);
     if (!info || info.day !== day) {
-      const effect = kind === 'mano' ? 'Oggi il post del sabato su LinkedIn non è uscito.' : 'Il post di oggi su LinkedIn è uscito lo stesso, con la grafica automatica del sito.';
-      await alert(st, 'canva-' + kind, `Card Canva "${name}" di ${dayName} non preparata`,
+      const quiz = kind === 'quiz' || kind === 'soluzione';
+      const effect = kind === 'mano' || quiz ? `Oggi il post del ${dayName} su LinkedIn non è uscito.` : 'Il post di oggi su LinkedIn è uscito lo stesso, con la grafica automatica del sito.';
+      if (quiz) await alert(st, 'canva-' + kind, `Gioco "Il punto di vista dell'AI" di ${dayName} non uscito`,
+        `La routine di Claude non ha preparato il post nei suoi 3 tentativi (8:40, 10:40 e 12:40). ${effect}\n\nDi solito vuol dire che il file Canva "Il punto di vista dell'AI" non è stato aggiornato con il capolavoro nuovo (la routine non ripete l'opera della settimana prima), oppure che Canva o GitHub si sono scollegati da Claude. Apri il Progetto FAIND su Claude e scrivilo nel thread "Giochi LinkedIn".`, now, 1);
+      else await alert(st, 'canva-' + kind, `Card Canva "${name}" di ${dayName} non preparata`,
         `La routine di Claude che compila la card "${name}" su Canva non ci è riuscita nei suoi 3 tentativi (8:40, 10:40 e 12:40). ${effect}\n\nDi solito vuol dire che Canva o GitHub si sono scollegati da Claude. Apri il Progetto FAIND su Claude e scrivi nel thread "Modello card venerdì su Canva" che la card di oggi non è uscita: Claude controlla cosa non va.`, now, 1);
     }
   }
