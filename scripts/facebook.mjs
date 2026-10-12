@@ -5,8 +5,9 @@
    push su main). Porta su Facebook i post usciti su LinkedIn (deciso da
    Paolo il 10 ottobre 2026): stessa immagine e stesso testo, senza link
    nel testo; il link al sito va nel primo commento, con utm_source=facebook.
-   Porta anche gli short di Faindo, come Reel, insieme all'uscita su
-   YouTube (deciso da Paolo il 12 ottobre 2026).
+   Porta anche gli short di Faindo, con il link dello short su YouTube,
+   appena è uscito (deciso da Paolo il 12 ottobre 2026: il link apre l'app
+   di YouTube, dove si possono lasciare iscrizione, like e commenti).
 
    Perché Zernio e non Buffer: il piano gratuito di Buffer ha 3 canali e
    sono già usati da LinkedIn, YouTube e Pinterest. Zernio gratuito ha 2
@@ -27,12 +28,11 @@
      stesso giorno si tolgono visibilità): se ce n'è più d'uno in attesa
      esce il più recente, gli altri vengono saltati;
    • gli short (news.json → tgState.yt e social/shorts.json) escono come
-     Reel nello stesso giro in cui youtube.mjs li consegna a Buffer: stesso
-     video di Canva, testo senza link (il link al sito va nel primo
-     commento). Non contano nel limite di un post al giorno. Servono il
-     link del video di Canva ancora valido e uno short consegnato da meno
-     di SHORT_MAX_H ore; se il link è scaduto non escono (si può riesportare
-     il video da Canva e aggiornare "video" e "scade" in social/shorts.json);
+     post con il link dello short su YouTube, nel primo giro dopo che
+     youtube.mjs ha il link (Buffer lo dà quando lo short è uscito). Testo
+     come l'annuncio su Telegram, con la frase del campo "telegram". Non
+     contano nel limite di un post al giorno; solo per SHORT_MAX_H ore
+     dalla consegna a YouTube;
    • dopo la consegna controlla su Zernio che il post sia uscito: se Zernio
      segna un errore apre una segnalazione (issue): GitHub avvisa per mail.
 
@@ -45,7 +45,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { alert, sharpImage, firstComment, withUtm } from './linkedin.mjs';
+import { alert, sharpImage, firstComment } from './linkedin.mjs';
 
 const romeDay = (t) => new Date(t).toLocaleDateString('sv-SE', { timeZone: 'Europe/Rome' });
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -58,7 +58,6 @@ const DELAY_MIN = 5;             // il primo post esce qualche minuto dopo la co
 const CHECK_AFTER_MIN = 30;      // dopo quanto controllo su Zernio che il post sia uscito
 const CHECK_LATE_H = 6;          // oltre questo ritardo un post non uscito viene segnalato
 const SHORT_MAX_H = 24;          // uno short consegnato a YouTube da più di tanto non va più su Facebook
-const MARGIN_MIN = 30;           // non consegno un video il cui link di Canva scade entro questo margine
 
 class ZernioError extends Error {
   constructor(message, auth = false) { super(message); this.auth = auth; }
@@ -110,35 +109,26 @@ export function pending(st, now) {
   return out;
 }
 
-// Reel da uno short: testo senza righe con link né #Shorts, il link al sito nel primo commento
-export function reelFromShort(s, now) {
-  if (!s || !s.video || !s.testo) return null;
-  if (s.scade && new Date(s.scade).getTime() - now < MARGIN_MIN * 60e3) return null;
-  const text = String(s.testo).split('\n').filter(l => !/https?:\/\//.test(l)).join('\n')
-    .replace(/(^|\s)#shorts\b/gi, '').replace(/^[ \t]+|[ \t]+$/gm, '').replace(/\n{3,}/g, '\n\n').trim();
-  const title = String(s.titolo || '').replace(/\s*#shorts\b/gi, '').trim();
-  return { key: 'yt-' + s.id, text, title, video: s.video,
-    comment: `Le notizie sull'intelligenza artificiale ogni giorno: ${withUtm('https://faind.org/', 'facebook', 'dal-cassetto')}` };
+// Post da uno short: lo stesso annuncio di Telegram, con il link che apre lo short su YouTube
+export function postFromShort(s, link) {
+  if (!s || !link) return null;
+  const line = String(s.telegram || s.titolo || '').replace(/\s*#shorts\b/gi, '').trim();
+  const text = ['Nuova storia sul nostro canale YouTube:', '"Dal cassetto di Faindo" 🗄️', line, `👉 ${link}`,
+    'Due storie a settimana, il lunedì e il giovedì. Faindo ci tiene se vi iscrivete 😄'].filter(Boolean).join('\n\n');
+  return { key: 'yt-' + s.id, text, link };
 }
 
-// Short consegnati a YouTube che non sono ancora su Facebook
+// Short usciti su YouTube (con il loro link) che non sono ancora su Facebook
 export function pendingShorts(st, queue, now) {
   const out = [];
   for (const [id, v] of Object.entries(st.yt || {})) {
-    if (!v || !v.post || !v.at || st.fb['yt-' + id] || (v.esito && v.esito !== 'sent')) continue;
+    if (!v || !v.post || !v.at || st.fb['yt-' + id] || v.esito !== 'sent') continue;
     if (now - new Date(v.at).getTime() > SHORT_MAX_H * 36e5) continue;
-    const s = (queue || []).find(x => x && x.id === id);
-    const reel = reelFromShort(s, now);
-    if (reel) out.push(reel);
-    else if (s) console.log('→ Facebook: il link del video di Canva dello short è scaduto, non lo porto:', id);
+    const p = postFromShort((queue || []).find(x => x && x.id === id), v.link);
+    if (p) out.push(p);
+    else console.log('→ Facebook: lo short non ha ancora il link di YouTube, riprovo al giro dopo:', id);
   }
   return out;
-}
-
-// Il video deve rispondere: scarico solo il primo byte (il link di Canva non accetta HEAD)
-async function videoReachable(url) {
-  try { const res = await fetch(url, { headers: { range: 'bytes=0-0' }, signal: AbortSignal.timeout(30000) }); return res.ok; }
-  catch { return false; }
 }
 
 // L'immagine deve essere online: Zernio la scarica quando pubblica
@@ -148,15 +138,13 @@ async function reachable(url) {
 }
 
 async function createPost(acc, p, delayMin, withImage) {
-  const extra = p.video ? { contentType: 'reel', ...(p.title ? { title: p.title } : {}) } : {};
   const body = {
     content: p.text,
-    platforms: [{ platform: 'facebook', accountId: acc.id, platformSpecificData: { ...extra, firstComment: p.comment } }],
+    platforms: [{ platform: 'facebook', accountId: acc.id, platformSpecificData: p.comment ? { firstComment: p.comment } : {} }],
     scheduledFor: new Date(Date.now() + delayMin * 60e3).toISOString(),
     timezone: 'UTC',
   };
-  if (p.video) body.mediaItems = [{ type: 'video', url: p.video }];
-  else if (withImage && p.img) body.mediaItems = [{ type: 'image', url: p.img }];
+  if (withImage && p.img) body.mediaItems = [{ type: 'image', url: p.img }];
   const data = await api('POST', '/posts', body);
   const post = data.post || data;
   if (!post || !(post._id || post.id)) throw new Error('post non creato: ' + JSON.stringify(data).slice(0, 200));
@@ -203,7 +191,7 @@ async function checkSent(st, now) {
 export async function run(data, now = Date.now(), queue = []) {
   const st = data.tgState = data.tgState || {};
   st.fb = st.fb || {};
-  const reels = pendingShorts(st, queue, now);
+  const shorts = pendingShorts(st, queue, now);
   let todo = pending(st, now);
   // Un post al giorno: esce il più recente, quelli più vecchi non usciranno più
   if (todo.length > 1) for (const p of todo.slice(0, -1)) { st.fb[p.key] = { skip: true }; console.log('→ Facebook: c\'è un post più recente, salto:', p.key); }
@@ -212,12 +200,12 @@ export async function run(data, now = Date.now(), queue = []) {
   if (DRY) {
     if (!todo.length) console.log('→ Facebook (prova): niente da pubblicare in questo giro.');
     for (const p of todo) console.log(`--- DRY · Facebook · ${p.key} ---\n${p.text}\n[${p.text.length} caratteri] [img] ${p.img || '—'}\n[primo commento] ${p.comment}`);
-    for (const p of reels) console.log(`--- DRY · Facebook · Reel ${p.key} ---\n[titolo] ${p.title}\n${p.text}\n[${p.text.length} caratteri] [video] ${p.video}\n[primo commento] ${p.comment}`);
+    for (const p of shorts) console.log(`--- DRY · Facebook · short ${p.key} ---\n${p.text}`);
     return 0;
   }
   let sent = 0;
   try {
-    if (todo.length || reels.length || !st.fbOk) {
+    if (todo.length || shorts.length || !st.fbOk) {
       const acc = await findAccount();
       if (!st.fbOk) console.log(`✓ Facebook: collegamento con Zernio riuscito. Pagina "${acc.name}".`);
       st.fbOk = true;
@@ -230,18 +218,17 @@ export async function run(data, now = Date.now(), queue = []) {
         sent++;
         console.log(`✓ Facebook: post consegnato a Zernio (${p.key}), esce alle ${new Date(post.at).toLocaleTimeString('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' })}`);
       }
-      // Short come Reel, insieme a YouTube; un errore qui non ferma i post (e viceversa)
-      for (const p of reels) {
-        if (!(await videoReachable(p.video))) { console.log('→ Facebook: il video dello short non risponde, riprovo al giro dopo:', p.key); continue; }
+      // Short con il link di YouTube; un errore qui non ferma i post (e viceversa)
+      for (const p of shorts) {
         try {
           const post = await createPost(acc, p, DELAY_MIN, false);
           st.fb[p.key] = { post: post.id, at: new Date(now).toISOString() };
           sent++;
-          console.log(`✓ Facebook: Reel dello short consegnato a Zernio (${p.key}), esce alle ${new Date(post.at).toLocaleTimeString('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' })}`);
+          console.log(`✓ Facebook: short consegnato a Zernio (${p.key}), esce alle ${new Date(post.at).toLocaleTimeString('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' })}`);
         } catch (e) {
           if (e.auth) throw e;
-          console.warn('✗ Facebook: Reel dello short non consegnato:', p.key, e.message);
-          await alert(st, 'fb-reel-' + p.key, 'Facebook: short di Faindo non pubblicato', `L'automazione non è riuscita a consegnare lo short "${p.key}" a Zernio come Reel. Riproverà al giro dopo finché il link del video di Canva è valido.\n\nErrore: \`${e.message}\`\n\nScrivi a Claude nel Progetto FAIND che lo short non è uscito su Facebook.`, now, 1);
+          console.warn('✗ Facebook: short non consegnato:', p.key, e.message);
+          await alert(st, 'fb-short-' + p.key, 'Facebook: short di Faindo non pubblicato', `L'automazione non è riuscita a consegnare a Zernio il post con il link dello short "${p.key}". Riproverà al giro dopo.\n\nErrore: \`${e.message}\`\n\nScrivi a Claude nel Progetto FAIND che lo short non è uscito su Facebook.`, now, 1);
         }
       }
     }
