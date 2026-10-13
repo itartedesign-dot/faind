@@ -88,9 +88,12 @@
 .h2panel--curiosita #strano-ma-vero > p:not(.h2smv-lede) { display: none; }
 .h2panel--curiosita #strano-ma-vero > .h2smv-lede {
   display: flex; flex-direction: column; gap: 6px; margin: 14px 0 4px; padding: 0; text-align: left;
-  font-size: 16px; line-height: 1.35; font-weight: 750; color: var(--ink);
+  font-size: 14px; line-height: 1.35; font-weight: 750; color: var(--ink);
 }
 .h2empty { color: var(--muted); padding-top: 22px; }
+/* sottotitoli delle schede più leggibili */
+.h2panel .block__hint, .h2panel .jobs__sub { font-size: 16.5px; line-height: 1.45; }
+.h2panel .secq, .h2panel .panel > .secq, .h2panel .wire__head .secq { font-size: 16px !important; }
 
 .h2-in { animation: h2in .32s cubic-bezier(.2, .7, .2, 1); }
 @keyframes h2in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -166,7 +169,7 @@
   /* Curiosità: foto a sinistra, le due righe centrate in verticale e in orizzontale nello spazio a destra */
   .h2panel--curiosita .h2panel__body > #strano-ma-vero { grid-template-columns: minmax(0, 380px) minmax(0, 1fr); grid-template-rows: auto; }
   .h2panel--curiosita .h2panel__body > #strano-ma-vero > .smv__img { grid-row: 1; }
-  .h2panel--curiosita .h2panel__body > #strano-ma-vero > .h2smv-lede { grid-row: 1; align-self: center; margin: 0; font-size: 21px; line-height: 1.3; gap: 4px; }
+  .h2panel--curiosita .h2panel__body > #strano-ma-vero > .h2smv-lede { grid-row: 1; align-self: center; margin: 0; font-size: 19px; line-height: 1.3; gap: 4px; }
   .h2panel--curiosita .h2panel__body > #strano-ma-vero > .h2smv-lede > span { white-space: nowrap; }
 }
 
