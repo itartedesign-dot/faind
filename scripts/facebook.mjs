@@ -44,6 +44,7 @@
 
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { segnala } from './anomalie.mjs';
 import path from 'node:path';
 import { alert, sharpImage, firstComment } from './linkedin.mjs';
 
@@ -255,5 +256,5 @@ async function main() {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
-  main().catch((e) => { console.error(e); process.exitCode = 0; });
+  main().catch((e) => { console.error(e); segnala('Facebook', 'lo script si è fermato: ' + e.message); process.exitCode = 0; });
 }
