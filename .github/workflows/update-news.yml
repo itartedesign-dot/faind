@@ -77,6 +77,16 @@ jobs:
           ZERNIO_API_KEY: ${{ secrets.ZERNIO_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Ultimo passo, anche se il giro si è fermato prima: manda a Paolo i problemi
+      # che gli script hanno registrato senza un'altra segnalazione (scripts/anomalie.mjs)
+      - name: Controllo anomalie
+        if: always()
+        run: node scripts/anomalie.mjs
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+
       - uses: actions/upload-pages-artifact@v5
         with:
           path: .

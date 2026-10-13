@@ -15,7 +15,8 @@
      su Buffer non ci sia già lo stesso post;
    • niente arretrati: le voci più vecchie di MAX_AGE_HOURS vengono scartate;
    • sotto ogni post un primo commento con il link al sito (utm_source=linkedin),
-     come su Facebook; se Buffer lo rifiuta il post esce lo stesso, senza commento;
+     come su Facebook; se Buffer lo rifiuta il post esce lo stesso, senza commento
+     (il piano gratuito di Buffer non lo permette: lo si riprova ogni 30 giorni);
    • se qualcosa va storto riprova al giro dopo e apre una segnalazione
      (issue) sul repository: GitHub avvisa per mail;
    • la chiave Buffer dura un anno: da WARN_DAYS giorni prima della scadenza
@@ -34,6 +35,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { segnala } from './anomalie.mjs';
 import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -49,6 +51,7 @@ const KEY_DAYS = 365;            // durata della chiave Buffer (scegliere "1 yea
 const WARN_DAYS = 30;            // da quanti giorni prima della scadenza avvisare
 const ALERT_EVERY_DAYS = 7;      // la stessa segnalazione non si ripete prima di N giorni
 const DUP_HOURS = 72;            // finestra del controllo "già presente su Buffer"
+const COMMENT_RECHECK_DAYS = 30; // con il piano gratuito Buffer il primo commento non c'è: riprovo dopo N giorni (se Paolo passa al piano a pagamento)
 const CANVA_ALERT_FROM = 15;     // ora italiana dopo cui una card Canva mancante viene segnalata (vedi LI_CANVA_WAIT_UNTIL in telegram.mjs)
 
 const q = (s) => JSON.stringify(String(s));   // stringa pronta per GraphQL
@@ -168,24 +171,34 @@ async function createPost(ch, item, withImage, delayMin, withComment = true) {
 // Consegna a tentativi: 1) con immagine e primo commento tra DELAY_MIN minuti; 2) se Buffer rifiuta,
 // di nuovo ma con un margine più largo (RETRY_DELAY_MIN), nel caso il problema fosse l'orario;
 // 3) senza il primo commento (il link resta comunque nel testo); 4) solo allora anche senza immagine.
-// Una chiave rifiutata interrompe subito i tentativi.
-export async function deliver(ch, item) {
-  try { return await createPost(ch, item, true, DELAY_MIN); }
-  catch (e) {
-    if (e.auth) throw e;
-    console.warn(`  consegna rifiutata, riprovo con un margine di ${RETRY_DELAY_MIN} minuti:`, e.message);
+// Una chiave rifiutata interrompe subito i tentativi. Se Buffer dice che il primo commento richiede
+// il piano a pagamento si passa subito al punto 3 (paid: true), e withComment = false parte da lì.
+const PAID_ONLY = /first comment requires a paid plan/i;
+export async function deliver(ch, item, withComment = true) {
+  let paid = false;
+  if (withComment) {
+    try { return await createPost(ch, item, true, DELAY_MIN); }
+    catch (e) {
+      if (e.auth) throw e;
+      paid = PAID_ONLY.test(e.message);
+      if (!paid) console.warn(`  consegna rifiutata, riprovo con un margine di ${RETRY_DELAY_MIN} minuti:`, e.message);
+    }
+    if (!paid) {
+      try { return await createPost(ch, item, true, RETRY_DELAY_MIN); }
+      catch (e) {
+        if (e.auth) throw e;
+        paid = PAID_ONLY.test(e.message);
+        if (!paid) console.warn('  rifiutata anche così, riprovo senza il primo commento:', e.message);
+      }
+    }
+    if (paid) console.warn('  Buffer: il primo commento richiede il piano a pagamento, pubblico senza');
   }
-  try { return await createPost(ch, item, true, RETRY_DELAY_MIN); }
-  catch (e) {
-    if (e.auth) throw e;
-    console.warn('  rifiutata anche così, riprovo senza il primo commento:', e.message);
-  }
-  try { return { ...(await createPost(ch, item, true, RETRY_DELAY_MIN, false)), noComment: true }; }
+  try { return { ...(await createPost(ch, item, true, withComment ? RETRY_DELAY_MIN : DELAY_MIN, false)), noComment: withComment, paid }; }
   catch (e) {
     if (e.auth || !item.img) throw e;
     console.warn('  rifiutata anche così, pubblico solo il testo:', e.message);
   }
-  return { ...(await createPost(ch, item, false, RETRY_DELAY_MIN, false)), noComment: true };
+  return { ...(await createPost(ch, item, false, RETRY_DELAY_MIN, false)), noComment: withComment, paid };
 }
 
 /* ---------- Segnalazioni sul repository (GitHub avvisa per mail) ---------- */
@@ -255,10 +268,13 @@ export async function run(data, now = Date.now()) {
       if (await alreadyOnBuffer(ch, i.text, now)) { i.buf = 'dup'; console.log('→ LinkedIn: già presente su Buffer, non lo ripeto:', i.id); continue; }
       if (/^(quiz|soluzione)-/.test(i.id) && await quizOnBuffer(ch, now)) { i.buf = 'dup'; console.log('→ LinkedIn: oggi su Buffer c\'è già un post #PuntoDiVistaAI, non ne aggiungo un altro:', i.id); continue; }
       if (i.img) i.img = await sharpImage(i.img);   // resta salvata: Facebook e Pinterest riprendono questa
-      const post = await deliver(ch, i);
+      const commentOff = st.liNoComment && now - new Date(st.liNoComment).getTime() < COMMENT_RECHECK_DAYS * 864e5;
+      const post = await deliver(ch, i, !commentOff);
       i.buf = new Date(now).toISOString();
       sent++;
-      if (post.noComment) await alert(st, 'commento', 'LinkedIn: post uscito senza il primo commento col link', `Buffer ha rifiutato il primo commento del post "${i.id}", che è uscito lo stesso (il link al sito è comunque nel testo). Scrivi a Claude nel Progetto FAIND che su LinkedIn il primo commento non esce.`, now);
+      // limite del piano gratuito di Buffer, già noto: niente segnalazione, riprovo tra COMMENT_RECHECK_DAYS giorni
+      if (post.paid) st.liNoComment = new Date(now).toISOString();
+      else if (post.noComment) await alert(st, 'commento', 'LinkedIn: post uscito senza il primo commento col link', `Buffer ha rifiutato il primo commento del post "${i.id}", che è uscito lo stesso (il link al sito è comunque nel testo). Scrivi a Claude nel Progetto FAIND che su LinkedIn il primo commento non esce.`, now);
       console.log(`✓ LinkedIn: post consegnato a Buffer (${i.id}), esce alle ${new Date(post.dueAt || Date.now()).toLocaleTimeString('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' })}`);
     }
   } catch (e) {
@@ -323,5 +339,5 @@ async function main() {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
-  main().catch((e) => { console.error(e); process.exitCode = 0; });
+  main().catch((e) => { console.error(e); segnala('LinkedIn', 'lo script si è fermato: ' + e.message); process.exitCode = 0; });
 }

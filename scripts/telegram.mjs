@@ -38,6 +38,7 @@ import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
 import { shot } from './cards.mjs';
 import { ARTICLES } from './articles.mjs';
 import { fileURLToPath } from 'node:url';
+import { segnala } from './anomalie.mjs';
 import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -221,7 +222,7 @@ async function maybeDigest(data, t) {
     if (!DRY) data.tgState.digestDay = t.day;
     console.log(`✓ Telegram: Il punto delle 8 (${list.length} notizie)`);
     await sleep(1500);
-  } catch (e) { console.warn('✗ Punto delle 8 —', e.message); }
+  } catch (e) { console.warn('✗ Punto delle 8 —', e.message); segnala('Telegram', 'Il punto delle 8 non inviato: ' + e.message); }
 }
 
 /* ---------- Lavoro AI: classifica della settimana ---------- */
@@ -538,7 +539,7 @@ async function maybeJobs(data, t, card) {
     }
     console.log('✓ Telegram: classifica lavori AI');
     await sleep(1500);
-  } catch (e) { console.warn('✗ Classifica lavori —', e.message); }
+  } catch (e) { console.warn('✗ Classifica lavori —', e.message); segnala('Telegram', 'classifica lavori non inviata: ' + e.message); }
 }
 
 /* ---------- Feed per LinkedIn (feeds/linkedin.xml) ----------
@@ -785,6 +786,7 @@ async function main() {
       await sleep(1500);
     } catch (e) {
       console.warn('✗ Telegram:', n.title, '—', e.message);
+      segnala('Telegram', 'notizia non pubblicata: ' + e.message);
       if (/chat not found|bot was kicked|not enough rights|unauthorized/i.test(e.message)) break;
     }
   }
@@ -798,7 +800,7 @@ async function main() {
   const nextVideo = videos.filter(v => !v.tg).sort((a, b) => b.date.localeCompare(a.date))[0];
   if (nextVideo) {
     try { await publish(nextVideo); nextVideo.tg = new Date().toISOString(); console.log('✓ Telegram video:', nextVideo.title); }
-    catch (e) { console.warn('✗ Telegram video:', nextVideo.title, '—', e.message); }
+    catch (e) { console.warn('✗ Telegram video:', nextVideo.title, '—', e.message); segnala('Telegram', 'video non pubblicato: ' + e.message); }
   }
 
   if (!DRY) await writeFile(file, JSON.stringify(data));
@@ -806,5 +808,5 @@ async function main() {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
-  main().catch((e) => { console.error(e); process.exitCode = 0; });
+  main().catch((e) => { console.error(e); segnala('Telegram', 'lo script si è fermato: ' + e.message); process.exitCode = 0; });
 }
