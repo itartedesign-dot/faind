@@ -350,12 +350,12 @@
     if (!lede.h2ro && window.ResizeObserver) { lede.h2ro = new ResizeObserver(function () { fitLede(lede); }); lede.h2ro.observe(lede); }
     fitLede(lede);
   }
-  // da tablet in su ogni riga resta intera: se non entra, il font scende fino a 15px
+  // da tablet in su ogni riga resta intera: se non entra, il font scende fino a 13px
   function fitLede(l) {
     l.style.fontSize = '';
     if (!l.clientWidth || !matchMedia('(min-width: 721px)').matches) return;
     var f = parseFloat(getComputedStyle(l).fontSize);
-    while (f > 15 && l.scrollWidth > l.clientWidth + 1) { f -= 0.5; l.style.fontSize = f + 'px'; }
+    while (f > 13 && l.scrollWidth > l.clientWidth + 1) { f -= 0.5; l.style.fontSize = f + 'px'; }
   }
   if (window.MutationObserver) new MutationObserver(label).observe(root, { attributes: true, attributeFilter: ['lang'] });
 
