@@ -1,6 +1,17 @@
 {
   "nota": "Gioco LinkedIn \"Il punto di vista dell'AI\": capolavori già usati (la routine non ripete mai un'opera). Vedi social/ROUTINE-QUIZ.md.",
   "usate": [
-    { "opera": "La ragazza con l'orecchino di perla", "autore": "Johannes Vermeer", "quiz": "2026-10-06", "soluzione": "2026-10-08" }
+    {
+      "opera": "La ragazza con l'orecchino di perla",
+      "autore": "Johannes Vermeer",
+      "quiz": "2026-10-06",
+      "soluzione": "2026-10-08"
+    },
+    {
+      "opera": "L'Ultima Cena",
+      "autore": "Leonardo da Vinci",
+      "quiz": "2026-10-13",
+      "soluzione": "2026-10-15"
+    }
   ]
 }
