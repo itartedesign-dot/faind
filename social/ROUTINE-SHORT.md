@@ -27,11 +27,14 @@ così Paolo decide se correggerlo. Il testo sul video resta quello di `testo`, p
 
 ## 3. Canva
 
-Video base: design `DAHXjQfDbfE` ("FAIND – Dal cassetto di Faindo (short vuoto)"), 5 pagine.
+Video base: design `DAHX7XDp_fk` ("FAIND – Dal cassetto di Faindo"), file di tipo Video creato da
+Paolo il 13 ottobre 2026 (una sola pagina con la timeline: video di inizio, le due card col testo e la
+coda, che Paolo può cambiare quando vuole). Il vecchio `DAHXjQfDbfE` ("short vuoto") non si usa più.
 Non modificarlo mai: usa `autofill-design` con `design_id`, che crea una copia.
 Titolo della copia: `FAIND short <numero aneddoto> <data>`.
-Campi: `ANEDDOTO` (pagina 2, animata) e `ANEDDOTO_FISSO` (pagina 3, ferma): tutti e due con lo stesso
-`testo` dell'aneddoto, così com'è. La fonte non va sul video.
+Campi: `ANEDDOTO` e `ANEDDOTO_FISSO`, tutti e due con lo stesso `testo` dell'aneddoto, così com'è.
+Nel file video tutte e due le card (animata e ferma) sono collegate ad `ANEDDOTO`, ma passa comunque
+entrambi i campi. La fonte non va sul video.
 
 Poi `export-design` in MP4, qualità `vertical_1080p`, e tieni il link restituito. Dal link ricava
 quando scade: `X-Amz-Date` + `X-Amz-Expires` secondi (in UTC).
