@@ -17,7 +17,7 @@
       "titolo": "Cercare medicine dentro di noi",
       "testo": "E se alcuni candidati antibiotici fossero nascosti nel nostro stesso corpo? I ricercatori hanno usato l’AI per cercare piccoli frammenti potenzialmente antimicrobici tra le proteine umane. Alcuni hanno mostrato attività contro i batteri negli esperimenti. Il corpo, a quanto pare, conserva ancora parecchie carpette da aprire.",
       "fonte": "NIH",
-      "verificato": false
+      "verificato": true
     },
     {
       "titolo": "Molecole nuove, invece di candidati già esistenti",
@@ -136,6 +136,10 @@
     {
       "n": 2,
       "day": "2026-10-12"
+    },
+    {
+      "n": 3,
+      "day": "2026-10-15"
     }
   ]
 }

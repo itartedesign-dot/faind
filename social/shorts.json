@@ -20,6 +20,16 @@
       "titolo": "L'AI ha trovato un antibiotico su misura per un superbatterio #Shorts",
       "testo": "Un modello di intelligenza artificiale ha esaminato quasi 7.000 molecole e ha indicato abaucin, un antibiotico che colpisce in modo mirato Acinetobacter baumannii, uno dei batteri resistenti ai farmaci più difficili da curare. Nei topi ha trattato infezioni delle ferite. Prima di arrivare ai pazienti servono altri studi.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Liu, Catacutan, Rathod et al., \"Deep learning-guided discovery of an antibiotic targeting Acinetobacter baumannii\", Nature Chemical Biology, 2023 (McMaster University e MIT)\nhttps://news.mit.edu/2023/using-ai-scientists-combat-drug-resistant-infections-0525\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Antibiotici #Superbatteri #Abaucin #Scienza #DalCassetto #FAIND",
       "telegram": "L'AI trova un antibiotico su misura per un superbatterio: un cecchino invece di una bomba."
+    },
+    {
+      "id": "dal-cassetto-03",
+      "aneddoto": 3,
+      "dalle": "2026-10-15T09:43:00Z",
+      "scade": "2026-10-15T11:41:48Z",
+      "video": "https://export-download.canva.com/o-msI/DAHYEbo-msI/-1/0-3439017361614275464.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261014%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261014T124717Z&X-Amz-Expires=82471&X-Amz-Signature=c3ca33532f1d2320d1fb9bf5cfbe11801736808d0e7e3e83843751109023d43e&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Thu%2C%2015%20Oct%202026%2011%3A41%3A48%20GMT",
+      "titolo": "L'AI ha cercato nuovi antibiotici dentro il corpo umano #Shorts",
+      "testo": "I ricercatori dell'Università della Pennsylvania hanno usato l'intelligenza artificiale per esplorare tutte le proteine umane e trovare piccoli frammenti nascosti, i peptidi, con possibili proprietà antibiotiche. Su 55 peptidi provati in laboratorio, più della metà ha colpito almeno un batterio e i migliori hanno ridotto le infezioni nei topi.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Torres, Melo, Crescenzi, Notomista, de la Fuente-Nunez, \"Mining for encrypted peptide antibiotics in the human proteome\", Nature Biomedical Engineering, 2021 (University of Pennsylvania)\nhttps://www.nih.gov/news-events/nih-research-matters/searching-new-antibiotics-human-body\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Antibiotici #Peptidi #Scienza #DalCassetto #FAIND",
+      "telegram": "L'AI ha cercato nuovi antibiotici in un posto insolito: dentro le proteine del nostro corpo."
     }
   ]
 }
