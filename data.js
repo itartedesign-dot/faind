@@ -175,6 +175,15 @@ window.FAIND_DATA = {
       link: { type: "download", url: "https://lmstudio.ai" }
     },
     {
+      id: "qualellm",
+      category: "chatbot",
+      tag: "guide",
+      title: "QualeLLM: quale modello gira sul tuo computer",
+      summary: "Indichi il tuo PC o Mac e scopri quali modelli open puoi usare in locale. Catalogo, classifiche e guide in italiano.",
+      source: { name: "qualellm.it", url: "https://qualellm.it" },
+      link: { type: "read", url: "https://qualellm.it/" }
+    },
+    {
       id: "claude-desktop",
       category: "chatbot",
       tag: "download",
