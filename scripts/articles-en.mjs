@@ -62,7 +62,7 @@ export default {
   },
 
   'imparare-a-usare-intelligenza-artificiale': {
-    title: `Learning to use artificial intelligence: where to start`,
+    title: `How to use artificial intelligence: a guide for complete beginners`,
     card: `A guide for complete beginners: which one to use, what to ask it, what to avoid.`,
     desc: `How to learn to use artificial intelligence from scratch: how it works, which AI to choose, how to write a request, how to use it for study and work, and the mistakes to avoid.`,
     lede: `Learning to use artificial intelligence does not require a technical background. It takes an hour of trying and a few rules to avoid being misled. This is the guide we wish we had read at the start.`,
@@ -76,11 +76,13 @@ export default {
       [`Which one to start with`, `Any of the main ones, in its free version: there is no need to pick the perfect one. If you already use Gmail and Docs, Gemini is the most convenient; for general use ChatGPT is perfectly fine; for writing and reasoning over long texts many people prefer Claude. The differences and prices are on the <a href="../../confronto/en/">AI assistants compared</a> page.`],
       [`How to write a good request`, `The request is called a <a href="../../glossario/en/#prompt">prompt</a>. It works best when it contains four things: <strong>who you are</strong> or who the result is for, <strong>what you want</strong>, precisely, <strong>the material</strong> to work on, and <strong>the format</strong> of the answer. “Write an email” gives a generic result; “write a three-line email to a client to move Thursday's appointment, friendly tone” gives a useful one. If the answer is not convincing, correct it: this is a conversation, not a search.`],
       [`How to use AI for studying and at school`, `It works well for having a topic explained in simpler words, being quizzed, summarising your own notes and finding examples. It works badly, and teaches nothing, if you ask it to do your homework for you. The practical rule: use it as a tutor, not as a substitute.`],
+      [`How to use artificial intelligence on your phone`, `It is the easiest way to start. Download the free ChatGPT, Gemini or Claude app and type or speak, as in a chat. On many Android phones Gemini is already installed as the assistant; on recent iPhones Siri can pass questions to ChatGPT. With the camera you can also show it something, a document or a label, and ask for an explanation.`],
       [`The mistakes to avoid`, `Three above all. Trusting without checking: dates, numbers and quotations must always be verified. Entering confidential data: work documents, client data, health information. Assuming that a well-written answer must be correct. For the terms you come across, there is the <a href="../../glossario/en/">glossary</a>.`]
     ],
     faq: [
       [`How do you learn to use artificial intelligence?`, `By trying a free assistant on real tasks: an email, a summary, an explanation. You improve by learning to write precise requests and to check the answers.`],
-      [`Do you have to pay to use artificial intelligence?`, `No. All the main services have a free plan that is enough for learning. Paid plans are for those who use it a lot.`]
+      [`Do you have to pay to use artificial intelligence?`, `No. All the main services have a free plan that is enough for learning. Paid plans are for those who use it a lot.`],
+      [`How do you use artificial intelligence?`, `Open an assistant such as ChatGPT, Gemini or Claude, on the website or in the app, and write a precise request: what you want, for whom, on what material and in what format. Then improve the answer by continuing the conversation.`]
     ],
     sources: []
   },
@@ -123,11 +125,13 @@ export default {
       [`The benefits of artificial intelligence`, `In <strong>research</strong> it speeds up discoveries that used to take years: predicting the shape of proteins, awarded the 2024 Nobel Prize in Chemistry, is the best-known example. In <strong>medicine</strong> it helps to read tests and scans and to detect some diseases earlier. At <strong>work</strong> it takes time away from repetitive tasks. In <strong>everyday life</strong> it translates, summarises, explains, and makes content accessible to people with a visual or hearing disability.`],
       [`The risks of artificial intelligence`, `It can <strong>make mistakes</strong> in a confident tone, and in healthcare or justice a mistake carries weight. It can reproduce <strong>discrimination</strong> present in the data it was trained on. It puts pressure on <strong>privacy</strong>, because it runs on large amounts of personal data. It makes it easy to produce <strong>disinformation</strong> and realistic fakes. And it changes <strong>work</strong> faster than many people can adapt.`],
       [`Risks and opportunities for mental health`, `This is one of the fastest-growing searches. Chatbots are always available and do not judge, and some people use them as a first outlet. But they are not therapists: they do not know the person, they can give inadequate answers in moments of crisis and they can encourage isolation. Serious distress calls for a professional.`],
+      [`What the experts think`, `Even the people who built it are divided. Geoffrey Hinton, who won the 2024 Nobel Prize in Physics for work underlying AI, left Google in 2023 to speak freely about the risks, including that of losing control of systems smarter than us. Yann LeCun, for years head of AI research at Meta, considers fears of catastrophe exaggerated and sees the greater danger in power concentrated in a few companies. In between is the position of many researchers: benefits and risks are both real, and the balance depends on the rules.`],
       [`The balance`, `The same tool that helps a doctor can get a diagnosis wrong; the one that translates a text can write a scam. The outcome depends on three things: the rules, the quality of the checks and the awareness of the person using it. Further reading: <a href="intelligenza-artificiale-e-pericolosa.html">is AI dangerous?</a>, <a href="intelligenza-artificiale-e-affidabile.html">is AI reliable?</a>, <a href="../../temi/en/ai-medicine-health.html">AI in medicine</a>.`]
     ],
     faq: [
       [`What are the benefits of artificial intelligence?`, `It speeds up scientific research, helps doctors and professionals, automates repetitive tasks and makes information and services more accessible.`],
-      [`What are the risks of artificial intelligence?`, `Errors presented as certainties, discrimination, privacy violations, disinformation, scams and rapid changes to work.`]
+      [`What are the risks of artificial intelligence?`, `Errors presented as certainties, discrimination, privacy violations, disinformation, scams and rapid changes to work.`],
+      [`What do experts think about artificial intelligence?`, `They are divided. Some, like Geoffrey Hinton, fear that very advanced systems could escape control; others, like Yann LeCun, think these fears are exaggerated. Almost all agree that rules and checks are needed.`]
     ],
     sources: []
   },
@@ -147,13 +151,17 @@ export default {
       [`How much it consumes`, `According to the International Energy Agency, in 2024 data centres used about 1.5% of the world's electricity, and their consumption could roughly double by 2030, driven mainly by AI. How much a single request weighs depends on the model and on how it is measured: the figures in circulation should always be read with the source beside them.`],
       [`Why AI uses water`, `Computers produce heat and have to be cooled. Many facilities use water-based systems, and part of that water evaporates. More water is consumed indirectly, by the power stations that generate the electricity. The amount varies widely with the local climate and the technology: this is why new data centres are often contested where water is scarce.`],
       [`Does AI pollute?`, `It depends on the energy that powers it. A data centre connected to renewable sources has a very different impact from one running on gas or coal. The big companies are signing contracts for solar, wind and nuclear power, but they have also acknowledged that AI makes it harder to meet their own emissions targets.`],
+      [`How much water a question to ChatGPT or Gemini uses`, `Little, but not nothing. According to Google (August 2025), a typical text request to Gemini uses about 0.26 millilitres of water, five drops, and 0.24 watt-hours of electricity. According to Sam Altman (June 2025), an average ChatGPT query uses about 0.3 millilitres and 0.34 watt-hours, but OpenAI has not explained how it calculated this. A 2023 study by the University of California, Riverside estimated about half a litre for every 10-50 answers from the older GPT-3, also counting the water used by power stations. The numbers differ so much because the model, the data centre and what is counted all change. Does AI waste water? A single question does not; the problem is the sum of billions of questions, concentrated in a few places.`],
+      [`Where the water used by AI ends up`, `Not all of it is lost. Part of the water drawn by data centres goes back, warmer, to rivers and networks; the part that evaporates in cooling towers is truly consumed, and it matters most where water is scarce. That is why company reports distinguish between water <strong>withdrawn</strong> and water <strong>consumed</strong>: when you read a figure, check which of the two it is. Some new facilities use closed loops or air cooling, which use much less water but more electricity.`],
       [`The role of AI in saving energy`, `The same technology is used to forecast solar and wind output, balance power grids and cut waste in buildings and factories. Whether the final balance will be positive has not yet been settled. FAIND follows the topic every day on the <a href="../../temi/en/ai-climate-environment.html">AI, climate and environment</a> page.`]
     ],
     faq: [
       [`Why does artificial intelligence use water?`, `Because the computers in data centres produce heat and many facilities cool them with water. More water is used by the power stations that generate the electricity.`],
-      [`Does using ChatGPT pollute?`, `Each request uses little energy, but multiplied by billions of uses it becomes significant. The impact depends on the efficiency of the data centre and on the energy source.`]
+      [`Does using ChatGPT pollute?`, `Each request uses little energy, but multiplied by billions of uses it becomes significant. The impact depends on the efficiency of the data centre and on the energy source.`],
+      [`How much water does a question to AI use?`, `According to the companies' own data, between 0.26 and 0.3 millilitres for a text request, a few drops. Older independent estimates went up to half a litre every 10-50 answers, including the water used by power stations.`],
+      [`Does AI waste water?`, `A single question does not: it uses a few drops. The problem is the sum of billions of requests, concentrated in a few data centres, sometimes in areas where water is scarce.`]
     ],
-    sources: [`International Energy Agency (IEA), “Energy and AI” (2025)`]
+    sources: [`International Energy Agency (IEA), “Energy and AI” (2025)`, `Google, study on the environmental impact of Gemini (August 2025)`, `Sam Altman, “The Gentle Singularity” (June 2025)`, `Li et al., “Making AI Less Thirsty”, University of California, Riverside (2023)`]
   },
 
   'intelligenza-artificiale-e-affidabile': {
@@ -171,13 +179,16 @@ export default {
       [`When it is reliable`, `It works well when it works on material you give it: summarising a document, rewriting a text, translating, tidying up notes, explaining a well-known concept. It also works better when it searches the web and cites its sources, because you can check them.`],
       [`When it is not`, `It is less reliable on numbers, dates, quotations, names, legal provisions, recent news and complex calculations. And in everything to do with health, money and legal matters, where a mistake has consequences: there it can help you understand, but not decide.`],
       [`Is artificial intelligence safe?`, `Safety also means data. What you write to a chatbot is processed on the company's servers and, depending on the settings, may be used to improve the models. It is better not to enter other people's personal data, confidential documents or passwords, and to check the privacy settings.`],
+      [`How often it gets things wrong: the numbers`, `Two studies help measure it. In October 2025, 22 public service broadcasters from 18 countries, coordinated by the EBU and the BBC, checked more than 3,000 answers about the news from ChatGPT, Copilot, Gemini and Perplexity: 45% contained at least one significant error, often in the sources cited. In April 2025 OpenAI stated that its o3 and o4-mini models made up information in 33% and 48% of answers to a test of questions about real people. The tests differ and models change fast, but the message is the same: on facts and news, mistakes are not rare.`],
       [`How to check an answer`, `Ask for the sources and open them. Check numbers and quotations on an official site. Ask the question again in a different way, or ask another AI: if the answers change, there is reason to doubt. And remember that a well-written answer is not necessarily a right one.`]
     ],
     faq: [
       [`Can artificial intelligence make mistakes?`, `Yes. It can invent false information and present it with confidence, especially on facts, numbers and quotations. That is why answers need to be checked.`],
-      [`Can you trust ChatGPT?`, `For summarising, rewriting and explaining, yes, with a final check. For decisions about health, money and legal matters you always need a professional.`]
+      [`Can you trust ChatGPT?`, `For summarising, rewriting and explaining, yes, with a final check. For decisions about health, money and legal matters you always need a professional.`],
+      [`How reliable is artificial intelligence?`, `Very reliable when it works on texts you give it, much less on facts and news: in a 2025 European study, 45% of answers about the news contained at least one significant error. Use it with a final check.`],
+      [`Does artificial intelligence always tell the truth?`, `No. It does not lie on purpose, but it generates the most plausible answer, and when it does not know it can make things up with confidence. That is why it is worth asking for sources and opening them.`]
     ],
-    sources: []
+    sources: [`EBU and BBC, “News Integrity in AI Assistants” (October 2025)`, `OpenAI, o3 and o4-mini system card (April 2025)`]
   },
 
   'intelligenza-artificiale-gratis-o-a-pagamento': {
