@@ -263,5 +263,104 @@ export default {
       [`Sind KI-Detektoren zuverlässig?`, `Nur zum Teil. Sie können sich in beide Richtungen irren und sollten daher als Hinweis zusammen mit der Überprüfung der Quelle genutzt werden.`]
     ],
     sources: []
+  },
+  'cos-e-intelligenza-artificiale-come-funziona': {
+    title: `Was ist künstliche Intelligenz und wie funktioniert sie? Einfach erklärt`,
+    card: `Was der Begriff bedeutet, wie eine Maschine lernt und warum sie sich manchmal irrt.`,
+    desc: `Was künstliche Intelligenz (KI) ist und wie sie funktioniert, einfach erklärt: wie sie aus Daten lernt, was maschinelles Lernen und Sprachmodelle sind, wo Sie sie schon nutzen und wo ihre Grenzen liegen.`,
+    lede: `Kurz gefasst: Künstliche Intelligenz (KI) ist eine Reihe von Programmen, die Aufgaben erledigen, für die normalerweise menschliche Intelligenz nötig ist, etwa einen Satz verstehen, ein Gesicht erkennen oder einen Text schreiben. Sie folgt keinen von Hand geschriebenen Regeln: Sie lernt aus riesigen Mengen von Beispielen.`,
+    brief: [
+      `KI lernt aus Beispielen statt aus von Hand geschriebenen Regeln.`,
+      `ChatGPT, Gemini und Claude sind Sprachmodelle: Sie sagen das wahrscheinlichste nächste Wort voraus.`,
+      `Sie ist leistungsfähig, versteht aber nicht wie ein Mensch: Sie kann sich selbstsicher irren.`
+    ],
+    sections: [
+      [`Was künstliche Intelligenz ist, in einfachen Worten`, `Es ist die Fähigkeit eines Computers, Dinge zu tun, die wir für intelligent halten: Bilder erkennen, Sprache verstehen und erzeugen, Entscheidungen treffen, Vorhersagen machen. Der Name stammt von 1956, von einer Konferenz am Dartmouth College in den USA. Jahrzehntelang blieb sie ein Thema für Labore; seit 2022, mit ChatGPT, ist sie im Alltag aller angekommen.`],
+      [`Wie sie funktioniert: Sie lernt aus Beispielen`, `Ein klassisches Programm folgt den Anweisungen eines Programmierers. Ein KI-System wird dagegen <a href="../../glossario/de/#addestramento">trainiert</a>: Man zeigt ihm Millionen Beispiele, und es stellt selbst Milliarden interner Zahlen ein, seine <a href="../../glossario/de/#parametri">Parameter</a>, bis seine Antworten den richtigen nahekommen. Um eine Katze zu erkennen, erklärt ihm niemand, was eine Katze ist: Man zeigt ihm sehr viele Katzenfotos. Diese Methode heißt <a href="../../glossario/de/#machine-learning">maschinelles Lernen</a>; ihre leistungsfähigste Form, beruhend auf vielschichtigen <a href="../../glossario/de/#rete-neurale">neuronalen Netzen</a>, ist das <a href="../../glossario/de/#deep-learning">Deep Learning</a>.`],
+      [`Wie ChatGPT, Gemini und Claude funktionieren`, `Sie sind <a href="../../glossario/de/#llm">große Sprachmodelle</a>: Sie haben einen riesigen Teil der verfügbaren Texte gelesen und gelernt, Wort für Wort die wahrscheinlichste Fortsetzung vorherzusagen. Danach werden sie mit Beispielgesprächen und mit dem Urteil von Menschen verfeinert, die die Antworten bewerten. Das Ergebnis schreibt flüssig über fast alles, schlägt aber in keinem Faktenarchiv nach: Deshalb erfindet es manchmal etwas. Mehr dazu in <a href="intelligenza-artificiale-e-affidabile.html">Ist KI zuverlässig?</a>`],
+      [`Wo Sie sie schon nutzen, ohne es zu wissen`, `Bei Film- und Musikempfehlungen, in Spamfiltern, beim Entsperren des Handys per Gesicht, bei automatischen Übersetzungen, in Karten, die den Verkehr berechnen, und in Kameras, die Fotos verbessern. <a href="../../glossario/de/#ai-generativa">Generative KI</a>, die Texte, Bilder und Videos erzeugt, ist nur der neueste und sichtbarste Teil.`],
+      [`Spezialisierte und allgemeine KI`, `Alle heutigen Systeme sind spezialisiert: hervorragend in bestimmten Aufgaben, unbrauchbar außerhalb davon. Die Idee einer KI, die alles kann, was ein Mensch kann, heißt <a href="../../glossario/de/#agi">allgemeine künstliche Intelligenz</a> (AGI): Einige Unternehmen sagen, sie arbeiten darauf hin, viele Forschende bezweifeln, dass sie nahe ist. In jedem Fall hat die heutige KI weder Bewusstsein noch Absichten.`],
+      [`Was sie kann und was nicht`, `Sie kann zusammenfassen, übersetzen, schreiben, programmieren, Daten auswerten sowie Bilder und Stimmen erkennen. Sie kann nicht selbst prüfen, ob stimmt, was sie sagt, hat keine Erfahrung mit der Welt und spiegelt die Schwächen der Daten wider, aus denen sie gelernt hat. Für den Einstieg gibt es den Leitfaden <a href="imparare-a-usare-intelligenza-artificiale.html">Wie benutzt man künstliche Intelligenz?</a>; für das Für und Wider <a href="intelligenza-artificiale-rischi-e-vantaggi.html">Risiken und Vorteile</a>.`]
+    ],
+    faq: [
+      [`Was ist künstliche Intelligenz in einfachen Worten?`, `Programme, die aus vielen Beispielen lernen, Aufgaben zu erledigen, die typisch für menschliche Intelligenz sind, etwa Sprache verstehen, Bilder erkennen oder Entscheidungen treffen.`],
+      [`Wie funktioniert künstliche Intelligenz?`, `Sie wird mit großen Datenmengen trainiert und stellt selbst Milliarden Parameter ein, bis ihre Antworten den richtigen nahekommen. Chatbots wie ChatGPT sagen das wahrscheinlichste nächste Wort voraus.`],
+      [`Wer hat die künstliche Intelligenz erfunden?`, `Es gibt keinen einzelnen Erfinder. Den Namen schlug John McCarthy 1956 für eine Konferenz am Dartmouth College vor; Alan Turing hatte 1950 die theoretischen Grundlagen gelegt.`]
+    ],
+    sources: [`J. McCarthy et al., Dartmouth Summer Research Project on Artificial Intelligence proposal (1955)`, `A. M. Turing, “Computing Machinery and Intelligence” (1950)`]
+  },
+  'cos-e-chatgpt-come-funziona': {
+    title: `Was ist ChatGPT, wie funktioniert es und wie benutzt man es?`,
+    card: `Was es kann, was es kostet, wie man anfängt und worauf man achten sollte.`,
+    desc: `Was ChatGPT ist und wie es funktioniert: wer es entwickelt hat, was es kann, wie man es kostenlos im Web und in der App nutzt, was Go, Plus und Pro kosten und welche Grenzen es bei Fehlern und Datenschutz gibt.`,
+    lede: `Kurz gefasst: ChatGPT ist ein KI-Assistent von OpenAI, mit dem man schriftlich oder per Sprache spricht, wie in einem Chat. Er beantwortet Fragen, schreibt und korrigiert Texte, fasst zusammen, übersetzt und liest Dateien und Bilder. Man kann ihn kostenlos auf chatgpt.com oder in der App nutzen.`,
+    brief: [
+      `Es ist ein Chatbot von OpenAI, gestartet am 30. November 2022.`,
+      `Er ist kostenlos nutzbar; Plus kostet 20 Dollar im Monat.`,
+      `Er kann sich selbstsicher irren: Antworten zu Fakten und Zahlen sollte man prüfen.`
+    ],
+    sections: [
+      [`Was ChatGPT ist`, `Es ist ein Gesprächsprogramm, ein <a href="../../glossario/de/#chatbot">Chatbot</a>, entwickelt vom US-Unternehmen OpenAI und gestartet am 30. November 2022. Nach einer Schätzung der Bank UBS erreichte er in zwei Monaten 100 Millionen Nutzer, ein nie dagewesenes Wachstum für einen digitalen Dienst; im August 2026 meldete OpenAI mehr als eine Milliarde Nutzer pro Woche. Der Name kommt von GPT, Generative Pre-trained Transformer, der Modellfamilie, auf der er beruht.`],
+      [`Wie er funktioniert`, `ChatGPT beruht auf einem <a href="../../glossario/de/#llm">Sprachmodell</a>, das mit riesigen Textmengen trainiert wurde: Auf eine Frage baut es die Antwort auf, indem es ein Wort nach dem anderen vorhersagt. Danach wurde es mit dem Urteil von Menschen verfeinert, die seine Antworten bewertet haben, damit es nützlicher und vorsichtiger wird. Heute kann es auch im Web suchen und Quellen angeben, Dokumente und Fotos lesen, Bilder erzeugen und per Sprache sprechen. Den allgemeinen Mechanismus erklärt <a href="cos-e-intelligenza-artificiale-come-funziona.html">Was ist künstliche Intelligenz?</a>`],
+      [`Wie man ChatGPT benutzt`, `Man öffnet chatgpt.com oder lädt die App für iPhone oder Android herunter, meldet sich an und schreibt eine Anfrage. Je genauer, desto besser: wer Sie sind, was Sie wollen, mit welchem Material, in welchem Format. Passt die Antwort nicht, korrigiert man sie, indem man das Gespräch fortsetzt. Beispiele und Regeln stehen im Leitfaden <a href="imparare-a-usare-intelligenza-artificiale.html">Wie benutzt man künstliche Intelligenz?</a>`],
+      [`Was es kostet`, `Die kostenlose Version reicht für leichte tägliche Nutzung. ChatGPT Go kostet 8 Dollar im Monat, Plus 20 und die Pro-Tarife 100 bis 200 Dollar im Monat, mit höheren Limits und Zugang zu den stärksten Modellen. Aktuelle Preise im Vergleich mit Claude, Gemini und den anderen stehen auf der Seite <a href="../../confronto/de/">KI-Vergleich</a>; wer zwischen ihm und Gemini schwankt, findet Hilfe in <a href="chatgpt-o-gemini-quale-scegliere.html">ChatGPT oder Gemini: was wählen?</a>`],
+      [`Was er gut kann und was nicht`, `Gut: Texte schreiben und korrigieren, Dokumente zusammenfassen, übersetzen, Themen erklären, beim Programmieren helfen, Ideen vorschlagen. Schlecht: Zahlen, Daten, Zitate und aktuelle Nachrichten ohne Quellen, wo er etwas erfinden kann (man spricht von <a href="../../glossario/de/#allucinazione">Halluzinationen</a>). Bei Gesundheit, Geld und Rechtsfragen hilft er beim Verstehen, ersetzt aber keine Fachleute.`],
+      [`ChatGPT und Datenschutz`, `Die Gespräche werden auf den Servern von OpenAI verarbeitet und können, sofern man es nicht abstellt, zur Verbesserung der Modelle genutzt werden; das lässt sich in den Einstellungen ausschalten. In Italien sperrte die Datenschutzbehörde ChatGPT im Frühjahr 2023 vorübergehend und verhängte im Dezember 2024 eine Strafe von 15 Millionen Euro gegen OpenAI. Persönliche Daten anderer, vertrauliche Dokumente oder Passwörter gibt man besser nicht ein.`]
+    ],
+    faq: [
+      [`Ist ChatGPT kostenlos?`, `Ja, es gibt eine kostenlose Version mit Nutzungsgrenzen. Bezahltarife beginnen bei 8 Dollar im Monat (Go); Plus kostet 20 Dollar.`],
+      [`Wer hat ChatGPT entwickelt?`, `OpenAI, ein US-Unternehmen mit Sitz in San Francisco unter der Leitung von Sam Altman. ChatGPT wurde am 30. November 2022 gestartet.`],
+      [`Sagt ChatGPT immer die Wahrheit?`, `Nein. Er kann selbstsicher Informationen erfinden, vor allem Fakten, Zahlen und Zitate. Wichtige Antworten sollte man prüfen.`]
+    ],
+    sources: [`OpenAI, „Introducing ChatGPT“ (30. November 2022)`, `Italienische Datenschutzbehörde (Garante), Bußgeldbescheid gegen OpenAI (Dezember 2024)`]
+  },
+  'chatgpt-o-gemini-quale-scegliere': {
+    title: `ChatGPT oder Gemini: was soll man wählen? Unterschiede, Preise, Vor- und Nachteile`,
+    card: `Die zwei meistgenutzten Assistenten im Vergleich, ohne Parteinahme.`,
+    desc: `ChatGPT oder Gemini, was wählen? Die Unterschiede zwischen den zwei meistgenutzten KI-Assistenten: Stärken, kostenlose und bezahlte Tarife, Einbindung in Google und das iPhone und ein Rat für jede Art der Nutzung.`,
+    lede: `Kurz gefasst: Es sind die zwei meistgenutzten Assistenten der Welt, und im Alltag sind sie etwa gleichwertig. Gemini passt zu Menschen, die in der Google-Welt leben (Gmail, Docs, Android); ChatGPT zu denen, die den vielseitigsten Assistenten wollen. Am besten probiert man beide kostenlos mit derselben Aufgabe aus.`,
+    brief: [
+      `Beim Schreiben, Zusammenfassen und Erklären sind sie etwa gleichwertig.`,
+      `Gemini ist in Gmail, Docs und Android eingebaut; ChatGPT hat den größten Funktionsumfang.`,
+      `Beide haben einen kostenlosen Tarif und einen für rund 20 Dollar im Monat.`
+    ],
+    sections: [
+      [`Wer sie sind`, `ChatGPT gehört OpenAI und erschien im November 2022; im August 2026 meldete OpenAI mehr als eine Milliarde Nutzer pro Woche. Gemini gehört Google, löste 2024 Bard ab, und im August 2026 meldete Google mehr als eine Milliarde Nutzer pro Monat (die Zahlen sind nicht vergleichbar: eine ist wöchentlich, die andere monatlich). Beide sind ausgereifte Produkte, die ständig aktualisiert werden: Ranglisten, wer der Beste ist, ändern sich alle paar Monate.`],
+      [`Wo ChatGPT stärker ist`, `Bei der Vielseitigkeit: sehr natürliche Sprachgespräche, Gedächtnis für Vorlieben, Projekte zum Organisieren der Arbeit, Bilderzeugung, eine große Sammlung eigener Assistenten (GPTs) und die Einbindung in Siri auf neueren iPhones. Außerdem gibt es dafür die meisten Anleitungen und Beispiele, was Einsteigern hilft.`],
+      [`Wo Gemini stärker ist`, `Bei der Einbindung in Google: Er liest und fasst Gmail-Nachrichten zusammen, arbeitet in Docs, Tabellen und Drive, nutzt Maps und YouTube und ist auf vielen Android-Handys der Standardassistent. Er hat direkten Zugriff auf die Google-Suche und kommt gut mit langen Dokumenten und Videos zurecht. Der Bezahltarif Google AI Pro enthält auch Speicherplatz in Google Drive.`],
+      [`Preise im Vergleich`, `Beide haben einen kostenlosen Tarif. ChatGPT: Go für 8 Dollar im Monat, Plus für 20, Pro für 100 bis 200. Gemini: Google AI Plus für 4,99 und Google AI Pro für 19,99, dazu höhere Tarife für den professionellen Einsatz. Aktuelle Preise, mit Claude, Copilot, Perplexity und den anderen, stehen auf der Seite <a href="../../confronto/de/">KI-Vergleich</a>.`],
+      [`Was man wählen sollte`, `Wer täglich Gmail und ein Android-Handy nutzt, beginnt mit Gemini. Wer einen allgemeinen Assistenten zum Schreiben, Lernen und Arbeiten sucht oder ein iPhone hat, beginnt mit ChatGPT. Wer lange Texte schreibt oder auswertet, sollte auch Claude ausprobieren. Die Methode bleibt dieselbe: Geben Sie beiden dieselbe echte Anfrage, eine E-Mail oder eine Zusammenfassung, und behalten Sie den, der besser antwortet. Bezahlen lohnt sich nur, wenn man oft an die kostenlosen Grenzen stößt: siehe <a href="intelligenza-artificiale-gratis-o-a-pagamento.html">Ist KI kostenlos oder kostenpflichtig?</a>`],
+      [`Vorsicht in beiden Fällen`, `Beide können sich bei Fakten, Zahlen und Nachrichten irren, und beide können Gespräche zur Verbesserung ihrer Modelle nutzen, sofern man das nicht abstellt. Wie man Antworten prüft, steht in <a href="intelligenza-artificiale-e-affidabile.html">Ist KI zuverlässig?</a>; wie ChatGPT funktioniert, in <a href="cos-e-chatgpt-come-funziona.html">Was ist ChatGPT?</a>`]
+    ],
+    faq: [
+      [`Ist ChatGPT oder Gemini besser?`, `Im Alltag sind sie etwa gleichwertig. Gemini passt zu Vielnutzern von Gmail, Docs und Android; ChatGPT zu denen, die den vielseitigsten Assistenten wollen. Beide kostenlos mit derselben Aufgabe zu testen, ist der beste Weg zur Entscheidung.`],
+      [`Ist Gemini kostenlos?`, `Ja, es gibt eine kostenlose Version. Google AI Plus kostet 4,99 im Monat und Google AI Pro 19,99, mit mehr Funktionen und Speicher in Drive.`],
+      [`Kann man beide nutzen?`, `Ja, es sind unabhängige Dienste, und die kostenlosen Versionen kosten nichts: Viele nutzen Gemini für E-Mails und Dokumente und ChatGPT für den Rest.`]
+    ],
+    sources: [`OpenAI, Mitteilung über eine Milliarde wöchentliche ChatGPT-Nutzer (August 2026)`, `Google, Mitteilung über eine Milliarde monatliche Nutzer der Gemini-App (August 2026)`]
+  },
+  'intelligenza-artificiale-a-scuola': {
+    title: `Künstliche Intelligenz in der Schule: Regeln, Risiken und richtiger Einsatz`,
+    card: `Was die italienischen Schulleitlinien sagen und wie man KI zum echten Lernen nutzt.`,
+    desc: `Künstliche Intelligenz in der Schule: was die Leitlinien des italienischen Bildungsministeriums vorsehen, wie man KI zum Lernen nutzt, ohne abzuschreiben, welche Risiken es für Lernen und Datenschutz gibt und was Lehrkräfte und Eltern tun können.`,
+    lede: `Kurz gefasst: Seit September 2025 haben italienische Schulen offizielle Leitlinien zur künstlichen Intelligenz. Man darf sie nutzen, aber mit Regeln: Die Lehrkraft bleibt für pädagogische Entscheidungen verantwortlich, die Daten der Schüler müssen geschützt werden, und KI soll beim Lernen helfen, nicht die Hausaufgaben erledigen.`,
+    brief: [
+      `Die italienischen Schulleitlinien (Dekret 166/2025) gelten seit September 2025.`,
+      `KI darf nicht über Noten und Bewertungen entscheiden: Das bleibt Sache der Lehrkraft.`,
+      `Als Nachhilfe hilft sie; zum Abschreiben genutzt, nimmt sie das Lernen weg.`
+    ],
+    sections: [
+      [`Die Regeln in Italien`, `Das italienische Ministerium für Bildung und Leistung hat seine Leitlinien mit dem Dekret 166 vom 9. August 2025 erlassen, in Kraft seit dem 2. September 2025. Sie beruhen auf vier Grundsätzen: der Mensch im Mittelpunkt, Gerechtigkeit und Inklusion, Ethik und Verantwortung, Transparenz. KI darf keine pädagogischen, bewertenden oder disziplinarischen Entscheidungen treffen: Die Verantwortung bleibt bei der Lehrkraft. Schulen, die KI-Werkzeuge einführen, sollen schrittweise vorgehen, vom Test in kleinen Gruppen bis zur Auswertung der Ergebnisse, und ihre Projekte auf der Ministeriumsplattform Unica teilen.`],
+      [`Datenschutz und Schülerdaten`, `Schulen müssen prüfen, dass die Anbieter die DSGVO einhalten, und ihre Datenschutzhinweise anpassen. Schüler, bei Minderjährigen die Familien, haben das Recht, die Nutzung ihrer Daten zum Training der Systeme abzulehnen, ohne Nachteile und mit einer Alternative. Viele Dienste haben außerdem ein Mindestalter: ChatGPT etwa ist unter 13 Jahren nicht erlaubt, zwischen 13 und 18 braucht es die Zustimmung der Eltern.`],
+      [`Damit lernen (ohne abzuschreiben)`, `Als Nachhilfe funktioniert sie gut: sich ein Thema mit anderen Worten neu erklären lassen, sich vor einer Prüfung abfragen lassen, Beispiele und Übungen anfordern, eine bereits gemachte Überlegung prüfen. Schlecht funktioniert sie, wenn man sie die Aufgabe machen lässt: Der Text kommt, das Lernen nicht, und oft mit Fehlern. Eine praktische Regel: erst selbst versuchen, dann mit KI prüfen und verstehen, wo man sich geirrt hat.`],
+      [`Die Risiken`, `Das erste ist, weniger zu lernen: Wer Schreiben und Denken abgibt, trainiert genau die Fähigkeiten kaum, die die Schule aufbauen soll. Dazu kommen selbstsicher vorgetragene Fehler, erfundene Quellen und der Abstand zwischen denen, die zu Hause Werkzeuge und Begleitung haben, und den anderen. Und Erkennungsprogramme für KI-Texte sind nicht zuverlässig: Ein Urteil sollte nie allein auf ihnen beruhen. Warum KI sich irrt, erklärt <a href="intelligenza-artificiale-e-affidabile.html">Ist KI zuverlässig?</a>`],
+      [`Was Lehrkräfte und Eltern tun können`, `Lehrkräfte können sie nutzen, um Materialien, passende Übungen und alternative Erklärungen vorzubereiten, und im Unterricht klar sagen, wann und wie sie erlaubt ist. Eltern sprechen besser mit ihren Kindern darüber, statt sie zu verbieten: fragen, wie sie sie nutzen, sie gemeinsam ausprobieren, erklären, dass man immer prüfen muss. Für den Einstieg gibt es den Leitfaden <a href="imparare-a-usare-intelligenza-artificiale.html">Wie benutzt man künstliche Intelligenz?</a>`]
+    ],
+    faq: [
+      [`Darf man künstliche Intelligenz in der Schule nutzen?`, `In Italien ja: Seit September 2025 regeln die Leitlinien des Bildungsministeriums ihren Einsatz, mit Regeln zu Datenschutz, Transparenz und der Verantwortung der Lehrkraft.`],
+      [`Ist es Schummeln, ChatGPT für Hausaufgaben zu nutzen?`, `Das hängt davon ab, wie. Sich etwas erklären oder korrigieren zu lassen, ist wie ein gutes Buch zu nutzen; sich die Aufgabe schreiben zu lassen und als eigene abzugeben, ist Abschreiben und nimmt das Lernen weg.`],
+      [`Ab welchem Alter darf man ChatGPT nutzen?`, `Laut den Bedingungen von OpenAI ab 13 Jahren, bis 18 mit Zustimmung der Eltern.`]
+    ],
+    sources: [`Italienisches Ministerium für Bildung und Leistung, Dekret 166 vom 9. August 2025 und Leitlinien zur Einführung künstlicher Intelligenz in Schulen`, `OpenAI, Nutzungsbedingungen`]
   }
 };
