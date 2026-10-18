@@ -22,8 +22,8 @@
     .logo { display: inline-block; border-radius: 6px; transition: transform .2s; }
     .logo:hover { transform: scale(1.03); }
     .logo:focus-visible { outline: 2px solid #8FD0F0; outline-offset: 6px; }
-    .logo img { display: block; width: min(320px, 72vw); height: auto; }
-    .code { margin: 36px 0 10px; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: #8FD0F0; font-weight: 700; }
+    .logo img { display: block; width: min(360px, 78vw); height: auto; border-radius: 18px; box-shadow: 0 18px 50px rgba(0, 0, 0, .45); }
+    .code { margin: 28px 0 10px; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: #8FD0F0; font-weight: 700; }
     h1 { margin: 0 0 14px; font-size: clamp(28px, 6vw, 40px); font-weight: 800; font-stretch: 78%; line-height: 1.1; letter-spacing: -.01em; color: #fff; }
     .lede { margin: 0 0 22px; font-size: 17px; line-height: 1.6; color: #B9C6DA; }
     .more { margin: 0 0 22px; font-size: 15.5px; line-height: 1.6; color: #E8EEF8; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, .1); }
@@ -40,7 +40,7 @@
 <body>
   <main>
     <a class="logo" href="/" aria-label="FAIND — Home">
-      <img src="/assets/logo-payoff-dark.webp" width="451" height="180" alt="FAIND – Flash AI News Daily">
+      <img id="pic" src="/assets/faindo-404-960.webp" srcset="/assets/faindo-404-480.webp 480w, /assets/faindo-404-960.webp 960w" sizes="(max-width: 460px) 78vw, 360px" width="960" height="960" alt="Faindo, il robot di FAIND, cade nel vuoto sotto la scritta luminosa «not found 404»">
     </a>
     <p class="code" data-t="code">Errore 404</p>
     <h1 data-t="title">Questa notizia ha preso il volo</h1>
@@ -51,9 +51,9 @@
   <script>
     (function () {
       var T = {
-        en: { code: 'Error 404', title: 'This story has flown away', lede: 'AI news moves fast: this story has already left our page, or the link is no longer valid.', more: 'No worries: FAIND has plenty of fresh AI news, updated every hour and always with the source.', btn: 'See the latest news →' },
-        fr: { code: 'Erreur 404', title: 'Cette actu s’est envolée', lede: 'L’actualité de l’IA va vite : cette info a déjà quitté notre page, ou le lien n’est plus valide.', more: 'Pas de panique : FAIND regorge d’actus IA fraîches, mises à jour chaque heure et toujours sourcées.', btn: 'Voir les dernières actus →' },
-        de: { code: 'Fehler 404', title: 'Diese Meldung ist schon weitergeflogen', lede: 'KI-News sind schnell: Diese Meldung ist nicht mehr auf unserer Seite oder der Link ist nicht mehr gültig.', more: 'Kein Problem: Auf FAIND gibt es viele frische KI-News, stündlich aktualisiert und immer mit Quelle.', btn: 'Zu den neuesten Meldungen →' }
+        en: { code: 'Error 404', title: 'This story has flown away', lede: 'AI news moves fast: this story has already left our page, or the link is no longer valid.', more: 'No worries: FAIND has plenty of fresh AI news, updated every hour and always with the source.', btn: 'See the latest news →', alt: 'Faindo, the FAIND robot, falling through the air below the glowing words “not found 404”' },
+        fr: { code: 'Erreur 404', title: 'Cette actu s’est envolée', lede: 'L’actualité de l’IA va vite : cette info a déjà quitté notre page, ou le lien n’est plus valide.', more: 'Pas de panique : FAIND regorge d’actus IA fraîches, mises à jour chaque heure et toujours sourcées.', btn: 'Voir les dernières actus →', alt: 'Faindo, le robot de FAIND, tombe dans le vide sous l’inscription lumineuse « not found 404 »' },
+        de: { code: 'Fehler 404', title: 'Diese Meldung ist schon weitergeflogen', lede: 'KI-News sind schnell: Diese Meldung ist nicht mehr auf unserer Seite oder der Link ist nicht mehr gültig.', more: 'Kein Problem: Auf FAIND gibt es viele frische KI-News, stündlich aktualisiert und immer mit Quelle.', btn: 'Zu den neuesten Meldungen →', alt: 'Faindo, der FAIND-Roboter, fällt unter dem leuchtenden Schriftzug „not found 404“ ins Leere' }
       };
       var l = null;
       try { l = localStorage.getItem('faind-lang'); } catch (e) {}
@@ -63,6 +63,7 @@
       document.title = T[l].title + ' | FAIND';
       var els = document.querySelectorAll('[data-t]');
       for (var i = 0; i < els.length; i++) els[i].textContent = T[l][els[i].getAttribute('data-t')];
+      document.getElementById('pic').alt = T[l].alt;
     })();
   </script>
 </body>
