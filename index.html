@@ -57,7 +57,7 @@
 
   <!-- Caratteri serviti da FAIND (nessun contatto con Google Fonts) -->
   <link rel="stylesheet" href="assets/fonts/archivo.css">
-  <link rel="stylesheet" href="style.css?v=20261012c">
+  <link rel="stylesheet" href="style.css?v=20261019a">
   <link rel="stylesheet" href="home2.css?v=20261013a">
 
   <!-- App sul telefono: "Aggiungi alla schermata Home" -->
@@ -195,6 +195,9 @@ in un solo posto.</span>
       </div>
 
       <div id="homeView">
+        <!-- Da quando non passi: compare solo a chi torna dopo almeno 6 ore (script.js → renderSince) -->
+        <section class="since" id="since" hidden aria-live="polite"></section>
+
         <!-- Apertura + Appena uscite -->
         <section class="front" aria-label="Apertura">
           <article class="lead is-loading" id="lead" aria-busy="true">
@@ -690,7 +693,7 @@ in un solo posto.</span>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="data.js?v=20261011a" defer></script>
-  <script src="script.js?v=20261013a" defer></script>
+  <script src="script.js?v=20261019a" defer></script>
   <script src="nav.js?v=20261011a" defer></script>
   <script src="home2.js?v=20261013a" defer></script>
   <!-- Popup newsletter: entra da sinistra dopo 1 minuto, una seconda volta 3 minuti dopo la chiusura, poi pausa di 7 giorni (script.js → nlPopup) -->

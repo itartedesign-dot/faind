@@ -139,7 +139,7 @@
   /* Testi aggiunti per sezioni, settori, caricamento e barra TG */
   var EXTRA = {
     it: {
-      'sec.fresh': 'Appena uscite', 'sec.important': 'Importanti', 'sec.more': 'Se hai 10 minuti - Letture secondarie', 'sec.sectors': 'Settori',
+      'sec.fresh': 'Appena uscite', 'since.title': 'Bentornato su FAIND', 'since.text': 'Dalla tua ultima visita ({when}) sono uscite {n} notizie. Ecco le più riprese:', 'since.sources': '{n} fonti', 'since.close': 'Chiudi', 'sec.important': 'Importanti', 'sec.more': 'Se hai 10 minuti - Letture secondarie', 'sec.sectors': 'Settori',
       'hint.important': 'Due criteri distinti: la scelta della redazione o la presenza su almeno 3 fonti. Più fonti dicono quanto una notizia circola, non quanto è verificata.', 'hint.more': 'Il resto della settimana, dal più recente',
       'more.btn': 'Mostra altre', 'results.back': 'Torna alla home',
       'results.all': 'Tutte le notizie', 'results.saved': 'Notizie salvate', 'results.search': 'Risultati per “{q}”', 'results.count': '{n} risultati',
@@ -159,7 +159,7 @@
       'also': 'Anche su', 'official': 'Fonte ufficiale', 'lang.title': 'Lingua dell’articolo originale', 'important.badge': 'Importante'
     },
     en: {
-      'sec.fresh': 'Just in', 'sec.important': 'Top stories', 'sec.more': 'If you have 10 minutes - More reading', 'sec.sectors': 'Sectors',
+      'sec.fresh': 'Just in', 'since.title': 'Welcome back to FAIND', 'since.text': 'Since your last visit ({when}) {n} stories have come out. Here are the most covered:', 'since.sources': '{n} sources', 'since.close': 'Close', 'sec.important': 'Top stories', 'sec.more': 'If you have 10 minutes - More reading', 'sec.sectors': 'Sectors',
       'hint.important': 'Two separate criteria: picked by our editors, or covered by at least 3 sources. More sources show how widely a story circulates, not how well it is verified.', 'hint.more': 'The rest of the week, newest first',
       'more.btn': 'Show more', 'results.back': 'Back to home',
       'results.all': 'All news', 'results.saved': 'Saved news', 'results.search': 'Results for “{q}”', 'results.count': '{n} results',
@@ -179,7 +179,7 @@
       'also': 'Also on', 'official': 'Official source', 'lang.title': 'Language of the original article', 'important.badge': 'Top story'
     },
     fr: {
-      'sec.fresh': 'À l’instant', 'sec.important': 'À la une', 'sec.more': 'Si vous avez 10 minutes - Autres lectures', 'sec.sectors': 'Secteurs',
+      'sec.fresh': 'À l’instant', 'since.title': 'Bon retour sur FAIND', 'since.text': 'Depuis votre dernière visite ({when}), {n} actualités sont parues. Voici les plus reprises :', 'since.sources': '{n} sources', 'since.close': 'Fermer', 'sec.important': 'À la une', 'sec.more': 'Si vous avez 10 minutes - Autres lectures', 'sec.sectors': 'Secteurs',
       'hint.important': 'Deux critères distincts : le choix de la rédaction ou la reprise par au moins 3 sources. Plusieurs sources montrent combien une info circule, pas à quel point elle est vérifiée.', 'hint.more': 'Le reste de la semaine, du plus récent',
       'more.btn': 'Afficher plus', 'results.back': 'Retour à l’accueil',
       'results.all': 'Toutes les actualités', 'results.saved': 'Actualités enregistrées', 'results.search': 'Résultats pour « {q} »', 'results.count': '{n} résultats',
@@ -199,7 +199,7 @@
       'also': 'Aussi sur', 'official': 'Source officielle', 'lang.title': 'Langue de l’article original', 'important.badge': 'À la une'
     },
     de: {
-      'sec.fresh': 'Gerade erschienen', 'sec.important': 'Wichtig', 'sec.more': 'Wenn du 10 Minuten hast - Weitere Artikel', 'sec.sectors': 'Bereiche',
+      'sec.fresh': 'Gerade erschienen', 'since.title': 'Willkommen zurück bei FAIND', 'since.text': 'Seit deinem letzten Besuch ({when}) sind {n} Nachrichten erschienen. Die meistberichteten:', 'since.sources': '{n} Quellen', 'since.close': 'Schließen', 'sec.important': 'Wichtig', 'sec.more': 'Wenn du 10 Minuten hast - Weitere Artikel', 'sec.sectors': 'Bereiche',
       'hint.important': 'Zwei getrennte Kriterien: Auswahl der Redaktion oder Berichte aus mindestens 3 Quellen. Viele Quellen zeigen, wie weit sich eine Meldung verbreitet, nicht wie gut sie geprüft ist.', 'hint.more': 'Der Rest der Woche, neueste zuerst',
       'more.btn': 'Mehr anzeigen', 'results.back': 'Zur Startseite',
       'results.all': 'Alle Nachrichten', 'results.saved': 'Gespeicherte Nachrichten', 'results.search': 'Ergebnisse für „{q}“', 'results.count': '{n} Ergebnisse',
@@ -1054,8 +1054,33 @@
     });
   }
 
+  /* "Da quando non passi": a chi torna dopo almeno 6 ore, le notizie più riprese uscite nel frattempo.
+     L'ora dell'ultima visita resta solo nel browser (localStorage 'faind-last-visit'), niente account. */
+  var SINCE_MIN = 6 * 3600e3, SINCE_MAX = 5;
+  var lastVisit = Number(store.get('faind-last-visit')) || 0, sinceClosed = false;
+  store.set('faind-last-visit', String(Date.now()));
+  function renderSince() {
+    var box = $('#since');
+    if (!box) return;
+    var news = lastVisit && Date.now() - lastVisit >= SINCE_MIN
+      ? all.filter(function (n) { return n.date && toDate(n.date).getTime() > lastVisit; }) : [];
+    if (sinceClosed || news.length < 3) { box.hidden = true; return; }
+    var top = news.slice().sort(function (a, b) {
+      return (b.coverage || 1) - (a.coverage || 1) || (b.priority === 'alta') - (a.priority === 'alta') || toDate(b.date) - toDate(a.date);
+    }).slice(0, SINCE_MAX);
+    box.innerHTML = '<div class="since__head"><h2 class="since__title">' + esc(t('since.title')) + '</h2>' +
+      '<button type="button" class="since__close" aria-label="' + esc(t('since.close')) + '">×</button></div>' +
+      '<p class="since__text">' + esc(t('since.text', { n: news.length, when: relTime(new Date(lastVisit).toISOString()) })) + '</p>' +
+      '<ol class="since__list">' + top.map(function (n) {
+        return '<li><a ' + titleAttrs(n) + '>' + esc(tx(n.title)) + '</a><span>' + esc(n.source ? n.source.name : '') +
+          ((n.coverage || 1) > 1 ? ' · ' + esc(t('since.sources', { n: n.coverage })) : '') + '</span></li>';
+      }).join('') + '</ol>';
+    box.hidden = false;
+    box.querySelector('.since__close').addEventListener('click', function () { sinceClosed = true; box.hidden = true; });
+  }
+
   function renderAll() {
-    renderStatus(); renderSectors();
+    renderStatus(); renderSectors(); renderSince();
     renderNews(); renderGuides(); renderPrices(); renderDeals(); renderTrending(); renderQuestions();
     var up = $('#updated');
     var when = state.feed && state.feed.generated ? state.feed.generated.slice(0, 10) : DATA.updated;
