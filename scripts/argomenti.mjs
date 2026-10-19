@@ -54,7 +54,7 @@ const romeDay = (iso) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Ro
 export const UI = {
   it: {
     back: '← Tutte le notizie', pageLang: 'Lingua della pagina', home: 'Torna alle notizie di FAIND',
-    foot: [['#chi-siamo', 'Chi siamo'], ['temi/', 'Temi'], ['glossario/', 'Glossario'], ['approfondimenti/', 'Approfondimenti'], ['confronto/', 'Le AI a confronto'], ['argomenti/', 'Argomenti'], ['archivio/', 'Archivio'], ['redazione.html', 'Chi c\'è dietro FAIND'], ['feed.xml', 'Feed RSS'], ['privacy.html', 'Privacy e note legali']],
+    foot: [['#chi-siamo', 'Chi siamo'], ['temi/', 'Temi'], ['glossario/', 'Glossario'], ['approfondimenti/', 'Approfondimenti'], ['confronto/', 'Le AI a confronto'], ['argomenti/', 'Argomenti'], ['archivio/', 'Archivio'], ['cos-e-faind.html', 'Cos\'è FAIND'], ['redazione.html', 'Chi c\'è dietro FAIND'], ['feed.xml', 'Feed RSS'], ['privacy.html', 'Privacy e note legali']],
     alsoTitle: 'Su FAIND trovi anche',
     also: [['', 'Notizie sull\'AI ogni ora', 'sempre con la fonte'], ['https://t.me/faindnews', 'Canale Telegram', 'le notizie importanti sul telefono'], ['glossario/', 'Glossario', 'le parole dell\'AI spiegate semplici'], ['temi/', 'Temi', 'robot, casa, salute, lavoro, clima'], ['approfondimenti/', 'Approfondimenti', 'le risposte alle domande più cercate'], ['confronto/', 'Le AI a confronto', 'pro, contro e prezzi'], ['argomenti/', 'Argomenti', 'tutte le notizie su un nome'], ['archivio/', 'Archivio', 'le notizie dei mesi passati']],
     h1: (s) => `Notizie su ${s}`, seo: (s) => `${s}: le notizie, sempre con la fonte`,

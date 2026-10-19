@@ -1,0 +1,24 @@
+# FAIND – Flash AI News Daily
+
+> FAIND (faind.org) è un sito indipendente di notizie sull'intelligenza artificiale, aggiornato ogni ora da testate italiane e internazionali, blog ufficiali delle aziende di AI e canali YouTube scelti. Ogni notizia porta il nome e il link della fonte originale; quando più testate danno la stessa notizia, FAIND le riunisce e mostra chi ne parla. Lingue: italiano, inglese, francese, tedesco.
+
+Le notizie sono raccolte in automatico e non riscritte: per il testo completo vale sempre l'articolo della fonte. Approfondimenti, glossario e confronto tra AI sono scritti dalla redazione.
+
+## Sezioni principali
+- [Notizie AI di oggi](https://faind.org/): la home, aggiornata ogni ora
+- [Approfondimenti](https://faind.org/approfondimenti/): risposte alle domande più cercate sull'intelligenza artificiale (lavoro, rischi, costi, consumi, leggi, affidabilità)
+- [Glossario AI](https://faind.org/glossario/): i termini dell'intelligenza artificiale spiegati in modo semplice
+- [Le AI a confronto](https://faind.org/confronto/): prezzi e caratteristiche dei principali assistenti AI
+- [Temi](https://faind.org/temi/): robot, medicina, lavoro, clima e casa
+- [Archivio](https://faind.org/archivio/): le notizie degli ultimi mesi
+
+## In altre lingue
+- [In depth (English)](https://faind.org/approfondimenti/en/)
+- [Dossiers (Français)](https://faind.org/approfondimenti/fr/)
+- [Hintergrund (Deutsch)](https://faind.org/approfondimenti/de/)
+
+## Chi siamo e dati
+- [Cos'è FAIND](https://faind.org/cos-e-faind.html)
+- [Chi c'è dietro FAIND: metodo e regole](https://faind.org/redazione.html)
+- [Feed RSS](https://faind.org/feed.xml)
+- [Sitemap](https://faind.org/sitemap.xml)
