@@ -62,24 +62,32 @@ const NP = {
   it: { locale: 'it-IT', back: '← Tutte le notizie', source: 'Fonte', cta: (s) => `Leggi l'articolo completo su ${s} ↗`,
     disc: (s) => `FAIND riporta titolo e un breve estratto: l'articolo completo e i diritti appartengono a ${s}.`,
     compared: (n) => `${n} fonti a confronto`, told: (n) => `Come la raccontano ${n} testate`,
+    spread: (s, d, k, span) => `Prima a darla: ${s} (${d}). Poi ${k === 1 ? "l'ha ripresa un'altra testata" : `l'hanno ripresa altre ${k} testate`} in ${span}.`,
+    span: (h) => h < 1 ? "meno di un'ora" : h < 2 ? "un'ora" : h < 48 ? `${h} ore` : `${Math.round(h / 24)} giorni`,
     more: 'Per capire di più', terms: 'Parole chiave', subjects: 'Argomenti', topic: 'Tema', deep: 'Approfondimento',
     sameCat: (c) => `Altre notizie: ${c}`, latest: 'Le ultime notizie su FAIND',
     tg: 'Le notizie AI importanti sul tuo telefono, appena escono. Iscriviti al canale Telegram.', homeBtn: 'Tutte le notizie di oggi su FAIND' },
   en: { locale: 'en-GB', back: '← All news', source: 'Source', cta: (s) => `Read the full article on ${s} ↗`,
     disc: (s) => `FAIND shows the headline and a short excerpt: the full article and its rights belong to ${s}.`,
     compared: (n) => `${n} sources compared`, told: (n) => `How ${n} outlets tell the story`,
+    spread: (s, d, k, span) => `First reported by ${s} (${d}). ${k === 1 ? 'One more outlet' : `${k} more outlets`} picked it up within ${span}.`,
+    span: (h) => h < 1 ? 'less than an hour' : h < 2 ? 'an hour' : h < 48 ? `${h} hours` : `${Math.round(h / 24)} days`,
     more: 'Understand more', terms: 'Key terms', subjects: 'Subjects', topic: 'Topic', deep: 'In depth',
     sameCat: (c) => `More news: ${c}`, latest: 'The latest news on FAIND',
     tg: 'Top AI stories on your phone as soon as they break. Join the Telegram channel.', homeBtn: 'All of today\'s news on FAIND' },
   fr: { locale: 'fr-FR', back: '← Toutes les actualités', source: 'Source', cta: (s) => `Lire l'article complet sur ${s} ↗`,
     disc: (s) => `FAIND reprend le titre et un court extrait : l'article complet et ses droits appartiennent à ${s}.`,
     compared: (n) => `${n} sources comparées`, told: (n) => `Comment ${n} médias en parlent`,
+    spread: (s, d, k, span) => `Premier à l'annoncer : ${s} (${d}). ${k === 1 ? "Un autre média l'a reprise" : `${k} autres médias l'ont reprise`} en ${span}.`,
+    span: (h) => h < 1 ? "moins d'une heure" : h < 2 ? 'une heure' : h < 48 ? `${h} heures` : `${Math.round(h / 24)} jours`,
     more: 'Pour aller plus loin', terms: 'Mots-clés', subjects: 'Sujets', topic: 'Thème', deep: 'Dossier',
     sameCat: (c) => `Autres actualités : ${c}`, latest: 'Les dernières actualités sur FAIND',
     tg: 'Les infos IA importantes sur votre téléphone, dès leur sortie. Rejoignez la chaîne Telegram.', homeBtn: 'Toutes les actualités du jour sur FAIND' },
   de: { locale: 'de-DE', back: '← Alle Nachrichten', source: 'Quelle', cta: (s) => `Den ganzen Artikel bei ${s} lesen ↗`,
     disc: (s) => `FAIND zeigt Überschrift und einen kurzen Auszug: Der vollständige Artikel und die Rechte gehören ${s}.`,
     compared: (n) => `${n} Quellen im Vergleich`, told: (n) => `So berichten ${n} Medien`,
+    spread: (s, d, k, span) => `Zuerst berichtet von ${s} (${d}). ${k === 1 ? 'Ein weiteres Medium folgte' : `${k} weitere Medien folgten`} innerhalb von ${span}.`,
+    span: (h) => h < 1 ? 'weniger als einer Stunde' : h < 2 ? 'einer Stunde' : h < 48 ? `${h} Stunden` : `${Math.round(h / 24)} Tagen`,
     more: 'Mehr verstehen', terms: 'Schlüsselbegriffe', subjects: 'Stichwörter', topic: 'Thema', deep: 'Hintergrund',
     sameCat: (c) => `Weitere Nachrichten: ${c}`, latest: 'Die neuesten Nachrichten auf FAIND',
     tg: 'Die wichtigsten KI-News sofort aufs Handy. Tritt dem Telegram-Kanal bei.', homeBtn: 'Alle Nachrichten von heute auf FAIND' }
@@ -137,6 +145,8 @@ export function seoDesc(n, lang = 'it') {
 
 /* ------------------------------ Pagina notizia ------------------------------ */
 const NP_CSS = `.np__told{list-style:none;margin:0;padding:0}
+.np__told b time{text-transform:none;letter-spacing:0;font-weight:500}
+.np__spread{margin:0 0 8px;font-size:15px;line-height:1.45;color:var(--ink)}
 .np__told li{padding:10px 0;border-bottom:1px solid var(--rule);display:grid;gap:2px}
 .np__told b{font-size:13px;color:var(--muted);font-weight:650;text-transform:uppercase;letter-spacing:.03em}
 .np__told a{color:var(--ink);font-weight:600;text-decoration:none;line-height:1.35}
@@ -162,10 +172,17 @@ function pageHtml(n, related, sameCat, ctx) {
   const text = `${title} ${summary}`;
 
   // Il confronto: il titolo che ogni testata ha dato alla notizia
+  // Con le ore di ogni fonte (salvate dal 19/10/2026) le testate vanno in ordine di uscita, con la riga "come si è diffusa"
+  let voices = [{ name: n.source.name, url: n.link.url, title, date: n.sourceDate }, ...(n.also || [])];
+  const timed = voices.every(a => a.date && /T\d{2}:/.test(a.date));
+  if (timed) voices = [...voices].sort((a, b) => toDate(a.date) - toDate(b.date));
+  const spanH = timed ? Math.floor((toDate(voices[voices.length - 1].date) - toDate(voices[0].date)) / 36e5) : 0;
   const told = (n.also || []).length
-    ? `<section class="np__box"><h2>${esc(u.told(count))}</h2><ul class="np__told">` +
-      [{ name: n.source.name, url: n.link.url, title }, ...n.also].map(a =>
-        `<li><b>${esc(a.name)}</b><a href="${esc(a.url)}" target="_blank" rel="noopener noreferrer">${esc(a.title ? tx(a.title) : a.name)}</a></li>`).join('') +
+    ? `<section class="np__box"><h2>${esc(u.told(count))}</h2>` +
+      (timed ? `<p class="np__spread">${esc(u.spread(voices[0].name, fmtDate(voices[0].date, lang), voices.length - 1, u.span(spanH)))}</p>` : '') +
+      `<ul class="np__told">` +
+      voices.map(a =>
+        `<li><b>${esc(a.name)}${timed ? ` · <time datetime="${esc(a.date)}">${esc(fmtDate(a.date, lang))}</time>` : ''}</b><a href="${esc(a.url)}" target="_blank" rel="noopener noreferrer">${esc(a.title ? tx(a.title) : a.name)}</a></li>`).join('') +
       `</ul></section>` : '';
 
   // Per capire di più: parole del glossario, argomenti, tema, approfondimento
@@ -327,8 +344,9 @@ function slim(n) {
   const o = {
     id: n.id, page: n.page, title: tx(n.title), summary: tx(n.summary) || '', lang: n.lang || 'it', date: n.date,
     category: n.category || 'altro', tag: n.tag || 'news', source: { name: n.source.name }, link: { url: n.link.url },
-    also: (n.also || []).map(a => ({ name: a.name, url: a.url, ...(a.title ? { title: tx(a.title) } : {}) })), coverage: n.coverage || 1
+    also: (n.also || []).map(a => ({ name: a.name, url: a.url, ...(a.title ? { title: tx(a.title) } : {}), ...(a.date ? { date: a.date } : {}) })), coverage: n.coverage || 1
   };
+  if (n.sourceDate) o.sourceDate = n.sourceDate;
   if (n.image && /^https:\/\//.test(n.image)) o.image = n.image;
   if (n.editorial) o.editorial = true;
   if (n.priority) o.priority = n.priority;

@@ -1166,3 +1166,17 @@ body.has-bticker .toast { bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 
 /* Banner illustrato sotto il titolo di una sezione (Prezzi) */
 .secbanner { display: block; width: 100%; height: auto; aspect-ratio: 1600 / 540; object-fit: cover; border-radius: var(--radius-m); margin: 4px 0 14px; background: var(--surface-2); }
+
+/* Da quando non passi (home): compare solo a chi torna dopo almeno 6 ore */
+.since { margin: 0 0 22px; padding: 16px 18px; border: 1px solid var(--rule); border-left: 5px solid #4293B9; border-radius: 14px; background: var(--surface); }
+.since[hidden] { display: none; }
+.since__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.since__title { font-size: 19px; font-weight: 760; margin: 0; }
+.since__close { border: 0; background: none; color: var(--muted); font-size: 24px; line-height: 1; cursor: pointer; padding: 2px 6px; border-radius: 8px; }
+.since__close:hover { color: var(--ink); }
+.since__text { margin: 6px 0 10px; color: var(--muted); font-size: 15px; }
+.since__list { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.since__list a { color: var(--ink); font-weight: 650; text-decoration: none; }
+.since__list a:hover { color: var(--link); text-decoration: underline; }
+.since__list span { display: block; font-size: 13px; color: var(--muted); }
+@media (max-width: 600px) { .since__list li:nth-child(n+4) { display: none; } }
