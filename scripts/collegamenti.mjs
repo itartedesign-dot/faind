@@ -12,7 +12,7 @@ const escAttr = (s = '') => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quo
 
 // Le voci da collegare per una pagina: argomenti (con pagina nella lingua, altrimenti in italiano) e, se richiesto, termini del glossario
 export function linkTargets({ subjects = [], lang = 'it', up = '../', terms = false, skip = '' }) {
-  const out = subjects.filter(s => s.pages && s.key !== skip).map(s => ({
+  const out = subjects.filter(s => s.pages && s.indexed && s.key !== skip).map(s => ({
     re: s.re instanceof RegExp ? s.re : new RegExp(s.re, (s.flags || '').replace('g', '')),
     href: `${up}${ARG_DIR[s.pages.includes(lang) ? lang : 'it']}${s.key}.html`, cls: 'sl', title: ''
   }));

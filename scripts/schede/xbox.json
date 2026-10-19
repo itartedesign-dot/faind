@@ -1,0 +1,115 @@
+{
+  "key": "xbox",
+  "name": "Xbox",
+  "tipo": "tema",
+  "kicker": "Videogiochi",
+  "title": "Xbox e intelligenza artificiale: Copilot, Muse, tagli e dubbi",
+  "desc": "Come l'AI sta cambiando Xbox: Gaming Copilot, il modello Muse, console e Game Pass, licenziamenti e polemiche sugli studi. Dati aggiornati a ottobre 2026.",
+  "re": "Xbox|Game Pass|Gaming Copilot|\\bMuse\\b|Halo Studios|Asha Sharma|Phil Spencer|Bethesda|Activision",
+  "intro": "Xbox è il marchio videogiochi di Microsoft. Comprende le console Xbox Series X e Series S, l'abbonamento Game Pass, il cloud gaming e gli studi di Xbox Game Studios, tra cui Halo Studios, Obsidian, Playground Games, Rare e Mojang, quella di Minecraft. Microsoft è anche una delle aziende più attive nell'intelligenza artificiale, e negli ultimi due anni ha provato a portarla nei giochi, sia per chi gioca sia per chi sviluppa.\n\nIl bilancio finora è misto. Ci sono un modello di ricerca come Muse, un assistente chiamato Gaming Copilot che è stato ridimensionato, e un dibattito acceso su quanto l'AI debba entrare nella creazione dei giochi. Nel frattempo Xbox ha cambiato guida, ha ceduto alcuni studi e ha annunciato migliaia di licenziamenti. Questa scheda riassume i fatti con le date e indica quando un dato viene da una sola fonte.",
+  "facts": [
+    [
+      "Proprietario",
+      "Microsoft. Dal 23 febbraio 2026 la divisione è guidata da Asha Sharma, che ha preso il posto di Phil Spencer"
+    ],
+    [
+      "Console attuali",
+      "Xbox Series X e Series S, uscite il 10 novembre 2020. Microsoft non pubblica le vendite: secondo stime citate da Wikipedia, circa 35 milioni a febbraio 2026"
+    ],
+    [
+      "Portatili",
+      "ROG Xbox Ally e ROG Xbox Ally X, prodotti con ASUS, in vendita dal 16 ottobre 2025"
+    ],
+    [
+      "Prezzi",
+      "Nel 2025 la Series X negli Stati Uniti è passata da 499,99 a 649,99 dollari. Dal 1 agosto 2026 nuovi aumenti in Europa e Regno Unito, legati ai costi di memoria e archiviazione (Wikipedia)"
+    ],
+    [
+      "Studi",
+      "Dieci studi elencati oggi da Wikipedia nella pagina di Xbox Game Studios, contro quindici nel 2019"
+    ],
+    [
+      "Ricerca AI",
+      "Muse (WHAM), modello generativo per il gameplay, presentato il 19 febbraio 2025 con un articolo su Nature"
+    ],
+    [
+      "Tagli",
+      "Circa 3.200 licenziamenti annunciati nella divisione Xbox il 6 luglio 2026 (Wikipedia)"
+    ],
+    [
+      "Cloud gaming",
+      "Xbox Cloud Gaming è uscito dalla beta nell'ottobre 2025 ed è disponibile in 29 paesi secondo Wikipedia"
+    ]
+  ],
+  "sections": [
+    [
+      "Cosa cambia con l'AI",
+      "Per i giocatori, la novità più visibile è stata Gaming Copilot. Microsoft lo ha annunciato il 13 marzo 2025 come assistente vocale nell'app mobile Xbox: risponde a domande sul gioco, dà consigli e ricorda le sessioni passate. A fine settembre 2025 la versione beta è arrivata nella Game Bar di Windows, e il 16 ottobre 2025 sono usciti i portatili ROG Xbox Ally.\n\nPer gli sviluppatori, Microsoft Research ha creato Muse, un modello che genera immagini di gioco e azioni del controller. È stato addestrato su dati di Bleeding Edge, un gioco del 2020 di Ninja Theory, e al momento produce immagini molto piccole, 300 per 180 pixel. È una ricerca, non un prodotto per fare giochi."
+    ],
+    [
+      "Esempi recenti",
+      "<ul><li><strong>19 febbraio 2025:</strong> Microsoft Research presenta Muse. Il modello è stato addestrato con oltre un miliardo di immagini e azioni del controller, pari a più di sette anni di gioco continuo, e pesi e dati di esempio sono pubblici.</li><li><strong>13 marzo 2025:</strong> debutta Copilot for Gaming nell'app mobile Xbox, prima del GDC.</li><li><strong>15 novembre 2025:</strong> i fan accusano Call of Duty: Black Ops 7 di usare arte generata con l'AI. La pagina Steam dichiara l'uso di strumenti generativi per alcuni elementi, senza dire quali, e Activision non ha confermato l'accusa sulle immagini contestate.</li><li><strong>20 febbraio 2026:</strong> Spencer lascia e Asha Sharma, ex responsabile di CoreAI di Microsoft, diventa CEO. Scrive che Xbox non riempirà l'ecosistema di «AI scadente» e che i giochi sono arte fatta da persone.</li><li><strong>5 maggio 2026:</strong> Sharma conferma la fine di Xbox Copilot su mobile e lo stop allo sviluppo per console, secondo WinBuzzer. Restano versioni beta su PC, telefono e portatili.</li><li><strong>19 ottobre 2026:</strong> Brandon Stirrup, manager di Microsoft, scrive su X che ignorare l'AI è un errore e che molte persone in Xbox già la usano. GamesRadar riporta le critiche e nota che non c'è una risposta ufficiale di Xbox.</li></ul>"
+    ],
+    [
+      "Cosa preoccupa giocatori e sviluppatori",
+      "Il timore principale è il lavoro. Nel luglio 2025 una ristrutturazione ha colpito Rare, Turn 10, Undead Labs e Compulsion Games, con la cancellazione di Perfect Dark e la fine di Everwild. Il 6 luglio 2026 sono stati annunciati circa 3.200 tagli, e Double Fine e Compulsion sono diventati indipendenti, mentre Ninja Theory e Undead Labs sono stati venduti. Le fonti lette non attribuiscono questi tagli all'AI in modo diretto, ma molti sviluppatori li leggono nel clima di forti investimenti di Microsoft nel settore.\n\nUn'altra preoccupazione è la qualità e la trasparenza: nel caso Black Ops 7 i giocatori hanno chiesto di sapere dove viene usata l'AI. Un articolo citato da VGC stima che quasi 8.000 giochi su Steam dichiarino l'uso di AI generativa, ma la dichiarazione è volontaria. Dall'altra parte, chi difende questi strumenti dice che possono ridurre lavori ripetitivi."
+    ],
+    [
+      "Cosa aspettarsi",
+      "Il segnale più chiaro viene dalla direzione. Secondo WinBuzzer, Sharma ha indicato i giocatori attivi ogni giorno come misura principale e ha detto che le funzioni che non servono a questo obiettivo possono essere eliminate. Per questo un assistente sulla console non ha superato la revisione, mentre le versioni su PC e portatili sono rimaste in beta.\n\nResta aperto il ruolo dell'AI negli studi: Sharma dice di non voler contenuti prodotti in serie, ma le parole di Stirrup mostrano che dentro Microsoft c'è chi spinge nella direzione opposta. Sulla prossima console non ci sono annunci ufficiali, quindi conviene trattare le voci con cautela."
+    ]
+  ],
+  "sameAs": [
+    "https://xbox.com",
+    "https://it.wikipedia.org/wiki/Xbox",
+    "https://en.wikipedia.org/wiki/Xbox_Game_Studios"
+  ],
+  "sources": [
+    {
+      "name": "Wikipedia",
+      "title": "Xbox Game Studios",
+      "url": "https://en.wikipedia.org/wiki/Xbox_Game_Studios"
+    },
+    {
+      "name": "Wikipedia",
+      "title": "Xbox Series X and Series S",
+      "url": "https://en.wikipedia.org/wiki/Xbox_Series_X_and_Series_S"
+    },
+    {
+      "name": "Video Games Chronicle",
+      "title": "Huge Xbox shakeup: Phil Spencer retiring, Sarah Bond resigns, Microsoft AI boss becomes new Microsoft Gaming CEO",
+      "url": "https://www.videogameschronicle.com/news/huge-xbox-shakeup-phil-spencer-retiring-sarah-bond-resigns-microsoft-ai-boss-becomes-new-microsoft-gaming-ceo/"
+    },
+    {
+      "name": "WinBuzzer",
+      "title": "Microsoft Ends Xbox Copilot AI Gaming Assistant on Mobile and Console",
+      "url": "https://winbuzzer.com/2026/05/06/microsoft-gives-up-on-xbox-copilot-ai-xcxwbn/"
+    },
+    {
+      "name": "Microsoft Research",
+      "title": "Introducing Muse: Our first generative AI model designed for gameplay ideation",
+      "url": "https://www.microsoft.com/en-us/research/blog/introducing-muse"
+    },
+    {
+      "name": "TechCrunch",
+      "title": "Xbox debuts a new AI-powered gaming companion",
+      "url": "https://techcrunch.com/2025/03/13/xbox-debuts-a-new-ai-powered-gaming-companion"
+    },
+    {
+      "name": "Xbox Wire",
+      "title": "Xbox September Update: ROG Xbox Ally, Gaming Copilot, Aggregated Library, and More",
+      "url": "https://news.xbox.com/en-us/2025/09/29/xbox-september-update-2025/"
+    },
+    {
+      "name": "Video Games Chronicle",
+      "title": "Fans think Call of Duty: Black Ops 7 is filled with generative AI art",
+      "url": "https://www.videogameschronicle.com/news/it-honestly-sucks-fans-think-call-of-duty-black-ops-7-is-filled-with-generative-ai-art"
+    },
+    {
+      "name": "GamesRadar",
+      "title": "Xbox business manager says devs not using AI shouldn't be in the business of being a business",
+      "url": "https://www.gamesradar.com/games/xbox-business-manager-says-devs-not-using-ai-shouldnt-be-in-the-business-of-being-a-business-because-he-vibe-coded-a-bad-but-improvable-game-in-2-days/"
+    }
+  ],
+  "updated": "2026-10-19"
+}

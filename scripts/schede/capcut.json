@@ -1,0 +1,143 @@
+{
+ "key": "capcut",
+ "name": "CapCut",
+ "tipo": "prodotto",
+ "kicker": "Video con l'AI",
+ "title": "CapCut: montaggio video con l'AI, prezzi, privacy e limiti",
+ "desc": "Scheda su CapCut: cos'è, funzioni AI, piani e prezzi a ottobre 2026, vantaggi e limiti, licenza sui contenuti, privacy e proprietà legata a ByteDance.",
+ "re": "\\bCapCut\\b|Seedance",
+ "intro": "CapCut è un'app di montaggio video e foto, con funzioni di intelligenza artificiale. Esiste per computer, browser e telefono. Permette di tagliare clip, aggiungere musica, effetti e testi, generare sottotitoli automatici, rimuovere lo sfondo e creare immagini o video con modelli AI come Seedance. È molto usata da chi pubblica su TikTok, YouTube e Instagram. Molte funzioni sono pensate per ridurre il lavoro manuale.\n\nServe a creator, piccoli negozi e utenti alle prime armi che vogliono un montaggio rapido, con molti modelli pronti. È sviluppata da ByteDance, la società di TikTok, e questo rende importante leggere con attenzione le regole su privacy e contenuti. Inoltre i piani sono cambiati nel 2026: conviene verificare nell'app il prezzo che compare per il proprio account. Il piano gratuito aiuta a capire se basta.",
+ "facts": [
+  [
+   "Sito ufficiale",
+   "<a href='https://www.capcut.com/'>capcut.com</a>"
+  ],
+  [
+   "Cos'è",
+   "Editor di video e foto con strumenti AI"
+  ],
+  [
+   "Piattaforme",
+   "Desktop, versione online e app mobile (<a href='https://www.capcut.com/'>pagina ufficiale</a>, 19 ottobre 2026)"
+  ],
+  [
+   "Funzioni AI",
+   "Sottotitoli automatici, sintesi vocale, rimozione dello sfondo, generatori di immagini e video, modelli Seedance"
+  ],
+  [
+   "Piano gratuito",
+   "Sì, con modelli gratuiti e strumenti di base (<a href='https://www.capcut.com/pricing'>pagina prezzi</a>)"
+  ],
+  [
+   "Prezzo del piano Pro",
+   "US$19,99 al mese, 1.200 crediti AI mensili (<a href='https://www.capcut.com/pricing'>pagina prezzi</a>, 19 ottobre 2026)"
+  ],
+  [
+   "Proprietà",
+   "Sviluppata da ByteDance; negli Stati Uniti la società contraente è TikTok USDS Joint Venture LLC (<a href='https://www.capcut.com/clause/terms-of-service'>termini di servizio</a>)"
+  ],
+  [
+   "Termini aggiornati",
+   "15 aprile 2026, secondo la pagina dei termini"
+  ]
+ ],
+ "sections": [
+  [
+   "Prezzi",
+   "La pagina prezzi ufficiale mostra quattro piani, tutti in dollari USA e con prezzo mensile. Ci sono interruttori per l'abbonamento annuale, con sconti dichiarati \"fino al 40%\" e \"fino al 30%\", ma i prezzi annuali non erano leggibili e non li riportiamo. La pagina precisa che i prezzi sono indicativi e che prezzo finale, tasse e offerte si vedono solo dopo l'accesso, quindi per altri paesi possono cambiare. Una guida di Hooked (azienda concorrente) riporta anche un piano Standard a 9,99 dollari sull'App Store statunitense, ma non compare nella pagina ufficiale letta e non lo consideriamo confermato.",
+   {
+    "caption": "Prezzi letti il 19 ottobre 2026 su capcut.com/pricing. Valuta: dollari USA (US$), prezzi mensili; i prezzi finali dipendono dall'account e dal paese.",
+    "head": [
+     "Piano",
+     "Prezzo al mese",
+     "Crediti AI al mese"
+    ],
+    "rows": [
+     [
+      "Free",
+      "US$0",
+      "Non indicati"
+     ],
+     [
+      "Pro",
+      "US$19,99",
+      "1.200"
+     ],
+     [
+      "Ultra",
+      "US$79",
+      "8.645"
+     ],
+     [
+      "Teams",
+      "US$12,49 per postazione",
+      "1.200 per postazione"
+     ]
+    ]
+   }
+  ],
+  [
+   "Pro",
+   "<ul><li>Il piano gratuito include i modelli e gli strumenti di base per montare un video senza pagare.</li><li>L'interfaccia è semplice e adatta ai formati verticali per social.</li><li>Le funzioni AI per sottotitoli, voce, audio e immagini sono raccolte nello stesso programma.</li><li>Esiste per desktop, web e telefono, quindi si può continuare un lavoro su più dispositivi.</li><li>Il piano Pro include 1 TB di spazio e 1.200 crediti AI al mese, secondo la pagina prezzi.</li><li>Nel 2026 sono arrivati nuovi strumenti, tra cui la generazione video con Seedance 2.5 su computer e web (secondo la guida di Hooked).</li></ul>"
+  ],
+  [
+   "Contro",
+   "<ul><li>I crediti AI sono limitati e i video generati con Seedance costano per secondo, con prezzi che sulla pagina erano indicati come offerta del primo mese.</li><li>Il prezzo finale non è visibile senza accedere, e le formule annuali non erano leggibili.</li><li>I piani sono cambiati nel marzo 2026: i vecchi prezzi non sono più disponibili per i nuovi abbonati (<a href='https://www.capcut.com/help/pricing-change'>avviso ufficiale</a>).</li><li>Il piano gratuito non include spazio cloud, secondo la guida di Hooked.</li><li>Gli strumenti per professionisti sono meno ampi di quelli dei programmi di montaggio avanzati.</li><li>La licenza sui contenuti caricati è ampia e può preoccupare chi lavora per clienti.</li></ul>"
+  ],
+  [
+   "Per chi è adatto",
+   "CapCut è adatta a chi pubblica video brevi per social, a piccoli negozi e a chi vuole imparare il montaggio senza spendere. I modelli e le funzioni automatiche accelerano il lavoro, e il piano gratuito permette di capire se basta. Il piano Pro ha senso solo se si usano davvero i crediti AI e lo spazio cloud.\n\nÈ meno indicata per chi gestisce materiale riservato, immagini di clienti o progetti coperti da accordi di riservatezza, e per le redazioni che vogliono controllo pieno sui dati. Per film, documentari o lavori lunghi con più tracce e flussi professionali, un editor tradizionale resta più adatto. Chi ha minori in casa deve ricordare che l'app è classificata 13+ e senza controlli parentali dedicati, secondo Hooked."
+  ],
+  [
+   "Limiti e controversie",
+   "CapCut è sviluppata da ByteDance. Fuori dagli Stati Uniti il contratto è con Bytedance Pte. Ltd., a Singapore. Dal 22 gennaio 2026, secondo Hooked e Legal Clarity, le operazioni statunitensi sono gestite da TikTok USDS Joint Venture LLC, in cui ByteDance ha il 19,9%; i <a href='https://www.capcut.com/clause/terms-of-service'>termini</a> indicano questa società come controparte negli Stati Uniti.\n\nSui diritti, i termini dicono che CapCut non possiede i contenuti degli utenti, ma chiedono una licenza non esclusiva, gratuita, trasferibile, sublicenziabile, perpetua e mondiale, per far funzionare e sviluppare i servizi, e anche per usare nome e immagine come fonte del contenuto. Il testo non tratta in modo specifico la proprietà dei risultati AI e rimanda a un accordo sui materiali per l'uso commerciale, che non abbiamo letto. Una class action del 2023 negli Stati Uniti accusa l'app di raccolta di dati senza consenso: non è provata."
+  ]
+ ],
+ "sameAs": [
+  "https://www.capcut.com/",
+  "https://it.wikipedia.org/wiki/CapCut"
+ ],
+ "sources": [
+  {
+   "name": "CapCut",
+   "title": "CapCut, pagina principale",
+   "url": "https://www.capcut.com/"
+  },
+  {
+   "name": "CapCut",
+   "title": "Prezzi di CapCut",
+   "url": "https://www.capcut.com/pricing"
+  },
+  {
+   "name": "CapCut",
+   "title": "Termini di servizio (utenti negli Stati Uniti)",
+   "url": "https://www.capcut.com/clause/terms-of-service"
+  },
+  {
+   "name": "CapCut",
+   "title": "Understanding the Pricing Change",
+   "url": "https://www.capcut.com/help/pricing-change"
+  },
+  {
+   "name": "Hooked",
+   "title": "Is CapCut Safe? Privacy, Data and Kids (2026)",
+   "url": "https://www.hooked.so/guides/is-capcut-safe"
+  },
+  {
+   "name": "Hooked",
+   "title": "CapCut Updates: What Changed in the Last 12 Months",
+   "url": "https://www.hooked.so/guides/capcut-updates"
+  },
+  {
+   "name": "Legal Clarity",
+   "title": "Who Owns CapCut? ByteDance, TikTok and the U.S. Deal",
+   "url": "https://legalclarity.org/who-owns-capcut-bytedance-tiktok-and-the-u-s-deal/"
+  },
+  {
+   "name": "VEED",
+   "title": "CapCut Review 2026: Is it Worth it? Is it Safe?",
+   "url": "https://www.veed.io/learn/capcut-review"
+  }
+ ],
+ "updated": "2026-10-19"
+}

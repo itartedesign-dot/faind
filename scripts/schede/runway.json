@@ -1,0 +1,37 @@
+{
+"key":"runway",
+"name":"Runway",
+"tipo":"prodotto",
+"kicker":"Video con l'AI",
+"title":"Runway: video e immagini con l'AI, prezzi, pro e contro",
+"desc":"Scheda su Runway: cos'è, modelli come Gen-4.5, piani e prezzi a ottobre 2026, vantaggi, limiti, diritti d'uso e uso dei contenuti per addestrare i modelli.",
+"re":"\\bRunway\\b|Gen-4\\.5|Gen-4\\b",
+"intro":"Runway è una piattaforma che genera e modifica video, immagini e audio con modelli di intelligenza artificiale. Si lavora dal browser: si scrive una descrizione o si carica un'immagine e il sistema produce un breve filmato. L'azienda sviluppa i propri modelli, e sul sito indica Gen-4.5 come modello video di punta. Offre anche un'API per sviluppatori e un kit per la robotica.\n\nÈ pensata per registi, creativi, agenzie e team marketing che vogliono provare idee o creare scene brevi senza girare. Non è un montatore completo né una soluzione \"un clic e il video è finito\". Le clip sono brevi e i crediti si consumano in fretta, quindi serve sapere cosa si vuole ottenere. Il piano gratuito basta solo per fare qualche prova.",
+"facts":[
+["Sito ufficiale","<a href='https://runway.com/'>runway.com</a> (il vecchio indirizzo runwayml.com rimanda qui)"],
+["Cos'è","Piattaforma di AI per video, immagini e audio, con API per sviluppatori"],
+["Prodotti","Runway Creative, Runway Dev (API) e Runway Robotics (<a href='https://runway.com/'>pagina ufficiale</a>, 19 ottobre 2026)"],
+["Modello video indicato","Gen-4.5, descritto dall'azienda come il suo migliore per movimento e fedeltà alla richiesta"],
+["Costo di Gen-4.5","12 crediti al secondo di video, quindi 60 crediti per 5 secondi (<a href='https://help.runwayml.com/hc/en-us/articles/15124877443219-How-do-credits-work'>centro assistenza</a>)"],
+["Piano gratuito","125 crediti una tantum, che non scadono"],
+["Prezzo di Standard","US$12 al mese con pagamento annuale (<a href='https://runway.com/pricing'>pagina prezzi</a>, 19 ottobre 2026)"],
+["Termini d'uso","<a href='https://runway.com/terms-of-use'>Condizioni di servizio</a> su proprietà, uso commerciale e addestramento"]
+],
+"sections":[
+["Prezzi","Sulla pagina prezzi ufficiale i piani a pagamento mostrano un prezzo mensile con fatturazione annuale e, accanto, un prezzo più alto barrato, che sembra quello con pagamento mese per mese: la pagina però non lo etichetta, quindi lo riportiamo solo come prezzo di listino. Il simbolo è \"$\" senza altra indicazione, e lo leggiamo come dollari USA. I crediti dei piani Standard e Pro scadono alla data di fatturazione, mentre il piano Max ne trasferisce fino a un mese. Il centro assistenza cita anche piani Unlimited e Team, che non comparivano nella tabella letta. Non abbiamo letto il prezzo del piano Enterprise.",{"caption":"Prezzi letti il 19 ottobre 2026 su runway.com/pricing. Valuta: dollari USA (US$, non etichettata sulla pagina), al mese con pagamento annuale; tra parentesi il prezzo barrato di listino.","head":["Piano","Prezzo al mese","Crediti"],"rows":[["Free","US$0","125 una tantum"],["Standard","US$12 (listino US$15)","625 al mese"],["Pro","US$28 (listino US$35)","2.250 al mese"],["Max","US$76 (listino US$95)","9.500 al mese"]]}],
+["Pro","<ul><li>I modelli video sono molto apprezzati per l'aspetto cinematografico: le recensioni di luglio 2026 e di maggio 2026 lo indicano come punto di forza.</li><li>Oltre al video ci sono immagini, audio, upscaling e strumenti per mantenere coerenti personaggi e oggetti tra più scene.</li><li>I piani Standard e Pro danno accesso a tutti i modelli video e immagine della piattaforma.</li><li>Esistono un'API e un collegamento MCP (nei piani Pro e Max) per integrare la generazione in altri flussi di lavoro.</li><li>I crediti del piano gratuito e quelli acquistati non scadono.</li><li>L'interfaccia è semplice e il primo risultato arriva in fretta.</li></ul>"],
+["Contro","<ul><li>I crediti finiscono presto quando si rifanno molte prove: una recensione consiglia di prevedere da tre a cinque volte il budget iniziale (aivideopicks, 31 maggio 2026).</li><li>Le clip sono brevi: secondo la stessa fonte arrivano a circa 10 secondi, quindi i progetti lunghi richiedono montaggio esterno.</li><li>Fisica, mani e testo nel video possono ancora risultare sbagliati, secondo le recensioni di similarlabs e aivideopicks.</li><li>L'azienda stessa indica limiti su causa ed effetto e sulla permanenza degli oggetti nella scena.</li><li>I crediti mensili di Standard e Pro non si accumulano.</li><li>Non sostituisce un programma di montaggio: serve comunque un editor tradizionale.</li></ul>"],
+["Per chi è adatto","Runway è adatta a creativi, registi, motion designer e piccoli studi che vogliono generare scene brevi, prototipi di storyboard o clip per social e pubblicità, e sono disposti a provare più volte per ottenere il risultato giusto. Il piano Standard serve per un uso occasionale, Pro per chi lavora ogni settimana, Max per volumi più alti.\n\nNon è la scelta giusta per video che devono mostrare un prodotto in modo esatto, per dichiarazioni regolate o per contenuti lunghi con presentatori. Chi cerca avatar parlanti o modelli per annunci troverà strumenti più mirati altrove. Prima di pagare conviene usare i 125 crediti gratuiti, tenendo presente che bastano per poche clip."],
+["Limiti e controversie","Secondo le <a href='https://runway.com/terms-of-use'>condizioni di servizio</a>, Runway non rivendica la proprietà di ciò che si carica o si genera, e non limita l'uso commerciale dei risultati se si rispettano le regole. Però l'utente concede all'azienda una licenza ampia e perpetua per usare input e output per addestrare e migliorare i suoi modelli, e il testo letto non descrive un modo per rifiutare. L'azienda può anche controllare i contenuti. È vietato usare il servizio per creare prodotti concorrenti.\n\nVigono divieti su nudità, violenza e contenuti ingannevoli. Il realismo dei video solleva inoltre questioni di trasparenza verso il pubblico: una recensione di luglio 2026 consiglia ai team di definire regole interne. Chi lavora con materiale riservato o di clienti dovrebbe leggere le condizioni prima di caricarlo."]
+],
+"sameAs":["https://runway.com/","https://it.wikipedia.org/wiki/Runway_(azienda)"],
+"sources":[
+{"name":"Runway","title":"Runway, pagina principale","url":"https://runway.com/"},
+{"name":"Runway","title":"Prezzi di Runway","url":"https://runway.com/pricing"},
+{"name":"Runway","title":"Condizioni d'uso di Runway","url":"https://runway.com/terms-of-use"},
+{"name":"Runway","title":"How do credits work (centro assistenza)","url":"https://help.runwayml.com/hc/en-us/articles/15124877443219-How-do-credits-work"},
+{"name":"SimilarLabs","title":"Runway Review 2026: Professional AI Video Production","url":"https://similarlabs.com/blog/runway-review"},
+{"name":"AIVideoPicks","title":"Runway Review 2026","url":"https://aivideopicks.com/posts/runway-review-2026.html"}
+],
+"updated":"2026-10-19"
+}
