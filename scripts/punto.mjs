@@ -44,7 +44,8 @@ const itemHtml = (p) => `<li><a href="${up}${PUNTO_DIR}${p.slug}.html">${esc(p.t
 export function puntoPage(p, all = []) {
   const file = `${p.slug}.html`, url = `${SITE}${PUNTO_DIR}${file}`, image = `${SITE}assets/og-image.png`;
   const deep = (p.deep || []).map(s => articleBySlug(s, 'it')).filter(Boolean);
-  const others = all.filter(x => x.slug !== p.slug).slice(0, 5);
+  const PREV_MAX = 10;
+  const others = all.filter(x => x.slug !== p.slug && x.date <= p.date);   // i punti usciti prima, dal più recente
   const jsonld = { '@context': 'https://schema.org', '@graph': [
     { '@type': 'NewsArticle', '@id': url + '#article', headline: p.title, description: p.desc, image, inLanguage: 'it-IT',
       datePublished: p.date, dateModified: p.updated || p.date, mainEntityOfPage: url,
@@ -75,15 +76,16 @@ ${p.faq.map(([q, r]) => `      <h3>${esc(q)}</h3>\n      <p>${esc(r)}</p>`).join
       <h2>Fonti</h2>
       <ul class="art__src">${(p.sources || []).map(s => `<li>${esc(s.name)}: <a href="${esc(s.url)}" rel="noopener">${esc(s.title || s.url)}</a></li>`).join('')}</ul>
     </section>
-${deep.length ? `
+${others.length ? `
+    <section>
+      <h2>I punti dei giorni precedenti</h2>
+      <ul class="art__news">${others.slice(0, PREV_MAX).map(x => itemHtml(x).replace('</span></li>', `</span><span>${esc(x.desc)}</span></li>`)).join('')}</ul>${others.length > PREV_MAX ? `
+      <p><a href="./">Tutti i punti →</a></p>` : ''}
+    </section>
+` : ''}${deep.length ? `
     <section>
       <h2>Per capire di più</h2>
       <ul class="art__news">${deep.map(d => `<li><a href="${up}${d.path}">${esc(d.title)}</a></li>`).join('')}</ul>
-    </section>
-` : ''}${others.length ? `
-    <section>
-      <h2>Gli ultimi punti</h2>
-      <ul class="art__news">${others.map(itemHtml).join('')}</ul>
     </section>
 ` : ''}`;
   return shell({ lang: 'it', file, langs: ['it'], title: p.title, desc: p.desc, image, jsonld, main, dir: PUNTO_DIR });
