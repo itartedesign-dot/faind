@@ -16,10 +16,9 @@
    • sitemap.xml, robots.txt e la chiave IndexNow (avviso a Bing e agli
      altri motori che aderiscono, per le pagine nuove)
    Indicizzabili da Google le notizie della redazione, quelle riprese
-   da almeno 2 fonti e (dal 9/10/2026, decisione di Paolo) anche quelle
-   con una sola fonte, purché abbiano un riassunto di almeno
-   INDEX_MIN_SUMMARY caratteri: le pagine quasi vuote restano "noindex"
-   e spariscono dopo 7 giorni.
+   da almeno 2 fonti e quelle di priorità alta (dal 19/10/2026; dal 9 al
+   19/10 lo erano anche quelle con una sola fonte e un riassunto lungo).
+   Le altre restano "noindex" e spariscono dopo 7 giorni.
    ===================================================================== */
 
 import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
@@ -112,8 +111,10 @@ async function loadEditorial(root) {
   } catch (e) { console.warn('data.js non leggibile:', e.message); return {}; }
 }
 
-const INDEX_MIN_SUMMARY = 80;   // sotto questa lunghezza una notizia con una sola fonte non va su Google (pagina troppo povera)
-const indexable = (n) => !!n.editorial || (n.coverage || 1) >= 2 || n.priority === 'alta' || String(n.summary || '').trim().length >= INDEX_MIN_SUMMARY;
+// Su Google solo le notizie con un valore nostro: il confronto tra almeno 2 fonti, la scelta della redazione o la priorità alta.
+// Quelle con una sola fonte restano sul sito ma "noindex" (decisione di Paolo del 19/10/2026, dopo l'analisi SEO:
+// pagine fatte quasi solo del testo della testata rischiano di far declassare tutto il sito).
+const indexable = (n) => !!n.editorial || (n.coverage || 1) >= 2 || n.priority === 'alta';
 
 // Titolo per Google: con almeno 2 fonti aggiunge "N fonti a confronto", se il titolo resta abbastanza corto
 // da non essere tagliato (Google mostra circa 60-70 caratteri); altrimenti il numero va solo nella descrizione
@@ -335,6 +336,27 @@ function slim(n) {
   return o;
 }
 
+/* ------------------------------ Home: notizie già nell'HTML ------------------------------ */
+// La home carica le notizie con JavaScript (news.json). Perché Google le trovi subito e i motori delle AI
+// (che non eseguono JavaScript) le vedano, scrivo le ultime notizie direttamente in index.html al posto
+// dei segnaposto: "Appena uscite" (8) e "Letture secondarie" (22). Quando lo script parte le sostituisce.
+const HOME_WIRE = 8, HOME_READS = 22;
+const homeItem = (n, cls) => `<li class="${cls}"><div class="${cls === 'read' ? 'read__body' : 'wire__body'}">` +
+  `<h3 class="${cls === 'read' ? 'read__title' : 'wire__headline'}"><a href="${esc(n.page)}">${esc(tx(n.title))}</a></h3>` +
+  `<span class="source">${esc(n.source.name)} · <time datetime="${esc(n.date)}">${esc(fmtDate(n.date, 'it'))}</time></span></div></li>`;
+export async function prefillHome(root, news) {
+  const file = path.join(root, 'index.html');
+  let html = await readFile(file, 'utf8');
+  const list = news.filter(n => n.page && indexable(n)).slice(0, HOME_WIRE + HOME_READS);
+  if (!list.length) return 0;
+  const wire = /(<ol class="wire__list" id="wire"[^>]*>)[\s\S]*?(<\/ol>)/, reads = /(<ol class="reads" id="reads"[^>]*>)[\s\S]*?(<\/ol>)/;
+  if (!wire.test(html) || !reads.test(html)) throw new Error('segnaposto della home non trovati');
+  html = html.replace(wire, (m, a, b) => `${a}\n${list.slice(0, HOME_WIRE).map(n => '              ' + homeItem(n, 'wire__item')).join('\n')}\n            ${b}`)
+    .replace(reads, (m, a, b) => `${a}\n${list.slice(HOME_WIRE).map(n => '            ' + homeItem(n, 'read')).join('\n')}\n          ${b}`);
+  await writeFile(file, html);
+  return list.length;
+}
+
 /* ------------------------------ IndexNow ------------------------------ */
 // Avvisa Bing (che condivide l'avviso con gli altri motori IndexNow) delle pagine nuove.
 // Si mandano le pagine nate nel giro precedente, che a questo punto sono già online. Solo su GitHub.
@@ -439,7 +461,7 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
 
   const today = new Date().toISOString().slice(0, 10);
   const urls = [`<url><loc>${SITE}</loc><lastmod>${today}</lastmod><changefreq>hourly</changefreq><priority>1.0</priority></url>`,
-    ...['redazione.html', 'about.html', 'a-propos.html', 'ueber-uns.html', 'incorpora.html'].map(p => `<url><loc>${SITE}${p}</loc><priority>0.6</priority></url>`)]
+    ...['redazione.html', 'cos-e-faind.html', 'about.html', 'a-propos.html', 'ueber-uns.html', 'incorpora.html'].map(p => `<url><loc>${SITE}${p}</loc><priority>0.6</priority></url>`)]
     .concat(everything.filter(indexable).map(n =>
       `<url><loc>${SITE}${n.page}</loc><lastmod>${toDate(n.date).toISOString().slice(0, 10)}</lastmod></url>`));
   await writeFile(path.join(root, 'sitemap.xml'),
@@ -460,7 +482,10 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
   catch (e) { console.warn('Pagina di confronto non generata:', e.message); }
 
   // Approfondimenti: gli articoli di fondo (cartella approfondimenti/)
-  try { await buildArticles(root); }
+  try { console.log(`🏠 home: ${await prefillHome(root, news)} notizie scritte nell'HTML`); }
+  catch (e) { console.warn('Notizie non scritte nella home (restano i segnaposto):', e.message); }
+
+  try { await buildArticles(root, everything.filter(indexable)); }
   catch (e) { console.warn('Approfondimenti non generati:', e.message); }
   // Card degli approfondimenti (og/<slug>.png): copertina dell'articolo con fascia, titolo e logo. Servono ai post social
   try {

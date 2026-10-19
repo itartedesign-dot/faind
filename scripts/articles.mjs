@@ -270,25 +270,25 @@ const LANGS = Object.keys(ARTICLE_DIR);
 const LANG_LABEL = { it: 'Italiano', en: 'English', fr: 'Français', de: 'Deutsch' };
 const UI = {
   it: { locale: 'it-IT', name: 'Approfondimenti', back: '← Tutte le notizie', home: 'Torna alle notizie di FAIND', pageLang: 'Lingua della pagina',
-    by: 'A cura della <a href="{about}">redazione di FAIND</a>', updated: 'Aggiornato il', brief: 'In breve', faq: 'Domande frequenti', sources: 'Fonti', more: 'Altri approfondimenti',
+    by: 'A cura della <a href="{about}">redazione di FAIND</a>', updated: 'Aggiornato il', brief: 'In breve', faq: 'Domande frequenti', sources: 'Fonti', more: 'Altri approfondimenti', latest: 'Le ultime notizie sul tema',
     idxH1: "Approfondimenti sull'intelligenza artificiale", idxTitle: "Approfondimenti sull'intelligenza artificiale: guide e risposte",
     idxLede: "Le risposte alle domande che le persone si fanno più spesso sull'intelligenza artificiale: lavoro, rischi, costi, leggi, come iniziare. Scritte in modo semplice, con le fonti.",
     idxDesc: "Guide e risposte alle domande più cercate sull'intelligenza artificiale: lavori a rischio, pericoli, come iniziare, costi, consumi, leggi nel mondo e come riconoscere i contenuti fatti con l'AI.",
     foot: ['Chi siamo', 'Le AI a confronto', 'Glossario', 'Privacy e note legali'], about: 'redazione.html', cmp: 'confronto/', gloss: 'glossario/' },
   en: { locale: 'en-GB', name: 'In depth', back: '← All the news', home: 'Back to FAIND news', pageLang: 'Page language',
-    by: 'By the <a href="{about}">FAIND newsroom</a>', updated: 'Updated on', brief: 'In brief', faq: 'Frequently asked questions', sources: 'Sources', more: 'More in-depth articles',
+    by: 'By the <a href="{about}">FAIND newsroom</a>', updated: 'Updated on', brief: 'In brief', faq: 'Frequently asked questions', sources: 'Sources', more: 'More in-depth articles', latest: 'Latest news on this topic',
     idxH1: 'Artificial intelligence in depth', idxTitle: 'Artificial intelligence in depth: guides and answers',
     idxLede: 'Answers to the questions people ask most often about artificial intelligence: jobs, risks, costs, laws, how to get started. Written in plain language, with sources.',
     idxDesc: 'Guides and answers to the most searched questions about artificial intelligence: jobs at risk, dangers, how to get started, costs, energy use, laws around the world and how to spot AI-made content.',
     foot: ['About', 'AI assistants compared', 'Glossary', 'Privacy and legal notes'], about: 'about.html', cmp: 'confronto/en/', gloss: 'glossario/en/' },
   fr: { locale: 'fr-FR', name: 'Dossiers', back: '← Toutes les actualités', home: 'Retour aux actualités de FAIND', pageLang: 'Langue de la page',
-    by: 'Par la <a href="{about}">rédaction de FAIND</a>', updated: 'Mis à jour le', brief: 'En bref', faq: 'Questions fréquentes', sources: 'Sources', more: 'Autres dossiers',
+    by: 'Par la <a href="{about}">rédaction de FAIND</a>', updated: 'Mis à jour le', brief: 'En bref', faq: 'Questions fréquentes', sources: 'Sources', more: 'Autres dossiers', latest: 'Les dernières actualités sur le sujet',
     idxH1: "Dossiers sur l'intelligence artificielle", idxTitle: "Dossiers sur l'intelligence artificielle : guides et réponses",
     idxLede: "Les réponses aux questions que l'on se pose le plus souvent sur l'intelligence artificielle : emploi, risques, coûts, lois, par où commencer. Écrites simplement, avec les sources.",
     idxDesc: "Guides et réponses aux questions les plus recherchées sur l'intelligence artificielle : métiers menacés, dangers, comment débuter, coûts, consommation, lois dans le monde et comment reconnaître les contenus créés avec l'IA.",
     foot: ['À propos', 'Les IA comparées', 'Glossaire', 'Confidentialité et mentions légales'], about: 'a-propos.html', cmp: 'confronto/fr/', gloss: 'glossario/fr/' },
   de: { locale: 'de-DE', name: 'Hintergrund', back: '← Alle Nachrichten', home: 'Zurück zu den FAIND-Nachrichten', pageLang: 'Sprache der Seite',
-    by: 'Von der <a href="{about}">FAIND-Redaktion</a>', updated: 'Aktualisiert am', brief: 'Kurz gefasst', faq: 'Häufige Fragen', sources: 'Quellen', more: 'Weitere Hintergrundartikel',
+    by: 'Von der <a href="{about}">FAIND-Redaktion</a>', updated: 'Aktualisiert am', brief: 'Kurz gefasst', faq: 'Häufige Fragen', sources: 'Quellen', more: 'Weitere Hintergrundartikel', latest: 'Die neuesten Nachrichten zum Thema',
     idxH1: 'Hintergrund zur künstlichen Intelligenz', idxTitle: 'Hintergrund zur künstlichen Intelligenz: Leitfäden und Antworten',
     idxLede: 'Antworten auf die Fragen, die sich Menschen am häufigsten zur künstlichen Intelligenz stellen: Arbeit, Risiken, Kosten, Gesetze, der Einstieg. Einfach geschrieben, mit Quellen.',
     idxDesc: 'Leitfäden und Antworten auf die meistgesuchten Fragen zur künstlichen Intelligenz: gefährdete Berufe, Gefahren, der Einstieg, Kosten, Verbrauch, Gesetze weltweit und wie man mit KI erstellte Inhalte erkennt.',
@@ -319,6 +319,7 @@ export function articleFor(text, lang = 'it') {
   const m = MATCH.find(([, re]) => re.test(text));
   return m ? articleBySlug(m[0], lang) : null;
 }
+const slugFor = (text) => (MATCH.find(([, re]) => re.test(text)) || [])[0];
 // Un approfondimento dato il suo indirizzo, con le stesse regole di lingua
 export function articleBySlug(slug, lang = 'it') {
   const a = ARTICLES.find(x => x.slug === slug);
@@ -368,6 +369,11 @@ ${alts}  <meta name="robots" content="index, follow, max-image-preview:large">
     .legal .art__brief ul { color: var(--ink); }
     .legal.art h3 { font-size: 17.5px; font-weight: 760; color: var(--ink); margin: 18px 0 6px; }
     .legal .art__src { font-size: 13.5px; }
+    .legal .art__news { list-style: none; padding: 0; margin: 10px 0 0; }
+    .legal .art__news li { padding: 10px 0; border-bottom: 1px solid var(--rule); line-height: 1.4; }
+    .art__news a { color: var(--ink); font-weight: 650; text-decoration: none; }
+    .art__news a:hover { color: var(--link); text-decoration: underline; }
+    .art__news span { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
     .art__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 14px; }
     .art__grid a { display: block; text-decoration: none; color: var(--ink); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; background: var(--surface); }
     .art__grid img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
@@ -398,7 +404,23 @@ ${main.replace('<!--lsw-->\n', sw)}
 
 const cardHtml = (a, up) => `<a href="${a.slug}.html"><img src="${up}assets/${a.img}" alt="" loading="lazy" width="1024" height="576"><strong>${esc(a.title)}</strong><span>${esc(a.card)}</span></a>`;
 
-function articlePage(base, lang) {
+// Le ultime notizie che rimandano a questo approfondimento (stessa regola delle pagine notizia), prima quelle nella lingua della pagina
+const LATEST_MAX = 5;
+function latestHtml(slug, lang, news, up, u) {
+  const hits = news.filter(n => n.page && slugFor(`${txt(n.title)} ${txt(n.summary)}`) === slug);
+  const list = [...hits.filter(n => (n.lang || 'it') === lang), ...hits.filter(n => (n.lang || 'it') !== lang)].slice(0, LATEST_MAX);
+  if (!list.length) return '';
+  const day = new Intl.DateTimeFormat(u.locale, { day: 'numeric', month: 'long', timeZone: 'Europe/Rome' });
+  return `
+    <section>
+      <h2>${u.latest}</h2>
+      <ul class="art__news">${list.map(n => `<li><a href="${up}${esc(n.page)}"${(n.lang || 'it') !== lang ? ` hreflang="${esc(n.lang || 'it')}"` : ''}>${esc(txt(n.title))}</a> <span>${esc(n.source.name)} · ${day.format(new Date(n.date))}</span></li>`).join('')}</ul>
+    </section>
+`;
+}
+const txt = (v) => (v == null ? '' : typeof v === 'string' ? v : (v.it || v.en || ''));
+
+function articlePage(base, lang, news = []) {
   const a = tr(base, lang), u = UI[lang], up = upOf(lang), file = `${a.slug}.html`;
   const url = `${SITE}${ARTICLE_DIR[lang]}${file}`, image = `${SITE}assets/${a.img}`;
   const langs = LANGS.filter(k => tr(base, k));
@@ -435,6 +457,7 @@ ${a.sources.length ? `
       <ul class="art__src">${a.sources.map(s => `<li>${esc(s)}</li>`).join('')}</ul>
     </section>
 ` : ''}
+${latestHtml(a.slug, lang, news, up, u)}
     <section>
       <h2>${u.more}</h2>
       <div class="art__grid">${others.map(o => cardHtml(o, up)).join('')}</div>
@@ -462,7 +485,7 @@ export const homeCards = () => ARTICLES.map(a => `          <a class="deep__card
 // Titoli e sommari tradotti per le schede della home: finiscono in approfondimenti/cards.json, letto da script.js
 const homeI18n = () => Object.fromEntries(LANGS.filter(k => k !== 'it').map(k => [k, Object.fromEntries(listFor(k).map(a => [a.slug, [a.title, a.card]]))]));
 
-export async function buildArticles(root) {
+export async function buildArticles(root, news = []) {
   const urls = [];
   let pages = 0;
   for (const lang of LANGS) {
@@ -474,7 +497,7 @@ export async function buildArticles(root) {
     urls.push(SITE + ARTICLE_DIR[lang]);
     for (const a of ARTICLES) {
       if (!tr(a, lang)) continue;
-      await writeFile(path.join(dir, `${a.slug}.html`), articlePage(a, lang));
+      await writeFile(path.join(dir, `${a.slug}.html`), articlePage(a, lang, news));
       urls.push(`${SITE}${ARTICLE_DIR[lang]}${a.slug}.html`);
       pages++;
     }
