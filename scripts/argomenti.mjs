@@ -354,7 +354,7 @@ export function discoverSubjects(items, known, { exclude = [] } = {}) {
 
 // Argomenti citati in un testo (solo quelli che hanno già una pagina)
 export function subjectsIn(text, subjects) {
-  return subjects.filter(s => s.pages && reOf(s).test(text));
+  return subjects.filter(s => s.pages && s.indexed && reOf(s).test(text));
 }
 
 /* ------------------------------ Argomenti: pagine ------------------------------ */
@@ -420,6 +420,7 @@ export async function buildArgomenti({ items, registry = [], root, now = Date.no
   for (const s of discoverSubjects(items, [...byKey.values()], { exclude })) if (!byKey.has(s.key)) byKey.set(s.key, s);
 
   const sorted = [...items].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  const schede = await loadSchede();
   const subjects = [];
   for (const s of byKey.values()) {
     const re = reOf(s);
@@ -428,12 +429,12 @@ export async function buildArgomenti({ items, registry = [], root, now = Date.no
     const born = registry.some(r => r.key === s.key && r.since);
     if (!born && (list.length < SOGLIA || outlets.size < MIN_FONTI)) continue;
     const pages = LANGS.filter(l => l === 'it' || list.filter(n => (n.lang || 'it') === l).length >= SOGLIA_LINGUA);
-    subjects.push({ name: s.name, key: s.key, re: s.re, flags: s.flags || '', seed: !!s.seed, since: (registry.find(r => r.key === s.key) || {}).since || new Date(now).toISOString().slice(0, 10), pages, _list: list });
+    subjects.push({ name: s.name, key: s.key, re: s.re, flags: s.flags || '', seed: !!s.seed, indexed: !!(s.seed || schede.has(s.key)), since: (registry.find(r => r.key === s.key) || {}).since || new Date(now).toISOString().slice(0, 10), pages, _list: list });
   }
   subjects.sort((a, b) => b._list.length - a._list.length || a.name.localeCompare(b.name));
 
   // 2) Pagine
-  const urls = [], schede = await loadSchede();
+  const urls = [];
   for (const s of subjects) {
     const alternates = s.pages.map(l => ({ lang: l, url: `${SITE}${ARG_DIR[l]}${s.key}.html` }));
     // argomenti che compaiono più spesso nelle stesse notizie
@@ -462,10 +463,11 @@ export async function buildArgomenti({ items, registry = [], root, now = Date.no
         mainEntity: { '@type': 'ItemList', numberOfItems: shown.length, itemListElement: shown.slice(0, 30).map((n, i) => ({ '@type': 'ListItem', position: i + 1, url: n.page ? SITE + n.page : n.link.url, name: tx(n.title) })) } };
       const html = shell({ lang, up, url, title: `${card ? card.title : u.seo(s.name)} | FAIND`, desc: card ? card.desc : u.desc(s.name, list.length, outlets.size), h1: card ? card.name : u.h1(s.name),
         lede: card ? '' : u.intro(s.name, list.length, outlets.size, fmtDay(first, lang)), main, alternates, jsonld, css: SC_CSS,
+        robots: s.indexed ? 'index, follow' : 'noindex, follow',
         crumb: `<a href="${up}">FAIND</a> › <a href="${up}${ARG_DIR[lang]}">${esc(u.crumb)}</a>` });
       await mkdir(path.join(root, ARG_DIR[lang]), { recursive: true });
       await writeFile(path.join(root, ARG_DIR[lang], `${s.key}.html`), html);
-      urls.push({ url, lastmod: list[0] ? romeDay(list[0].date) : '' });
+      if (s.indexed) urls.push({ url, lastmod: list[0] ? romeDay(list[0].date) : '' });
     }
   }
   // Schede su un tema o un prodotto senza pagina "Notizie su…": una pagina a sé in schede/ (solo italiano)
@@ -502,7 +504,7 @@ export async function buildArgomenti({ items, registry = [], root, now = Date.no
   for (const lang of LANGS) {
     const u = UI[lang], up = lang === 'it' ? '../' : '../../';
     const url = `${SITE}${ARG_DIR[lang]}`;
-    const list = subjects.filter(s => s.pages.includes(lang));
+    const list = subjects.filter(s => s.indexed && s.pages.includes(lang));
     const main = `<ul class="chips">${list.map(s => {
       const n = lang === 'it' ? s._list.length : s._list.filter(x => (x.lang || 'it') === lang).length;
       return `<li><a href="${s.key}.html">${esc(s.name)} <small>${esc(u.count(n))}</small></a></li>`;
@@ -513,7 +515,7 @@ export async function buildArgomenti({ items, registry = [], root, now = Date.no
     if (list.length) urls.push({ url, lastmod: '' });
   }
   const out = subjects.map(({ _list, ...s }) => s);
-  console.log(`🏷  argomenti: ${out.length} pagine (${out.filter(s => !s.seed).length} scoperte da sole)`);
+  console.log(`🏷  argomenti: ${out.length} pagine (${out.filter(s => !s.seed).length} scoperte da sole, ${out.filter(s => s.indexed).length} indicizzabili)`);
   return { subjects: out, urls };
 }
 
