@@ -1,0 +1,99 @@
+{
+ "key": "chatgpt",
+ "name": "ChatGPT",
+ "tipo": "prodotto",
+ "title": "ChatGPT: cos'è, chi lo guida e cosa fa",
+ "desc": "ChatGPT è l'assistente di intelligenza artificiale di OpenAI: come funziona, chi lo guida, i modelli GPT-6, gli utenti, i piani e le controversie principali.",
+ "intro": "<strong>ChatGPT</strong> è un assistente basato sull'intelligenza artificiale sviluppato dall'azienda statunitense OpenAI. Chi lo usa scrive (o detta a voce) una domanda o una richiesta, e il programma risponde con testi, immagini, tabelle o altri contenuti. È stato reso disponibile al pubblico il 30 novembre 2022 e in pochi mesi è diventato il servizio di intelligenza artificiale più conosciuto al mondo, tanto da essere spesso usato come sinonimo di chatbot.\n\nIl servizio si può usare gratis, con alcuni limiti, oppure con abbonamenti a pagamento che danno accesso a modelli più potenti e a più funzioni. Secondo <a href=\"https://en.wikipedia.org/wiki/ChatGPT\">Wikipedia</a>, a febbraio 2026 contava circa 900 milioni di utenti attivi ogni settimana. Accanto al successo sono arrivate anche critiche: indagini sulla privacy, cause per diritto d'autore e denunce di famiglie che accusano il chatbot di aver danneggiato persone fragili.",
+ "facts": [
+  [
+   "Lancio",
+   "30 novembre 2022"
+  ],
+  [
+   "Sviluppatore",
+   "OpenAI"
+  ],
+  [
+   "Chi lo guida",
+   "Nick Turley, responsabile di ChatGPT, sotto Fidji Simo, CEO delle Applicazioni di OpenAI (dato febbraio 2026)"
+  ],
+  [
+   "Modelli in uso",
+   "GPT-6 Sol nei piani a pagamento, GPT-6 Luna nei piani Free e Go (ottobre 2026)"
+  ],
+  [
+   "Utenti",
+   "circa 900 milioni a settimana (febbraio 2026, secondo Wikipedia)"
+  ],
+  [
+   "Piani",
+   "Free, Go, Plus, Pro, Business, Enterprise (ottobre 2026)"
+  ],
+  [
+   "Valore di OpenAI",
+   "852 miliardi di dollari dopo un round da 122 miliardi (aprile 2026)"
+  ]
+ ],
+ "sections": [
+  [
+   "Cosa fa",
+   "ChatGPT risponde a domande, scrive e corregge testi, traduce, riassume documenti, aiuta a programmare e analizza file e foto. Può anche cercare informazioni sul web, generare immagini e conversare a voce. Dal 7 ottobre 2026, secondo le <a href=\"https://help.openai.com/en/articles/6825453-chatgpt-release-notes\">note di rilascio ufficiali</a>, le risposte possono includere elementi interattivi come grafici, pulsanti e moduli, una funzione che OpenAI chiama Intelligent UI. Le stesse note elencano strumenti sempre più vicini al lavoro d'ufficio, come la creazione di presentazioni, il collegamento con servizi esterni tramite plugin e un'integrazione con Microsoft Word. Il risultato non è sempre affidabile: il sistema può inventare informazioni con tono sicuro, per cui le risposte importanti vanno verificate."
+  ],
+  [
+   "Le tappe principali",
+   "Al debutto, a novembre 2022, ChatGPT usava il modello GPT-3.5. A marzo 2023 è arrivato <strong>GPT-4</strong>, a maggio 2024 GPT-4o, capace di gestire testo, immagini e audio, e ad agosto 2025 <strong>GPT-5</strong>, che sceglie da solo il modello più adatto alla richiesta. A ottobre 2025 Sam Altman ha dichiarato a <a href=\"https://techcrunch.com/2025/10/06/sam-altman-says-chatgpt-has-hit-800m-weekly-active-users\">TechCrunch</a> oltre 800 milioni di utenti settimanali. A settembre 2026 OpenAI ha presentato la famiglia <strong>GPT-6</strong>, partendo dalla versione più avanzata, Astra, offerta a un gruppo ristretto di aziende, come riportato da <a href=\"https://news.bgov.com/artificial-intelligence/openai-rolls-out-gpt-6-astra-model-with-cyber-guardrails-1\">Bloomberg Government</a>. A ottobre 2026 GPT-6 è arrivato nella chat per tutti i piani."
+  ],
+  [
+   "Perché se ne parla",
+   "In Italia il Garante della privacy ha bloccato ChatGPT per alcune settimane tra marzo e aprile 2023 e nel 2024 ha multato OpenAI per 15 milioni di euro, contestando tra l'altro la mancanza di controlli sull'età. Secondo <a href=\"https://www.italiaoggi.it/diritto-e-fisco/privacy/chatgpt-sospesa-la-sanzione-del-garante-privacy-da-15-milioni-di-euro-jojzy80l\">ItaliaOggi</a>, a marzo 2025 il Tribunale di Roma ha sospeso la sanzione in attesa del giudizio. Negli Stati Uniti testate e autori hanno fatto causa per l'uso dei loro testi nell'addestramento, e diverse famiglie accusano il chatbot di aver spinto persone vulnerabili verso il suicidio: <a href=\"https://www.fortune.com/2025/11/07/chatgpt-open-sam-altman-suicide-lawsuits-17-year-old\">Fortune</a> ha raccontato sette cause depositate a novembre 2025. Fa discutere anche la pubblicità nella versione gratuita, annunciata a gennaio 2026."
+  ]
+ ],
+ "sameAs": [
+  "https://it.wikipedia.org/wiki/ChatGPT",
+  "https://chatgpt.com/"
+ ],
+ "sources": [
+  {
+   "name": "Wikipedia",
+   "title": "ChatGPT",
+   "url": "https://en.wikipedia.org/wiki/ChatGPT"
+  },
+  {
+   "name": "OpenAI Help Center",
+   "title": "ChatGPT release notes",
+   "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes"
+  },
+  {
+   "name": "TechCrunch",
+   "title": "Sam Altman says ChatGPT has hit 800M weekly active users",
+   "url": "https://techcrunch.com/2025/10/06/sam-altman-says-chatgpt-has-hit-800m-weekly-active-users"
+  },
+  {
+   "name": "Bloomberg Law",
+   "title": "OpenAI Valued at $852 Billion After Mega $122 Billion Round",
+   "url": "https://news.bloomberglaw.com/tech-and-telecom-law/openai-valued-at-852-billion-after-closing-122-billion-round"
+  },
+  {
+   "name": "Bloomberg Government",
+   "title": "OpenAI Rolls Out GPT-6 Astra Model With Cyber Guardrails",
+   "url": "https://news.bgov.com/artificial-intelligence/openai-rolls-out-gpt-6-astra-model-with-cyber-guardrails-1"
+  },
+  {
+   "name": "Business Insider (via AOL)",
+   "title": "Inside OpenAI's org chart: Here are the executives in charge at the ChatGPT creator",
+   "url": "https://www.aol.com/articles/inside-openais-org-chart-executives-151941197.html"
+  },
+  {
+   "name": "ItaliaOggi",
+   "title": "ChatGpt, sospesa la sanzione del Garante privacy da 15 milioni di euro",
+   "url": "https://www.italiaoggi.it/diritto-e-fisco/privacy/chatgpt-sospesa-la-sanzione-del-garante-privacy-da-15-milioni-di-euro-jojzy80l"
+  },
+  {
+   "name": "Fortune",
+   "title": "He was 17 and asked ChatGPT for help. It allegedly told him how to die instead",
+   "url": "https://www.fortune.com/2025/11/07/chatgpt-open-sam-altman-suicide-lawsuits-17-year-old"
+  }
+ ],
+ "updated": "2026-10-19"
+}

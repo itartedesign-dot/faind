@@ -1,0 +1,107 @@
+{
+ "key": "microsoft",
+ "name": "Microsoft",
+ "tipo": "azienda",
+ "title": "Microsoft: cos'è, chi la guida e cosa fa nell'AI",
+ "desc": "Microsoft e l'intelligenza artificiale: Copilot, il cloud Azure e il legame con OpenAI. Chi guida l'azienda, quanto fattura e perché fa discutere, in breve.",
+ "intro": "<strong>Microsoft</strong> è un'azienda tecnologica statunitense nata nel 1975, famosa per Windows e per i programmi di Office. Oggi è anche uno dei protagonisti dell'intelligenza artificiale: porta gli assistenti <strong>Copilot</strong> dentro i suoi software e affitta a imprese e sviluppatori la potenza di calcolo del suo cloud, <strong>Azure</strong>. Dal 2014 è guidata da Satya Nadella e nell'anno fiscale chiuso a giugno 2026 ha superato i <a href=\"https://news.microsoft.com/source/2026/07/29/microsoft-cloud-and-ai-strength-fuels-fourth-quarter-results-4\">330 miliardi di dollari di ricavi</a>.\n\nGran parte del suo peso nell'AI viene dal rapporto con <strong>OpenAI</strong>, la società di ChatGPT, in cui ha investito miliardi a partire dal 2019. Con la riorganizzazione di OpenAI, a ottobre 2025, Microsoft ha ottenuto <a href=\"https://www.scmp.com/tech/big-tech/article/3330714/microsoft-holds-27-openai-revamped-partnership\">circa il 27% della nuova società</a>. Ad aprile 2026 le due aziende hanno poi rivisto di nuovo l'accordo, rendendolo meno esclusivo. Nel frattempo Microsoft sviluppa anche modelli propri attraverso la divisione Microsoft AI.",
+ "facts": [
+  [
+   "Fondata",
+   "aprile 1975, ad Albuquerque (Stati Uniti), da Bill Gates e Paul Allen"
+  ],
+  [
+   "Sede",
+   "Redmond, stato di Washington (Stati Uniti)"
+  ],
+  [
+   "Chi la guida",
+   "Satya Nadella, amministratore delegato (dal febbraio 2014)"
+  ],
+  [
+   "AI",
+   "Mustafa Suleyman guida Microsoft AI; Jacob Andreou l'esperienza Copilot (da marzo 2026)"
+  ],
+  [
+   "Dipendenti",
+   "circa 223.000 (giugno 2026)"
+  ],
+  [
+   "Prodotti principali",
+   "Copilot, Azure, Windows, Microsoft 365, Xbox, LinkedIn"
+  ],
+  [
+   "Ricavi",
+   "331,8 miliardi di dollari, utile netto 133,7 miliardi (anno fiscale chiuso a giugno 2026)"
+  ],
+  [
+   "Valore in borsa",
+   "circa 3.900 miliardi di dollari (18 ottobre 2026, CompaniesMarketCap)"
+  ],
+  [
+   "Quota in OpenAI",
+   "circa 27% (ottobre 2025)"
+  ]
+ ],
+ "sections": [
+  [
+   "Cosa fa",
+   "Microsoft vende software, servizi cloud e dispositivi. Nell'intelligenza artificiale lavora su tre fronti. Il primo è <strong>Copilot</strong>, l'assistente che scrive testi, riassume documenti e risponde a domande dentro Word, Excel, Outlook, Teams e Windows: secondo l'azienda, a luglio 2026 Microsoft 365 Copilot aveva <a href=\"https://news.microsoft.com/source/2026/07/29/microsoft-cloud-and-ai-strength-fuels-fourth-quarter-results-4\">oltre 30 milioni di licenze a pagamento</a>. Il secondo è <strong>Azure</strong>, il cloud dove le aziende usano modelli di AI, compresi quelli di OpenAI: nell'ultimo trimestre fiscale è cresciuto del 43% e in un anno ha superato per la prima volta i 100 miliardi di dollari di ricavi. Il terzo sono i chip progettati in casa, come <a href=\"https://en.wikipedia.org/wiki/Microsoft\">Maia e Cobalt</a>, pensati per far girare l'AI nei suoi data center."
+  ],
+  [
+   "Le tappe principali",
+   "A luglio 2019 Microsoft <a href=\"https://techcrunch.com/2019/07/22/microsoft-invests-1-billion-in-openai-in-new-multiyear-partnership/embed/\">investe 1 miliardo di dollari in OpenAI</a>, avviando una collaborazione pluriennale. A gennaio 2023, dopo il successo di ChatGPT, annuncia un nuovo investimento pluriennale da miliardi di dollari e inizia a portare i modelli di OpenAI nei propri prodotti. A marzo 2024 nasce la divisione <strong>Microsoft AI</strong>, affidata a Mustafa Suleyman. A ottobre 2025 OpenAI diventa una società a scopo di lucro: Microsoft riceve circa il 27% e i diritti sui suoi modelli fino al 2032, mentre OpenAI si impegna ad acquistare servizi Azure per 250 miliardi di dollari. A marzo 2026 Microsoft <a href=\"https://rcpmag.com/articles/2026/03/19/microsoft-consolidates-ai-leadership.aspx\">riunisce i team di Copilot</a> sotto un'unica guida. Ad aprile 2026 un <a href=\"https://openai.com/INDEX/NEXT-PHASE-OF-MICROSOFT-PARTNERSHIP\">nuovo accordo</a> toglie l'esclusiva: OpenAI può vendere i suoi prodotti su qualsiasi cloud."
+  ],
+  [
+   "Perché se ne parla",
+   "Microsoft è al centro del dibattito sulla corsa all'AI. Spende cifre enormi per data center e chip, mentre riduce il personale: circa 9.000 posti tagliati a luglio 2025 e altri 4.800 a luglio 2026, secondo <a href=\"https://en.wikipedia.org/wiki/Microsoft\">Wikipedia</a>. Il suo legame con OpenAI è stato più volte rinegoziato e oggi è <a href=\"https://openai.com/INDEX/NEXT-PHASE-OF-MICROSOFT-PARTNERSHIP\">meno esclusivo</a> di un tempo. Non mancano le critiche: in passato l'azienda ha ricevuto multe antitrust negli Stati Uniti e in Europa; la funzione Recall di Windows è stata rilanciata a novembre 2024 come opzione facoltativa dopo critiche sulla privacy; un rapporto ONU di giugno 2025 l'ha criticata per i servizi forniti a Israele. Anche il consumo di energia dei suoi data center è un tema aperto."
+  ]
+ ],
+ "sameAs": [
+  "https://en.wikipedia.org/wiki/Microsoft",
+  "https://www.microsoft.com/"
+ ],
+ "sources": [
+  {
+   "name": "Microsoft",
+   "title": "Microsoft Cloud and AI strength fuels fourth quarter results",
+   "url": "https://news.microsoft.com/source/2026/07/29/microsoft-cloud-and-ai-strength-fuels-fourth-quarter-results-4"
+  },
+  {
+   "name": "SEC",
+   "title": "Microsoft Corp - Form 10-K, anno fiscale 2026",
+   "url": "https://www.sec.gov/Archives/edgar/data/0000789019/000119312526323660/msft-20260630.htm"
+  },
+  {
+   "name": "OpenAI",
+   "title": "The next phase of the Microsoft OpenAI partnership",
+   "url": "https://openai.com/INDEX/NEXT-PHASE-OF-MICROSOFT-PARTNERSHIP"
+  },
+  {
+   "name": "South China Morning Post",
+   "title": "Microsoft holds 27% of OpenAI in revamped partnership",
+   "url": "https://www.scmp.com/tech/big-tech/article/3330714/microsoft-holds-27-openai-revamped-partnership"
+  },
+  {
+   "name": "TechCrunch",
+   "title": "Microsoft invests $1 billion in OpenAI in new multiyear partnership",
+   "url": "https://techcrunch.com/2019/07/22/microsoft-invests-1-billion-in-openai-in-new-multiyear-partnership/embed/"
+  },
+  {
+   "name": "RCPmag",
+   "title": "Microsoft Consolidates AI Leadership",
+   "url": "https://rcpmag.com/articles/2026/03/19/microsoft-consolidates-ai-leadership.aspx"
+  },
+  {
+   "name": "CompaniesMarketCap",
+   "title": "Microsoft market capitalization",
+   "url": "https://companiesmarketcap.com/microsoft/marketcap/"
+  },
+  {
+   "name": "Wikipedia",
+   "title": "Microsoft",
+   "url": "https://en.wikipedia.org/wiki/Microsoft"
+  }
+ ],
+ "updated": "2026-10-19"
+}

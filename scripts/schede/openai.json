@@ -1,0 +1,103 @@
+{
+ "key": "openai",
+ "name": "OpenAI",
+ "tipo": "azienda",
+ "title": "OpenAI: cos'è, chi la guida e cosa fa",
+ "desc": "OpenAI è l'azienda americana che ha creato ChatGPT e i modelli GPT. Chi la guida, come è organizzata, quanto vale e perché fa discutere (ottobre 2026).",
+ "intro": "<strong>OpenAI</strong> è un'azienda statunitense di intelligenza artificiale con sede a San Francisco. È nata nel dicembre 2015 come organizzazione senza scopo di lucro, con l'obiettivo dichiarato di sviluppare un'intelligenza artificiale avanzata che porti benefici a tutta l'umanità. Tra i fondatori c'erano Sam Altman, Elon Musk, Greg Brockman e Ilya Sutskever. Oggi è conosciuta soprattutto per <strong>ChatGPT</strong>, l'assistente con cui milioni di persone scrivono, cercano informazioni e lavorano ogni giorno.\n\nNel tempo OpenAI si è trasformata in una delle aziende private più ricche del mondo. Da ottobre 2025 l'attività commerciale fa capo a <strong>OpenAI Group PBC</strong>, una società a scopo di lucro che però deve perseguire anche la missione originaria. La controlla una fondazione non profit, la OpenAI Foundation. A guidarla è l'amministratore delegato <strong>Sam Altman</strong>. La sua crescita rapida ha portato con sé cause legali, critiche sulla sicurezza e dibattiti su chi debba controllare questa tecnologia.",
+ "facts": [
+  [
+   "Fondata",
+   "dicembre 2015, come non profit"
+  ],
+  [
+   "Sede",
+   "San Francisco, California (Stati Uniti)"
+  ],
+  [
+   "Chi la guida",
+   "Sam Altman (amministratore delegato); Bret Taylor presiede il consiglio"
+  ],
+  [
+   "Struttura",
+   "OpenAI Group PBC, controllata dalla OpenAI Foundation (da ottobre 2025)"
+  ],
+  [
+   "Azionisti principali",
+   "Microsoft circa 27%, OpenAI Foundation 26% (ottobre 2025)"
+  ],
+  [
+   "Prodotti principali",
+   "ChatGPT, modelli GPT-6, Codex, API per sviluppatori"
+  ],
+  [
+   "Valutazione",
+   "852 miliardi di dollari (aprile 2026)"
+  ],
+  [
+   "Ricavi",
+   "circa 13 miliardi di dollari (2025, stima riportata da Wikipedia)"
+  ]
+ ],
+ "sections": [
+  [
+   "Cosa fa",
+   "OpenAI sviluppa i cosiddetti <strong>modelli linguistici</strong>: programmi addestrati su enormi quantità di testi che sanno rispondere a domande, scrivere, tradurre, analizzare documenti e generare codice. Il prodotto più noto è ChatGPT, disponibile gratis e in abbonamento. L'azienda vende inoltre l'accesso ai suoi modelli ad altre imprese tramite API e offre Codex, un assistente per programmatori. L'ultima famiglia di modelli è <strong>GPT-6</strong>, presentata a settembre 2026: la versione più potente, Astra, è stata distribuita con limiti sull'uso in ambito informatico perché giudicata rischiosa (<a href=\"https://openai.com/blog/gpt-6-astra\">OpenAI</a>). Dall'8 ottobre 2026 i modelli GPT-6 arrivano a tutti gli utenti di ChatGPT, anche a quelli gratuiti, che ricevono la versione più leggera, Luna (<a href=\"https://www.androidheadlines.com/2026/10/openai-bringing-gpt-6-ai-models-chatgpt-everyone.html\">Android Headlines</a>). Non tutti i progetti sopravvivono: a marzo 2026 OpenAI ha annunciato la chiusura di Sora, la sua app per creare video, per concentrare la potenza di calcolo su altro (<a href=\"https://engadget.com/ai/openai-is-shutting-down-its-sora-video-generation-app-211023358.html\">Engadget</a>)."
+  ],
+  [
+   "Le tappe principali",
+   "Nel 2019 OpenAI ha creato una società a scopo di lucro per raccogliere i capitali necessari, e Microsoft è diventata il suo principale investitore. Il grande pubblico l'ha scoperta a fine 2022 con il lancio di ChatGPT. Nel novembre 2023 il consiglio di amministrazione ha licenziato Sam Altman, che però è tornato al suo posto dopo pochi giorni, sotto la pressione di dipendenti e investitori. Il 28 ottobre 2025 è arrivata la riorganizzazione: la non profit è diventata la <a href=\"https://openai.com/our-structure\">OpenAI Foundation</a>, che nomina il consiglio della società commerciale e ne possiede il 26%. Ad aprile 2026 OpenAI ha chiuso un round da 122 miliardi di dollari con Amazon, Nvidia e SoftBank, raggiungendo una <a href=\"https://news.bgov.com/us-law-week/openai-valued-at-852-billion-after-closing-122-billion-round\">valutazione di 852 miliardi</a>."
+  ],
+  [
+   "Perché se ne parla",
+   "OpenAI è al centro di diverse controversie. Elon Musk, cofondatore uscito nel 2018, l'ha accusata di aver tradito la missione non profit; a maggio 2026 una giuria federale gli ha dato torto, ritenendo che avesse fatto causa troppo tardi, e i suoi legali hanno detto di riservarsi l'appello (<a href=\"https://www.timeslive.co.za/news/2026-05-18-elon-musk-loses-high-stakes-lawsuit-against-openai-over-companys-mission/\">Reuters via TimesLIVE</a>). Il New York Times e altri editori e autori le contestano l'uso dei loro testi per addestrare i modelli senza permesso. Altre cause accusano ChatGPT di aver contribuito a suicidi e a episodi di violenza (<a href=\"https://en.wikipedia.org/wiki/OpenAI\">Wikipedia</a>). Si discute anche della quotazione in Borsa: secondo <a href=\"https://thenextweb.com/news/openai-ipo-delay-2027-altman-1-trillion\">The Next Web</a>, l'azienda potrebbe rimandarla al 2027."
+  ]
+ ],
+ "sameAs": [
+  "https://en.wikipedia.org/wiki/OpenAI",
+  "https://openai.com/"
+ ],
+ "sources": [
+  {
+   "name": "Wikipedia",
+   "title": "OpenAI",
+   "url": "https://en.wikipedia.org/wiki/OpenAI"
+  },
+  {
+   "name": "OpenAI",
+   "title": "Our structure",
+   "url": "https://openai.com/our-structure"
+  },
+  {
+   "name": "OpenAI",
+   "title": "GPT-6 Astra",
+   "url": "https://openai.com/blog/gpt-6-astra"
+  },
+  {
+   "name": "Android Headlines",
+   "title": "OpenAI Is Finally Bringing GPT-6 to ChatGPT for Everyone",
+   "url": "https://www.androidheadlines.com/2026/10/openai-bringing-gpt-6-ai-models-chatgpt-everyone.html"
+  },
+  {
+   "name": "Bloomberg Government",
+   "title": "OpenAI Valued at $852 Billion After Mega $122 Billion Round",
+   "url": "https://news.bgov.com/us-law-week/openai-valued-at-852-billion-after-closing-122-billion-round"
+  },
+  {
+   "name": "TimesLIVE (Reuters)",
+   "title": "Elon Musk loses high-stakes lawsuit against OpenAI over company's mission",
+   "url": "https://www.timeslive.co.za/news/2026-05-18-elon-musk-loses-high-stakes-lawsuit-against-openai-over-companys-mission/"
+  },
+  {
+   "name": "Engadget",
+   "title": "OpenAI is shutting down its Sora video generation app",
+   "url": "https://engadget.com/ai/openai-is-shutting-down-its-sora-video-generation-app-211023358.html"
+  },
+  {
+   "name": "The Next Web",
+   "title": "OpenAI may delay its IPO to 2027 to hold out for $1tn",
+   "url": "https://thenextweb.com/news/openai-ipo-delay-2027-altman-1-trillion"
+  }
+ ],
+ "updated": "2026-10-19"
+}
