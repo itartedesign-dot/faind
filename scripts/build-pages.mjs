@@ -29,6 +29,7 @@ import { buildCompare } from './compare.mjs';
 import { buildArticles, ARTICLES, articleFor } from './articles.mjs';
 import { buildStrano } from './strano.mjs';
 import { buildPunto, loadPunti, PUNTO_DIR } from './punto.mjs';
+import { linkTargets, linkNames } from './collegamenti.mjs';
 import { buildGlossary, termsIn, linkify, termPath, TERMS } from './glossary.mjs';
 import { topicText, TOPIC_DIR } from './topics.mjs';
 import { buildArgomenti, buildArchivePages, addToSitemap, subjectsIn, footerHtml, alsoBand, ALSO_CSS, ARG_DIR } from './argomenti.mjs';
@@ -267,7 +268,7 @@ ${NP_CSS}
       <h1 class="np__title">${esc(title)}</h1>
       <p class="np__meta"><time datetime="${esc(n.date)}">${esc(fmtDate(n.date, lang))}</time> · ${esc(u.source)}: <a href="${esc(n.link.url)}" target="_blank" rel="noopener noreferrer">${esc(n.source.name)}</a></p>
       ${img}
-      ${summary ? `<p class="np__lede">${linkify(esc(summary), '../', lang)}</p>` : ''}
+      ${summary ? `<p class="np__lede">${linkNames(linkify(esc(summary), '../', lang), linkTargets({ subjects: ctx.subjects, lang }), { max: 3 })}</p>` : ''}
       <a class="btn btn--primary np__cta" href="${esc(n.link.url)}" target="_blank" rel="noopener noreferrer">${esc(u.cta(n.source.name))}</a>
       <p class="np__disclaimer">${esc(u.disc(n.source.name))}</p>
       ${told}
@@ -475,7 +476,15 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
   // Pagine "Notizie su …": servono prima delle pagine notizia, che le collegano
   let argomenti = { subjects: [], urls: [] }, registry = archive.subjects || [];
   const exclude = TERMS.flatMap(t => ['it', 'en', 'fr', 'de'].map(l => t[l][0].replace(/ \(.*\)$/, '')));
-  try { argomenti = await buildArgomenti({ items: archived, registry, root, exclude }); registry = argomenti.subjects; }
+  // I testi di FAIND che citano un nome compaiono nella sua pagina
+  const plain = (h = '') => String(h).replace(/<[^>]+>/g, ' ');
+  const reads = [
+    ...(await loadPunti()).map(p => ({ title: p.title, path: `${PUNTO_DIR}${p.slug}.html`, lang: 'it', kind: 'Il punto',
+      text: plain([p.title, p.lede, ...p.sections.map(x => x[1])].join(' ')) })),
+    ...ARTICLES.map(a => ({ title: a.title, path: `approfondimenti/${a.slug}.html`, lang: 'it', kind: 'Approfondimento',
+      text: plain([a.title, a.lede, ...a.sections.map(x => x[1])].join(' ')) }))
+  ];
+  try { argomenti = await buildArgomenti({ items: archived, registry, root, exclude, reads }); registry = argomenti.subjects; }
   catch (e) { console.warn('Pagine degli argomenti non generate (l\'elenco resta quello di prima):', e.message); }
   const ctx = { subjects: argomenti.subjects, topics: cfgTopics };
 
@@ -522,7 +531,9 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
   try { console.log(`🏠 home: ${await prefillHome(root, news)} notizie scritte nell'HTML`); }
   catch (e) { console.warn('Notizie non scritte nella home (restano i segnaposto):', e.message); }
 
-  try { await buildArticles(root, everything.filter(indexable)); }
+  // Nei testi di FAIND i nomi e le parole del glossario portano alle loro pagine
+  const linker = (lang, up) => { const targets = linkTargets({ subjects: argomenti.subjects, lang, up, terms: true }); return (html, used) => linkNames(html, targets, { max: 10, used }); };
+  try { await buildArticles(root, everything.filter(indexable), linker); }
   catch (e) { console.warn('Approfondimenti non generati:', e.message); }
   // Card degli approfondimenti (og/<slug>.png): copertina dell'articolo con fascia, titolo e logo. Servono ai post social
   try {
@@ -531,7 +542,7 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
   } catch (e) { console.warn('Card degli approfondimenti non generate:', e.message); }
 
   // Il punto: l'articolo quotidiano sulla notizia più ripresa (cartella il-punto/)
-  try { await addToSitemap(root, await buildPunto(root)); }
+  try { await addToSitemap(root, await buildPunto(root, linker('it', '../'))); }
   catch (e) { console.warn('Il punto non generato:', e.message); }
   try { await prefillPunto(root); }
   catch (e) { console.warn('Il punto non scritto nella home:', e.message); }

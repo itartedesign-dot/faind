@@ -448,8 +448,9 @@ const txt = (v) => (v == null ? '' : typeof v === 'string' ? v : (v.it || v.en |
 // Tabella dentro una sezione: { caption, head: [...], rows: [[...], ...] } (celle in HTML semplice)
 export const tableHtml = (t) => `<div class="art__tw"><table class="art__table"><caption>${esc(t.caption)}</caption><thead><tr>${t.head.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map((c, i) => i ? `<td>${c}</td>` : `<th scope="row">${c}</th>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 
-function articlePage(base, lang, news = []) {
+function articlePage(base, lang, news = [], linker = null) {
   const a = tr(base, lang), u = UI[lang], up = upOf(lang), file = `${a.slug}.html`;
+  const lk = linker && linker(lang, up), used = new Set(), link = lk ? (h) => lk(h, used) : (h) => h;   // nomi e parole del glossario → loro pagine
   const url = `${SITE}${ARTICLE_DIR[lang]}${file}`, image = `${SITE}assets/${a.img}`;
   const langs = LANGS.filter(k => tr(base, k));
   const updated = (lang === 'it' && base.updated) || UPDATED;   // updated: data propria di un articolo riscritto (vale per l'italiano)
@@ -467,14 +468,14 @@ function articlePage(base, lang, news = []) {
     <h1 class="legal__title">${esc(a.title)}</h1>
     <p class="legal__updated">${u.by.replace('{about}', up + u.about)} · ${u.updated} ${date}</p>
     <img class="art__img" src="${up}assets/${a.img}" width="1024" height="576" alt="${esc(a.title)}">
-    <p class="legal__lede">${a.lede}</p>
+    <p class="legal__lede">${link(a.lede)}</p>
 
     <div class="art__brief">
       <h2>${u.brief}</h2>
       <ul>${a.brief.map(b => `<li>${esc(b)}</li>`).join('')}</ul>
     </div>
 
-${a.sections.map(([h, p, table]) => `    <section>\n      <h2>${esc(h)}</h2>\n      <p>${p}</p>${table ? `\n      ${tableHtml(table)}` : ''}\n    </section>`).join('\n')}
+${a.sections.map(([h, p, table]) => `    <section>\n      <h2>${esc(h)}</h2>\n      <p>${link(p)}</p>${table ? `\n      ${tableHtml(table)}` : ''}\n    </section>`).join('\n')}
 
     <section>
       <h2>${u.faq}</h2>
@@ -514,7 +515,7 @@ export const homeCards = () => ARTICLES.map(a => `          <a class="deep__card
 // Titoli e sommari tradotti per le schede della home: finiscono in approfondimenti/cards.json, letto da script.js
 const homeI18n = () => Object.fromEntries(LANGS.filter(k => k !== 'it').map(k => [k, Object.fromEntries(listFor(k).map(a => [a.slug, [a.title, a.card]]))]));
 
-export async function buildArticles(root, news = []) {
+export async function buildArticles(root, news = [], linker = null) {
   const urls = [];
   let pages = 0;
   for (const lang of LANGS) {
@@ -526,7 +527,7 @@ export async function buildArticles(root, news = []) {
     urls.push(SITE + ARTICLE_DIR[lang]);
     for (const a of ARTICLES) {
       if (!tr(a, lang)) continue;
-      await writeFile(path.join(dir, `${a.slug}.html`), articlePage(a, lang, news));
+      await writeFile(path.join(dir, `${a.slug}.html`), articlePage(a, lang, news, linker));
       urls.push(`${SITE}${ARTICLE_DIR[lang]}${a.slug}.html`);
       pages++;
     }
