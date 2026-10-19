@@ -28,7 +28,7 @@ import { buildCards } from './cards.mjs';
 import { buildCompare } from './compare.mjs';
 import { buildArticles, ARTICLES, articleFor } from './articles.mjs';
 import { buildStrano } from './strano.mjs';
-import { buildPunto } from './punto.mjs';
+import { buildPunto, loadPunti, PUNTO_DIR } from './punto.mjs';
 import { buildGlossary, termsIn, linkify, termPath, TERMS } from './glossary.mjs';
 import { topicText, TOPIC_DIR } from './topics.mjs';
 import { buildArgomenti, buildArchivePages, addToSitemap, subjectsIn, footerHtml, alsoBand, ALSO_CSS, ARG_DIR } from './argomenti.mjs';
@@ -376,6 +376,24 @@ export async function prefillHome(root, news) {
   return list.length;
 }
 
+// Il riquadro del Punto in home: l'ultimo articolo, subito dopo le ultime notizie (resta nascosto finché non ce n'è uno)
+export async function prefillPunto(root) {
+  const [p] = await loadPunti();
+  if (!p) return;
+  const file = path.join(root, 'index.html');
+  const html = await readFile(file, 'utf8');
+  const box = /<section class="punto" id="punto"[^>]*>[\s\S]*?<\/section>/;
+  if (!box.test(html)) throw new Error('segnaposto del Punto non trovato');
+  const day = new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', timeZone: 'Europe/Rome' }).format(new Date(p.date + 'T12:00:00Z'));
+  const href = `${PUNTO_DIR}${p.slug}.html`;
+  await writeFile(file, html.replace(box, `<section class="punto" id="punto" aria-labelledby="puntoTitle" lang="it">
+          <p class="punto__kick"><b>Il punto</b> <time datetime="${p.date}">${day}</time></p>
+          <h2 class="punto__title" id="puntoTitle"><a href="${href}">${esc(p.title)}</a></h2>
+          <p class="punto__desc">${esc(p.desc)}</p>
+          <p class="punto__links"><a href="${href}">Leggi il punto →</a> <a href="${PUNTO_DIR}">Tutti i punti</a></p>
+        </section>`));
+}
+
 /* ------------------------------ IndexNow ------------------------------ */
 // Avvisa Bing (che condivide l'avviso con gli altri motori IndexNow) delle pagine nuove.
 // Si mandano le pagine nate nel giro precedente, che a questo punto sono già online. Solo su GitHub.
@@ -515,6 +533,8 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
   // Il punto: l'articolo quotidiano sulla notizia più ripresa (cartella il-punto/)
   try { await addToSitemap(root, await buildPunto(root)); }
   catch (e) { console.warn('Il punto non generato:', e.message); }
+  try { await prefillPunto(root); }
+  catch (e) { console.warn('Il punto non scritto nella home:', e.message); }
 
   // Le notizie più riprese delle ultime 36 ore (oggi.json): da qui si sceglie il tema del Punto
   const since = Date.now() - 36 * 3600e3;

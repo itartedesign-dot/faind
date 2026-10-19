@@ -57,7 +57,7 @@
 
   <!-- Caratteri serviti da FAIND (nessun contatto con Google Fonts) -->
   <link rel="stylesheet" href="assets/fonts/archivo.css">
-  <link rel="stylesheet" href="style.css?v=20261019a">
+  <link rel="stylesheet" href="style.css?v=20261019b">
   <link rel="stylesheet" href="home2.css?v=20261013a">
 
   <!-- App sul telefono: "Aggiungi alla schermata Home" -->
@@ -219,6 +219,9 @@ in un solo posto.</span>
             </ol>
           </aside>
         </section>
+
+        <!-- Il punto: l'ultimo articolo del Punto, scritto qui a ogni giro (build-pages.mjs → prefillPunto) -->
+        <section class="punto" id="punto" aria-label="Il punto" hidden></section>
 
         <!-- Importanti -->
         <section class="block" id="importanti" aria-labelledby="impTitle">
