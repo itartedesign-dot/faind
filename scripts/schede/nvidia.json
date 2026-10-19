@@ -1,0 +1,38 @@
+{
+  "key": "nvidia",
+  "name": "Nvidia",
+  "tipo": "azienda",
+  "title": "Nvidia: cos'è, chi la guida e cosa fa nell'IA",
+  "desc": "Nvidia è l'azienda americana che progetta i chip più usati per l'intelligenza artificiale: storia, chi la guida, prodotti, numeri e controversie aggiornati.",
+  "intro": "<strong>Nvidia</strong> è un'azienda tecnologica statunitense con sede a Santa Clara, in California. Nata nel 1993 per creare schede grafiche per i videogiochi, oggi progetta soprattutto i processori su cui vengono addestrati e fatti funzionare i grandi modelli di intelligenza artificiale. Non fabbrica i chip in proprio: li disegna e ne affida la produzione ad aziende esterne. Accanto all'hardware offre anche software, come la piattaforma CUDA, che i programmatori usano per sfruttare la potenza di calcolo delle sue schede.\n\nNegli ultimi anni la crescita dell'intelligenza artificiale ha trasformato Nvidia in una delle società più ricche del mondo. Secondo <a href=\"https://en.wikipedia.org/wiki/Nvidia\">Wikipedia</a>, nell'ottobre 2025 è stata la prima azienda a raggiungere un valore in Borsa di 5.000 miliardi di dollari. Il suo peso però solleva anche domande: le autorità antitrust di diversi Paesi la osservano da vicino e le tensioni tra Stati Uniti e Cina sull'esportazione di chip avanzati hanno avuto effetti diretti sui suoi affari.",
+  "facts": [
+    ["Fondata", "5 aprile 1993, a Sunnyvale (California)"],
+    ["Fondatori", "Jensen Huang, Chris Malachowsky, Curtis Priem"],
+    ["Sede", "Santa Clara, California (Stati Uniti)"],
+    ["Chi la guida", "Jensen Huang, fondatore, presidente e amministratore delegato; Colette Kress, direttrice finanziaria"],
+    ["Dipendenti", "circa 42.000 (anno fiscale 2026)"],
+    ["Prodotti principali", "chip per data center (Blackwell, Vera Rubin), schede grafiche GeForce e RTX, piattaforma software CUDA"],
+    ["Ricavi annui", "215,9 miliardi di dollari (anno fiscale chiuso a gennaio 2026)"],
+    ["Ricavi trimestrali", "96,2 miliardi di dollari, +106% su un anno (trimestre chiuso a luglio 2026)"],
+    ["Quotazione", "Nasdaq, da gennaio 1999"]
+  ],
+  "sections": [
+    ["Cosa fa", "Il prodotto per cui Nvidia è nota è la <strong>GPU</strong>, un processore nato per disegnare immagini ma capace di svolgere moltissimi calcoli contemporaneamente. Questa caratteristica lo rende adatto all'addestramento delle reti neurali. Oggi la parte più grande del fatturato arriva dai data center: nel trimestre chiuso a luglio 2026 questa divisione ha portato 89 miliardi di dollari su 96,2 complessivi, secondo il <a href=\"https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000073/q2fy27pr.htm\">comunicato sui risultati</a>. L'azienda vende chip, interi server e reti di collegamento, e affianca il software CUDA, che rende difficile per molti clienti passare a prodotti concorrenti. Continua a vendere anche schede grafiche per videogiochi e per professionisti."],
+    ["Le tappe principali", "Dopo un avvio difficile, Nvidia si è quotata in Borsa nel gennaio 1999 e nello stesso anno ha lanciato la GeForce 256, presentata come la prima GPU. Nel 2006 ha introdotto CUDA e nel 2012 le sue schede sono state usate per AlexNet, la rete neurale che ha dato una spinta decisiva all'apprendimento profondo, come ricorda la <a href=\"https://www.nvidia.com/en-us/about-nvidia/corporate-timeline/\">cronologia ufficiale</a>. Nel 2019 ha acquistato Mellanox, specialista delle reti per data center. Il tentativo di comprare Arm per 40 miliardi è invece fallito nel febbraio 2022 per l'opposizione delle autorità. Nel 2024 è arrivata l'architettura Blackwell; la successiva, Vera Rubin, è stata presentata nel marzo 2026 ed è in piena produzione da agosto 2026."],
+    ["Perché se ne parla", "Nvidia è diventata un simbolo del boom dell'intelligenza artificiale, ma anche delle sue tensioni. Gli Stati Uniti limitano dal 2022 la vendita di chip avanzati alla Cina, e la Cina a sua volta ha frenato gli acquisti: a settembre 2025 l'autorità antitrust cinese ha sostenuto in via preliminare che l'azienda aveva violato le condizioni poste all'acquisto di Mellanox, riporta <a href=\"https://www.fortune.com/2025/09/15/china-nvidia-mellanox-antitrust-trade-trump-tariffs-talks-beijing-washington\">Fortune</a>. Nell'agosto 2026 sono partite le prime spedizioni del chip H200 in Cina, ma in quantità minime, secondo il <a href=\"https://www.scmp.com/tech/big-tech/article/3365383/nvidia-ships-first-h200s-china-forecasts-no-data-centre-computing-revenue\">South China Morning Post</a>. Fanno discutere anche gli accordi miliardari con clienti e partner, come OpenAI, Intel e Groq, che secondo i critici rafforzano ulteriormente la sua posizione dominante."]
+  ],
+  "sameAs": [
+    "https://en.wikipedia.org/wiki/Nvidia",
+    "https://www.nvidia.com/"
+  ],
+  "sources": [
+    {"name": "Nvidia (comunicato via SEC)", "title": "NVIDIA Announces Financial Results for Second Quarter Fiscal 2027", "url": "https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000073/q2fy27pr.htm"},
+    {"name": "Nvidia (comunicato via SEC)", "title": "NVIDIA Announces Financial Results for Fourth Quarter and Fiscal 2026", "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000019/q4fy26pr.htm"},
+    {"name": "Nvidia", "title": "Our History: Innovations Over the Years", "url": "https://www.nvidia.com/en-us/about-nvidia/corporate-timeline/"},
+    {"name": "Nvidia Investor Relations", "title": "Governance - Management Team", "url": "https://investor.nvidia.com/governance/management-team/default.aspx"},
+    {"name": "Wikipedia", "title": "Nvidia", "url": "https://en.wikipedia.org/wiki/Nvidia"},
+    {"name": "Fortune", "title": "China says Nvidia violated antitrust laws as it ratchets up pressure ahead of U.S. trade talks", "url": "https://www.fortune.com/2025/09/15/china-nvidia-mellanox-antitrust-trade-trump-tariffs-talks-beijing-washington"},
+    {"name": "South China Morning Post", "title": "Nvidia ships first H200s to China, forecasts no data centre computing revenue", "url": "https://www.scmp.com/tech/big-tech/article/3365383/nvidia-ships-first-h200s-china-forecasts-no-data-centre-computing-revenue"}
+  ],
+  "updated": "2026-10-19"
+}

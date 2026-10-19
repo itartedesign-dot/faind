@@ -1,0 +1,47 @@
+{
+  "key": "google",
+  "name": "Google",
+  "tipo": "azienda",
+  "title": "Google: cos'è, chi la guida e cosa fa nell'AI",
+  "desc": "Scheda su Google vista dal lato dell'AI: chi la guida, i dati principali, i modelli Gemini, il ruolo di Google DeepMind e le cause antitrust in corso.",
+  "intro": "<strong>Google</strong> è l'azienda statunitense conosciuta soprattutto per il suo motore di ricerca, ma oggi è anche uno dei maggiori sviluppatori di intelligenza artificiale al mondo. Fa parte del gruppo Alphabet e ha sede a Mountain View, in California. I suoi modelli di AI si chiamano <strong>Gemini</strong>: sono inseriti in prodotti che molte persone usano ogni giorno, come la Ricerca, Gmail, Android e Chrome, e vengono venduti anche alle aziende attraverso i servizi cloud.\n\nLa ricerca sull'AI fa capo a <strong>Google DeepMind</strong>, il laboratorio guidato da Demis Hassabis e nato nel 2023 dall'unione di due gruppi interni. Da qui sono usciti risultati scientifici come AlphaFold, il sistema che prevede la forma delle proteine e che ha portato a un premio Nobel per la chimica nel 2024. Nello stesso periodo Google ha affrontato negli Stati Uniti grandi processi antitrust sul suo peso nella ricerca online e nella pubblicità digitale.",
+  "facts": [
+    ["Fondata", "settembre 1998, da Larry Page e Sergey Brin"],
+    ["Sede", "Mountain View, California (Stati Uniti)"],
+    ["Società madre", "Alphabet Inc., creata nell'agosto 2015"],
+    ["Chi la guida", "Sundar Pichai (CEO di Google e Alphabet); Demis Hassabis guida Google DeepMind"],
+    ["Dipendenti (Alphabet)", "198.933 (giugno 2026)"],
+    ["Ricavi trimestrali (Alphabet)", "119,8 miliardi di dollari, +24% in un anno (aprile-giugno 2026)"],
+    ["Modelli AI", "famiglia Gemini; Gemini 4 Argon annunciato a settembre 2026, ad accesso limitato"],
+    ["App Gemini", "oltre 1 miliardo di utenti al mese (agosto 2026)"]
+  ],
+  "sections": [
+    [
+      "Cosa fa",
+      "Google guadagna soprattutto con la pubblicità online, ma l'intelligenza artificiale è ormai presente in quasi tutti i suoi servizi. L'assistente <strong>Gemini</strong> è disponibile come app, dentro Android, Chrome e gli strumenti di lavoro come Gmail e Documenti. Nella Ricerca, i riassunti generati dall'AI e la modalità AI Mode rispondono alle domande con testi scritti dal modello invece che con un semplice elenco di link. Google vende poi i suoi modelli agli sviluppatori e alle imprese tramite Google Cloud: nel secondo trimestre 2026 questa divisione ha incassato circa 24,8 miliardi di dollari, l'82% in più rispetto a un anno prima, secondo i <a href=\"https://www.sec.gov/Archives/edgar/data/0001652044/000165204426000066/googexhibit991q22026.htm\">conti ufficiali di Alphabet</a>. L'azienda progetta anche chip propri per l'AI, chiamati TPU."
+    ],
+    [
+      "Le tappe principali",
+      "Nel gennaio 2014 Google ha acquistato la società londinese <strong>DeepMind</strong>. Nel 2017 i ricercatori di Google Brain hanno presentato il Transformer, l'architettura su cui si basano quasi tutti i grandi modelli linguistici di oggi. Dopo il successo di ChatGPT, nel marzo 2023 Google ha lanciato il chatbot Bard e nell'aprile 2023 ha unito Brain e DeepMind in <a href=\"https://deepmind.google/about/\">Google DeepMind</a>. Il primo modello Gemini è arrivato nel dicembre 2023 e in seguito Bard ha preso lo stesso nome. Nell'ottobre 2024 Hassabis e John Jumper hanno condiviso il Nobel per la chimica grazie ad AlphaFold. Nel maggio 2026 è uscito <a href=\"https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/\">Gemini 3.5 Flash</a>, seguito da versioni più recenti, e nel settembre 2026 è stato annunciato <a href=\"https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/\">Gemini 4 Argon</a>, aperto per ora solo a un gruppo ristretto di esperti di sicurezza informatica."
+    ],
+    [
+      "Perché se ne parla",
+      "Google è al centro di due grandi cause antitrust del governo degli Stati Uniti. Nell'agosto 2024 un giudice federale ha stabilito che l'azienda aveva un monopolio illegale nella ricerca online. Nel settembre 2025 lo stesso tribunale ha escluso la vendita del browser Chrome, ma ha vietato i contratti in esclusiva anche per l'app Gemini e ha imposto di condividere alcuni dati di ricerca con i concorrenti. Nel secondo caso, sulla tecnologia pubblicitaria, la giudice Leonie Brinkema nel settembre 2026 ha respinto la cessione della piattaforma AdX, imponendo però sei anni di regole più aperte e un controllore interno; Google ha annunciato ricorso, come riporta <a href=\"https://www.thestar.com.my/tech/tech-news/2026/09/17/google-should-relax-ad-tech-rules-appoint-antitrust-monitor-us-judge-finds\">Reuters</a>. In passato DeepMind era stata criticata anche per l'uso di dati di pazienti del servizio sanitario britannico."
+    ]
+  ],
+  "sameAs": [
+    "https://en.wikipedia.org/wiki/Google",
+    "https://about.google/"
+  ],
+  "sources": [
+    {"name": "Alphabet (SEC)", "title": "Alphabet Announces Second Quarter 2026 Results (Form 8-K, Exhibit 99.1)", "url": "https://www.sec.gov/Archives/edgar/data/0001652044/000165204426000066/googexhibit991q22026.htm"},
+    {"name": "The Star / Reuters", "title": "Google should relax ad tech rules, appoint antitrust monitor, US judge finds", "url": "https://www.thestar.com.my/tech/tech-news/2026/09/17/google-should-relax-ad-tech-rules-appoint-antitrust-monitor-us-judge-finds"},
+    {"name": "Wikipedia", "title": "Google", "url": "https://en.wikipedia.org/wiki/Google"},
+    {"name": "Wikipedia", "title": "Google DeepMind", "url": "https://en.wikipedia.org/wiki/Google_DeepMind"},
+    {"name": "Google DeepMind", "title": "About Google DeepMind", "url": "https://deepmind.google/about/"},
+    {"name": "Google Blog", "title": "Gemini 3.5: frontier intelligence with action", "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5/"},
+    {"name": "Google Blog", "title": "The latest AI news we announced in August 2026", "url": "https://blog.google/innovation-and-ai/technology/google-ai-updates-august-2026/"},
+    {"name": "Google Blog", "title": "Gemini 4 Argon: our next era of frontier intelligence", "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/"}
+  ],
+  "updated": "2026-10-19"
+}
