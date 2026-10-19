@@ -20,6 +20,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { shell, newsListHtml, footerHtml, alsoBand, ALSO_CSS } from './argomenti.mjs';
+import { articleBySlug } from './articles.mjs';
 
 const SITE = 'https://faind.org/';
 export const GLOSSARY_PATH = { it: 'glossario/', en: 'glossario/en/', fr: 'glossario/fr/', de: 'glossario/de/' };
@@ -195,6 +196,23 @@ const UI = {
     news: 'In den Nachrichten', back: '← Alle Nachrichten', home: 'Zurück zu den FAIND-Nachrichten', crumb: 'Glossar', index: 'Verzeichnis der Begriffe',
     foot: ['Über uns', 'Themen', 'Glossar', 'RSS-Feed', 'Datenschutz und rechtliche Hinweise'], about: 'ueber-uns.html', topics: 'temi/de/', allNews: 'Alle Nachrichten, die ihn erwähnen', allTerms: 'Alle Begriffe im Glossar', what: 'was es ist und was es bedeutet' }
 };
+// L'approfondimento da proporre sotto ogni termine (stesso indirizzo in tutte le lingue)
+const ART = 'cos-e-intelligenza-artificiale-come-funziona', ENERGY = 'perche-intelligenza-artificiale-consuma-acqua-energia', TRUST = 'intelligenza-artificiale-e-affidabile';
+const TERM_ARTICLE = {
+  'intelligenza-artificiale': ART, 'ai-generativa': ART, llm: ART, 'machine-learning': ART, 'deep-learning': ART, 'rete-neurale': ART,
+  addestramento: ART, 'fine-tuning': ART, parametri: ART, multimodale: ART,
+  chatbot: 'cos-e-chatgpt-come-funziona', prompt: 'imparare-a-usare-intelligenza-artificiale', 'finestra-di-contesto': 'imparare-a-usare-intelligenza-artificiale',
+  token: 'intelligenza-artificiale-gratis-o-a-pagamento', api: 'intelligenza-artificiale-gratis-o-a-pagamento',
+  allucinazione: TRUST, benchmark: TRUST, rag: TRUST,
+  gpu: ENERGY, 'data-center': ENERGY, inferenza: ENERGY,
+  deepfake: 'come-riconoscere-audio-foto-video-intelligenza-artificiale', 'modello-di-diffusione': 'come-riconoscere-audio-foto-video-intelligenza-artificiale',
+  'ai-act': 'leggi-intelligenza-artificiale-nel-mondo', agi: 'intelligenza-artificiale-e-pericolosa'
+};
+const DEEP = { it: 'Approfondimento', en: 'In depth', fr: 'Dossier', de: 'Hintergrund' };
+function deepLink(id, lang, up) {
+  const a = TERM_ARTICLE[id] && articleBySlug(TERM_ARTICLE[id], lang);
+  return a ? `<p class="gt__deep"><b>${DEEP[lang]}:</b> <a href="${up}${a.path}"${a.lang !== lang ? ` hreflang="${a.lang}"` : ''}>${esc(a.title)}</a></p>` : '';
+}
 const LANG_LABEL = { it: 'Italiano', en: 'English', fr: 'Français', de: 'Deutsch' };
 
 const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -240,7 +258,8 @@ function page(lang, news, now) {
     const hits = t.re ? news.filter(n => t.re.test(`${tx(n.title)} ${tx(n.summary) || ''}`)) : [];
     const pref = [...hits.filter(n => (n.lang || 'it') === lang), ...hits.filter(n => (n.lang || 'it') !== lang)].slice(0, 3);
     const list = pref.length ? `\n      <p class="gt__news"><b>${u.news}:</b> ${pref.map(n => `<a href="${esc(n.page ? up + n.page : n.link.url)}">${esc(tx(n.title))}</a>`).join(' · ')}</p>` : '';
-    return `    <section id="${t.id}" class="gt">\n      <h2><a href="${t.id}.html">${esc(t.name)}</a></h2>\n      <p>${esc(t.def)}</p>${list}\n    </section>`;
+    const deep = deepLink(t.id, lang, up);
+    return `    <section id="${t.id}" class="gt">\n      <h2><a href="${t.id}.html">${esc(t.name)}</a></h2>\n      <p>${esc(t.def)}</p>${deep ? `\n      ${deep}` : ''}${list}\n    </section>`;
   }).join('\n');
   const jsonld = { '@context': 'https://schema.org', '@type': 'DefinedTermSet', '@id': url, url, name: u.title, inLanguage: u.locale, dateModified: new Date(now).toISOString(),
     isPartOf: { '@id': SITE + '#website' },
@@ -275,6 +294,7 @@ ${alts}
     .legal .gt p { color: var(--ink); }
     .legal .gt p.gt__news { font-size: 14px; color: var(--muted); margin-top: 8px; }
     .gt__news a { color: var(--link); }
+    .legal .gt p.gt__deep { font-size: 14.5px; margin-top: 8px; } .gt__deep a { color: var(--link); font-weight: 600; }
     .legal .gt h2 a { color: var(--ink); text-decoration: none; }
     .legal .gt h2 a:hover { color: var(--link); text-decoration: underline; }
 ${ALSO_CSS}
@@ -318,7 +338,8 @@ function termPage(t, lang, news, now) {
   const short = name.replace(/ \(.*\)$/, '');
   const jsonld = { '@context': 'https://schema.org', '@type': 'DefinedTerm', '@id': url, url, name, description: def, inLanguage: u.locale,
     inDefinedTermSet: { '@type': 'DefinedTermSet', name: u.title, url: SITE + GLOSSARY_PATH[lang] }, dateModified: new Date(now).toISOString() };
-  const main = `    ${hits.length ? `<h2 class="al-month" style="border:0;margin-top:34px">${esc(u.allNews)}</h2>\n${newsListHtml(hits.slice(0, TERM_MAX), up, lang)}` : ''}
+  const deep = deepLink(t.id, lang, up);
+  const main = `${deep ? `    ${deep.replace('<p class="gt__deep">', '<p class="gt__deep" style="margin-top:22px;font-size:16px">')}\n` : ''}    ${hits.length ? `<h2 class="al-month" style="border:0;margin-top:34px">${esc(u.allNews)}</h2>\n${newsListHtml(hits.slice(0, TERM_MAX), up, lang)}` : ''}
     <p style="margin-top:28px"><a href="./">${esc(u.allTerms)} →</a></p>`;
   return shell({ lang, up, url, title: `${short}: ${u.what} | ${u.crumb} FAIND`, desc: def.length > 155 ? def.slice(0, 152).replace(/\s+\S*$/, '') + '…' : def,
     h1: name, lede: esc(def), main, jsonld,

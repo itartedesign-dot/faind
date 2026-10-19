@@ -307,7 +307,7 @@ const MATCH = [
   ['perche-intelligenza-artificiale-consuma-acqua-energia', /data ?cent(er|re)|rechenzentr|centres? de données|\benerg|\bstrom\b|électricit|elettricit|\bwater\b|\bacqua\b|\bwasser\b|nuclear|nucleare|nucléaire|gigawatt|\bGW\b/i],
   ['leggi-intelligenza-artificiale-nel-mondo', /\bAI Act\b|regulat|regolament|réglement|verordnung|\blaw\b|\blaws\b|lawsuit|\bsues?\b|\bsued\b|causa contro|tribunal|\bcourt\b|gericht|\bklage|copyright|diritto d'autore|droit d'auteur|urheberrecht|antitrust|legge|\bloi\b|gesetz/i],
   ['intelligenza-artificiale-gratis-o-a-pagamento', /\bpric(e|es|ing)\b|prezz|\bprix\b|\bpreis|subscription|abbonament|abonnement|\babo\b|free tier|\bgratis\b|kostenlos|gratuit|per month|al mese|par mois|pro monat/i],
-  ['intelligenza-artificiale-e-affidabile', /hallucinat|allucinaz|halluzin|misinformation|disinformazion|désinformation|desinformation|fact.?check|inaccura|accuracy|wrong answers|risposte sbagliate/i],
+  ['intelligenza-artificiale-e-affidabile', /hallucinat|allucinaz|halluzin|misinformation|disinformazion|désinformation|desinformation|fact.?check|inaccura|accuracy|wrong answers|risposte sbagliate|reliab|affidabil|attendibil|fiabilit|zuverläss|trustworth|made.?up (facts|answers|citations)|inventa(to|te|ti)? (fonti|citazioni|risposte)/i],
   ['intelligenza-artificiale-e-pericolosa', /\bsafety\b|sicurezza dell|sécurité de l|sicherheit von ki|existential|alignment|allineamento|superintelligen|bioweapon|cyberattac|attacco informatico|\bhack|malware|jailbreak|misuse|abus/i],
   ['intelligenza-artificiale-a-scuola', /\bschools?\b|\bscuol|\bécole|\bschule|\bstudent|\bstudenti|\bélèves|schüler|\bteachers?\b|insegnant|enseignant|\blehrer/i],
   ['intelligenza-artificiale-sostituira-uomo-lavori-a-rischio', /\bjobs?\b|layoff|licenzi|lavorator|workforce|employment|hiring|assunzion|\bemploi|chômage|arbeitspl|stellenabbau|entlass/i],
@@ -317,7 +317,11 @@ const MATCH = [
 // L'approfondimento collegato a un testo, nella lingua della pagina se è tradotto (altrimenti in italiano)
 export function articleFor(text, lang = 'it') {
   const m = MATCH.find(([, re]) => re.test(text));
-  const a = m && ARTICLES.find(x => x.slug === m[0]);
+  return m ? articleBySlug(m[0], lang) : null;
+}
+// Un approfondimento dato il suo indirizzo, con le stesse regole di lingua
+export function articleBySlug(slug, lang = 'it') {
+  const a = ARTICLES.find(x => x.slug === slug);
   if (!a) return null;
   const l = tr(a, lang) ? lang : 'it';
   return { title: tr(a, l).title, path: `${ARTICLE_DIR[l]}${a.slug}.html`, lang: l };
