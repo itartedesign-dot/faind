@@ -28,6 +28,7 @@ import { buildCards } from './cards.mjs';
 import { buildCompare } from './compare.mjs';
 import { buildArticles, ARTICLES, articleFor } from './articles.mjs';
 import { buildStrano } from './strano.mjs';
+import { buildPunto } from './punto.mjs';
 import { buildGlossary, termsIn, linkify, termPath, TERMS } from './glossary.mjs';
 import { topicText, TOPIC_DIR } from './topics.mjs';
 import { buildArgomenti, buildArchivePages, addToSitemap, subjectsIn, footerHtml, alsoBand, ALSO_CSS, ARG_DIR } from './argomenti.mjs';
@@ -510,6 +511,20 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
     await buildCards(ARTICLES.map(a => ({ page: `approfondimenti/${a.slug}.html`, title: a.title, source: { name: 'faind.org' }, category: 'deep', date: '', photo: `assets/${a.img}` })),
       root, { cats: { deep: 'Approfondimenti' } });
   } catch (e) { console.warn('Card degli approfondimenti non generate:', e.message); }
+
+  // Il punto: l'articolo quotidiano sulla notizia più ripresa (cartella il-punto/)
+  try { await addToSitemap(root, await buildPunto(root)); }
+  catch (e) { console.warn('Il punto non generato:', e.message); }
+
+  // Le notizie più riprese delle ultime 36 ore (oggi.json): da qui si sceglie il tema del Punto
+  const since = Date.now() - 36 * 3600e3;
+  const top = news.filter(n => !n.editorial && toDate(n.date) >= since && (n.coverage || 1) >= 2)
+    .sort((a, b) => (b.coverage || 1) - (a.coverage || 1) || toDate(b.date) - toDate(a.date)).slice(0, 12);
+  await writeFile(path.join(root, 'oggi.json'), JSON.stringify({ updated: new Date().toISOString(), items: top.map(n => ({
+    title: n.title, summary: n.summary, lang: n.lang, date: n.date, coverage: n.coverage || 1, category: n.category, page: SITE + n.page,
+    sources: [{ name: n.source.name, url: n.link.url }, ...(n.also || []).map(x => ({ name: x.name, url: x.url, title: x.title }))]
+  })) }, null, 1));
+  console.log('🔝 più riprese:', top.slice(0, 5).map(n => `${n.coverage}× ${n.title}`).join(' | ') || 'nessuna con 2+ fonti');
 
   // Strano ma vero: le curiosità sull'AI, in quattro lingue (cartella strano-ma-vero/)
   try { await buildStrano(root); }
