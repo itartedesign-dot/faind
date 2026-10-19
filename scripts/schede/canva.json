@@ -1,0 +1,37 @@
+{
+"key":"canva",
+"name":"Canva",
+"tipo":"prodotto",
+"kicker":"Grafica con l'AI",
+"title":"Canva e Magic Studio: funzioni AI, prezzi, pro e contro",
+"desc":"Scheda su Canva e le sue funzioni AI: cosa fa, piani e prezzi a ottobre 2026, vantaggi, limiti, diritti sui contenuti generati e a chi conviene davvero.",
+"re":"\\bCanva\\b|Magic Studio",
+"intro":"Canva è un editor di grafica online pensato per chi non fa il designer di mestiere. Si usa da browser, computer o telefono e parte da modelli già pronti per post social, presentazioni, volantini e documenti. Le funzioni di intelligenza artificiale, raccolte sotto il nome Magic Studio, stanno dentro lo stesso editor: si scrive una richiesta e il risultato si può poi ritoccare a mano.\n\nServe soprattutto a piccole imprese, insegnanti, freelance e team marketing che devono produrre molti contenuti in fretta. Non sostituisce un programma professionale come Photoshop, ma riduce il lavoro ripetitivo. Secondo un resoconto del 17 aprile 2026, a Canva Create l'azienda ha presentato Canva AI 2.0, una versione più basata sulla conversazione. Conviene provare tutto nel piano gratuito prima di pagare.",
+"facts":[
+["Sito ufficiale","<a href='https://www.canva.com/'>canva.com</a>"],
+["Cos'è","Editor di grafica online con strumenti AI integrati"],
+["Funzioni AI","Magic Layers, Magic Resize, Magic Write, Magic Animate, Translate (elenco su <a href='https://www.canva.com/ai/'>canva.com/ai</a>, letto il 19 ottobre 2026)"],
+["Piano gratuito","Sì, con fino a 20 usi AI Standard o Premium e nessun accesso agli strumenti Ultra (<a href='https://www.canva.com/pricing/'>pagina prezzi</a>, 19 ottobre 2026)"],
+["Prezzo del piano Pro","US$144 all'anno per persona, tasse escluse (<a href='https://www.canva.com/pricing/'>pagina prezzi</a>, 19 ottobre 2026)"],
+["Novità 2026","Canva AI 2.0, presentata a Canva Create 2026 (secondo nav43, 17 aprile 2026)"],
+["Modelli usati","Dream Lab si appoggia a Leonardo.ai, secondo fast.io (aggiornamento del 26 giugno 2026)"],
+["Termini AI","Regole su proprietà e uso dei risultati nei <a href='https://www.canva.com/policies/ai-product-terms/'>termini dei prodotti AI</a>"]
+],
+"sections":[
+["Prezzi","Canva ha un piano gratuito e piani a pagamento per singoli, team e grandi organizzazioni. Sulla pagina ufficiale la fatturazione annuale è quella mostrata nel testo acquisito, con uno sconto indicato da \"16%\" rispetto al mensile. Il prezzo mensile non era leggibile, quindi non lo riportiamo. L'uso dell'AI è una quota condivisa: gli strumenti Standard, Premium e Ultra la consumano in modo diverso. Pro e Business possono comprare in più il componente AI Pass. Alcune recensioni indicano cifre diverse, per esempio 15 dollari al mese per Pro, ma non coincidono con la pagina ufficiale e non le usiamo.",{"caption":"Prezzi letti il 19 ottobre 2026 su canva.com/pricing. Valuta: dollari USA (US$), fatturazione annuale, tasse escluse. Il piano Enterprise non ha prezzo pubblico.","head":["Piano","Prezzo","Uso AI indicato"],"rows":[["Free","US$0","Fino a 20 usi AI Standard o Premium, niente Ultra"],["Pro","US$144 all'anno, per persona","10 volte il piano Free, fino a 20 usi Ultra"],["Business","US$250 all'anno, per persona","20 volte il piano Free, fino a 40 usi Ultra"],["Enterprise","Non indicato","Accesso AI definito con l'ufficio vendite"]]}],
+["Pro","<ul><li>Gli strumenti AI sono dentro l'editor: non serve cambiare programma per togliere uno sfondo, ridimensionare o tradurre un design.</li><li>Il piano gratuito è usabile davvero, con migliaia di modelli e una quota di funzioni AI.</li><li>Il Brand Kit aiuta a mantenere colori, caratteri e logo coerenti anche con i testi e le immagini generate.</li><li>Magic Resize e Magic Write fanno risparmiare tempo sul lavoro ripetitivo, come adattare lo stesso contenuto a più formati.</li><li>I risultati restano modificabili: si interviene sui singoli elementi senza rifare tutto.</li><li>Funziona su browser, computer e telefono, quindi si può lavorare in gruppo da dispositivi diversi.</li></ul>"],
+["Contro","<ul><li>La quota AI è piccola nel piano gratuito e il consumo dei crediti è difficile da prevedere, secondo fast.io (giugno 2026).</li><li>Le immagini di Dream Lab risultano più piatte di quelle dei generatori specializzati, soprattutto sul fotorealismo, secondo la stessa recensione.</li><li>Magic Edit e Magic Expand lasciano segni visibili nelle scene complesse.</li><li>I modelli molto usati rischiano di rendere i design simili tra loro se non vengono personalizzati.</li><li>Il testo lungo scritto dall'AI va rivisto con cura.</li><li>Per il controllo fine sui pixel serve un programma professionale.</li></ul>"],
+["Per chi è adatto","Canva conviene a chi deve fare grafica corrente senza una formazione specifica: negozi, associazioni, scuole, creator e uffici comunicazione. Il piano Pro ha senso per freelance e piccole attività che usano ogni settimana i modelli premium, il Brand Kit e le funzioni AI. Il piano Business è pensato per team che hanno bisogno di approvazioni e di più Brand Kit.\n\nÈ meno adatto a chi cerca immagini fotorealistiche di alto livello, a chi lavora in agenzia con flussi di stampa molto precisi e a chi vuole scegliere il modello di AI usato. In quei casi un generatore dedicato o un programma professionale offrono più controllo. Chi lavora in Europa deve ricordare che i prezzi letti sono in dollari e che alcune funzioni AI non sono disponibili in tutti i paesi."],
+["Limiti e controversie","Secondo i <a href='https://www.canva.com/policies/ai-product-terms/'>termini dei prodotti AI</a>, l'utente è proprietario dei risultati, tranne quelli che modificano o includono contenuti con licenza di Canva, come le foto della libreria. Quindi un design può essere tuo nel complesso, ma non le singole foto. L'uso commerciale è ammesso per scopi leciti, a proprio rischio, e il testo consiglia una consulenza professionale. Altri utenti possono ottenere risultati simili. Canva non garantisce correttezza dei risultati.\n\nSui dati, i termini rimandano alle impostazioni sulla privacy per decidere se i contenuti servono a migliorare i servizi AI. È vietato rimuovere i metadati di provenienza C2PA o presentare contenuti AI come fatti da persone. Secondo fast.io (giugno 2026) non risultano cause importanti sui dati di addestramento di Canva, ma è una valutazione della testata, non una verifica legale."]
+],
+"sameAs":["https://www.canva.com/","https://it.wikipedia.org/wiki/Canva"],
+"sources":[
+{"name":"Canva","title":"Prezzi e piani di Canva","url":"https://www.canva.com/pricing/"},
+{"name":"Canva","title":"Canva AI","url":"https://www.canva.com/ai/"},
+{"name":"Canva","title":"Termini dei prodotti AI di Canva","url":"https://www.canva.com/policies/ai-product-terms/"},
+{"name":"Fast.io","title":"Canva AI Review 2026: 8 Magic Studio Features Ranked","url":"https://fast.io/resources/canva-ai-review-2026/"},
+{"name":"SkillScouter","title":"Canva Review (2026): Is Canva + Magic Studio AI Worth It?","url":"https://skillscouter.com/canva-review/"},
+{"name":"Nav43","title":"Canva Create 2026: Canva AI 2.0 launch keynote review","url":"https://nav43.com/blog/canva-create-2026-canva-ai-2-review/"}
+],
+"updated":"2026-10-19"
+}

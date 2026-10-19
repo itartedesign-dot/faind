@@ -1,0 +1,148 @@
+{
+ "key": "adobe-firefly",
+ "name": "Adobe Firefly",
+ "tipo": "prodotto",
+ "kicker": "Grafica con l'AI",
+ "title": "Adobe Firefly: prezzi, funzioni, pro e contro (ottobre 2026)",
+ "desc": "Scheda di Adobe Firefly: cos'è, piani e crediti a ottobre 2026, pregi e limiti, uso commerciale, dati di addestramento e cause in corso. Per chi è adatto.",
+ "re": "Firefly|Adobe Firefly",
+ "intro": "Adobe Firefly è la piattaforma di intelligenza artificiale generativa di Adobe. Crea e modifica immagini, video, audio e grafica vettoriale partendo da un testo. Funziona sul web, su desktop e da app per iOS e Android, e si collega a Photoshop, Premiere, Illustrator, Lightroom e Adobe Express. Oltre ai modelli di Adobe, offre modelli di partner come Google, OpenAI e FLUX.\n\nSi rivolge a designer, studi e aziende che già lavorano con gli strumenti Adobe e vogliono funzioni come il riempimento generativo dentro i programmi usuali. Il sistema a crediti rende difficile prevedere la spesa per chi fa molte prove. Adobe insiste sull'uso commerciale sicuro dei propri modelli, ma la garanzia non si estende a tutti i modelli di partner e il tema è oggetto di una causa tra azionisti.",
+ "facts": [
+  [
+   "Azienda",
+   "Adobe"
+  ],
+  [
+   "Pagina ufficiale",
+   "<a href=\"https://www.adobe.com/products/firefly.html\">adobe.com/products/firefly</a>"
+  ],
+  [
+   "Modelli",
+   "Firefly Image 5 e modelli di partner (tra cui Gemini, GPT Image, FLUX.2), secondo la pagina ufficiale letta il 19 ottobre 2026"
+  ],
+  [
+   "Funzioni",
+   "Immagini, video, audio e vettori; Firefly Boards per mood board e storyboard; Custom Models in beta pubblica"
+  ],
+  [
+   "Dove si usa",
+   "Web, desktop, app iOS e Android; integrazione con le app Creative Cloud"
+  ],
+  [
+   "Piani",
+   "Da 9,99 a 199,99 dollari al mese più un livello gratuito con generazioni giornaliere limitate (prezzi USA, in dollari)"
+  ],
+  [
+   "Trasparenza",
+   "Content Credentials allegate alle immagini create in Firefly, secondo Adobe"
+  ],
+  [
+   "Ultima verifica",
+   "19 ottobre 2026"
+  ]
+ ],
+ "sections": [
+  [
+   "Prezzi",
+   "I piani individuali si pagano al mese e danno un numero di crediti generativi mensili. Le funzioni di immagine standard, come il riempimento generativo, sono illimitate su tutti i piani a pagamento, mentre le funzioni premium (video, voce) consumano crediti. Pro Plus e Premium mostrano uno sconto del 30% per il primo anno, che la pagina dichiara valido fino al 21 ottobre. Esistono anche piani per team, con prezzi per licenza.\n\nLa pagina mostra i prezzi per gli Stati Uniti. Il listino per l'Italia può differire e non l'ho letto.",
+   {
+    "caption": "Prezzi letti il 19 ottobre 2026 su adobe.com/products/firefly/plans.html (listino USA, in dollari statunitensi, USD).",
+    "head": [
+     "Piano",
+     "Prezzo al mese",
+     "Crediti generativi al mese"
+    ],
+    "rows": [
+     [
+      "Free",
+      "Gratuito",
+      "Nessun credito indicato; generazioni giornaliere limitate"
+     ],
+     [
+      "Firefly Standard",
+      "9,99 $",
+      "2.000"
+     ],
+     [
+      "Firefly Pro",
+      "19,99 $",
+      "4.000"
+     ],
+     [
+      "Firefly Pro Plus",
+      "49,99 $ (34,97 $ con sconto del primo anno fino al 21 ottobre)",
+      "10.000"
+     ],
+     [
+      "Firefly Premium",
+      "199,99 $ (139,91 $ con sconto del primo anno fino al 21 ottobre)",
+      "50.000"
+     ]
+    ]
+   }
+  ],
+  [
+   "Pro",
+   "<ul><li>Si integra con le app Adobe già in uso: il riempimento generativo di Photoshop e l'estensione generativa di Premiere Pro (WeShop, gennaio 2026).</li><li>Copre più media nello stesso posto: immagini, video, audio, doppiaggio e vettori modificabili in Illustrator.</li><li>Adobe dichiara che i propri modelli sono addestrati su contenuti con licenza o di pubblico dominio, e allega Content Credentials alle immagini.</li><li>Le funzioni standard per le immagini sono illimitate su tutti i piani a pagamento.</li><li>Permette di scegliere tra modelli propri e di partner nello stesso strumento.</li><li>Rangy.ai (maggio 2026) segnala una tutela legale formale per i clienti aziendali idonei, che a suo dire altri grandi servizi non offrono.</li></ul>"
+  ],
+  [
+   "Contro",
+   "<ul><li>Secondo Rangy.ai (maggio 2026) la qualità delle immagini è inferiore a Midjourney e a Nano Banana Pro, con un'estetica prudente più adatta al marketing che all'arte.</li><li>L'uso dei crediti è difficile da prevedere: rifacimenti, formati diversi e tentativi video consumano crediti (Dreamina, 2026).</li><li>I modelli di partner hanno un'origine dei dati diversa e non rientrano negli impegni di Adobe sull'addestramento.</li><li>Fuori dall'ecosistema Adobe il valore è meno chiaro (Dreamina, 2026).</li><li>Le tutele dipendono da piano e idoneità: i beta non sono coperti da indennizzo e gli utenti gratuiti o individuali hanno meno garanzie (Adobe; Rangy.ai).</li><li>I piani alti sono costosi: Premium costa 199,99 dollari al mese.</li></ul>"
+  ],
+  [
+   "Per chi è adatto",
+   "Firefly è adatto a chi lavora già con Photoshop, Illustrator o Premiere e vuole usare l'AI per ritocchi mirati, estensioni e varianti dentro quei programmi. Lo è anche per i team di marketing e le aziende che danno peso alla provenienza dei dati, ai Content Credentials e a un quadro contrattuale chiaro.\n\nÈ meno convincente per chi cerca solo immagini artistiche al massimo livello, per chi genera in modo occasionale e per chi non usa altri prodotti Adobe. Chi sceglie un modello di partner deve ricordare che la promessa di sicurezza commerciale riguarda i modelli Firefly di Adobe, non necessariamente tutti gli altri."
+  ],
+  [
+   "Diritto d'autore, dati e uso commerciale",
+   "Adobe dichiara che addestra Firefly «solo su dati di cui ha i diritti»: Adobe Stock, contenuti con licenza aperta e di pubblico dominio. I contenuti editoriali di Stock non sono usati, e secondo Adobe non si addestra sui contenuti personali degli abbonati Creative Cloud. Le uscite delle funzioni non beta si possono usare a fini commerciali; quelle delle funzioni beta non sono idonee all'indennizzo (<a href=\"https://www.adobe.com/vn_en/cc-shared/fragments/products/firefly/faq\">FAQ Adobe</a>, letta il 19 ottobre 2026). Adobe afferma di non addestrare modelli sui contenuti creati con i modelli di partner, che però non seguono gli stessi impegni sui dati (Yahoo Tech, luglio 2025).\n\nLa promessa è contestata. Secondo TechJack, il 16 giugno 2026 azionisti hanno presentato una causa derivata, sostenendo che la dicitura «con licenza, sicura per uso commerciale» sia falsa, a causa del dataset SlimPajama; sono accuse non esaminate da un tribunale. A dicembre 2025 un'autrice ha fatto causa ad Adobe per i modelli di linguaggio SlimLM, non per Firefly."
+  ]
+ ],
+ "sameAs": [
+  "https://www.adobe.com/products/firefly.html",
+  "https://it.wikipedia.org/wiki/Adobe_Firefly"
+ ],
+ "sources": [
+  {
+   "name": "Adobe",
+   "title": "Adobe Firefly",
+   "url": "https://www.adobe.com/products/firefly.html"
+  },
+  {
+   "name": "Adobe",
+   "title": "Piani e prezzi di Adobe Firefly",
+   "url": "https://www.adobe.com/products/firefly/plans.html"
+  },
+  {
+   "name": "Adobe",
+   "title": "Firefly FAQ",
+   "url": "https://www.adobe.com/vn_en/cc-shared/fragments/products/firefly/faq"
+  },
+  {
+   "name": "TechJack Solutions",
+   "title": "Adobe shareholder suit targets Firefly's commercially safe AI",
+   "url": "https://techjacksolutions.com/ai-brief/adobe-shareholder-suit-targets-fireflys-commercially-safe-ai/"
+  },
+  {
+   "name": "eWEEK",
+   "title": "Adobe Faces First Major AI Copyright Lawsuit",
+   "url": "https://www.eweek.com/de/news/adobe-faces-ai-copyright-lawsuit/"
+  },
+  {
+   "name": "Rangy",
+   "title": "Is Adobe Firefly worth it",
+   "url": "https://rangy.ai/blog/is-adobe-firefly-worth-it"
+  },
+  {
+   "name": "Yahoo Tech",
+   "title": "Adobe claims its AI tools are commercially safe",
+   "url": "https://tech.yahoo.com/ai/articles/adobe-claims-ai-tools-commercially-082734390.html"
+  },
+  {
+   "name": "WeShop",
+   "title": "Adobe Firefly Review 2026",
+   "url": "https://www.weshop.ai/blog/?p=12151"
+  }
+ ],
+ "updated": "2026-10-19"
+}

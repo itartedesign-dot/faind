@@ -1,0 +1,138 @@
+{
+ "key": "finanza-e-intelligenza-artificiale",
+ "name": "Finanza e intelligenza artificiale",
+ "tipo": "tema",
+ "kicker": "Finanza",
+ "title": "Finanza e intelligenza artificiale: usi, rischi e regole | FAIND",
+ "desc": "Come banche, assicurazioni e borsa usano l'IA, cosa cambia per i risparmiatori, rischi, truffe con deepfake e regole delle autorità. Aggiornato a ottobre 2026.",
+ "re": "banche|bancari|finanz|trading|robo-?advisor|assicura|borsa|credito|antifrode|Consob|ESMA|Banca d'Italia|fintech|deepfake",
+ "warning": "Contenuto solo informativo. Non è consulenza finanziaria né una raccomandazione o un invito a investire. Ogni investimento comporta rischi, compresa la perdita, anche totale, del capitale. I risultati passati non garantiscono quelli futuri. Prima di decidere, rivolgiti a un consulente finanziario abilitato.",
+ "intro": "L'intelligenza artificiale è ormai presente in molte attività finanziarie. Le banche la usano per valutare il credito, individuare operazioni sospette e rispondere ai clienti, le assicurazioni per gestire pratiche e sinistri, gli intermediari per analizzare dati e documenti. Secondo dati della BCE riportati da Milano Finanza il 9 gennaio 2026, la maggior parte delle banche europee vigilate dichiara di usarla in qualche forma, con una crescita rapida negli ultimi anni.\n\nPer chi risparmia questo può significare servizi più veloci e controlli più efficaci contro le frodi, ma anche decisioni più difficili da spiegare, errori dei sistemi e nuove truffe che imitano voci, volti e siti di operatori veri. Le autorità europee e italiane stanno aggiornando regole e avvertenze. Questa scheda spiega gli usi, i rischi e i comportamenti prudenti, senza dare indicazioni di investimento.",
+ "facts": [
+  [
+   "Tema",
+   "Uso dell'IA in banche, assicurazioni, borsa e consulenza"
+  ],
+  [
+   "Diffusione nelle banche",
+   "Secondo la BCE (dati riportati da Milano Finanza, 9 gennaio 2026), l'88% di 110 banche vigilate usa l'IA"
+  ],
+  [
+   "Antifrode e credito",
+   "Uso per l'antifrode salito al 62% delle banche nel 2024 (36% l'anno prima); per il credit scoring al 30% (14%)"
+  ],
+  [
+   "Regole UE sul credito",
+   "Il credit scoring è sistema ad alto rischio dell'AI Act; con l'Omnibus digitale (in vigore dal 27 luglio 2026) la scadenza è il 2 dicembre 2027"
+  ],
+  [
+   "ESMA",
+   "Dichiarazione del 30 maggio 2024: l'IA nei servizi di investimento resta soggetta alle regole MiFID II"
+  ],
+  [
+   "Consob",
+   "6 agosto 2026: 1.805 siti abusivi oscurati dal luglio 2019; segnala più truffe con contenuti creati dall'IA"
+  ],
+  [
+   "BCE",
+   "Ai grandi istituti chiesto di rafforzare le difese informatiche contro le minacce legate all'IA entro il 31 ottobre 2026 (secondo QuiFinanza, 15 ottobre 2026)"
+  ]
+ ],
+ "sections": [
+  [
+   "Dove si usa già",
+   "Nelle banche l'IA lavora soprattutto dietro le quinte. Gli usi più diffusi sono l'antifrode, che cerca operazioni anomale su conti e carte, la valutazione del merito di credito, l'antiriciclaggio, i chatbot per l'assistenza e la lettura automatica dei documenti. Secondo dati BCE riportati da <a href=\"https://www.milanofinanza.it/news/l-ai-cresce-nelle-banche-europee-ecco-come-unicredit-e-intesa-sanpaolo-usano-l-intelligenza-202601091924186997\">Milano Finanza</a> il 9 gennaio 2026, l'88% delle 110 banche vigilate usa l'IA.\n\nNelle assicurazioni e nella gestione del risparmio aiuta a classificare pratiche e riassumere documenti. Esistono poi i robo-advisor, servizi automatici che propongono portafogli a partire da un questionario, e il trading algoritmico, in cui programmi inviano ordini di borsa seguendo regole prestabilite. Questi strumenti non eliminano il rischio di perdita e restano soggetti alle norme a tutela dei clienti.",
+   {
+    "caption": "Banche europee vigilate dalla BCE che usano l'IA (fonte: BCE, via Milano Finanza, 9 gennaio 2026)",
+    "head": [
+     "Uso",
+     "Anno prima",
+     "2024"
+    ],
+    "rows": [
+     [
+      "Antifrode",
+      "36%",
+      "62%"
+     ],
+     [
+      "Credit scoring",
+      "14%",
+      "30%"
+     ]
+    ]
+   }
+  ],
+  [
+   "Esempi recenti",
+   "Alcuni casi e notizie datati, tutti da fonti indicate in fondo alla scheda:\n\n<ul><li><strong>8 febbraio 2025</strong>: secondo <a href=\"https://quifinanza.it/attualita/truffa-crosetto/880594/\">QuiFinanza</a>, la voce del ministro Crosetto è stata clonata con l'IA per telefonare a imprenditori e chiedere pagamenti; indaga la Procura di Milano.</li><li><strong>10 ottobre 2025</strong>: il <a href=\"https://finreg.aoshearman.com/FSB-publishes-report-on-monitoring-AI-adoption-an\">Financial Stability Board</a> pubblica un rapporto sul monitoraggio dell'IA nella finanza.</li><li><strong>9 gennaio 2026</strong>: UniCredit e Intesa Sanpaolo descrivono i loro progetti, dal credito alle piccole imprese all'antifrode.</li><li><strong>13 aprile 2026</strong>: la <a href=\"https://oecd.ai/en/incidents/2026-04-13-dc84\">CNMV spagnola</a> avverte che chatbot come ChatGPT, Gemini, DeepSeek e Perplexity, usati senza supervisione umana, producono spesso errori e allucinazioni.</li><li><strong>6 agosto 2026</strong>: la <a href=\"https://www.consob.it/web/area-pubblica/w/comunicato-stampa-del-6-agosto-2026\">Consob</a> oscura 6 siti abusivi e segnala l'aumento di truffe con contenuti generati dall'IA.</li></ul>"
+  ],
+  [
+   "Rischi e truffe",
+   "I rischi riguardano sia chi offre i servizi sia chi li usa:\n\n<ul><li><strong>Errori e allucinazioni</strong>: i chatbot generici possono dare risposte sbagliate ma convincenti.</li><li><strong>Bias e dati scadenti</strong>: secondo l'<a href=\"https://www.esma.europa.eu/press-news/esma-news/esma-provides-guidance-firms-using-artificial-intelligence-investment-services\">ESMA</a> algoritmi distorti, dati di bassa qualità ed eccessiva fiducia nello strumento possono danneggiare i clienti.</li><li><strong>Poca trasparenza</strong>: alcuni modelli sono scatole nere difficili da spiegare (BCE, via Milano Finanza).</li><li><strong>Dipendenza da fornitori esterni</strong>: il <a href=\"https://finreg.aoshearman.com/FSB-publishes-report-on-monitoring-AI-adoption-an\">FSB</a> segnala vulnerabilità operative e di sicurezza informatica.</li><li><strong>Truffe</strong>: voci e video falsi, siti clonati, annunci con finti volti noti e presunti consigli di investimento dell'IA (<a href=\"https://www.consob.it/documents/d/area-pubblica/scheda_informativa_frodi_ai_esma_2026\">scheda di EBA, EIOPA ed ESMA</a>).</li></ul>"
+  ],
+  [
+   "Come proteggersi e cosa dicono le autorità",
+   "Le autorità europee EBA, EIOPA ed ESMA consigliano di non condividere mai password, PIN e codici, di fermarsi a verificare davanti a ogni urgenza, di richiamare la banca solo su numeri già noti, di concordare in famiglia una parola sicura e di diffidare degli investimenti a tempo limitato. In caso di frode occorre avvisare subito la banca e denunciare (<a href=\"https://www.consob.it/documents/d/area-pubblica/scheda_informativa_frodi_ai_esma_2026\">scheda informativa</a>).\n\nSul fronte delle regole, l'ESMA ha chiarito il 30 maggio 2024 che l'uso dell'IA nei servizi di investimento deve rispettare la MiFID II (<a href=\"https://www.esma.europa.eu/press-news/esma-news/esma-provides-guidance-firms-using-artificial-intelligence-investment-services\">comunicato</a>). L'AI Act tratta il credit scoring come sistema ad alto rischio: con l'Omnibus digitale, pubblicato il 24 luglio 2026, l'obbligo slitta al 2 dicembre 2027 (<a href=\"https://www.garrigues.com/en_GB/garrigues-digital/ai-digital-omnibus-regulation-has-been-published-redefining-deadlines-and\">Garrigues</a>). Secondo <a href=\"https://www.milanofinanza.it/news/allarme-abi-sull-ai-banche-attente-alla-sicurezza-202608062042426133\">Milano Finanza</a> il 17 luglio 2026 la Banca d'Italia ha chiesto agli intermediari più resilienza informatica, con una relazione dei vertici entro il 31 dicembre 2026."
+  ]
+ ],
+ "sameAs": [
+  "https://www.esma.europa.eu/",
+  "https://www.consob.it/",
+  "https://www.bancaditalia.it/",
+  "https://www.fsb.org/"
+ ],
+ "sources": [
+  {
+   "name": "ESMA",
+   "title": "ESMA provides guidance to firms using AI in investment services",
+   "url": "https://www.esma.europa.eu/press-news/esma-news/esma-provides-guidance-firms-using-artificial-intelligence-investment-services"
+  },
+  {
+   "name": "Consob",
+   "title": "Comunicato stampa del 6 agosto 2026",
+   "url": "https://www.consob.it/web/area-pubblica/w/comunicato-stampa-del-6-agosto-2026"
+  },
+  {
+   "name": "EBA, EIOPA, ESMA (via Consob)",
+   "title": "Frodi e truffe finanziarie online nell'era dell'intelligenza artificiale",
+   "url": "https://www.consob.it/documents/d/area-pubblica/scheda_informativa_frodi_ai_esma_2026"
+  },
+  {
+   "name": "Garrigues",
+   "title": "AI Digital Omnibus Regulation has been published",
+   "url": "https://www.garrigues.com/en_GB/garrigues-digital/ai-digital-omnibus-regulation-has-been-published-redefining-deadlines-and"
+  },
+  {
+   "name": "Allen & Overy Shearman",
+   "title": "FSB publishes report on monitoring AI adoption and vulnerabilities",
+   "url": "https://finreg.aoshearman.com/FSB-publishes-report-on-monitoring-AI-adoption-an"
+  },
+  {
+   "name": "Milano Finanza",
+   "title": "L'AI cresce nelle banche europee: come UniCredit e Intesa Sanpaolo usano l'intelligenza artificiale",
+   "url": "https://www.milanofinanza.it/news/l-ai-cresce-nelle-banche-europee-ecco-come-unicredit-e-intesa-sanpaolo-usano-l-intelligenza-202601091924186997"
+  },
+  {
+   "name": "QuiFinanza",
+   "title": "Intelligenza artificiale e conti correnti, la BCE chiede alle banche più difese entro il 31 ottobre",
+   "url": "https://quifinanza.it/innovazione/intelligenza-artificiale/bce-banche-intelligenza-artificiale-sicurezza-conti/1019896/"
+  },
+  {
+   "name": "OECD.AI",
+   "title": "Spanish regulator warns of AI investment risks without human oversight",
+   "url": "https://oecd.ai/en/incidents/2026-04-13-dc84"
+  },
+  {
+   "name": "QuiFinanza",
+   "title": "Truffa del falso Crosetto ai danni di Moratti, Armani e Tronchetti Provera",
+   "url": "https://quifinanza.it/attualita/truffa-crosetto/880594/"
+  },
+  {
+   "name": "Milano Finanza",
+   "title": "Allarme ABI sull'AI: banche, attente alla sicurezza",
+   "url": "https://www.milanofinanza.it/news/allarme-abi-sull-ai-banche-attente-alla-sicurezza-202608062042426133"
+  }
+ ],
+ "updated": "2026-10-19"
+}

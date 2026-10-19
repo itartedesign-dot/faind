@@ -1,0 +1,153 @@
+{
+ "key": "midjourney",
+ "name": "Midjourney",
+ "tipo": "prodotto",
+ "kicker": "Grafica con l'AI",
+ "title": "Midjourney: prezzi, funzioni, pro e contro (ottobre 2026)",
+ "desc": "Scheda di Midjourney: cos'è, piani e prezzi a ottobre 2026, pregi e limiti, uso commerciale e cause per diritto d'autore. Per chi è adatto e per chi no.",
+ "re": "Midjourney",
+ "intro": "Midjourney è un servizio che genera immagini a partire da una descrizione scritta. Lo sviluppa un laboratorio indipendente di circa 60 persone, che sul proprio sito si definisce autofinanziato. Si usa dal sito web e da Discord, e solo con un abbonamento a pagamento: e i risultati hanno uno stile molto curato e riconoscibile, che è la ragione principale del suo successo tra i creativi.\n\nSi rivolge a illustratori, art director, designer e appassionati che cercano un'estetica forte per concept art, moodboard e idee di campagna. Oggi la versione predefinita è la V8.2 e il servizio produce anche brevi video partendo da un'immagine. È meno adatto a chi ha bisogno di testi e loghi precisi, di un'API o di garanzie legali chiare sui dati di addestramento, e il servizio è al centro di cause per diritto d'autore.",
+ "facts": [
+  [
+   "Azienda",
+   "Midjourney, laboratorio di ricerca con circa 60 persone, secondo il sito ufficiale (letto il 19 ottobre 2026)"
+  ],
+  [
+   "Pagina ufficiale",
+   "<a href=\"https://www.midjourney.com\">midjourney.com</a>"
+  ],
+  [
+   "Versione predefinita",
+   "V8.2, in uso dal 24 luglio 2026, secondo la documentazione ufficiale"
+  ],
+  [
+   "Come si usa",
+   "Sito web e Discord; per i piani Pro e Mega esiste la modalità privata Stealth"
+  ],
+  [
+   "Video",
+   "Da immagine a video: 5 secondi, estendibili fino a 21, secondo PixVerse (giugno 2026); risoluzione SD o HD secondo il piano"
+  ],
+  [
+   "Piani",
+   "Da 10 a 120 dollari al mese, in dollari statunitensi; nessun piano gratuito indicato da PixVerse (giugno 2026)"
+  ],
+  [
+   "API",
+   "Nessuna API ufficiale, secondo aiagentrank.io (aprile 2026, aggiornato a maggio 2026)"
+  ],
+  [
+   "Ultima verifica",
+   "19 ottobre 2026"
+  ]
+ ],
+ "sections": [
+  [
+   "Prezzi",
+   "I piani sono quattro e i prezzi sono in dollari statunitensi. La pagina dei piani nella documentazione ufficiale indica anche il costo del tempo GPU aggiuntivo: 4 dollari l'ora, su tutti i piani. I rinnovi sono automatici, salvo disdetta. Le aziende con più di un milione di dollari di ricavi annui devono sottoscrivere almeno il piano Pro o Mega.\n\nNon ho trovato un piano gratuito nelle fonti lette. Le funzioni video in alta definizione partono dal piano Standard.",
+   {
+    "caption": "Prezzi letti il 19 ottobre 2026 su docs.midjourney.com (pagina ufficiale di confronto dei piani), in dollari statunitensi (USD).",
+    "head": [
+     "Piano",
+     "Mensile",
+     "Annuale (pagato in anticipo)",
+     "Ore GPU veloci al mese",
+     "Relax",
+     "Stealth"
+    ],
+    "rows": [
+     [
+      "Basic",
+      "10 $",
+      "96 $ (8 $ al mese)",
+      "3,3 ore (200 minuti)",
+      "No",
+      "No"
+     ],
+     [
+      "Standard",
+      "30 $",
+      "288 $ (24 $ al mese)",
+      "15 ore",
+      "Immagini illimitate",
+      "No"
+     ],
+     [
+      "Pro",
+      "60 $",
+      "576 $ (48 $ al mese)",
+      "30 ore",
+      "Immagini e video SD illimitati",
+      "Sì"
+     ],
+     [
+      "Mega",
+      "120 $",
+      "1.152 $ (96 $ al mese)",
+      "60 ore",
+      "Immagini e video SD illimitati",
+      "Sì"
+     ]
+    ]
+   }
+  ],
+  [
+   "Pro",
+   "<ul><li>Resa estetica molto apprezzata dalle recensioni indipendenti, in particolare per luce, atmosfera e composizione (PixVerse, giugno 2026).</li><li>L'app web è più facile da usare di Discord per chi comincia (PixVerse, giugno 2026).</li><li>La V8.1, uscita ad aprile 2026, rende i lavori standard circa 4 o 5 volte più veloci delle versioni precedenti e offre l'alta definizione a 2K senza upscaling (documentazione ufficiale).</li><li>La V8.2 introduce il modello Edit, che sostituisce Omni Reference, Character Reference e lo strumento Retexture, e una Personalizzazione più fedele al gusto dell'utente.</li><li>Dal piano Standard in su la modalità Relax permette immagini illimitate.</li><li>Le immagini si possono trasformare in brevi video.</li></ul>"
+  ],
+  [
+   "Contro",
+   "<ul><li>Non c'è un piano gratuito e il prezzo di ingresso è di 10 dollari al mese, con sole 3,3 ore di GPU veloce.</li><li>Testi e loghi precisi possono ancora sbagliare e vanno controllati (PixVerse, giugno 2026). Per la tipografia aiagentrank.io indica Ideogram come più pulito.</li><li>Per impostazione predefinita le immagini sono visibili e riutilizzabili da altri utenti. La modalità privata costa almeno 60 dollari al mese.</li><li>Non esiste un'API ufficiale, quindi non si può integrare in un prodotto (aiagentrank.io, 2026).</li><li>I dati di addestramento non sono documentati in modo trasparente, e questo può bloccare le verifiche legali di un'azienda (aiagentrank.io, 2026).</li><li>Il video è breve e privo di controlli di movimento avanzati e di audio (PixVerse, giugno 2026).</li></ul>"
+  ],
+  [
+   "Per chi è adatto",
+   "Midjourney funziona bene per chi lavora sull'ideazione visiva: concept art, copertine, moodboard, bozze per campagne, immagini editoriali dove conta l'atmosfera più della precisione. Per un uso regolare il piano Standard da 30 dollari è quello che le recensioni indicano come punto di equilibrio.\n\nÈ meno adatto a chi deve produrre grafiche con testi esatti, loghi o prodotti riconoscibili, a chi lavora con clienti che chiedono garanzie sui dati di addestramento e a chi vuole automatizzare la produzione tramite API. Chi ha riservatezza da tutelare deve mettere in conto il piano Pro per la modalità Stealth, che resta comunque un impegno «best effort» dell'azienda."
+  ],
+  [
+   "Diritto d'autore, dati e uso commerciale",
+   "Secondo i <a href=\"https://docs.midjourney.com/hc/en-us/articles/32083055291277-Terms-of-Service\">termini di servizio</a> letti il 19 ottobre 2026, l'utente è proprietario delle immagini «nella misura massima consentita dalla legge», con vincoli e diritti di terzi. Le aziende sopra il milione di dollari di ricavi devono avere il piano Pro o Mega. Midjourney non garantisce che le immagini siano adatte all'uso e la responsabilità è dell'utente. L'utente concede a Midjourney una licenza perpetua e irrevocabile sui contenuti; i termini non citano l'addestramento dei modelli.\n\nSul fronte legale, Disney, Universal e Warner Bros. hanno citato in giudizio Midjourney dal giugno 2025 e i procedimenti sono stati riuniti a novembre 2025. Secondo Graphic Policy (11 maggio 2026) la causa era nella fase delle prove (discovery). Sono accuse non ancora decise in giudizio, per quanto ho letto. Aiagentrank.io (2026) descrive i dati di addestramento come opachi."
+  ]
+ ],
+ "sameAs": [
+  "https://www.midjourney.com",
+  "https://it.wikipedia.org/wiki/Midjourney"
+ ],
+ "sources": [
+  {
+   "name": "Midjourney",
+   "title": "Midjourney (home page)",
+   "url": "https://www.midjourney.com"
+  },
+  {
+   "name": "Midjourney Docs",
+   "title": "Comparing Midjourney Plans",
+   "url": "https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans"
+  },
+  {
+   "name": "Midjourney Docs",
+   "title": "Terms of Service",
+   "url": "https://docs.midjourney.com/hc/en-us/articles/32083055291277-Terms-of-Service"
+  },
+  {
+   "name": "Midjourney Docs",
+   "title": "Version",
+   "url": "https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version"
+  },
+  {
+   "name": "Graphic Policy",
+   "title": "Disney, Warner Bros., Universal and Midjourney Discovery Dispute Kicked to Late May",
+   "url": "https://graphicpolicy.com/2026/05/11/disney-warner-bros-universal-and-midjourney-discovery-dispute/"
+  },
+  {
+   "name": "aiagentrank.io",
+   "title": "Midjourney review 2026",
+   "url": "https://aiagentrank.io/blog/midjourney-review-2026"
+  },
+  {
+   "name": "PixVerse",
+   "title": "Midjourney AI Image Generator Review in 2026",
+   "url": "https://pixverse.ai/en/blog/midjourney-ai-image-generator-review"
+  }
+ ],
+ "updated": "2026-10-19"
+}
