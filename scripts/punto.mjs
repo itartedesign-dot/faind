@@ -122,6 +122,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv[2]) {
     .replace(/<link rel="stylesheet" href="\.\.\/style\.css">/, `<style>${css.replace(/url\((['"]?)(?!data:|https?:)/g, `url($1${SITE}`)}</style>`)
     .replace(/(href|src)="\.\.\//g, `$1="${SITE}`)
     .replace(/href="\.\/"/g, `href="${SITE}${PUNTO_DIR}"`)
-    .replace(/<script src="[^"]*(stats|nav)\.js" defer><\/script>\n?/g, '');
+    .replace(/<script src="[^"]*(stats|nav)\.js" defer><\/script>\n?/g, '')
+    .replace(/<link rel="(stylesheet|icon|apple-touch-icon|manifest)" href="https?:[^"]*fonts[^"]*">\n?/g, '')
+    .replace(/<img class="brand__img[^>]*>/g, (m) => /--light/.test(m) ? '<strong style="font-size:22px;color:var(--ink)">FAIND</strong>' : '')
+    .replace('<title>', '<title>Anteprima · ');
   process.stdout.write(html);
 }
