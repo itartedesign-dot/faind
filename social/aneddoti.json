@@ -23,7 +23,7 @@
       "titolo": "Molecole nuove, invece di candidati già esistenti",
       "testo": "Questa volta l’AI non ha soltanto cercato tra molecole già note: ha aiutato a progettarne di nuove. Al MIT sono stati sviluppati candidati antibiotici contro batteri resistenti, poi verificati sperimentalmente. Non sono medicinali pronti in farmacia. Sono nuove possibilità da mettere alla prova, una molecola alla volta.",
       "fonte": "MIT, ricerca del 2025",
-      "verificato": false
+      "verificato": true
     },
     {
       "titolo": "Duecento milioni di indizi",
@@ -140,6 +140,10 @@
     {
       "n": 3,
       "day": "2026-10-15"
+    },
+    {
+      "n": 4,
+      "day": "2026-10-19"
     }
   ]
 }

@@ -30,6 +30,16 @@
       "titolo": "L'AI ha cercato nuovi antibiotici dentro il corpo umano #Shorts",
       "testo": "I ricercatori dell'Università della Pennsylvania hanno usato l'intelligenza artificiale per esplorare tutte le proteine umane e trovare piccoli frammenti nascosti, i peptidi, con possibili proprietà antibiotiche. Su 55 peptidi provati in laboratorio, più della metà ha colpito almeno un batterio e i migliori hanno ridotto le infezioni nei topi.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Torres, Melo, Crescenzi, Notomista, de la Fuente-Nunez, \"Mining for encrypted peptide antibiotics in the human proteome\", Nature Biomedical Engineering, 2021 (University of Pennsylvania)\nhttps://www.nih.gov/news-events/nih-research-matters/searching-new-antibiotics-human-body\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Antibiotici #Peptidi #Scienza #DalCassetto #FAIND",
       "telegram": "L'AI ha cercato nuovi antibiotici in un posto insolito: dentro le proteine del nostro corpo."
+    },
+    {
+      "id": "dal-cassetto-04",
+      "aneddoto": 4,
+      "dalle": "2026-10-19T09:42:00Z",
+      "scade": "2026-10-19T10:50:04Z",
+      "video": "https://export-download.canva.com/M7kwo/DAHYcRM7kwo/-1/0-9152959799598145321.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261018%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261018T225357Z&X-Amz-Expires=42967&X-Amz-Signature=b45b2cf9db83cf3f5f0582bef6b9e1020b7d84b0a7947ecaeca43d5409f86182&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Mon%2C%2019%20Oct%202026%2010%3A50%3A04%20GMT",
+      "titolo": "L'AI ha progettato da zero nuovi antibiotici contro i superbatteri #Shorts",
+      "testo": "Al MIT l'intelligenza artificiale generativa ha creato oltre 36 milioni di molecole mai viste prima e ha scelto le più promettenti contro due batteri resistenti ai farmaci: quello della gonorrea e lo stafilococco MRSA. Due candidati, NG1 e DN1, hanno funzionato in laboratorio e nei topi. Non sono ancora farmaci: ora vanno migliorati e provati.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Krishnan, Anahtar, Valeri, Collins et al., \"A generative deep learning approach to de novo antibiotic design\", Cell, 2025 (MIT)\nhttps://news.mit.edu/2025/using-generative-ai-researchers-design-compounds-kill-drug-resistant-bacteria-0814\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Antibiotici #Superbatteri #AIGenerativa #MIT #DalCassetto #FAIND",
+      "telegram": "Stavolta l'AI non ha cercato tra le molecole che conosciamo: ne ha disegnate di nuove, contro due superbatteri."
     }
   ]
 }
