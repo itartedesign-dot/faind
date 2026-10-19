@@ -54,7 +54,7 @@ const romeDay = (iso) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Ro
 export const UI = {
   it: {
     back: '← Tutte le notizie', pageLang: 'Lingua della pagina', home: 'Torna alle notizie di FAIND',
-    foot: [['#chi-siamo', 'Chi siamo'], ['temi/', 'Temi'], ['glossario/', 'Glossario'], ['approfondimenti/', 'Approfondimenti'], ['il-punto/', 'Il punto'], ['confronto/', 'Le AI a confronto'], ['argomenti/', 'Argomenti'], ['archivio/', 'Archivio'], ['cos-e-faind.html', 'Cos\'è FAIND'], ['redazione.html', 'Chi c\'è dietro FAIND'], ['feed.xml', 'Feed RSS'], ['privacy.html', 'Privacy e note legali']],
+    foot: [['#chi-siamo', 'Chi siamo'], ['temi/', 'Temi'], ['glossario/', 'Glossario'], ['approfondimenti/', 'Approfondimenti'], ['il-punto/', 'Il punto'], ['schede/', 'Schede'], ['confronto/', 'Le AI a confronto'], ['argomenti/', 'Argomenti'], ['archivio/', 'Archivio'], ['cos-e-faind.html', 'Cos\'è FAIND'], ['redazione.html', 'Chi c\'è dietro FAIND'], ['feed.xml', 'Feed RSS'], ['privacy.html', 'Privacy e note legali']],
     alsoTitle: 'Su FAIND trovi anche',
     also: [['', 'Notizie sull\'AI ogni ora', 'sempre con la fonte'], ['https://t.me/faindnews', 'Canale Telegram', 'le notizie importanti sul telefono'], ['glossario/', 'Glossario', 'le parole dell\'AI spiegate semplici'], ['temi/', 'Temi', 'robot, casa, salute, lavoro, clima'], ['approfondimenti/', 'Approfondimenti', 'le risposte alle domande più cercate'], ['confronto/', 'Le AI a confronto', 'pro, contro e prezzi'], ['argomenti/', 'Argomenti', 'tutte le notizie su un nome'], ['archivio/', 'Archivio', 'le notizie dei mesi passati']],
     h1: (s) => `Notizie su ${s}`, seo: (s) => `${s}: le notizie, sempre con la fonte`,
@@ -64,7 +64,7 @@ export const UI = {
     idxH1: 'Notizie per argomento', idxSeo: 'Notizie AI per argomento: aziende, prodotti e modelli',
     idxDesc: 'Le aziende, i prodotti e i modelli di intelligenza artificiale più citati nelle notizie, ognuno con tutte le sue notizie e le fonti. Pagine che crescono da sole.',
     idxLede: 'Le aziende, i prodotti, i modelli e le persone dell\'intelligenza artificiale che tornano più spesso nelle notizie. Ogni pagina raccoglie tutte le notizie che li citano, con la fonte, e cresce da sola.',
-    count: (n) => `${n} notizie`, crumb: 'Argomenti', timeline: 'Cronologia: i fatti principali mese per mese', card: 'Scheda', all: (x) => `Tutte le notizie su ${x}`, srcs: 'Fonti della scheda', upd: 'Scheda aggiornata il',
+    count: (n) => `${n} notizie`, crumb: 'Argomenti', timeline: 'Cronologia: i fatti principali mese per mese', moreCards: 'Altre schede', relNews: 'Le ultime notizie sul tema', cardsCrumb: 'Schede', cardsTitle: 'Schede: guide su temi, prodotti e aziende dell\'AI', cardsLede: 'Schede scritte dalla redazione su temi, strumenti e aziende dell\'intelligenza artificiale: cosa sono, come cambiano il mondo, quanto costano, con le fonti.', cardsDesc: 'Schede della redazione di FAIND su temi, strumenti e aziende dell\'intelligenza artificiale: videogiochi, grafica e video, finanza, con fonti e prezzi datati.', card: 'Scheda', all: (x) => `Tutte le notizie su ${x}`, srcs: 'Fonti della scheda', upd: 'Scheda aggiornata il',
     arcH1: 'Archivio delle notizie', arcSeo: 'Archivio delle notizie sull\'intelligenza artificiale',
     arcDesc: 'Tutte le notizie sull\'intelligenza artificiale riprese da almeno due testate, mese per mese, con le fonti.',
     arcLede: 'Le notizie riprese da almeno due testate e quelle della redazione restano qui per sempre, mese per mese, ognuna con le sue fonti.',
@@ -362,6 +362,7 @@ export function subjectsIn(text, subjects) {
 // Schede: testo della redazione su un nome (scripts/schede/<key>.json), riletto prima di pubblicarlo.
 // { key, name, tipo: 'azienda'|'persona'|'prodotto', title, desc, intro, facts: [[etichetta, valore]], sections?: [[titolo, html]],
 //   sameAs?: [url], sources: [{ name, title, url }], updated: 'AAAA-MM-GG' }. Solo per la pagina italiana.
+export const SCHEDE_PAGE_DIR = 'schede/';
 const SCHEDE_DIR = path.join(path.dirname(new URL(import.meta.url).pathname), 'schede');
 export async function loadSchede() {
   const out = new Map();
@@ -370,14 +371,15 @@ export async function loadSchede() {
   for (const f of files) { const c = JSON.parse(await readFile(path.join(SCHEDE_DIR, f), 'utf8')); if (c.key && c.name) out.set(c.key, c); }
   return out;
 }
-const paras = (h = '') => String(h).split(/\n\n+/).map(x => `<p>${x}</p>`).join('\n    ');
+const paras = (h = '') => String(h).split(/\n\n+/).map(x => /^<(ul|ol|table|div)\b/.test(x) ? x : `<p>${x}</p>`).join('\n    ');
+const tbl = (t) => t ? `<div class="sc__tw"><table class="sc__table"><caption>${esc(t.caption)}</caption><thead><tr>${t.head.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map((c, i) => i ? `<td>${c}</td>` : `<th scope="row">${c}</th>`).join('')}</tr>`).join('')}</tbody></table></div>` : '';
 const SCHEMA_TYPE = { azienda: 'Organization', persona: 'Person', prodotto: 'SoftwareApplication' };
 export function schedaHtml(c, lang = 'it') {
   const u = UI[lang] || UI.it;
   return `<section class="sc">
     ${paras(c.intro)}
     <div class="sc__facts"><h2>${esc(u.card)}: ${esc(c.name)}</h2><dl>${(c.facts || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join('')}</dl></div>
-${(c.sections || []).map(([h, b]) => `    <h2>${esc(h)}</h2>\n    ${paras(b)}`).join('\n')}
+${(c.sections || []).map(([h, b, t]) => `    <h2>${esc(h)}</h2>\n    ${paras(b)}${t ? '\n    ' + tbl(t) : ''}`).join('\n')}
     <details class="sc__src"><summary>${esc(u.srcs)} · ${esc(u.upd)} ${fmtDay(c.updated, lang)}</summary><ul>${(c.sources || []).map(x => `<li>${esc(x.name)}: <a href="${esc(x.url)}" rel="noopener">${esc(x.title || x.url)}</a></li>`).join('')}</ul></details>
   </section>`;
 }
@@ -404,6 +406,10 @@ const SC_CSS = `.sc{margin:6px 0 10px}.sc p{font-size:17px;line-height:1.6;color
 .tl__list b{display:block;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px}
 .tl__list ul{margin:0;padding-left:18px}.tl__list ul li{margin:3px 0;line-height:1.4}.tl__list a{color:var(--ink);font-weight:600;text-decoration:none}.tl__list a:hover{text-decoration:underline;color:var(--link)}
 .tl__list span{color:var(--muted);font-size:13px}
+.sc__tw{overflow-x:auto;margin:8px 0 14px}.sc__table{width:100%;border-collapse:collapse;font-size:14.5px;line-height:1.4}.sc__table caption{text-align:left;font-weight:700;color:var(--muted);font-size:13.5px;margin-bottom:6px}
+.sc__table th,.sc__table td{text-align:left;vertical-align:top;padding:9px 10px;border-bottom:1px solid var(--rule);color:var(--ink)}.sc__table thead th{font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);border-bottom:2px solid var(--ink)}
+.sc ul{margin:0 0 14px;padding-left:20px;font-size:16.5px;line-height:1.55;color:var(--ink)}.sc li{margin:4px 0}
+.sc__warn{border:1px solid var(--rule);border-left:5px solid #C9812B;border-radius:12px;background:var(--surface);padding:12px 16px;font-size:15px;line-height:1.5;margin:14px 0;color:var(--ink)}
 .al-all{font-size:24px;font-weight:780;margin:34px 0 6px}.al-intro{color:var(--muted);font-size:15px;line-height:1.5}`;
 
 // reads: testi di FAIND (Punto, approfondimenti) { title, path, text, lang, kind } che compaiono nella pagina del nome che citano
@@ -461,6 +467,36 @@ export async function buildArgomenti({ items, registry = [], root, now = Date.no
       await writeFile(path.join(root, ARG_DIR[lang], `${s.key}.html`), html);
       urls.push({ url, lastmod: list[0] ? romeDay(list[0].date) : '' });
     }
+  }
+  // Schede su un tema o un prodotto senza pagina "Notizie su…": una pagina a sé in schede/ (solo italiano)
+  const standalone = [...schede.values()].filter(c => !subjects.some(x => x.key === c.key));
+  for (const c of standalone) {
+    const u = UI.it, up = '../', url = `${SITE}${SCHEDE_PAGE_DIR}${c.key}.html`;
+    const re = c.re ? new RegExp(c.re, c.flags || 'iu') : null;
+    const rel = re ? sorted.filter(n => re.test(textOf(n))).slice(0, 12) : [];
+    const warn = c.warning ? `<p class="sc__warn"><strong>Attenzione.</strong> ${c.warning}</p>\n    ` : '';
+    const others = standalone.filter(o => o.key !== c.key).slice(0, 6);
+    const more = others.length ? `<section class="np__box"><h2>${esc(u.moreCards)}</h2><ul class="np__rel">${others.map(o => `<li><a href="${o.key}.html">${esc(o.name)}</a><span>${esc(o.kicker || 'Scheda')}</span></li>`).join('')}</ul></section>` : '';
+    const main = `${warn}${schedaHtml(c, 'it')}
+    ${rel.length ? `<h2 class="al-all">${esc(u.relNews)}</h2>\n    ${newsListHtml(rel, up, 'it')}` : ''}
+    ${more}`;
+    const about = { '@type': SCHEMA_TYPE[c.tipo] || 'Thing', name: c.name, description: c.desc, ...(c.sameAs ? { sameAs: c.sameAs } : {}) };
+    const jsonld = { '@context': 'https://schema.org', '@graph': [
+      { '@type': 'Article', '@id': url + '#article', headline: c.title, description: c.desc, inLanguage: 'it-IT', dateModified: c.updated, datePublished: c.published || c.updated, mainEntityOfPage: url, about,
+        author: { '@type': 'Organization', name: 'Redazione FAIND', url: SITE + 'redazione.html' }, publisher: { '@type': 'Organization', name: 'FAIND', url: SITE, logo: { '@type': 'ImageObject', url: SITE + 'assets/icon-180.png' } },
+        citation: (c.sources || []).map(x => ({ '@type': 'CreativeWork', name: x.title || x.name, url: x.url })) },
+      { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'FAIND', item: SITE }, { '@type': 'ListItem', position: 2, name: 'Schede', item: SITE + SCHEDE_PAGE_DIR }, { '@type': 'ListItem', position: 3, name: c.name, item: url }] }] };
+    await mkdir(path.join(root, SCHEDE_PAGE_DIR), { recursive: true });
+    await writeFile(path.join(root, SCHEDE_PAGE_DIR, `${c.key}.html`), shell({ lang: 'it', up, url, title: `${c.title} | FAIND`, desc: c.desc, h1: c.name, lede: '', main, jsonld, css: SC_CSS,
+      crumb: `<a href="${up}">FAIND</a> › <a href="${up}${SCHEDE_PAGE_DIR}">${esc(u.cardsCrumb)}</a>` }));
+    urls.push({ url, lastmod: c.updated });
+  }
+  if (standalone.length) {
+    const u = UI.it, up = '../', url = SITE + SCHEDE_PAGE_DIR;
+    const main = `<ul class="np__rel">${standalone.map(c => `<li><a href="${c.key}.html">${esc(c.name)}</a><span>${esc(c.desc)}</span></li>`).join('')}</ul>`;
+    await writeFile(path.join(root, SCHEDE_PAGE_DIR, 'index.html'), shell({ lang: 'it', up, url, title: `${u.cardsTitle} | FAIND`, desc: u.cardsDesc, h1: u.cardsTitle, lede: esc(u.cardsLede), main, css: SC_CSS,
+      jsonld: { '@context': 'https://schema.org', '@type': 'CollectionPage', '@id': url, url, name: u.cardsTitle, inLanguage: 'it-IT', hasPart: standalone.map(c => ({ '@type': 'Article', headline: c.title, url: `${url}${c.key}.html` })) } }));
+    urls.push({ url, lastmod: '' });
   }
   // Indice degli argomenti, in ogni lingua
   for (const lang of LANGS) {
