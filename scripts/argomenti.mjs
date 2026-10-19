@@ -22,7 +22,7 @@
    notizie, fonti, date) e frasi fisse.
    ===================================================================== */
 
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 export const SITE = 'https://faind.org/';
@@ -64,7 +64,7 @@ export const UI = {
     idxH1: 'Notizie per argomento', idxSeo: 'Notizie AI per argomento: aziende, prodotti e modelli',
     idxDesc: 'Le aziende, i prodotti e i modelli di intelligenza artificiale più citati nelle notizie, ognuno con tutte le sue notizie e le fonti. Pagine che crescono da sole.',
     idxLede: 'Le aziende, i prodotti, i modelli e le persone dell\'intelligenza artificiale che tornano più spesso nelle notizie. Ogni pagina raccoglie tutte le notizie che li citano, con la fonte, e cresce da sola.',
-    count: (n) => `${n} notizie`, crumb: 'Argomenti',
+    count: (n) => `${n} notizie`, crumb: 'Argomenti', timeline: 'Cronologia: i fatti principali mese per mese', card: 'Scheda', all: (x) => `Tutte le notizie su ${x}`, srcs: 'Fonti della scheda', upd: 'Scheda aggiornata il',
     arcH1: 'Archivio delle notizie', arcSeo: 'Archivio delle notizie sull\'intelligenza artificiale',
     arcDesc: 'Tutte le notizie sull\'intelligenza artificiale riprese da almeno due testate, mese per mese, con le fonti.',
     arcLede: 'Le notizie riprese da almeno due testate e quelle della redazione restano qui per sempre, mese per mese, ognuna con le sue fonti.',
@@ -86,7 +86,7 @@ export const UI = {
     idxH1: 'News by subject', idxSeo: 'AI news by subject: companies, products and models',
     idxDesc: 'The artificial intelligence companies, products and models most mentioned in the news, each with all its stories and sources. Pages that grow by themselves.',
     idxLede: 'The companies, products, models and people in artificial intelligence that come up most often in the news. Each page collects every story that mentions them, with the source, and grows by itself.',
-    count: (n) => `${n} stories`, crumb: 'Subjects'
+    count: (n) => `${n} stories`, crumb: 'Subjects', timeline: 'Timeline: the main events month by month'
   },
   fr: {
     back: '← Toutes les actualités', pageLang: 'Langue de la page', home: 'Retour aux actualités de FAIND',
@@ -100,7 +100,7 @@ export const UI = {
     idxH1: 'Actualités par sujet', idxSeo: 'Actualités IA par sujet : entreprises, produits et modèles',
     idxDesc: 'Les entreprises, produits et modèles d\'intelligence artificielle les plus cités dans l\'actualité, chacun avec toutes ses actualités et ses sources. Des pages qui grandissent toutes seules.',
     idxLede: 'Les entreprises, produits, modèles et personnes de l\'intelligence artificielle qui reviennent le plus souvent dans l\'actualité. Chaque page réunit toutes les actualités qui les citent, avec la source, et grandit toute seule.',
-    count: (n) => `${n} actualités`, crumb: 'Sujets'
+    count: (n) => `${n} actualités`, crumb: 'Sujets', timeline: 'Chronologie : les faits marquants mois par mois'
   },
   de: {
     back: '← Alle Nachrichten', pageLang: 'Sprache der Seite', home: 'Zurück zu den FAIND-Nachrichten',
@@ -114,7 +114,7 @@ export const UI = {
     idxH1: 'Nachrichten nach Stichwort', idxSeo: 'KI-Nachrichten nach Stichwort: Unternehmen, Produkte und Modelle',
     idxDesc: 'Die in den Nachrichten meistgenannten KI-Unternehmen, -Produkte und -Modelle, jeweils mit allen Meldungen und Quellen. Seiten, die von selbst wachsen.',
     idxLede: 'Die Unternehmen, Produkte, Modelle und Personen der künstlichen Intelligenz, die in den Nachrichten am häufigsten vorkommen. Jede Seite sammelt alle Meldungen, die sie erwähnen, mit Quelle, und wächst von selbst.',
-    count: (n) => `${n} Meldungen`, crumb: 'Stichwörter'
+    count: (n) => `${n} Meldungen`, crumb: 'Stichwörter', timeline: 'Chronik: die wichtigsten Ereignisse Monat für Monat'
   }
 };
 
@@ -358,6 +358,54 @@ export function subjectsIn(text, subjects) {
 }
 
 /* ------------------------------ Argomenti: pagine ------------------------------ */
+/* ------------------------------ Schede e cronologia ------------------------------ */
+// Schede: testo della redazione su un nome (scripts/schede/<key>.json), riletto prima di pubblicarlo.
+// { key, name, tipo: 'azienda'|'persona'|'prodotto', title, desc, intro, facts: [[etichetta, valore]], sections?: [[titolo, html]],
+//   sameAs?: [url], sources: [{ name, title, url }], updated: 'AAAA-MM-GG' }. Solo per la pagina italiana.
+const SCHEDE_DIR = path.join(path.dirname(new URL(import.meta.url).pathname), 'schede');
+export async function loadSchede() {
+  const out = new Map();
+  let files = [];
+  try { files = (await readdir(SCHEDE_DIR)).filter(f => f.endsWith('.json')); } catch { return out; }
+  for (const f of files) { const c = JSON.parse(await readFile(path.join(SCHEDE_DIR, f), 'utf8')); if (c.key && c.name) out.set(c.key, c); }
+  return out;
+}
+const paras = (h = '') => String(h).split(/\n\n+/).map(x => `<p>${x}</p>`).join('\n    ');
+const SCHEMA_TYPE = { azienda: 'Organization', persona: 'Person', prodotto: 'SoftwareApplication' };
+export function schedaHtml(c, lang = 'it') {
+  const u = UI[lang] || UI.it;
+  return `<section class="sc">
+    ${paras(c.intro)}
+    <div class="sc__facts"><h2>${esc(u.card)}: ${esc(c.name)}</h2><dl>${(c.facts || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join('')}</dl></div>
+${(c.sections || []).map(([h, b]) => `    <h2>${esc(h)}</h2>\n    ${paras(b)}`).join('\n')}
+    <details class="sc__src"><summary>${esc(u.srcs)} · ${esc(u.upd)} ${fmtDay(c.updated, lang)}</summary><ul>${(c.sources || []).map(x => `<li>${esc(x.name)}: <a href="${esc(x.url)}" rel="noopener">${esc(x.title || x.url)}</a></li>`).join('')}</ul></details>
+  </section>`;
+}
+// Cronologia: per ogni mese le notizie più riprese (almeno 2 fonti), al massimo 3; solo se le notizie coprono almeno 2 mesi
+const TL_PER_MONTH = 3, TL_MONTHS = 12;
+export function timelineHtml(list, up, lang) {
+  const byMonth = new Map();
+  for (const n of list) { const m = romeDay(n.date).slice(0, 7); if (!byMonth.has(m)) byMonth.set(m, []); byMonth.get(m).push(n); }
+  if (byMonth.size < 2) return '';
+  const rows = [...byMonth].sort((a, b) => b[0].localeCompare(a[0])).slice(0, TL_MONTHS).map(([m, ns]) => {
+    const top = ns.filter(n => (n.coverage || 1) >= 2).sort((a, b) => (b.coverage || 1) - (a.coverage || 1) || String(b.date).localeCompare(String(a.date))).slice(0, TL_PER_MONTH);
+    return top.length ? `<li><b>${esc(fmtMonth(m, lang))}</b><ul>${top.map(n => `<li><a href="${n.page ? up + n.page : esc(n.link.url)}">${esc(tx(n.title))}</a> <span>${esc(fmtDay(n.date, lang, 'short'))}</span></li>`).join('')}</ul></li>` : '';
+  }).filter(Boolean);
+  return rows.length >= 2 ? `<section class="np__box tl"><h2>${esc((UI[lang] || UI.it).timeline)}</h2><ol class="tl__list">${rows.join('')}</ol></section>\n    ` : '';
+}
+const SC_CSS = `.sc{margin:6px 0 10px}.sc p{font-size:17px;line-height:1.6;color:var(--ink);margin:0 0 14px}.sc h2{font-size:21px;font-weight:760;margin:24px 0 8px}
+.sc a{color:var(--link)}
+.sc__facts{border:1px solid var(--rule);border-left:5px solid #4293B9;border-radius:14px;background:var(--surface);padding:14px 18px;margin:18px 0}
+.sc__facts h2{font-size:14px;text-transform:uppercase;letter-spacing:.05em;margin:0 0 8px}
+.sc__facts dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0;font-size:15px}.sc__facts dt{font-weight:700;color:var(--muted)}.sc__facts dd{margin:0;color:var(--ink)}
+@media(max-width:560px){.sc__facts dl{grid-template-columns:1fr}.sc__facts dd{margin-bottom:6px}}
+.sc__src{font-size:13.5px;color:var(--muted);margin:10px 0 0}.sc__src summary{cursor:pointer}.sc__src ul{margin:8px 0 0;padding-left:18px}
+.tl__list{list-style:none;margin:0;padding:0}.tl__list>li{padding:10px 0;border-top:1px solid var(--rule)}.tl__list>li:first-child{border-top:0}
+.tl__list b{display:block;font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px}
+.tl__list ul{margin:0;padding-left:18px}.tl__list ul li{margin:3px 0;line-height:1.4}.tl__list a{color:var(--ink);font-weight:600;text-decoration:none}.tl__list a:hover{text-decoration:underline;color:var(--link)}
+.tl__list span{color:var(--muted);font-size:13px}
+.al-all{font-size:24px;font-weight:780;margin:34px 0 6px}.al-intro{color:var(--muted);font-size:15px;line-height:1.5}`;
+
 // reads: testi di FAIND (Punto, approfondimenti) { title, path, text, lang, kind } che compaiono nella pagina del nome che citano
 export async function buildArgomenti({ items, registry = [], root, now = Date.now(), exclude = [], reads = [] }) {
   // 1) Chi ha una pagina: quelli già nati restano; i nuovi nascono quando superano le soglie
@@ -379,7 +427,7 @@ export async function buildArgomenti({ items, registry = [], root, now = Date.no
   subjects.sort((a, b) => b._list.length - a._list.length || a.name.localeCompare(b.name));
 
   // 2) Pagine
-  const urls = [];
+  const urls = [], schede = await loadSchede();
   for (const s of subjects) {
     const alternates = s.pages.map(l => ({ lang: l, url: `${SITE}${ARG_DIR[l]}${s.key}.html` }));
     // argomenti che compaiono più spesso nelle stesse notizie
@@ -399,13 +447,15 @@ export async function buildArgomenti({ items, registry = [], root, now = Date.no
       const ours = mine.length ? `<section class="np__box"><h2>${esc(u.reads)}</h2><ul class="np__rel">${mine.map(r =>
         `<li><a href="${up}${r.path}">${esc(r.title)}</a><span>${esc(r.kind)}</span></li>`).join('')}</ul></section>\n    ` : '';
       const shown = list.slice(0, MAX_LISTA);
-      const main = `${ours}${newsListHtml(shown, up, lang)}
+      const card = lang === 'it' ? schede.get(s.key) : null;
+      const main = `${card ? schedaHtml(card, lang) + `\n    <h2 class="al-all">${esc(u.all(s.name))}</h2>\n    <p class="al-intro">${u.intro(s.name, list.length, outlets.size, fmtDay(first, lang))}</p>\n    ` : ''}${timelineHtml(list, up, lang)}${ours}${newsListHtml(shown, up, lang)}
     ${list.length > MAX_LISTA ? `<p><a href="${up}${ARCHIVE_DIR}">${esc(u.older)} →</a></p>` : ''}
     ${rel}`;
-      const jsonld = { '@context': 'https://schema.org', '@type': 'CollectionPage', url, name: u.h1(s.name), inLanguage: LOCALE[lang], about: { '@type': 'Thing', name: s.name },
+      const about = card ? { '@type': SCHEMA_TYPE[card.tipo] || 'Thing', name: s.name, description: card.desc, ...(card.sameAs ? { sameAs: card.sameAs } : {}) } : { '@type': 'Thing', name: s.name };
+      const jsonld = { '@context': 'https://schema.org', '@type': 'CollectionPage', url, name: card ? card.title : u.h1(s.name), inLanguage: LOCALE[lang], about, ...(card ? { dateModified: card.updated, description: card.desc } : {}),
         mainEntity: { '@type': 'ItemList', numberOfItems: shown.length, itemListElement: shown.slice(0, 30).map((n, i) => ({ '@type': 'ListItem', position: i + 1, url: n.page ? SITE + n.page : n.link.url, name: tx(n.title) })) } };
-      const html = shell({ lang, up, url, title: `${u.seo(s.name)} | FAIND`, desc: u.desc(s.name, list.length, outlets.size), h1: u.h1(s.name),
-        lede: u.intro(s.name, list.length, outlets.size, fmtDay(first, lang)), main, alternates, jsonld,
+      const html = shell({ lang, up, url, title: `${card ? card.title : u.seo(s.name)} | FAIND`, desc: card ? card.desc : u.desc(s.name, list.length, outlets.size), h1: card ? card.name : u.h1(s.name),
+        lede: card ? '' : u.intro(s.name, list.length, outlets.size, fmtDay(first, lang)), main, alternates, jsonld, css: SC_CSS,
         crumb: `<a href="${up}">FAIND</a> › <a href="${up}${ARG_DIR[lang]}">${esc(u.crumb)}</a>` });
       await mkdir(path.join(root, ARG_DIR[lang]), { recursive: true });
       await writeFile(path.join(root, ARG_DIR[lang], `${s.key}.html`), html);
