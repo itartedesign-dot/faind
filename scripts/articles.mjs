@@ -346,8 +346,9 @@ export function articleBySlug(slug, lang = 'it') {
 }
 
 // file = nome della pagina dentro la cartella della lingua ('' per l'indice); langs = lingue in cui la pagina esiste
-function shell({ lang, file, langs, title, desc, image, jsonld, main, type = 'article' }) {
-  const u = UI[lang], up = upOf(lang), url = `${SITE}${ARTICLE_DIR[lang]}${file}`;
+// dir: cartella della pagina se non è quella degli approfondimenti (Il punto usa la stessa veste)
+export function shell({ lang, file, langs, title, desc, image, jsonld, main, type = 'article', dir = ARTICLE_DIR[lang] }) {
+  const u = UI[lang], up = upOf(lang), url = `${SITE}${dir}${file}`;
   const alts = langs.length > 1 ? langs.map(k => `  <link rel="alternate" hreflang="${k}" href="${SITE}${ARTICLE_DIR[k]}${file}">`).join('\n') + `\n  <link rel="alternate" hreflang="x-default" href="${SITE}${ARTICLE_DIR.it}${file}">\n` : '';
   const sw = langs.length > 1 ? `    <p class="lsw"><span class="lsw__lab">${u.pageLang}:</span> ${langs.map(k => k === lang
     ? `<span class="lsw__on" aria-current="page">${LANG_LABEL[k]}</span>`
@@ -420,7 +421,7 @@ ${alts}  <meta name="robots" content="index, follow, max-image-preview:large">
 ${main.replace('<!--lsw-->\n', sw)}
     <p class="legal__back"><a class="btn btn--primary" href="${up}">${u.home}</a></p>
   </main>
-  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="${up}#chi-siamo">${u.foot[0]}</a> · <a href="./">${u.name}</a> · <a href="${up}${u.cmp}">${u.foot[1]}</a> · <a href="${up}${u.gloss}">${u.foot[2]}</a> · <a href="${up}privacy.html">${u.foot[3]}</a></p></div></footer>
+  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="${up}#chi-siamo">${u.foot[0]}</a> · <a href="${up}${ARTICLE_DIR[lang]}">${u.name}</a> · <a href="${up}${u.cmp}">${u.foot[1]}</a> · <a href="${up}${u.gloss}">${u.foot[2]}</a> · <a href="${up}privacy.html">${u.foot[3]}</a></p></div></footer>
 </body>
 </html>
 `;
@@ -445,7 +446,7 @@ function latestHtml(slug, lang, news, up, u) {
 const txt = (v) => (v == null ? '' : typeof v === 'string' ? v : (v.it || v.en || ''));
 
 // Tabella dentro una sezione: { caption, head: [...], rows: [[...], ...] } (celle in HTML semplice)
-const tableHtml = (t) => `<div class="art__tw"><table class="art__table"><caption>${esc(t.caption)}</caption><thead><tr>${t.head.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map((c, i) => i ? `<td>${c}</td>` : `<th scope="row">${c}</th>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+export const tableHtml = (t) => `<div class="art__tw"><table class="art__table"><caption>${esc(t.caption)}</caption><thead><tr>${t.head.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map((c, i) => i ? `<td>${c}</td>` : `<th scope="row">${c}</th>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 
 function articlePage(base, lang, news = []) {
   const a = tr(base, lang), u = UI[lang], up = upOf(lang), file = `${a.slug}.html`;
