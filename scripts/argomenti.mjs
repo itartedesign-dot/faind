@@ -60,7 +60,7 @@ export const UI = {
     h1: (s) => `Notizie su ${s}`, seo: (s) => `${s}: le notizie, sempre con la fonte`,
     desc: (s, n, m) => `Le notizie su ${s} raccolte da FAIND: ${n} notizie da ${m} testate, ognuna con la fonte e il link all'articolo originale. Aggiornate ogni ora.`,
     intro: (s, n, m, d) => `FAIND ha raccolto <strong>${n}</strong> notizie su ${esc(s)} da <strong>${m}</strong> testate, dal ${d}. La pagina si aggiorna da sola ogni ora: le notizie riprese da almeno due testate restano qui per sempre.`,
-    sources: (n) => n === 1 ? '1 fonte' : `${n} fonti`, related: 'Argomenti collegati', older: 'Le notizie precedenti sono nell\'archivio',
+    sources: (n) => n === 1 ? '1 fonte' : `${n} fonti`, related: 'Argomenti collegati', reads: 'Ne parliamo anche qui', older: 'Le notizie precedenti sono nell\'archivio',
     idxH1: 'Notizie per argomento', idxSeo: 'Notizie AI per argomento: aziende, prodotti e modelli',
     idxDesc: 'Le aziende, i prodotti e i modelli di intelligenza artificiale più citati nelle notizie, ognuno con tutte le sue notizie e le fonti. Pagine che crescono da sole.',
     idxLede: 'Le aziende, i prodotti, i modelli e le persone dell\'intelligenza artificiale che tornano più spesso nelle notizie. Ogni pagina raccoglie tutte le notizie che li citano, con la fonte, e cresce da sola.',
@@ -82,7 +82,7 @@ export const UI = {
     h1: (s) => `${s} news`, seo: (s) => `${s} news, always with the source`,
     desc: (s, n, m) => `${s} news collected by FAIND: ${n} stories from ${m} outlets, each with the source and a link to the original article. Updated every hour.`,
     intro: (s, n, m, d) => `FAIND has collected <strong>${n}</strong> stories about ${esc(s)} from <strong>${m}</strong> outlets since ${d}. This page updates itself every hour: stories covered by at least two outlets stay here for good.`,
-    sources: (n) => n === 1 ? '1 source' : `${n} sources`, related: 'Related subjects', older: 'Older stories are in the archive',
+    sources: (n) => n === 1 ? '1 source' : `${n} sources`, related: 'Related subjects', reads: 'We also cover it here', older: 'Older stories are in the archive',
     idxH1: 'News by subject', idxSeo: 'AI news by subject: companies, products and models',
     idxDesc: 'The artificial intelligence companies, products and models most mentioned in the news, each with all its stories and sources. Pages that grow by themselves.',
     idxLede: 'The companies, products, models and people in artificial intelligence that come up most often in the news. Each page collects every story that mentions them, with the source, and grows by itself.',
@@ -96,7 +96,7 @@ export const UI = {
     h1: (s) => `Actualités sur ${s}`, seo: (s) => `${s} : les actualités, toujours avec la source`,
     desc: (s, n, m) => `Les actualités sur ${s} réunies par FAIND : ${n} articles de ${m} médias, chacun avec sa source et le lien vers l'article original. Mises à jour chaque heure.`,
     intro: (s, n, m, d) => `FAIND a réuni <strong>${n}</strong> actualités sur ${esc(s)} provenant de <strong>${m}</strong> médias depuis le ${d}. Cette page se met à jour toute seule chaque heure : les actualités reprises par au moins deux médias restent ici pour toujours.`,
-    sources: (n) => n === 1 ? '1 source' : `${n} sources`, related: 'Sujets liés', older: 'Les actualités plus anciennes sont dans les archives',
+    sources: (n) => n === 1 ? '1 source' : `${n} sources`, related: 'Sujets liés', reads: 'Nous en parlons aussi ici', older: 'Les actualités plus anciennes sont dans les archives',
     idxH1: 'Actualités par sujet', idxSeo: 'Actualités IA par sujet : entreprises, produits et modèles',
     idxDesc: 'Les entreprises, produits et modèles d\'intelligence artificielle les plus cités dans l\'actualité, chacun avec toutes ses actualités et ses sources. Des pages qui grandissent toutes seules.',
     idxLede: 'Les entreprises, produits, modèles et personnes de l\'intelligence artificielle qui reviennent le plus souvent dans l\'actualité. Chaque page réunit toutes les actualités qui les citent, avec la source, et grandit toute seule.',
@@ -110,7 +110,7 @@ export const UI = {
     h1: (s) => `${s}: Nachrichten`, seo: (s) => `${s}: Nachrichten, immer mit Quelle`,
     desc: (s, n, m) => `Nachrichten zu ${s}, gesammelt von FAIND: ${n} Meldungen aus ${m} Medien, jede mit Quelle und Link zum Originalartikel. Stündlich aktualisiert.`,
     intro: (s, n, m, d) => `FAIND hat seit dem ${d} <strong>${n}</strong> Meldungen zu ${esc(s)} aus <strong>${m}</strong> Medien gesammelt. Die Seite aktualisiert sich jede Stunde von selbst: Meldungen, über die mindestens zwei Medien berichten, bleiben hier dauerhaft.`,
-    sources: (n) => n === 1 ? '1 Quelle' : `${n} Quellen`, related: 'Verwandte Stichwörter', older: 'Ältere Meldungen stehen im Archiv',
+    sources: (n) => n === 1 ? '1 Quelle' : `${n} Quellen`, related: 'Verwandte Stichwörter', reads: 'Mehr dazu bei FAIND', older: 'Ältere Meldungen stehen im Archiv',
     idxH1: 'Nachrichten nach Stichwort', idxSeo: 'KI-Nachrichten nach Stichwort: Unternehmen, Produkte und Modelle',
     idxDesc: 'Die in den Nachrichten meistgenannten KI-Unternehmen, -Produkte und -Modelle, jeweils mit allen Meldungen und Quellen. Seiten, die von selbst wachsen.',
     idxLede: 'Die Unternehmen, Produkte, Modelle und Personen der künstlichen Intelligenz, die in den Nachrichten am häufigsten vorkommen. Jede Seite sammelt alle Meldungen, die sie erwähnen, mit Quelle, und wächst von selbst.',
@@ -358,7 +358,8 @@ export function subjectsIn(text, subjects) {
 }
 
 /* ------------------------------ Argomenti: pagine ------------------------------ */
-export async function buildArgomenti({ items, registry = [], root, now = Date.now(), exclude = [] }) {
+// reads: testi di FAIND (Punto, approfondimenti) { title, path, text, lang, kind } che compaiono nella pagina del nome che citano
+export async function buildArgomenti({ items, registry = [], root, now = Date.now(), exclude = [], reads = [] }) {
   // 1) Chi ha una pagina: quelli già nati restano; i nuovi nascono quando superano le soglie
   const byKey = new Map();
   for (const s of [...SEED, ...registry]) if (s.key && !byKey.has(s.key)) byKey.set(s.key, { ...s });
@@ -394,8 +395,11 @@ export async function buildArgomenti({ items, registry = [], root, now = Date.no
         const l = o.pages.includes(lang) ? lang : 'it';
         return `<li><a href="${up}${ARG_DIR[l]}${o.key}.html">${esc(o.name)}</a></li>`;
       }).join('')}</ul></section>` : '';
+      const mine = reads.filter(r => r.lang === lang && reOf(s).test(r.text)).slice(0, 8);
+      const ours = mine.length ? `<section class="np__box"><h2>${esc(u.reads)}</h2><ul class="np__rel">${mine.map(r =>
+        `<li><a href="${up}${r.path}">${esc(r.title)}</a><span>${esc(r.kind)}</span></li>`).join('')}</ul></section>\n    ` : '';
       const shown = list.slice(0, MAX_LISTA);
-      const main = `${newsListHtml(shown, up, lang)}
+      const main = `${ours}${newsListHtml(shown, up, lang)}
     ${list.length > MAX_LISTA ? `<p><a href="${up}${ARCHIVE_DIR}">${esc(u.older)} →</a></p>` : ''}
     ${rel}`;
       const jsonld = { '@context': 'https://schema.org', '@type': 'CollectionPage', url, name: u.h1(s.name), inLanguage: LOCALE[lang], about: { '@type': 'Thing', name: s.name },

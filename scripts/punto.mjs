@@ -41,7 +41,8 @@ export async function loadPunti() {
 
 const itemHtml = (p) => `<li><a href="${up}${PUNTO_DIR}${p.slug}.html">${esc(p.title)}</a> <span>${day(p.date)}</span></li>`;
 
-export function puntoPage(p, all = []) {
+export function puntoPage(p, all = [], linker = null) {
+  const used = new Set(), link = linker ? (h) => linker(h, used) : (h) => h;   // nomi e parole del glossario → loro pagine
   const file = `${p.slug}.html`, url = `${SITE}${PUNTO_DIR}${file}`, image = `${SITE}assets/og-image.png`;
   const deep = (p.deep || []).map(s => articleBySlug(s, 'it')).filter(Boolean);
   const PREV_MAX = 10;
@@ -58,14 +59,14 @@ export function puntoPage(p, all = []) {
     <a class="art__kick" href="./">Il punto</a>
     <h1 class="legal__title">${esc(p.title)}</h1>
     <p class="legal__updated">A cura della <a href="${up}redazione.html">redazione di FAIND</a> · <time datetime="${p.date}">${day(p.date)}</time></p>
-    <p class="legal__lede">${p.lede}</p>
+    <p class="legal__lede">${link(p.lede)}</p>
 
     <div class="art__brief">
       <h2>In breve</h2>
       <ul>${p.brief.map(b => `<li>${esc(b)}</li>`).join('')}</ul>
     </div>
 
-${p.sections.map(([h, body, table]) => `    <section>\n      <h2>${esc(h)}</h2>\n      ${body.split(/\n\n+/).map(x => `<p>${x}</p>`).join('\n      ')}${table ? `\n      ${tableHtml(table)}` : ''}\n    </section>`).join('\n')}
+${p.sections.map(([h, body, table]) => `    <section>\n      <h2>${esc(h)}</h2>\n      ${body.split(/\n\n+/).map(x => `<p>${link(x)}</p>`).join('\n      ')}${table ? `\n      ${tableHtml(table)}` : ''}\n    </section>`).join('\n')}
 ${p.faq && p.faq.length ? `
     <section>
       <h2>Domande frequenti</h2>
@@ -104,12 +105,12 @@ function indexPage(all) {
 }
 
 // Pagine del Punto e indirizzi per la sitemap ([] se non c'è ancora nessun articolo)
-export async function buildPunto(root) {
+export async function buildPunto(root, linker = null) {
   const all = await loadPunti();
   if (!all.length) return [];
   const dir = path.join(root, PUNTO_DIR);
   await mkdir(dir, { recursive: true });
-  for (const p of all) await writeFile(path.join(dir, `${p.slug}.html`), puntoPage(p, all));
+  for (const p of all) await writeFile(path.join(dir, `${p.slug}.html`), puntoPage(p, all, linker));
   await writeFile(path.join(dir, 'index.html'), indexPage(all));
   console.log(`📰 il punto: ${all.length} articoli`);
   return [{ url: SITE + PUNTO_DIR, lastmod: all[0].date }, ...all.map(p => ({ url: `${SITE}${PUNTO_DIR}${p.slug}.html`, lastmod: p.updated || p.date }))];
