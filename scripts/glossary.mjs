@@ -21,6 +21,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { shell, newsListHtml, footerHtml, alsoBand, ALSO_CSS } from './argomenti.mjs';
 import { articleBySlug } from './articles.mjs';
+import { MORE } from './glossary-more.mjs';
 
 const SITE = 'https://faind.org/';
 export const GLOSSARY_PATH = { it: 'glossario/', en: 'glossario/en/', fr: 'glossario/fr/', de: 'glossario/de/' };
@@ -339,7 +340,8 @@ function termPage(t, lang, news, now) {
   const jsonld = { '@context': 'https://schema.org', '@type': 'DefinedTerm', '@id': url, url, name, description: def, inLanguage: u.locale,
     inDefinedTermSet: { '@type': 'DefinedTermSet', name: u.title, url: SITE + GLOSSARY_PATH[lang] }, dateModified: new Date(now).toISOString() };
   const deep = deepLink(t.id, lang, up);
-  const main = `${deep ? `    ${deep.replace('<p class="gt__deep">', '<p class="gt__deep" style="margin-top:22px;font-size:16px">')}\n` : ''}    ${hits.length ? `<h2 class="al-month" style="border:0;margin-top:34px">${esc(u.allNews)}</h2>\n${newsListHtml(hits.slice(0, TERM_MAX), up, lang)}` : ''}
+  const more = ((MORE[t.id] || {})[lang] || []).map(([h, p]) => `    <h2 class="al-month" style="border:0;margin-top:26px">${esc(h)}</h2>\n    <p>${p.replace(/href="([a-z-]+)\.html"/g, 'href="$1.html"')}</p>`).join('\n');
+  const main = `${more ? more + '\n' : ''}${deep ? `    ${deep.replace('<p class="gt__deep">', '<p class="gt__deep" style="margin-top:22px;font-size:16px">')}\n` : ''}    ${hits.length ? `<h2 class="al-month" style="border:0;margin-top:34px">${esc(u.allNews)}</h2>\n${newsListHtml(hits.slice(0, TERM_MAX), up, lang)}` : ''}
     <p style="margin-top:28px"><a href="./">${esc(u.allTerms)} →</a></p>`;
   return shell({ lang, up, url, title: `${short}: ${u.what} | ${u.crumb} FAIND`, desc: def.length > 155 ? def.slice(0, 152).replace(/\s+\S*$/, '') + '…' : def,
     h1: name, lede: esc(def), main, jsonld,
