@@ -6,7 +6,7 @@ escono da soli tramite Buffer, senza passare da lui. A Paolo resta il promemoria
 
 - **Martedì** esce il quiz (pagina 1 del file Canva), **giovedì** la soluzione (pagina 2).
 - La routine gira martedì e giovedì con **3 tentativi alle 8:40, 10:40 e 12:40** ora italiana.
-  L'automazione del sito pubblica il post al primo giro orario dopo il suo arrivo (tra le 9 e le 22).
+  L'automazione del sito pubblica il post al primo giro orario dopo il suo arrivo (tra le 9 e le 17).
 - Se un passo non riesce, **non scrivere nulla sul repository**: ci riprova il tentativo successivo.
   Se alle 15 il post non c'è, il sito apre una segnalazione su GitHub che arriva a Paolo per mail.
 
@@ -58,42 +58,45 @@ con il primo commento col link al sito. Il post passa poi da solo anche su Faceb
 
 ## Modelli dei testi
 
-Italiano semplice, frasi brevi, niente link nel testo (va nel primo commento, lo aggiunge il sito).
+**Dal 20 ottobre 2026 (richiesta di Paolo) i testi dei post sono in INGLESE**, per tutti i social:
+il campo `testo` e il campo `soluzione` dei file JSON, e anche `opera` in inglese (es. "The Birth of Venus").
+Inglese semplice, frasi brevi, niente link nel testo (va nel primo commento, lo aggiunge il sito).
 Hashtag in fondo, sempre con `#PuntoDiVistaAI` (serve anche al sito per non pubblicare doppioni).
+La data della soluzione va scritta in inglese ("Thursday, October 22").
 
 **Quiz** (non deve far capire l'opera: niente indizi su titolo, autore o soggetto):
 
 ```
-Un capolavoro della pittura. Un salto ai giorni nostri.
+A masterpiece of painting. A leap into the present day.
 
-Per "Il punto di vista dell'AI" abbiamo chiesto a un'intelligenza artificiale di reinterpretare un celebre dipinto in chiave contemporanea.
+For "AI's Point of View" we asked an artificial intelligence to reimagine a famous painting in a contemporary key.
 
-Lo riconosci?
+Do you recognise it?
 
-Scrivi titolo e autore nei commenti. E raccontaci quale dettaglio te l'ha fatto riconoscere.
+Write the title and the artist in the comments. And tell us which detail gave it away.
 
-La soluzione giovedì <giorno> <mese>.
+The solution on Thursday, <month> <day>.
 
-#IntelligenzaArtificiale #Arte #AIArt #PuntoDiVistaAI
+#ArtificialIntelligence #Art #AIArt #PuntoDiVistaAI
 ```
 
-**Soluzione** (esempio reale del 8 ottobre 2026):
+**Soluzione** (esempio reale del 22 ottobre 2026):
 
 ```
-La soluzione del gioco: era "La ragazza con l'orecchino di perla" di Johannes Vermeer.
+The solution to the game: it was "The Birth of Venus" by Sandro Botticelli.
 
-Dipinta intorno al 1665, oggi è al Mauritshuis dell'Aia. L'AI l'ha portata ai giorni nostri cambiando pochi dettagli, e tutti con un senso:
+Painted around 1485, it now hangs in the Uffizi Gallery in Florence. The AI brought it to the present day by turning the scene into a photo shoot:
 
-- la perla è diventata un auricolare
-- il turbante blu e giallo è diventato un cappellino blu
-- la veste ocra è diventata una felpa
+- Venus became a white, articulated android model
+- the wind filling her cloak became a studio fan
+- the landscape of sea and trees became a blue backdrop with photographers' lights and umbrellas
 
-Sono rimasti lo sguardo sopra la spalla, la luce da sinistra e lo sfondo scuro. Basta questo a far riconoscere un capolavoro di oltre 350 anni.
+What stayed: the pose with one hand on the chest and the weight on one leg, the pink fabric blowing in the wind and the blue-green tones of the background. That is enough to recognise a masterpiece more than 500 years old.
 
-Voi l'avevate riconosciuta? Ditecelo nei commenti.
-La prossima settimana un nuovo capolavoro da indovinare.
+Did you recognise it? Tell us in the comments.
+Next week, a new masterpiece to guess.
 
-#IntelligenzaArtificiale #Arte #Vermeer #AIArt #PuntoDiVistaAI
+#ArtificialIntelligence #Art #Botticelli #AIArt #PuntoDiVistaAI
 ```
 
 Nella soluzione: titolo e autore subito; anno e luogo verificati; 3 dettagli cambiati, ognuno accanto
