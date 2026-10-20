@@ -573,6 +573,16 @@ const LI_INTRO = [
   'ChatGPT, Claude, Gemini, robot, leggi, lavoro: su FAIND trovi le novità dell\'AI spiegate in poche righe, con il link all\'articolo originale.',
   'FAIND è un\'agenzia di notizie flash sull\'intelligenza artificiale: titolo, poche righe, fonte. Per chi vuole restare aggiornato sull\'AI senza perdere ore.'
 ];
+// Stesso testo fisso in inglese: le card del lunedì (lavori) e del venerdì (notizie più riprese) escono in inglese (Paolo, 20 ottobre 2026)
+const LI_INTRO_EN = [
+  'FAIND collects artificial intelligence news every hour from Italian and international outlets, always with the source. Free, no ads and no sign-up.',
+  'Keeping up with artificial intelligence takes time. FAIND does it for you: AI news updated every hour, videos, the most requested jobs and a comparison of ChatGPT, Claude and Gemini, all in one place.',
+  'What happened in artificial intelligence this week? FAIND lines up the most important news and always tells you where it comes from, so you can check it.',
+  'ChatGPT, Claude, Gemini, robots, laws, work: on FAIND you find the latest AI news explained in a few lines, with a link to the original article.',
+  'FAIND is a flash news agency on artificial intelligence: headline, a few lines, source. For anyone who wants to stay up to date on AI without losing hours.'
+];
+const LI_TAGS_EN = ['#ArtificialIntelligence', '#AINews', '#AI'];
+const LI_WHAT_EN = { '#AIAct': '#AIRegulation', '#LavoroAI': '#AIJobs', '#Robotica': '#Robotics', '#AgentiAI': '#AIAgents', '#DataCenter': '#DataCenters', '#AIinMedicina': '#AIinHealthcare', '#AIgenerativa': '#GenerativeAI', '#SicurezzaAI': '#AISafety' };
 // Hashtag: tre fissi + due scelti in base a ciò di cui parla il post (azienda o prodotto, e tema)
 const LI_TAGS = ['#IntelligenzaArtificiale', '#NotizieAI', '#AI'];
 const LI_WHO = [[/chatgpt/i, '#ChatGPT'], [/openai/i, '#OpenAI'], [/claude|anthropic/i, '#Anthropic'], [/gemini/i, '#Gemini'], [/google|deepmind/i, '#Google'], [/copilot|microsoft/i, '#Microsoft'],
@@ -581,9 +591,10 @@ const LI_WHAT = [[/ai act|regolament|\blegg[ei]\b|\blaw\b|regulat|garante|copyri
   [/agent/i, '#AgentiAI'], [/chip|gpu|data ?cent/i, '#DataCenter'], [/medic|salute|health|farmac/i, '#AIinMedicina'], [/video|immagin|image/i, '#AIgenerativa'], [/sicurezz|safety|security|deepfake/i, '#SicurezzaAI']];
 const xml = (v = '') => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-export function liTags(texts, fallback = '#AIgenerativa') {
+export function liTags(texts, fallback = '#AIgenerativa', en = false) {
   const top = (rules) => { let best = null, n = 0; for (const [re, tag] of rules) { const c = texts.filter(x => re.test(x)).length; if (c > n) { n = c; best = tag; } } return best; };
-  return [...LI_TAGS, top(LI_WHO), top(LI_WHAT) || fallback].filter(Boolean).filter((x, i, a) => a.indexOf(x) === i).join(' ');
+  const what = top(LI_WHAT) || fallback;
+  return [...(en ? LI_TAGS_EN : LI_TAGS), top(LI_WHO), en ? LI_WHAT_EN[what] || what : what].filter(Boolean).filter((x, i, a) => a.indexOf(x) === i).join(' ');
 }
 // Le notizie più riprese degli ultimi 7 giorni
 export function pickWeek(items, now, count = 5) {
@@ -606,17 +617,17 @@ export function weekShort(st, queue, now) {
 
 export function linkedinItems(data, t, rank, canva = {}, shorts = []) {
   const st = data.tgState, out = [];
-  const intro = () => { const i = (st.liIntro || 0) % LI_INTRO.length; st.liIntro = (st.liIntro || 0) + 1; return LI_INTRO[i]; };
+  const intro = (en = false) => { const i = (st.liIntro || 0) % LI_INTRO.length; st.liIntro = (st.liIntro || 0) + 1; return (en ? LI_INTRO_EN : LI_INTRO)[i]; };
   // Lunedì: classifica dei lavori AI
   if (t.weekday === JOBS_WEEKDAY && t.hour >= JOBS_FROM && st.liJobs !== t.day && rank && rank.total >= JOBS_MIN && rank.rows.length >= 3
     && (canva.lavori || t.hour >= LI_CANVA_WAIT_UNTIL)) {
-    const tags = `${LI_TAGS.join(' ')} #LavoroAI #AIJobs`, top = rank.rows.slice(0, 5);
+    const tags = `${LI_TAGS_EN.join(' ')} #AIJobs #Careers`, top = rank.rows.slice(0, 5);
     const img = canvaJobsOk(canva.lavori, rank) ? canva.lavori.img : SITE + 'social/lavori-ai.png';
     out.push({ id: 'lavori-' + t.day, link: `${SITE}?lavori=${t.day}#job`, date: new Date(t.now).toISOString(), img,
-      title: `Lavoro e intelligenza artificiale: ${top[0].name} è il ruolo più richiesto questa settimana. La classifica completa su FAIND ${tags}`,
-      text: [`Quali sono i lavori più richiesti nell'intelligenza artificiale? Questa settimana in testa c'è ${top[0].name}.`, '', intro(), '',
-        `La classifica (settimana del ${t.mondayLabel}):`, ...top.map((r, i) => `${i + 1}. ${r.name}: ${offers(r.n)}`), '',
-        `Nasce da ${rank.total} annunci pubblici degli ultimi 30 giorni e si aggiorna ogni 6 ore.`, `Tutte le offerte, con il link per candidarsi: ${SITE}#job`, '', tags].join('\n') });
+      title: `AI jobs: ${top[0].name} is the most requested role this week. The full ranking on FAIND ${tags}`,
+      text: [`What are the most requested jobs in artificial intelligence? This week ${top[0].name} is in the lead.`, '', intro(true), '',
+        `The ranking (week of ${t.mondayLabelEn}):`, ...top.map((r, i) => `${i + 1}. ${r.name}: ${r.n === 1 ? '1 job offer' : r.n + ' job offers'}`), '',
+        `Based on ${rank.total} public job ads from the last 30 days, updated every 6 hours.`, `All the offers, with the link to apply: ${SITE}#job`, '', tags].join('\n') });
     st.liJobs = t.day;
   }
   // Venerdì: la settimana dell'AI
@@ -629,13 +640,13 @@ export function linkedinItems(data, t, rank, canva = {}, shorts = []) {
     const cl = canvaWeekList(data, canva.settimana);
     const list = cl || (ready ? live : pickWeek(data.items, t.now));
     if (list.length >= DIGEST_MIN) {
-      const tags = liTags(list.map(n => n.title));
+      const tags = liTags(list.map(n => n.title), undefined, true);
       const a = ARTICLES[(st.liArt || 0) % ARTICLES.length]; st.liArt = (st.liArt || 0) + 1;
       out.push({ id: 'settimana-' + t.day, link: `${SITE}?settimana=${t.day}`, date: new Date(t.now).toISOString(), img: cl ? canva.settimana.img : SITE + (ready ? WEEK_CARD : DIGEST_LOGO),
-        title: `La settimana dell'intelligenza artificiale: ${cut(list[0].title, 110).replace(/[.!?…]+$/, '')}. Le ${list.length} notizie AI da sapere, su FAIND ${tags}`,
-        text: [`La settimana dell'intelligenza artificiale in ${list.length} notizie. La più ripresa: ${list[0].title}`, '', intro(), '',
+        title: `The week in artificial intelligence: ${cut(list[0].title, 110).replace(/[.!?…]+$/, '')}. The ${list.length} AI stories to know, on FAIND ${tags}`,
+        text: [`The week in artificial intelligence in ${list.length} stories. The most covered: ${list[0].title}`, '', intro(true), '',
           ...list.map((n, i) => `${i + 1}. ${n.title} (${n.source.name})`), '',
-          `Tutte le notizie, con la fonte: ${SITE}`, `Da leggere con calma: ${a.title} ${SITE}approfondimenti/${a.slug}.html`, '', tags].join('\n') });
+          `All the news, with the source: ${SITE}`, `For a slower read: ${a.title} ${SITE}approfondimenti/${a.slug}.html`, '', tags].join('\n') });
     }
     st.liWeek = t.day;
   }
@@ -742,6 +753,7 @@ async function main() {
   const t = romeNow(new Date(now));
   // lunedì della settimana in corso (per l'etichetta della grafica)
   const dow = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(t.weekday);
+  t.mondayLabelEn = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(now - dow * 864e5));
   t.mondayLabel = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(now - dow * 864e5));
 
   // Grafica e testo "Lavoro AI" per i social: sempre aggiornati sul sito
