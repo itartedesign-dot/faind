@@ -37,6 +37,7 @@
 import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
 import { shot } from './cards.mjs';
 import { ARTICLES } from './articles.mjs';
+import ARTICLES_EN from './articles-en.mjs';
 import { fileURLToPath } from 'node:url';
 import { segnala } from './anomalie.mjs';
 import path from 'node:path';
@@ -591,6 +592,9 @@ const LI_WHAT = [[/ai act|regolament|\blegg[ei]\b|\blaw\b|regulat|garante|copyri
   [/agent/i, '#AgentiAI'], [/chip|gpu|data ?cent/i, '#DataCenter'], [/medic|salute|health|farmac/i, '#AIinMedicina'], [/video|immagin|image/i, '#AIgenerativa'], [/sicurezz|safety|security|deepfake/i, '#SicurezzaAI']];
 const xml = (v = '') => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+// Approfondimento in inglese (stesso slug) se esiste, altrimenti quello italiano
+const artEn = (a) => { const e = ARTICLES_EN[a.slug]; return e ? { ...a, ...e, url: `${SITE}approfondimenti/en/${a.slug}.html`, en: true } : { ...a, url: `${SITE}approfondimenti/${a.slug}.html`, en: false }; };
+
 export function liTags(texts, fallback = '#AIgenerativa', en = false) {
   const top = (rules) => { let best = null, n = 0; for (const [re, tag] of rules) { const c = texts.filter(x => re.test(x)).length; if (c > n) { n = c; best = tag; } } return best; };
   const what = top(LI_WHAT) || fallback;
@@ -641,12 +645,12 @@ export function linkedinItems(data, t, rank, canva = {}, shorts = []) {
     const list = cl || (ready ? live : pickWeek(data.items, t.now));
     if (list.length >= DIGEST_MIN) {
       const tags = liTags(list.map(n => n.title), undefined, true);
-      const a = ARTICLES[(st.liArt || 0) % ARTICLES.length]; st.liArt = (st.liArt || 0) + 1;
+      const a = artEn(ARTICLES[(st.liArt || 0) % ARTICLES.length]); st.liArt = (st.liArt || 0) + 1;
       out.push({ id: 'settimana-' + t.day, link: `${SITE}?settimana=${t.day}`, date: new Date(t.now).toISOString(), img: cl ? canva.settimana.img : SITE + (ready ? WEEK_CARD : DIGEST_LOGO),
         title: `The week in artificial intelligence: ${cut(list[0].title, 110).replace(/[.!?…]+$/, '')}. The ${list.length} AI stories to know, on FAIND ${tags}`,
         text: [`The week in artificial intelligence in ${list.length} stories. The most covered: ${list[0].title}`, '', intro(true), '',
           ...list.map((n, i) => `${i + 1}. ${n.title} (${n.source.name})`), '',
-          `All the news, with the source: ${SITE}`, `For a slower read: ${a.title} ${SITE}approfondimenti/${a.slug}.html`, '', tags].join('\n') });
+          `All the news, with the source: ${SITE}`, `For a slower read: ${a.title} ${a.url}`, '', tags].join('\n') });
     }
     st.liWeek = t.day;
   }
@@ -654,14 +658,14 @@ export function linkedinItems(data, t, rank, canva = {}, shorts = []) {
   const mano = canva.mano;
   if (t.weekday === 'Sat' && t.hour >= LI_SAT_FROM && t.hour < LI_SAT_UNTIL && st.liSat !== t.day && mano && mano.frase) {
     const utm = `utm_source=linkedin&utm_medium=social&utm_campaign=scritto-a-mano&utm_content=${t.day}`;
-    const tags = '#FAIND #IntelligenzaArtificiale #Ricordi #AI #ScrittoAMano #Nostalgia #TecnologiaUmana';
+    const tags = '#FAIND #ArtificialIntelligence #Memories #AI #Handwritten #Nostalgia #HumanTouch';
     out.push({ id: 'mano-' + t.day, link: `${SITE}?${utm}`, date: new Date(t.now).toISOString(), img: mano.img,
       title: `${mano.frase} ${tags}`,
-      text: ['Il sabato, su FAIND, il futuro può aspettare un momento.', '',
-        'Ci teniamo certe piccole cose umane: una calligrafia storta, un ricordo di quando l\'AI era solo fantascienza, il tempo perso per fare qualcosa di bello.', '',
-        'Racconta la tua, magari chi legge non l\'ha mai vissuta.', '',
-        `Le notizie sull'intelligenza artificiale, ogni ora e con la fonte: ${SITE}?${utm}`,
-        'Il canale Telegram: https://t.me/faindnews', '', tags].join('\n') });
+      text: ['On Saturdays, at FAIND, the future can wait a moment.', '',
+        'We hold on to certain small human things: crooked handwriting, a memory from when AI was just science fiction, time wasted making something beautiful.', '',
+        'Tell us yours, maybe someone reading has never lived it.', '',
+        `Artificial intelligence news, every hour and with the source: ${SITE}?${utm}`,
+        'The Telegram channel: https://t.me/faindnews', '', tags].join('\n') });
     st.liSat = t.day;
   }
   // Martedì e giovedì: quiz e soluzione del gioco "Il punto di vista dell'AI" (testo della routine)
@@ -683,24 +687,24 @@ export function linkedinItems(data, t, rank, canva = {}, shorts = []) {
   if (t.weekday === 'Sun' && t.hour >= LI_SUN_FROM && st.liSun !== t.day) {
     const sh = weekShort(st, shorts, t.now);
     if (sh) {
-      const tags = '#FAIND #DalCassetto #Faindo #IntelligenzaArtificiale #AI #Scienza';
+      const tags = '#FAIND #FromTheDrawer #Faindo #ArtificialIntelligence #AI #Science';
       const title = String(sh.titolo || '').replace(/#\S+/g, '').replace(/\s+/g, ' ').trim();
       const story = sh.telegram || String(sh.testo || '').split('\n')[0];
       out.push({ id: 'domenica-' + t.day, link: sh.link, date: new Date(t.now).toISOString(), img: `https://i.ytimg.com/vi/${sh.vid}/hqdefault.jpg`,
         title: `${title} ${tags}`,
-        text: [`La storia della settimana dal cassetto di Faindo: ${title}`, '', story, '',
-          'Ogni lunedì e giovedì Faindo apre un cassetto del suo archivio e racconta in meno di un minuto una storia vera di intelligenza artificiale e scienza.', '',
-          `Guarda lo short: ${sh.link}`, `Tutte le storie: ${SITE}dal-cassetto-di-faindo/`, '', tags].join('\n') });
+        text: [`The story of the week from Faindo's drawer: ${title}`, '', story, '',
+          'Every Monday and Thursday Faindo opens a drawer of his archive and tells, in under a minute, a true story about artificial intelligence and science.', '',
+          `Watch the short: ${sh.link}`, `All the stories: ${SITE}dal-cassetto-di-faindo/`, '', tags].join('\n') });
     } else console.log('→ LinkedIn: domenica senza short usciti negli ultimi 7 giorni, nessun post.');
     st.liSun = t.day;
   }
   // Mercoledì: un approfondimento, a rotazione (parte da metà elenco, così non coincide con quello citato il venerdì)
   if (t.weekday === 'Wed' && t.hour >= LI_WED_FROM && st.liWed !== t.day) {
-    const a = ARTICLES[((st.liArtW || 0) + Math.floor(ARTICLES.length / 2)) % ARTICLES.length]; st.liArtW = (st.liArtW || 0) + 1;
-    const tags = liTags([a.title, a.card, a.desc]);
-    out.push({ id: 'approfondimento-' + t.day, link: `${SITE}approfondimenti/${a.slug}.html`, date: new Date(t.now).toISOString(), img: `${SITE}og/${a.slug}.png`,   // card con il marchio FAIND, generata dall'automazione (come per le notizie)
+    const a = artEn(ARTICLES[((st.liArtW || 0) + Math.floor(ARTICLES.length / 2)) % ARTICLES.length]); st.liArtW = (st.liArtW || 0) + 1;
+    const tags = liTags([a.title, a.card, a.desc], undefined, a.en);
+    out.push({ id: 'approfondimento-' + t.day, link: a.url, date: new Date(t.now).toISOString(), img: `${SITE}og/${a.slug}.png`,   // card con il marchio FAIND, generata dall'automazione (come per le notizie)
       title: `${a.title} ${tags}`,
-      text: [a.title, '', a.card, '', intro(), '', 'In breve:', ...a.brief.map(b => `→ ${b}`), '', `Leggi l'approfondimento: ${SITE}approfondimenti/${a.slug}.html`, '', tags].join('\n') });
+      text: [a.title, '', a.card, '', intro(a.en), '', a.en ? 'In short:' : 'In breve:', ...a.brief.map(b => `→ ${b}`), '', `${a.en ? 'Read the full article' : "Leggi l'approfondimento"}: ${a.url}`, '', tags].join('\n') });
     st.liWed = t.day;
   }
   return out;
