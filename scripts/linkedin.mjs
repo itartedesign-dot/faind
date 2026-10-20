@@ -141,7 +141,7 @@ export function firstComment(i, source) {
   const kind = String(i.id).replace(/-\d{4}-\d{2}-\d{2}$/, '');
   const link = withUtm(i.link || SITE, source, kind);
   if (kind === 'domenica') return `Guarda lo short: ${link}`;
-  if (kind === 'quiz' || kind === 'soluzione') return `Le notizie sull'intelligenza artificiale, ogni ora e con la fonte: ${link}`;
+  if (kind === 'quiz' || kind === 'soluzione') return `AI news every hour, always with the source: ${link}`;
   return `Leggi su FAIND: ${link}`;
 }
 

@@ -661,6 +661,12 @@ export function linkedinItems(data, t, rank, canva = {}, shorts = []) {
     out.push({ id: qd[0] + '-' + t.day, link: `${SITE}?${utm}`, date: new Date(t.now).toISOString(), img: qc.img,
       title: cut(text.split('\n').filter(Boolean).slice(0, 2).join(' '), 200) + ' #PuntoDiVistaAI', text });
     st[qd[1]] = t.day;
+  } else if (qd && qc && qc.testo && st[qd[1]] === t.day) {
+    // Testo aggiornato dopo l'uscita (es. passaggio all'inglese): finché Facebook non ha pubblicato, il post del giorno prende il testo della card
+    const it = (st.linkedin || []).find(x => x.id === qd[0] + '-' + t.day), text = String(qc.testo).trim();
+    if (it && !(st.fb && st.fb['li-' + it.id]) && it.text !== text) {
+      it.text = text; it.title = cut(text.split('\n').filter(Boolean).slice(0, 2).join(' '), 200) + ' #PuntoDiVistaAI';
+    }
   }
   // Domenica: lo short di Faindo più recente della settimana
   if (t.weekday === 'Sun' && t.hour >= LI_SUN_FROM && st.liSun !== t.day) {
@@ -698,7 +704,7 @@ async function linkedinFeed(data, t, rank) {
     if (t.weekday === JOBS_WEEKDAY && st.liJobs !== t.day) canva.lavori = await canvaCard('lavori', t);
     if (t.weekday === 'Sat' && st.liSat !== t.day) canva.mano = await canvaCard('mano', t);
     const qd = LI_QUIZ[t.weekday];
-    if (qd && st[qd[1]] !== t.day) canva[qd[0]] = await canvaCard(qd[0], t);
+    if (qd) canva[qd[0]] = await canvaCard(qd[0], t);
     let shorts = [];
     if (t.weekday === 'Sun' && st.liSun !== t.day) try { shorts = JSON.parse(await readFile(path.join(ROOT, 'social/shorts.json'), 'utf8')).coda || []; } catch {}
     const fresh = linkedinItems(data, t, rank, canva, shorts);
