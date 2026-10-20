@@ -561,7 +561,7 @@ const LI_SAT_FROM = 9, LI_SAT_UNTIL = 17;   // sabato: card "Scritto a mano" (es
 // Gioco "Il punto di vista dell'AI" (deciso da Paolo il 12 ottobre 2026): martedì il quiz, giovedì la soluzione.
 // Immagini dal file Canva di Paolo, testi scritti dalla routine di Claude; senza card non esce nulla.
 const LI_QUIZ = { Tue: ['quiz', 'liQuiz', 'punto-di-vista-ai'], Thu: ['soluzione', 'liSol', 'punto-di-vista-ai-soluzione'] };
-const LI_QUIZ_FROM = 9, LI_QUIZ_UNTIL = 17;
+const LI_QUIZ_FROM = 9, LI_QUIZ_UNTIL = 22;   // la sera resta aperto: se Paolo carica l'opera in ritardo il quiz esce comunque lo stesso giorno
 // Lunedì e venerdì il post aspetta la card Canva fino a quest'ora: la routine fa 3 tentativi (8:40, 10:40, 12:40);
 // poi esce con la grafica di riserva (e linkedin.mjs manda una segnalazione per mail)
 export const LI_CANVA_WAIT_UNTIL = 15;

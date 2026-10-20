@@ -6,7 +6,7 @@ escono da soli tramite Buffer, senza passare da lui. A Paolo resta il promemoria
 
 - **Martedì** esce il quiz (pagina 1 del file Canva), **giovedì** la soluzione (pagina 2).
 - La routine gira martedì e giovedì con **3 tentativi alle 8:40, 10:40 e 12:40** ora italiana.
-  L'automazione del sito pubblica il post al primo giro orario dopo il suo arrivo (tra le 9 e le 17).
+  L'automazione del sito pubblica il post al primo giro orario dopo il suo arrivo (tra le 9 e le 22).
 - Se un passo non riesce, **non scrivere nulla sul repository**: ci riprova il tentativo successivo.
   Se alle 15 il post non c'è, il sito apre una segnalazione su GitHub che arriva a Paolo per mail.
 
