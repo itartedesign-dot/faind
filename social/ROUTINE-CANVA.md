@@ -30,6 +30,8 @@ l'ultima esecuzione riuscita di oggi e leggi il log del job `build`. Cerca la ri
 
 ## 3. Mantra
 
+**Dal 20 ottobre 2026 (richiesta di Paolo) mantra, frasi e ogni testo dei post sono in INGLESE**: le liste `mantra` e `frasi` sono già tradotte, stessa numerazione. `MANO_DATA` si scrive in inglese ("October 17": mese in inglese con la maiuscola e giorno senza zero, senza anno).
+
 Leggi `social/mantra.json` dal branch `main`. La lista `mantra` è numerata da 1.
 - Se `prossimi[<card>]` esiste, usa quel numero e poi toglilo da `prossimi`.
 - Altrimenti usa il primo numero che non compare né in `usati` né tra i valori di `prossimi`.
