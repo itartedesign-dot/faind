@@ -61,23 +61,21 @@ con il primo commento col link al sito. Il post passa poi da solo anche su Faceb
 **Dal 20 ottobre 2026 (richiesta di Paolo) i testi dei post sono in INGLESE**, per tutti i social:
 il campo `testo` e il campo `soluzione` dei file JSON, e anche `opera` in inglese (es. "The Birth of Venus").
 Inglese semplice, frasi brevi, niente link nel testo (va nel primo commento, lo aggiunge il sito).
-Hashtag in fondo, sempre con `#PuntoDiVistaAI` (serve anche al sito per non pubblicare doppioni).
+Hashtag in fondo (SEO, vanno bene anche su Pinterest), sempre con `#PuntoDiVistaAI` (serve anche al sito per non pubblicare doppioni).
 La data della soluzione va scritta in inglese ("Thursday, October 22").
 
-**Quiz** (non deve far capire l'opera: niente indizi su titolo, autore o soggetto):
+**Quiz** (tono stuzzicante deciso da Paolo il 20 ottobre; non deve far capire l'opera: niente indizi su titolo, autore o soggetto, adatta "Renaissance" al periodo giusto):
 
 ```
-A masterpiece of painting. A leap into the present day.
+What if a Renaissance master had had ChatGPT?
 
-For "AI's Point of View" we asked an artificial intelligence to reimagine a famous painting in a contemporary key.
+We gave a famous painting to an AI and asked for a 2026 version. The result is a little unsettling.
 
-Do you recognise it?
+Can you name the masterpiece and its artist? Tell us in the comments, and which detail gave it away.
 
-Write the title and the artist in the comments. And tell us which detail gave it away.
+Answer on Thursday, <month> <day>. 👇
 
-The solution on Thursday, <month> <day>.
-
-#ArtificialIntelligence #Art #AIArt #PuntoDiVistaAI
+#ArtificialIntelligence #AIArt #ArtHistory #GenerativeAI #ChatGPT #ArtQuiz #PuntoDiVistaAI #faind
 ```
 
 **Soluzione** (esempio reale del 22 ottobre 2026):
