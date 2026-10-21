@@ -8,6 +8,7 @@
    browser senza sfocature (image-rendering: pixelated).
    ===================================================================== */
 import { CONFIG as C } from './sim.js';
+import { SPRITE_W, SPRITE_H, drawFaindoSprite, poseFor, poseKey } from './faindo.js';
 
 const P = {
   navy: '#15213A', navyD: '#0b1226', navyM: '#1d2d4f', navyL: '#2a4170',
@@ -20,6 +21,7 @@ const P = {
 };
 
 const W = C.W, H = C.H;
+const FA_W = 33;   // larghezza di Faindo in unità di scena (44 di altezza): stesso ingombro di prima
 
 function rect(g, col, x, y, w, h) { g.fillStyle = col; g.fillRect(x | 0, y | 0, w | 0, h | 0); }
 
@@ -231,94 +233,6 @@ function drawNewsroomStatic(g, rnd) {
 
 /* ------------------------------ Faindo, visto di schiena ------------------------------ */
 const OL = '#0b1226';   // contorno scuro sottile
-const IV = { base: '#ecdcb9', hi: P.ivoryL, sh: '#d3b98c', sh2: '#a98a5c' };   // avorio con ombre calde
-const BR = { base: P.brass, hi: P.brassL, sh: P.brassD, sh2: P.brassD };
-const NV = { base: '#2f4a7c', hi: '#5d82c4', sh: '#22365f', sh2: '#16233f' };   // blu notte, abbastanza chiaro da staccarsi dallo sfondo
-/** Forma tondeggiante a righe (semilarghezza per riga) con contorno, luce da sinistra in alto e ombra calda a destra. */
-function blob(g, cx, top, hws, c) {
-  const n = hws.length;
-  for (let r = 0; r < n; r++) rect(g, OL, cx - hws[r] - 1, top + r, hws[r] * 2 + 2, 1);
-  rect(g, OL, cx - hws[0], top - 1, hws[0] * 2, 1); rect(g, OL, cx - hws[n - 1], top + n, hws[n - 1] * 2, 1);
-  for (let r = 0; r < n; r++) {
-    const hw = hws[r], w = hw * 2;
-    rect(g, c.base, cx - hw, top + r, w, 1);
-    rect(g, c.hi, cx - hw, top + r, Math.min(2, hw), 1);
-    rect(g, c.sh, cx + hw - 3, top + r, 3, 1); rect(g, c.sh2, cx + hw - 1, top + r, 1, 1);
-    if (r === 0) rect(g, c.hi, cx - hw + 1, top, Math.max(1, w - 4), 1);
-    if (r === n - 1) { rect(g, c.sh, cx - hw, top + r, w, 1); rect(g, c.sh2, cx + 1, top + r, hw - 1, 1); }
-  }
-}
-/** Rettangolo con contorno, riga chiara a sinistra e ombra a destra. */
-function box(g, x, y, w, h, c) {
-  rect(g, OL, x - 1, y - 1, w + 2, h + 2);
-  rect(g, c.base, x, y, w, h);
-  if (w > 1) { rect(g, c.hi, x, y, 1, h); rect(g, c.sh, x + w - 1, y, 1, h); }
-  if (h > 2) rect(g, c.sh, x, y + h - 1, w, 1);
-}
-const HEAD_HW = [4, 6, 7, 8, 9, 9, 9, 9, 9, 9, 8, 7, 5], TORSO_HW = [6, 7, 7, 7, 7, 7, 7, 6, 6], FOOT_HW = [3, 4, 4, 4];
-
-/** Faindo di schiena. st: {walk(-1|0|1), step(0..3), idle, collect(s), deliver(s), load, cap, blink, pulse}. fy = linea dei piedi. */
-function drawFaindo(g, cx, fy, st) {
-  const x = Math.round(cx), step = st.walk ? st.step : 0;
-  const lf = step === 1 ? 2 : 0, rf = step === 3 ? 2 : 0;                       // piedi alternati: uno si solleva, l'altro resta a terra
-  const up = st.collect > 0, dl = st.deliver > 0;
-  const bob = st.walk ? (step % 2 ? -1 : 0) : (st.idle ? -1 : 0);               // passo: il corpo sale e scende; attesa: respira
-  const by = fy - 1 + bob + (st.deliver > 0.35 ? 1 : 0) - (dl && st.deliver <= 0.35 ? 1 : 0) - (up ? 1 : 0);
-  const sway = st.walk ? (step === 1 ? -1 : step === 3 ? 1 : 0) : 0;            // il busto oscilla sopra il piede in appoggio
-  const tx = x + sway, hx = tx + st.walk;
-  // piedi larghi con pannello ciano
-  for (const [fx, lift] of [[x - 5, lf], [x + 5, rf]]) {
-    const ox = fx + (st.walk && lift ? st.walk : 0), ft = fy - 4 - lift;
-    blob(g, ox, ft, FOOT_HW, IV);
-    rect(g, P.cyan, ox - 2, ft + 1, 4, 1); rect(g, P.navy, ox - 4, ft + 3, 8, 1);
-  }
-  // gambe: coscia blu notte, ginocchio in ottone, stinco avorio con feritoia ciano, caviglia in ottone
-  for (const [lx, lift] of [[x - 7, lf], [x + 4, rf]]) {
-    const bot = fy - 7 - lift, top = by - 8;
-    if (bot - 1 > top) box(g, lx, top, 3, bot - 1 - top, NV);
-    box(g, lx, bot - 1, 3, 1, BR);
-    box(g, lx, bot, 3, 3, IV); rect(g, P.cyan, lx + 1, bot, 1, 2);
-    if (lift) box(g, lx, bot + 3, 3, 1, BR);
-  }
-  // bacino blu notte con anelli in ottone
-  box(g, tx - 6, by - 10, 12, 2, NV); rect(g, P.brass, tx - 5, by - 10, 2, 2); rect(g, P.brass, tx + 3, by - 10, 2, 2);
-  // braccia: spalla blu notte con anello in ottone, braccio blu notte, gomito in ottone, avambraccio avorio con feritoia ciano, mano blu notte
-  const swL = st.walk ? (step === 1 ? 2 : step === 3 ? -2 : 0) : (st.idle ? 1 : 0);
-  for (const s of [-1, 1]) {
-    const sx = s < 0 ? tx - 10 : tx + 6, sw = s < 0 ? swL : -swL;
-    box(g, sx, by - 19, 4, 4, NV); rect(g, P.brass, sx + 1, by - 18, 2, 2);
-    if (up) {                                                                  // raccolta: braccia alzate ad accogliere il rotolo
-      const o = s * 2;
-      box(g, sx + o, by - 20, 4, 3, NV); box(g, sx + o * 3 / 2 | 0, by - 24, 4, 4, IV); rect(g, P.cyan, (sx + o * 3 / 2 | 0) + 1, by - 23, 1, 2);
-      box(g, (sx + o * 3 / 2 | 0), by - 27, 4, 2, NV);
-    } else {
-      const o = dl ? s * 2 : 0;                                                // consegna: braccia aperte
-      box(g, sx + o, by - 15, 4, 3, NV); box(g, sx + o, by - 12, 4, 1, BR);
-      const fl = Math.max(2, 4 + sw);
-      box(g, sx + o, by - 11, 4, fl, IV); rect(g, P.cyan, sx + o + 1, by - 10, 1, Math.min(2, fl - 1));
-      box(g, sx + o, by - 11 + fl, 4, 1, BR); box(g, sx + o, by - 10 + fl, 4, 2, NV);
-    }
-  }
-  // busto compatto con il pannello di manutenzione sul dorso (con le spie del carico)
-  blob(g, tx, by - 19, TORSO_HW, IV);
-  rect(g, '#9a7a4c', tx - 5, by - 18, 11, 7); rect(g, '#dcc79e', tx - 4, by - 17, 9, 5);
-  rect(g, '#16233f', tx - 4, by - 16, 9, 3);
-  const n = st.cap, x0 = tx - Math.floor((n * 2 - 1) / 2);
-  for (let i = 0; i < n; i++) rect(g, dl || i < st.load ? (st.load >= st.cap && st.pulse ? P.amberL : P.cyanL) : '#2a4170', x0 + i * 2, by - 16, 1, 2);
-  for (const [dx, dy] of [[-5, -18], [5, -18], [-5, -12], [5, -12]]) rect(g, P.brassD, tx + dx, by + dy, 1, 1);
-  // testa larga e schiacciata, con cuciture, dischi laterali in ottone e antenna ciano
-  blob(g, hx, by - 34, HEAD_HW, IV);
-  rect(g, '#b39868', hx - 4, by - 33, 1, 8); rect(g, '#b39868', hx + 3, by - 33, 1, 8);
-  for (const [dx, dy] of [[-6, -30], [5, -31], [-1, -32], [-6, -26], [5, -27], [0, -27]]) rect(g, P.brassD, hx + dx, by + dy, 1, 1);
-  for (const [dx, o] of [[-12, 0], [8, 1]]) {
-    box(g, hx + dx, by - 31, 4, 8, BR);
-    rect(g, P.cyan, hx + dx + (o ? 2 : 1), by - 28, 1, 3); rect(g, P.cyanL, hx + dx + (o ? 2 : 1), by - 28, 1, 1);
-  }
-  rect(g, OL, hx - 2, by - 21, 4, 1); rect(g, P.navy, hx - 2, by - 20, 4, 1); rect(g, P.brass, hx - 2, by - 20, 1, 1); rect(g, P.brass, hx + 1, by - 20, 1, 1);
-  rect(g, P.steelL, hx - 4, by - 37, 1, 2);   // antenna rettangolare ciano, un po' a sinistra come nel riferimento
-  rect(g, OL, hx - 6, by - 42, 5, 5); rect(g, dl || st.blink ? P.cyanL : P.cyan, hx - 5, by - 41, 3, 4); rect(g, '#d8f4ff', hx - 5, by - 41, 1, 2);
-}
-
 /* ------------------------------ Giornalisti, di schiena ------------------------------ */
 const STAFF = [
   { cx: 30, hair: '#5a3418', hairL: '#7a4a24', shirt: '#3f6fb8', shirtD: '#2c4f88', skin: '#d9a07a' },
@@ -371,7 +285,10 @@ export class Scene {
     this.rollsLean = [makeRoll(0.4), makeRoll(-0.4)];
     this.time = 0; this.fx = []; this.tube = []; this.react = [0, 0, 0]; this.flash = [0, 0, 0];
     this.shake = 0; this.collectT = 0; this.deliverT = 0; this.unloadFlash = 0; this.missFlash = 0; this.deskNext = 0;
-    this.winFlash = [0, 0, 0]; this.faindoX = W / 2; this.walkDir = 0; this.walkClock = 0;
+    this.winFlash = [0, 0, 0]; this.faindoX = W / 2;
+    // Faindo ha una tela propria 48 × 64 (faindo.js) sovrapposta alla scena, ingrandita senza sfocature
+    this.fa = document.getElementById('fa'); this.faKey = '';
+    if (this.fa) { this.fa.width = SPRITE_W; this.fa.height = SPRITE_H; this.fag = this.fa.getContext('2d'); this.fag.imageSmoothingEnabled = false; } this.walkDir = 0; this.walkClock = 0;
   }
 
   reset() { this.fx = []; this.tube = []; this.react = [0, 0, 0]; this.flash = [0, 0, 0]; this.shake = 0; this.collectT = 0; this.deliverT = 0; this.unloadFlash = 0; this.missFlash = 0; this.winFlash = [0, 0, 0]; }
@@ -407,6 +324,18 @@ export class Scene {
       if (!r.done && r.t >= 1.15) { r.done = true; this.react[r.desk] = 0.55; this.flash[r.desk] = 0.25; this.fx.push({ k: 'paper', x: STAFF[r.desk].cx, y: 200, t: 0 }); }
     }
     this.tube = this.tube.filter(r => r.t < 1.3);
+  }
+
+  /** Faindo: ridisegna il fotogramma solo se cambia e lo posiziona con i piedi sulla piattaforma (la collisione è quella del motore). */
+  placeFaindo(m, st) {
+    if (!this.fa) return;
+    const pose = poseFor(st), key = poseKey(pose);
+    if (key !== this.faKey) { this.faKey = key; drawFaindoSprite(this.fag, pose); }
+    const w = FA_W, h = w * SPRITE_H / SPRITE_W, x = Math.round(m.x) - w / 2, y = C.PLATFORM_Y - h;
+    const s = this.fa.style;
+    s.left = (x / W * 100).toFixed(3) + '%'; s.top = (y / H * 100).toFixed(3) + '%';
+    s.width = (w / W * 100).toFixed(3) + '%'; s.height = (h / H * 100).toFixed(3) + '%';
+    s.transform = this.shake > 0 ? 'translateX(calc(' + Math.round(Math.sin(this.time * 90) * 1.5) + ' * var(--u, 2px)))' : '';
   }
 
   /** model: {x, dir, load, cap, rolls, pending, level, full, playing} */
@@ -523,7 +452,7 @@ export class Scene {
       walk: m.dir, step: Math.floor(this.walkClock * 9) % 4, idle: Math.floor(t * 1.6) % 2, collect: this.collectT, deliver: this.deliverT,
       load: m.load, cap: m.cap, blink: Math.floor(t * 2.2) % 3 === 0, pulse: Math.floor(t * 5) % 2
     };
-    drawFaindo(g, m.x, C.PLATFORM_Y, st);
+    this.placeFaindo(m, st);
 
     // redazione: rotoli che attraversano il tubo e scrivanie
     for (let i = 0; i < 3; i++) drawStaff(g, STAFF[i], t, this.react[i], this.flash[i]);
