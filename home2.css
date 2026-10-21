@@ -7,7 +7,7 @@
 .home2 .intro__actions { display: none; }
 
 /* ------------------------------ Fila di icone ------------------------------ */
-.h2apps { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 14px; margin: 4px 0 22px; }
+.h2apps { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 14px; margin: 4px 0 22px; }
 .h2app {
   appearance: none; -webkit-appearance: none; background: none; border: 0; padding: 0; margin: 0; font: inherit;
   display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; color: var(--ink);
@@ -15,6 +15,7 @@
 }
 /* Bottoni definitivi forniti da Paolo (12 ottobre 2026): riquadro, costa, riflessi e prospettiva sono già nell'immagine,
    quindi qui niente sfondo, bordo o trasformazioni aggiuntive. L'etichetta resta dritta sotto il bottone. */
+a.h2app { text-decoration: none; }
 .h2app__tile {
   position: relative; display: block; width: 100%; max-width: 112px; aspect-ratio: 1; border-radius: 20%;
   transition: transform .18s ease;

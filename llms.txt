@@ -11,6 +11,7 @@ Le notizie sono raccolte in automatico e non riscritte: per il testo completo va
 - [Le AI a confronto](https://faind.org/confronto/): prezzi e caratteristiche dei principali assistenti AI
 - [Temi](https://faind.org/temi/): robot, medicina, lavoro, clima e casa
 - [Archivio](https://faind.org/archivio/): le notizie degli ultimi mesi
+- [FAIND GAME – News Rush](https://faind.org/faind-game/): il gioco arcade gratuito di FAIND (180 secondi, 5 livelli, classifica settimanale e assoluta)
 
 ## In altre lingue
 - [In depth (English)](https://faind.org/approfondimenti/en/)

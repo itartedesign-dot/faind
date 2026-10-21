@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>FAIND GAME – News Rush, the free AI newsroom arcade game</title>
+  <meta name="description" content="FAIND GAME – News Rush: a free pixel-art arcade game. Help Faindo catch the news scrolls and deliver them to the newsroom in 180 seconds. Weekly and all-time leaderboard.">
+  <link rel="canonical" href="https://faind.org/faind-game/">
+  <meta name="theme-color" content="#0b1226">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FAIND">
+  <meta property="og:title" content="FAIND GAME – News Rush">
+  <meta property="og:description" content="Catch the news. Deliver it to the newsroom. A free pixel-art arcade game by FAIND.">
+  <meta property="og:url" content="https://faind.org/faind-game/">
+  <meta property="og:image" content="https://faind.org/assets/icone/gioca.webp">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="../assets/favicon-32.png?v=3" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
+  <link rel="stylesheet" href="game.css?v=20261021a">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"FAIND GAME – News Rush","url":"https://faind.org/faind-game/","description":"A free pixel-art arcade game: catch the news scrolls and deliver them to the newsroom in 180 seconds.","image":"https://faind.org/assets/icone/gioca.webp","genre":"Arcade","gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","inLanguage":["en","it","fr","de"],"isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"FAIND","url":"https://faind.org/"}}</script>
+</head>
+<body>
+<div id="app" class="g-app" data-state="start">
+  <div id="fit" class="g-fit">
+    <div id="frame" class="g-frame">
+      <div id="stage" class="g-stage">
+        <canvas id="cv" class="g-canvas" aria-label="FAIND News Rush" role="img"></canvas>
+
+        <header class="g-hud" id="hud">
+          <a class="g-brand" id="brand" href="../" aria-label="FAIND">
+            <span class="g-brand__main">F<i>A</i>IND</span><span class="g-brand__sub">NEWS RUSH</span>
+          </a>
+          <div class="g-cell g-cell--score"><span class="g-lbl" data-t="score">SCORE</span><span class="g-val" id="hScore">00000</span></div>
+          <div class="g-cell g-cell--time"><span class="g-lbl" id="hClock" aria-hidden="true">◷</span><span class="g-val" id="hTime" role="timer">03:00</span></div>
+          <div class="g-cell g-cell--level"><span class="g-lbl" data-t="level">LEVEL</span><span class="g-val" id="hLevel">1/5</span></div>
+          <div class="g-cell g-cell--load" id="hLoadCell"><span class="g-lbl"><span data-t="load">LOAD</span> <b id="hLoadN">0/5</b></span><span class="g-slots" id="hSlots"></span></div>
+          <button type="button" class="g-pausebtn" id="btnPause" data-ta="pause" aria-label="Pause" hidden><span></span><span></span></button>
+        </header>
+
+        <div class="g-live" id="liveMsg" aria-live="polite"></div>
+        <div class="g-toast" id="toast" hidden></div>
+        <div class="g-count" id="count" hidden aria-hidden="true"></div>
+
+        <!-- Schermata iniziale -->
+        <section class="g-panel g-panel--start" id="pStart">
+          <h1 class="g-title"><span>FAIND</span> — NEWS RUSH</h1>
+          <button type="button" class="g-btn g-btn--main" id="btnStart" data-t="start">START</button>
+          <p class="g-tag" data-t="tagline">Catch the news. Deliver it to the newsroom.</p>
+          <p class="g-howto" data-t="howto"></p>
+          <p class="g-keys" data-t="keysHint"></p>
+          <div class="g-row">
+            <button type="button" class="g-btn" id="btnLb" data-t="leaderboard">LEADERBOARD</button>
+            <button type="button" class="g-btn g-btn--icon" id="btnSound" aria-pressed="false"><span class="g-ico" id="icoSound"></span></button>
+          </div>
+          <p class="g-note" id="offNote" hidden></p>
+        </section>
+
+        <!-- Pausa -->
+        <section class="g-panel g-panel--pause" id="pPause" hidden>
+          <h2 class="g-h2" id="pauseTitle" data-t="paused">PAUSED</h2>
+          <p class="g-note" id="pauseAuto" hidden data-t="pausedAuto"></p>
+          <button type="button" class="g-btn g-btn--main" id="btnResume" data-t="resume">RESUME</button>
+          <button type="button" class="g-btn" id="btnRestart" data-t="restart">RESTART</button>
+          <button type="button" class="g-btn" id="btnHome" data-t="home">HOME</button>
+          <button type="button" class="g-btn g-btn--icon" id="btnSound2" aria-pressed="false"><span class="g-ico" id="icoSound2"></span></button>
+        </section>
+
+        <!-- Risultati -->
+        <section class="g-panel g-panel--over" id="pOver" hidden>
+          <h2 class="g-h2" data-t="gameOver">TIME UP</h2>
+          <p class="g-lbl2" data-t="finalScore">FINAL SCORE</p>
+          <p class="g-big" id="rScore">0</p>
+          <p class="g-badge" id="rBest" hidden data-t="newBest"></p>
+          <dl class="g-stats">
+            <div><dt data-t="delivered">Delivered</dt><dd id="rDel">0</dd></div>
+            <div><dt data-t="lost">Lost</dt><dd id="rLost">0</dd></div>
+            <div><dt data-t="best">Your best</dt><dd id="rBestV">0</dd></div>
+          </dl>
+          <p class="g-rank" id="rRank" hidden></p>
+          <form class="g-name" id="nameForm" hidden autocomplete="off">
+            <p class="g-note" data-t="enterName"></p>
+            <div class="g-name__row">
+              <label class="g-sr" for="nameIn" data-t="initials">Initials</label>
+              <input id="nameIn" class="g-input" maxlength="3" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="AAA" pattern="[A-Za-z]{3}">
+              <button type="button" class="g-btn g-country" id="btnCountry"><span class="g-flag" id="cFlag"></span><span id="cName" data-t="chooseCountry">Choose your country</span></button>
+            </div>
+            <p class="g-err" id="nameErr" hidden></p>
+            <div class="g-row"><button type="submit" class="g-btn g-btn--main" id="btnSave" data-t="save">SAVE</button><button type="button" class="g-btn" id="btnSkip" data-t="skip">Skip</button></div>
+          </form>
+          <p class="g-note" id="rNote" hidden></p>
+          <div class="g-grid">
+            <button type="button" class="g-btn g-btn--main" id="btnAgain" data-t="playAgain">PLAY AGAIN</button>
+            <button type="button" class="g-btn" id="btnLb2" data-t="leaderboard">LEADERBOARD</button>
+            <button type="button" class="g-btn" id="btnShare" data-t="share">SHARE SCORE</button>
+            <a class="g-btn" id="btnNews" href="../#notizie" data-t="news">TODAY'S AI NEWS</a>
+          </div>
+          <p class="g-note" id="shareNote" hidden></p>
+        </section>
+
+        <!-- Classifica -->
+        <section class="g-panel g-panel--lb" id="pLb" hidden role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+          <h2 class="g-h2" id="lbTitle" data-t="leaderboard">LEADERBOARD</h2>
+          <div class="g-tabs" role="tablist">
+            <button type="button" role="tab" class="g-tab" id="tabW" aria-selected="true" data-t="weekly">THIS WEEK</button>
+            <button type="button" role="tab" class="g-tab" id="tabA" aria-selected="false" data-t="allTime">ALL TIME</button>
+          </div>
+          <ol class="g-list" id="lbList"></ol>
+          <p class="g-note" id="lbNote"></p>
+          <div class="g-row"><button type="button" class="g-btn" id="btnLbRetry" hidden data-t="retry">Retry</button><button type="button" class="g-btn g-btn--main" id="btnLbClose" data-t="close">Close</button></div>
+        </section>
+
+        <!-- Scelta della nazione -->
+        <section class="g-panel g-panel--country" id="pCountry" hidden role="dialog" aria-modal="true" aria-labelledby="coTitle">
+          <h2 class="g-h2" id="coTitle" data-t="chooseCountry">Choose your country</h2>
+          <input type="search" id="coSearch" class="g-input g-input--wide" autocomplete="off" data-ta="searchCountry">
+          <ul class="g-countries" id="coList" role="listbox"></ul>
+          <div class="g-row"><button type="button" class="g-btn" id="btnCoClose" data-t="close">Close</button></div>
+        </section>
+      </div>
+
+      <!-- Comandi: frecce grandi (tenute premute) e zona di trascinamento -->
+      <div class="g-controls" id="controls">
+        <button type="button" class="g-arrow g-arrow--l" id="btnL" data-ta="left" aria-label="Move left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5l-7 7 7 7M7 12h13"/></svg></button>
+        <div class="g-drag" id="drag"><span data-t="dragHint">CATCH THE NEWS · DELIVER TO THE NEWSROOM</span></div>
+        <button type="button" class="g-arrow g-arrow--r" id="btnR" data-ta="right" aria-label="Move right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5l7 7-7 7M17 12H4"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <noscript><p class="g-noscript">FAIND GAME – News Rush needs JavaScript. <a href="../">Back to FAIND</a></p></noscript>
+</div>
+<script src="config.js?v=20261021a"></script>
+<script type="module" src="game.js?v=20261021a"></script>
+</body>
+</html>
