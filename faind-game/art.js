@@ -44,26 +44,28 @@ function text(g, str, x, y, col, scale) {
 function textW(str, s) { return String(str).length * 4 * (s || 1) - (s || 1); }
 
 /* ------------------------------ Rotolo ------------------------------ */
-// 6 × 12, in piedi; le varianti inclinate sono ottenute spostando le righe (niente rotazioni sfocate)
+// 8 × 14, in piedi: carta avorio, fascia ciano centrale, estremità arrotolata in cima e contorno scuro sottile.
+// Lo stesso disegno vale per la caduta, il tubo, il braccio e il carico; le varianti inclinate spostano le righe (niente rotazioni sfocate)
 const ROLL_MAP = [
-  '.oooo.', 'oiiIIo', 'oiSSio', 'oiiiio', 'occccO', 'oCCCCO', 'occccO', 'oiiiio', 'oiSSio', 'oiiiio', 'oiiiio', '.oooo.'
+  '..oooo..', '.oIIiSo.', 'oIiooiSo', 'oIiSSiSo', 'occccccO', 'oCCCCCCO', 'occccccO', 'oIiiiiSo', 'oIiiiiSo', 'oIiiiiSo', 'oIiiiiSo', 'oIiiiSSo', '.oSSSSo.', '..oooo..'
 ];
-const ROLL_COL = { o: P.navyD, i: P.ivory, I: P.ivoryL, S: P.ivoryS, c: P.cyan, C: P.cyanL, O: P.navyD };
+const ROLL_COL = { o: '#0b1226', O: '#0b1226', i: P.ivory, I: P.ivoryL, S: P.ivoryS, c: P.cyan, C: P.cyanL };
 const RED_COL = { i: '#f2a99f', I: '#ffd0c8', S: '#c97367', c: '#d8261c', C: '#ff7a6a' };
+const RX = 8, RY = 8;   // origine del rotolo nella sua tela 16 × 16: si disegna a (x - RX, y - RY)
 function makeRoll(shear, red) {
-  const cv = document.createElement('canvas'); cv.width = 14; cv.height = 14;
+  const cv = document.createElement('canvas'); cv.width = 16; cv.height = 16;
   const g = cv.getContext('2d');
   ROLL_MAP.forEach((row, y) => {
-    const off = Math.round((y - 6) * shear);
-    for (let x = 0; x < 6; x++) { const ch = row[x]; if (ch !== '.') rect(g, red ? (RED_COL[ch] || ROLL_COL[ch]) : ROLL_COL[ch], 4 + x + off, 1 + y, 1, 1); }
+    const off = Math.round((y - 7) * shear);
+    for (let x = 0; x < 8; x++) { const ch = row[x]; if (ch !== '.') rect(g, red ? (RED_COL[ch] || ROLL_COL[ch]) : ROLL_COL[ch], 4 + x + off, 1 + y, 1, 1); }
   });
   return cv;
 }
-// anta orizzontale per i tubi: 11 × 6
+// versione orizzontale per i tubi: lo stesso disegno ruotato di 90°, 14 × 8
 function makeRollH() {
-  const cv = document.createElement('canvas'); cv.width = 12; cv.height = 8;
+  const cv = document.createElement('canvas'); cv.width = 16; cv.height = 10;
   const g = cv.getContext('2d');
-  ROLL_MAP.forEach((row, y) => { for (let x = 0; x < 6; x++) { const ch = row[x]; if (ch !== '.') rect(g, ROLL_COL[ch], 1 + y, 1 + x, 1, 1); } });
+  ROLL_MAP.forEach((row, y) => { for (let x = 0; x < 8; x++) { const ch = row[x]; if (ch !== '.') rect(g, ROLL_COL[ch], 1 + y, 1 + x, 1, 1); } });
   return cv;
 }
 
@@ -85,7 +87,7 @@ function buildBackground() {
     const bx = i * 22 - 6 + Math.floor(rnd() * 8), bw = 16 + Math.floor(rnd() * 12), bh = 30 + Math.floor(rnd() * 50);
     rect(g, i % 2 ? '#0e1830' : '#101c36', bx, 136 - bh, bw, bh);
     for (let wy = 136 - bh + 4; wy < 130; wy += 6) for (let wx = bx + 3; wx < bx + bw - 3; wx += 5) {
-      if (rnd() < 0.22) rect(g, rnd() < 0.5 ? P.amberD : '#8a5a1c', wx, wy, 2, 3);
+      if (rnd() < 0.22) rect(g, rnd() < 0.5 ? '#24385f' : '#1c2c4c', wx, wy, 2, 3);   // finestre spente e fredde: niente macchie arancioni che sembrino oggetti
     }
   }
   // travi: diagonali e orizzontali con croci
@@ -228,70 +230,93 @@ function drawNewsroomStatic(g, rnd) {
 }
 
 /* ------------------------------ Faindo, visto di schiena ------------------------------ */
+const OL = '#0b1226';   // contorno scuro sottile
+const IV = { base: '#ecdcb9', hi: P.ivoryL, sh: '#d3b98c', sh2: '#a98a5c' };   // avorio con ombre calde
+const BR = { base: P.brass, hi: P.brassL, sh: P.brassD, sh2: P.brassD };
+const NV = { base: '#2f4a7c', hi: '#5d82c4', sh: '#22365f', sh2: '#16233f' };   // blu notte, abbastanza chiaro da staccarsi dallo sfondo
+/** Forma tondeggiante a righe (semilarghezza per riga) con contorno, luce da sinistra in alto e ombra calda a destra. */
+function blob(g, cx, top, hws, c) {
+  const n = hws.length;
+  for (let r = 0; r < n; r++) rect(g, OL, cx - hws[r] - 1, top + r, hws[r] * 2 + 2, 1);
+  rect(g, OL, cx - hws[0], top - 1, hws[0] * 2, 1); rect(g, OL, cx - hws[n - 1], top + n, hws[n - 1] * 2, 1);
+  for (let r = 0; r < n; r++) {
+    const hw = hws[r], w = hw * 2;
+    rect(g, c.base, cx - hw, top + r, w, 1);
+    rect(g, c.hi, cx - hw, top + r, Math.min(2, hw), 1);
+    rect(g, c.sh, cx + hw - 3, top + r, 3, 1); rect(g, c.sh2, cx + hw - 1, top + r, 1, 1);
+    if (r === 0) rect(g, c.hi, cx - hw + 1, top, Math.max(1, w - 4), 1);
+    if (r === n - 1) { rect(g, c.sh, cx - hw, top + r, w, 1); rect(g, c.sh2, cx + 1, top + r, hw - 1, 1); }
+  }
+}
+/** Rettangolo con contorno, riga chiara a sinistra e ombra a destra. */
+function box(g, x, y, w, h, c) {
+  rect(g, OL, x - 1, y - 1, w + 2, h + 2);
+  rect(g, c.base, x, y, w, h);
+  if (w > 1) { rect(g, c.hi, x, y, 1, h); rect(g, c.sh, x + w - 1, y, 1, h); }
+  if (h > 2) rect(g, c.sh, x, y + h - 1, w, 1);
+}
+const HEAD_HW = [4, 6, 7, 8, 9, 9, 9, 9, 9, 9, 8, 7, 5], TORSO_HW = [6, 7, 7, 7, 7, 7, 7, 6, 6], FOOT_HW = [3, 4, 4, 4];
+
+/** Faindo di schiena. st: {walk(-1|0|1), step(0..3), idle, collect(s), deliver(s), load, cap, blink, pulse}. fy = linea dei piedi. */
 function drawFaindo(g, cx, fy, st) {
-  // st: {walk(-1|0|1), step(0..3), bob, collect(0..1), deliver(0..1), load, cap, blink, t}
-  const x = Math.round(cx);
-  const bob = st.walk ? (st.step % 2 ? -1 : 0) : (st.idle ? -1 : 0);
-  const dl = st.deliver > 0 ? 1 : 0;
-  const y = fy - (dl && st.deliver > 0.55 ? 1 : 0);
-  // piedi grandi
-  const lift = st.walk ? st.step : 0;
-  const lf = lift === 1 ? 1 : 0, rf = lift === 3 ? 1 : 0;
-  for (const [sx, up] of [[-8, lf], [1, rf]]) {
-    rect(g, P.ivoryS, x + sx, y - 3 - up, 8, 3); rect(g, P.ivory, x + sx, y - 3 - up, 8, 2);
-    rect(g, P.brass, x + sx + 1, y - 2 - up, 6, 1); rect(g, P.navy, x + sx, y - 1 - up, 8, 1);
+  const x = Math.round(cx), step = st.walk ? st.step : 0;
+  const lf = step === 1 ? 2 : 0, rf = step === 3 ? 2 : 0;                       // piedi alternati: uno si solleva, l'altro resta a terra
+  const up = st.collect > 0, dl = st.deliver > 0;
+  const bob = st.walk ? (step % 2 ? -1 : 0) : (st.idle ? -1 : 0);               // passo: il corpo sale e scende; attesa: respira
+  const by = fy - 1 + bob + (st.deliver > 0.35 ? 1 : 0) - (dl && st.deliver <= 0.35 ? 1 : 0) - (up ? 1 : 0);
+  const sway = st.walk ? (step === 1 ? -1 : step === 3 ? 1 : 0) : 0;            // il busto oscilla sopra il piede in appoggio
+  const tx = x + sway, hx = tx + st.walk;
+  // piedi larghi con pannello ciano
+  for (const [fx, lift] of [[x - 5, lf], [x + 5, rf]]) {
+    const ox = fx + (st.walk && lift ? st.walk : 0), ft = fy - 4 - lift;
+    blob(g, ox, ft, FOOT_HW, IV);
+    rect(g, P.cyan, ox - 2, ft + 1, 4, 1); rect(g, P.navy, ox - 4, ft + 3, 8, 1);
   }
-  // gambe: caviglie blu notte, stinchi avorio, ginocchia blu notte
-  for (const [sx, up] of [[-5, lf], [3, rf]]) {
-    rect(g, P.navy, x + sx, y - 4 - up, 3, 1);
-    rect(g, P.ivory, x + sx, y - 8 - up, 3, 4); rect(g, P.ivoryS, x + sx + 2, y - 8 - up, 1, 4);
-    rect(g, P.navy, x + sx, y - 9, 3, 1);
+  // gambe: coscia blu notte, ginocchio in ottone, stinco avorio con feritoia ciano, caviglia in ottone
+  for (const [lx, lift] of [[x - 7, lf], [x + 4, rf]]) {
+    const bot = fy - 7 - lift, top = by - 8;
+    if (bot - 1 > top) box(g, lx, top, 3, bot - 1 - top, NV);
+    box(g, lx, bot - 1, 3, 1, BR);
+    box(g, lx, bot, 3, 3, IV); rect(g, P.cyan, lx + 1, bot, 1, 2);
+    if (lift) box(g, lx, bot + 3, 3, 1, BR);
   }
-  const by = y + bob;
-  // bacino
-  rect(g, P.navy, x - 6, by - 11, 12, 2); rect(g, P.navyL, x - 6, by - 11, 12, 1);
-  // busto
-  rect(g, P.ivoryS, x - 7, by - 22, 14, 11);
-  rect(g, P.ivory, x - 6, by - 22, 12, 10);
-  rect(g, P.ivoryL, x - 6, by - 22, 12, 1);
-  // pannello sul dorso
-  rect(g, P.navy, x - 5, by - 20, 10, 8); rect(g, '#2b3d63', x - 4, by - 19, 8, 6);
-  // spie di carico: una per ogni notizia trasportata (cielo se piena)
-  for (let i = 0; i < st.cap; i++) {
-    const on = i < st.load, px = x - 4 + Math.round((i * 6) / Math.max(1, st.cap - 1 || 1)) - (st.cap === 1 ? -3 : 0);
-    rect(g, on ? (st.load >= st.cap && st.pulse ? P.amberL : P.cyanL) : '#16223e', px, by - 18, 2, 2);
-  }
-  rect(g, P.brass, x - 3, by - 15, 7, 1); rect(g, P.brass, x - 3, by - 13, 7, 1);
-  rect(g, P.brassL, x - 6, by - 21, 1, 1); rect(g, P.brassL, x + 5, by - 21, 1, 1);
-  // braccia
-  const up = st.collect > 0 ? 1 : 0;
-  const swL = st.walk ? (st.step === 1 ? -1 : st.step === 3 ? 1 : 0) : 0;
-  const spread = dl ? 2 : 0;
+  // bacino blu notte con anelli in ottone
+  box(g, tx - 6, by - 10, 12, 2, NV); rect(g, P.brass, tx - 5, by - 10, 2, 2); rect(g, P.brass, tx + 3, by - 10, 2, 2);
+  // braccia: spalla blu notte con anello in ottone, braccio blu notte, gomito in ottone, avambraccio avorio con feritoia ciano, mano blu notte
+  const swL = st.walk ? (step === 1 ? 2 : step === 3 ? -2 : 0) : (st.idle ? 1 : 0);
   for (const s of [-1, 1]) {
-    const ax = s < 0 ? x - 10 - spread : x + 7 + spread;
-    const sw = s < 0 ? swL : -swL;
-    const ay = by - 21 + (up ? -3 : 0);
-    rect(g, P.navy, ax, ay, 3, 2);                                   // spalla
-    rect(g, P.ivory, ax, ay + 2, 3, 4 + (dl ? -1 : 0)); rect(g, P.ivoryS, ax + (s < 0 ? 0 : 2), ay + 2, 1, 4);
-    rect(g, P.navy, ax, ay + 6, 3, 1);                               // gomito
-    const hy = ay + 7 + (up ? -1 : sw);
-    rect(g, P.ivory, ax, hy, 3, 3); rect(g, P.brassD, ax, hy + 3, 3, 1);
+    const sx = s < 0 ? tx - 10 : tx + 6, sw = s < 0 ? swL : -swL;
+    box(g, sx, by - 19, 4, 4, NV); rect(g, P.brass, sx + 1, by - 18, 2, 2);
+    if (up) {                                                                  // raccolta: braccia alzate ad accogliere il rotolo
+      const o = s * 2;
+      box(g, sx + o, by - 20, 4, 3, NV); box(g, sx + o * 3 / 2 | 0, by - 24, 4, 4, IV); rect(g, P.cyan, (sx + o * 3 / 2 | 0) + 1, by - 23, 1, 2);
+      box(g, (sx + o * 3 / 2 | 0), by - 27, 4, 2, NV);
+    } else {
+      const o = dl ? s * 2 : 0;                                                // consegna: braccia aperte
+      box(g, sx + o, by - 15, 4, 3, NV); box(g, sx + o, by - 12, 4, 1, BR);
+      const fl = Math.max(2, 4 + sw);
+      box(g, sx + o, by - 11, 4, fl, IV); rect(g, P.cyan, sx + o + 1, by - 10, 1, Math.min(2, fl - 1));
+      box(g, sx + o, by - 11 + fl, 4, 1, BR); box(g, sx + o, by - 10 + fl, 4, 2, NV);
+    }
   }
-  // collo
-  rect(g, P.navy, x - 2, by - 23, 4, 1);
-  // testa larga: calotta avorio con angoli smussati
-  rect(g, P.ivoryS, x - 8, by - 31, 16, 8);
-  rect(g, P.ivory, x - 7, by - 32, 14, 9);
-  rect(g, P.ivoryL, x - 6, by - 32, 12, 1); rect(g, P.ivoryL, x - 7, by - 31, 3, 1);
-  rect(g, P.ivoryS, x - 7, by - 24, 14, 1);
-  rect(g, P.ivoryD, x, by - 31, 1, 7);                                // cucitura posteriore
-  rect(g, P.navy, x - 5, by - 27, 10, 1);                             // fessura del pannello della nuca
-  // auricolari in ottone
-  for (const sx of [-10, 8]) { rect(g, P.brassD, x + sx, by - 30, 3, 6); rect(g, P.brass, x + sx, by - 30, 3, 5); rect(g, P.brassL, x + sx + (sx < 0 ? 0 : 2), by - 30, 1, 5); rect(g, P.navy, x + sx + 1, by - 28, 1, 2); }
-  // antenna ciano
-  rect(g, P.steelL, x, by - 36, 1, 4);
-  rect(g, st.blink ? P.cyanL : P.cyan, x - 1, by - 39, 3, 3);
-  rect(g, '#d8f4ff', x, by - 39, 1, 1);
+  // busto compatto con il pannello di manutenzione sul dorso (con le spie del carico)
+  blob(g, tx, by - 19, TORSO_HW, IV);
+  rect(g, '#9a7a4c', tx - 5, by - 18, 11, 7); rect(g, '#dcc79e', tx - 4, by - 17, 9, 5);
+  rect(g, '#16233f', tx - 4, by - 16, 9, 3);
+  const n = st.cap, x0 = tx - Math.floor((n * 2 - 1) / 2);
+  for (let i = 0; i < n; i++) rect(g, dl || i < st.load ? (st.load >= st.cap && st.pulse ? P.amberL : P.cyanL) : '#2a4170', x0 + i * 2, by - 16, 1, 2);
+  for (const [dx, dy] of [[-5, -18], [5, -18], [-5, -12], [5, -12]]) rect(g, P.brassD, tx + dx, by + dy, 1, 1);
+  // testa larga e schiacciata, con cuciture, dischi laterali in ottone e antenna ciano
+  blob(g, hx, by - 34, HEAD_HW, IV);
+  rect(g, '#b39868', hx - 4, by - 33, 1, 8); rect(g, '#b39868', hx + 3, by - 33, 1, 8);
+  for (const [dx, dy] of [[-6, -30], [5, -31], [-1, -32], [-6, -26], [5, -27], [0, -27]]) rect(g, P.brassD, hx + dx, by + dy, 1, 1);
+  for (const [dx, o] of [[-12, 0], [8, 1]]) {
+    box(g, hx + dx, by - 31, 4, 8, BR);
+    rect(g, P.cyan, hx + dx + (o ? 2 : 1), by - 28, 1, 3); rect(g, P.cyanL, hx + dx + (o ? 2 : 1), by - 28, 1, 1);
+  }
+  rect(g, OL, hx - 2, by - 21, 4, 1); rect(g, P.navy, hx - 2, by - 20, 4, 1); rect(g, P.brass, hx - 2, by - 20, 1, 1); rect(g, P.brass, hx + 1, by - 20, 1, 1);
+  rect(g, P.steelL, hx - 4, by - 37, 1, 2);   // antenna rettangolare ciano, un po' a sinistra come nel riferimento
+  rect(g, OL, hx - 6, by - 42, 5, 5); rect(g, dl || st.blink ? P.cyanL : P.cyan, hx - 5, by - 41, 3, 4); rect(g, '#d8f4ff', hx - 5, by - 41, 1, 2);
 }
 
 /* ------------------------------ Giornalisti, di schiena ------------------------------ */
@@ -327,9 +352,9 @@ function drawStaff(g, s, t, react, flash) {
   rect(g, s.shirt, cx - 11, 213, 22, 13); rect(g, s.shirtD, cx - 11, 213, 22, 1);
   rect(g, s.shirtD, cx - 1, 215, 2, 9);
   // braccia sulla tastiera: si muovono a turno mentre scrivono
-  const k = Math.floor(t * 8 + cx) % 2, up = react > 0;
-  rect(g, s.shirt, cx - 14, 216 - (up ? 8 : 0), 4, 8); rect(g, s.shirt, cx + 10, 216 - (up ? 8 : 0), 4, 8);
-  rect(g, s.skin, cx - 14, (up ? 204 : 224) + (k ? 0 : 1), 4, 2); rect(g, s.skin, cx + 10, (up ? 204 : 224) + (k ? 1 : 0), 4, 2);
+  const fast = react > 0, k = Math.floor(t * (fast ? 20 : 5) + cx) % 2, amp = fast ? 2 : 1;   // alla consegna digita veloce
+  rect(g, s.shirt, cx - 14, 216, 4, 8); rect(g, s.shirt, cx + 10, 216, 4, 8);
+  rect(g, s.skin, cx - 14, 224 + (k ? 0 : amp), 4, 2); rect(g, s.skin, cx + 10, 224 + (k ? amp : 0), 4, 2);
   // sedia
   rect(g, P.navyD, cx - 9, 224, 18, 16); rect(g, P.navyM, cx - 9, 224, 18, 2); rect(g, P.navyL, cx - 8, 226, 1, 12);
 }
@@ -353,11 +378,13 @@ export class Scene {
 
   /** Un fatto accaduto nel motore (raccolta, consegna, rotolo perso, livello…). */
   event(e, sim) {
-    if (e.type === 'collect') { this.collectT = 0.28; this.fx.push({ k: 'spark', x: e.a, y: Math.min(e.b, C.PLATFORM_Y - 12), t: 0 }); }
+    if (e.type === 'collect') { this.collectT = 0.28; this.fx.push({ k: 'flash', x: e.a, y: Math.min(e.b, C.PLATFORM_Y - 14), t: 0 }); }
     else if (e.type === 'deliver') {
       this.deliverT = 0.5; this.unloadFlash = 0.5;
       for (let i = 0; i < e.a; i++) { this.tube.push({ t: -i * 0.16, desk: (this.deskNext++) % 3 }); }
-      this.fx.push({ k: 'pop', txt: '+' + e.b, x: C.DELIVER_X, y: C.PLATFORM_Y - 44, t: 0 });
+      this.fx = this.fx.filter(f => f.k !== 'pop' || f.t < 0.4);                     // consegne ravvicinate: niente pile di scritte
+      this.fx.push({ k: 'pop', txt: '+' + e.b, x: C.DELIVER_X, y: C.PLATFORM_Y - 48, t: 0 });
+      this.fx.push({ k: 'ring', x: C.DELIVER_X, y: C.PLATFORM_Y, t: 0 });
     } else if (e.type === 'drop' || e.type === 'bad') {
       this.winFlash[Math.min(2, Math.max(0, (sim ? sim.lost : 1) - 1))] = 0.8;
       if (e.type === 'bad') return;
@@ -369,7 +396,7 @@ export class Scene {
   update(dt) {
     this.time += dt;
     for (const f of this.fx) f.t += dt;
-    this.fx = this.fx.filter(f => f.t < 0.9);
+    this.fx = this.fx.filter(f => f.t < (f.k === 'pop' ? 1.1 : f.k === 'flash' ? 0.25 : 0.9));
     this.collectT = Math.max(0, this.collectT - dt); this.deliverT = Math.max(0, this.deliverT - dt);
     this.unloadFlash = Math.max(0, this.unloadFlash - dt); this.missFlash = Math.max(0, this.missFlash - dt);
     this.shake = Math.max(0, this.shake - dt);
@@ -400,51 +427,66 @@ export class Scene {
     // rotoli che scorrono nel tubo sul soffitto
     for (let i = 0; i < 6; i++) {
       const px = ((t * 22 + i * 40) % 250) - 36;
-      g.drawImage(this.rollH, Math.round(px), 24);
+      g.drawImage(this.rollH, Math.round(px), 23);
     }
     // luci dei collari
     for (const cx of [4, 38, 72, 108, 142, 176]) rect(g, ((Math.floor(t * 2) + cx) % 3) ? P.cyan : P.cyanL, cx + 2, 25, 1, 7);
 
     // bocchette: preavviso luminoso prima del rilascio
     if (m.pending) for (const p of m.pending) {
-      const vx = C.VENTS[p.vent], left = p.at - m.tick, pulse = Math.floor(left / 5) % 2;
+      const vx = C.VENTS[p.vent], left = p.at - m.tick, pulse = Math.floor(left / 4) % 2;
       rect(g, pulse ? (p.red ? '#ff9a8c' : P.amberL) : (p.red ? P.red : P.amber), vx - 4, 48, 9, 2);
       rect(g, p.red ? 'rgba(255,90,78,.45)' : 'rgba(255,200,90,.35)', vx - 6, 46, 13, 4);
       rect(g, p.red ? '#ff9a8c' : P.amberL, vx - 2, 51 + (left % 8 > 4 ? 1 : 0), 5, 1);
       g.fillStyle = p.red ? 'rgba(255,70,60,.22)' : 'rgba(255,180,58,.18)'; g.beginPath(); g.moveTo(vx - 5, 48); g.lineTo(vx + 6, 48); g.lineTo(vx + 14, 80); g.lineTo(vx - 13, 80); g.closePath(); g.fill();
       // il rotolo si affaccia alla bocchetta
-      if (left < 12) g.drawImage((p.red ? this.rollsRed : this.rolls)[1], vx - 7, 36 - 8);
+      if (left < 12) g.drawImage((p.red ? this.rollsRed : this.rolls)[1], vx - RX, 28);
     }
     // lampade fisse delle bocchette
     for (const vx of C.VENTS) rect(g, P.amber, vx - 2, 50, 5, 1);
 
     // punto di scarico: pad che pulsa quando il carico è pieno
-    const padOn = this.unloadFlash > 0 || (m.full && Math.floor(t * 4) % 2);
+    const padOn = this.unloadFlash > 0 || (m.full && Math.floor(t * 2.5) % 2);
     rect(g, padOn ? P.cyanL : P.cyan, 80, C.PLATFORM_Y - 1, 20, 2);
     if (padOn) { g.fillStyle = 'rgba(111,211,255,.20)'; g.fillRect(78, C.PLATFORM_Y - 24, 24, 24); rect(g, 'rgba(111,211,255,.5)', 78, C.PLATFORM_Y - 1, 24, 1); }
-    if (this.unloadFlash > 0) rect(g, P.cyanL, 79, C.PLATFORM_Y + 3, 22, 1);
+    if (this.unloadFlash > 0) {                                                       // consegna: impulso ciano sulla bocchetta
+      rect(g, P.cyanL, 79, C.PLATFORM_Y + 3, 22, 1);
+      g.fillStyle = 'rgba(111,211,255,' + (this.unloadFlash * 0.5).toFixed(3) + ')'; g.fillRect(76, C.PLATFORM_Y + 1, 28, 20);
+    }
+    for (const f of this.fx) if (f.k === 'ring') {
+      const k = f.t / 0.9, w = 14 + Math.round(k * 22);
+      g.strokeStyle = 'rgba(111,211,255,' + (0.8 * (1 - k)).toFixed(3) + ')'; g.lineWidth = 1;
+      g.strokeRect(f.x - w / 2 + 0.5, C.PLATFORM_Y - 3 - Math.round(k * 9) + 0.5, w, 5);
+    }
 
     // tre finestrelle sulla barra, a destra di UNLOAD: si riempiono con ogni rotolo perso (rosso preso o notizia caduta)
     for (let i = 0; i < 3; i++) {
-      const wx = 108 + i * 13, wy = C.PLATFORM_Y + 3, kind = m.lostLog ? m.lostLog[i] : null, fl = this.winFlash[i] > 0 && Math.floor(this.winFlash[i] * 12) % 2;
-      rect(g, kind ? (fl ? P.ivoryL : P.red) : P.brassD, wx, wy, 12, 16);
-      rect(g, kind ? '#8a2a24' : P.brass, wx + 1, wy + 1, 10, 14);
-      rect(g, P.navyD, wx + 2, wy + 2, 8, 12);
+      const wx = 108 + i * 13, wy = C.PLATFORM_Y + 2, kind = m.lostLog ? m.lostLog[i] : null, fl = this.winFlash[i] > 0 && Math.floor(this.winFlash[i] * 12) % 2;
+      rect(g, kind ? (fl ? P.ivoryL : P.red) : P.brassD, wx, wy, 12, 18);
+      rect(g, kind ? '#8a2a24' : P.brass, wx + 1, wy + 1, 10, 16);
+      rect(g, P.navyD, wx + 2, wy + 2, 8, 14);
       rect(g, '#0a1124', wx + 2, wy + 2, 8, 1);
       if (kind) {
         g.save(); if (kind === 'drop') g.globalAlpha = 0.75;
-        g.drawImage((kind === 'red' ? this.rollsRed : this.rolls)[1], wx - 1, wy + 1); g.restore();
-        if (kind === 'drop') for (const [dx, dy] of [[0, 0], [4, 0], [1, 1], [3, 1], [2, 2], [1, 3], [3, 3], [0, 4], [4, 4]]) rect(g, P.red, wx + 4 + dx, wy + 5 + dy, 1, 1);
+        g.drawImage((kind === 'red' ? this.rollsRed : this.rolls)[1], wx - 2, wy + 1); g.restore();
+        if (kind === 'drop') for (const [dx, dy] of [[0, 0], [4, 0], [1, 1], [3, 1], [2, 2], [1, 3], [3, 3], [0, 4], [4, 4]]) rect(g, P.red, wx + 4 + dx, wy + 6 + dy, 1, 1);
       }
+    }
+
+    // totale guadagnato: sale e svanisce dietro ai rotoli in caduta (mai sopra gli oggetti da prendere)
+    for (const f of this.fx) if (f.k === 'pop') {
+      const k = f.t / 1.1, tx = f.txt, w = textW(tx, 2), px = Math.round(f.x - w / 2), py = Math.round(f.y - k * 14);
+      g.globalAlpha = k < 0.6 ? 1 : Math.max(0, 1 - (k - 0.6) / 0.4);
+      for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) text(g, tx, px + dx, py + dy, OL, 2);
+      text(g, tx, px, py, k < 0.5 ? P.cyanL : P.ivoryL, 2);
+      g.globalAlpha = 1;
     }
 
     // rotoli che cadono
     if (m.rolls) for (const r of m.rolls) {
-      const tilt = Math.floor(r.y / 6 + r.vent) % 3;
-      const x = Math.round(r.x) - 7, y = Math.round(r.y) - 7;
-      rect(g, 'rgba(160,220,255,.55)', Math.round(r.x), y - 8, 1, 5);
-      rect(g, 'rgba(160,220,255,.35)', Math.round(r.x) - 3, y - 5, 1, 3);
-      rect(g, 'rgba(160,220,255,.35)', Math.round(r.x) + 3, y - 6, 1, 4);
+      const tilt = [1, 0, 1, 2][Math.floor(r.y / 16 + r.vent) % 4];   // oscilla appena, senza roteare
+      const x = Math.round(r.x) - RX, y = Math.round(r.y) - RY;
+      rect(g, 'rgba(160,220,255,.4)', Math.round(r.x), y - 4, 1, 4);                 // una sola linea di movimento
       g.drawImage((r.red ? this.rollsRed : this.rolls)[tilt], x, y);
     }
 
@@ -456,7 +498,7 @@ export class Scene {
       const lean = this.rollsLean[dir > 0 ? 0 : 1];   // la cima del rotolo punta verso Faindo
       if (!a.taken && a.prog > 0.05) {
         if (Math.floor(t * 8) % 2) { g.fillStyle = 'rgba(255,217,138,.28)'; g.fillRect(hx - 9, y - 20, 18, 26); }
-        g.drawImage(lean, hx - 7 - dir * 1, y - 14);
+        g.drawImage(lean, hx - RX - dir * 1, y - 13);
       }
       // l'avambraccio sale leggermente dalla spalla al pugno; si disegna una colonna alla volta
       for (let i = 0; i <= len; i++) {
@@ -494,17 +536,18 @@ export class Scene {
         const dx = desk === 0 ? -1 : 1, q = (p - 0.4) / 0.75;
         if (q < 0.55) { px = 90 + dx * (q / 0.55) * 46; py = 185; vert = false; } else { px = 90 + dx * 46; py = 185 + ((q - 0.55) / 0.45) * 17; }
       }
-      if (vert) g.drawImage(this.rolls[1], Math.round(px) - 7, Math.round(py) - 7); else g.drawImage(this.rollH, Math.round(px) - 6, Math.round(py) - 4);
+      if (vert) g.drawImage(this.rolls[1], Math.round(px) - RX, Math.round(py) - RY); else g.drawImage(this.rollH, Math.round(px) - 8, Math.round(py) - 5);
     }
     if (this.missFlash > 0) { g.fillStyle = 'rgba(255,60,50,' + (this.missFlash * 0.45).toFixed(3) + ')'; g.fillRect(0, C.PLATFORM_Y - 6, W, 8); }
 
     // effetti: scintille, punti, rotolo perso, fogli
     for (const f of this.fx) {
       const k = f.t / 0.9;
-      if (f.k === 'spark') {
-        for (let i = 0; i < 4; i++) { const a = (i * 1.57) + 0.8; rect(g, i % 2 ? P.cyanL : P.ivoryL, f.x + Math.cos(a) * f.t * 40, f.y + Math.sin(a) * f.t * 40, 2, 2); }
-      } else if (f.k === 'pop') {
-        const s = 1, tx = f.txt; text(g, tx, f.x - textW(tx, s) / 2 + 0, f.y - f.t * 16, f.t < 0.6 ? P.amberL : P.amber, s);
+      if (f.k === 'flash') {                                                         // raccolta: piccolo lampo ciano
+        const q = f.t / 0.25, r = 2 + Math.round(q * 4);
+        g.globalAlpha = 1 - q;
+        rect(g, P.cyanL, f.x - r, f.y - 1, r * 2 + 1, 3); rect(g, P.cyanL, f.x - 1, f.y - r, 3, r * 2 + 1); rect(g, '#ffffff', f.x - 1, f.y - 1, 3, 3);
+        g.globalAlpha = 1;
       } else if (f.k === 'miss') {
         for (let i = 0; i < 5; i++) { rect(g, i % 2 ? P.red : P.ivoryL, f.x - 6 + i * 3 + Math.sin(i * 7) * f.t * 6, f.y - f.t * 22 * (0.6 + (i % 3) * 0.3), 2, 2); }
         text(g, 'X', f.x - 1, f.y - 12 - f.t * 6, P.red, 1);
