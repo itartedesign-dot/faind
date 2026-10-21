@@ -173,7 +173,8 @@ export class Sim {
   armState() {
     const a = this.arm; if (!a) return null;
     const C = CONFIG, back = C.ARM_TICKS - C.ARM_RETRACT;
-    const prog = a.age < C.ARM_EXTEND ? a.age / C.ARM_EXTEND : a.age >= back ? Math.max(0, 1 - (a.age - back) / C.ARM_RETRACT) : 1;
+    // presa la notizia il braccio si ritira subito, con la stessa velocità del ritiro normale
+    const prog = a.taken ? Math.max(0, a.from - (a.age - a.takenAt) / C.ARM_RETRACT) : a.age < C.ARM_EXTEND ? a.age / C.ARM_EXTEND : a.age >= back ? Math.max(0, 1 - (a.age - back) / C.ARM_RETRACT) : 1;
     const edge = a.side > 0 ? C.W + 8 : -8;
     return { side: a.side, x: edge + (a.xt - edge) * prog, prog, taken: a.taken };
   }
@@ -193,11 +194,11 @@ export class Sim {
     const a = this.arm; a.age++;
     const st = this.armState();
     if (!a.taken && st.prog >= 0.5 && this.load < C.CAPACITY[this.level - 1] && this.load < this.cap && Math.abs(st.x - this.x) <= C.PICK_HALF_W + C.ROLL_HALF_W + 2) {
-      a.taken = true; this.load++;
+      a.taken = true; a.takenAt = a.age; a.from = st.prog; this.load++;
       this._emit('collect', st.x, C.ARM_Y); this._emit('armtake', st.x);
       if (this.load >= this.cap) this._emit('full');
     }
-    if (a.age >= C.ARM_TICKS) {
+    if (a.age >= C.ARM_TICKS || (a.taken && this.armState().prog <= 0)) {
       this.arm = null;
       this.nextArm = this.tick + Math.round((C.ARM_GAP_MIN + rand(this.rng) * (C.ARM_GAP_MAX - C.ARM_GAP_MIN)) * C.TPS);
     }
