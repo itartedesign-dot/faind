@@ -49,6 +49,9 @@ function applyTexts() {
 
 /* ------------------------------ Stato ------------------------------ */
 const scene = new Scene(el.cv);
+// START si attiva a pose caricate (precaricate, così non spariscono al cambio di fotogramma); dopo 5 s parte comunque con il disegno di riserva
+$('btnStart').disabled = true;
+Promise.race([scene.ready, new Promise((r) => setTimeout(r, 5000))]).then(() => { $('btnStart').disabled = false; });
 const audio = new Audio8();
 let state = 'start';            // start | countdown | playing | paused | over
 let pausedFrom = null;
@@ -372,7 +375,7 @@ function frame(now) {
   }
   const moving = sim && state === 'playing' && sim.dir !== 0;
   scene.update(state === 'paused' ? 0 : dt / 1000);
-  if (moving) scene.walkClock += dt / 1000;
+  if (moving) scene.walkClock += dt / 1000; else scene.walkClock = 0;
   const k = state === 'playing' ? acc / STEP_MS : 0;
   const m = sim ? {
     x: sim.dir ? sim.x + sim.dir * Math.min(Math.abs(sim.target - sim.x), (C.MOVE_SPEED / C.TPS) * k) : sim.x,

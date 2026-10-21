@@ -140,6 +140,7 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 @media (prefers-reduced-motion: reduce) { .g-cell--load.is-full { animation: none; } }
 .g-canvas { touch-action: none; cursor: ew-resize; }
 /* Faindo: tela 48 × 64 sovrapposta alla scena; non cattura i tocchi (il trascinamento resta sul canvas) */
+.g-btn:disabled { opacity: .55; cursor: wait; }
 .g-faindo { position: absolute; z-index: 5; pointer-events: none; image-rendering: pixelated; image-rendering: crisp-edges; image-rendering: pixelated; display: block; }
 
 /* ---- carattere pixel anni '80/'90 (Silkscreen, SIL Open Font License, file in fonts/) per titoli, numeri, pulsanti ed etichette;
