@@ -16,6 +16,7 @@
 /* Bottoni definitivi forniti da Paolo (12 ottobre 2026): riquadro, costa, riflessi e prospettiva sono già nell'immagine,
    quindi qui niente sfondo, bordo o trasformazioni aggiuntive. L'etichetta resta dritta sotto il bottone. */
 a.h2app { text-decoration: none; }
+.h2app__sub { margin-top: -5px; font-size: 10px; font-weight: 800; letter-spacing: .08em; line-height: 1; text-align: center; white-space: nowrap; color: var(--link); text-transform: uppercase; }
 .h2app__tile {
   position: relative; display: block; width: 100%; max-width: 112px; aspect-ratio: 1; border-radius: 20%;
   transition: transform .18s ease;
