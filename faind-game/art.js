@@ -346,10 +346,10 @@ export class Scene {
     this.rollsLean = [makeRoll(0.4), makeRoll(-0.4)];
     this.time = 0; this.fx = []; this.tube = []; this.react = [0, 0, 0]; this.flash = [0, 0, 0];
     this.shake = 0; this.collectT = 0; this.deliverT = 0; this.unloadFlash = 0; this.missFlash = 0; this.deskNext = 0;
-    this.faindoX = W / 2; this.walkDir = 0; this.walkClock = 0;
+    this.winFlash = [0, 0, 0]; this.faindoX = W / 2; this.walkDir = 0; this.walkClock = 0;
   }
 
-  reset() { this.fx = []; this.tube = []; this.react = [0, 0, 0]; this.flash = [0, 0, 0]; this.shake = 0; this.collectT = 0; this.deliverT = 0; this.unloadFlash = 0; this.missFlash = 0; }
+  reset() { this.fx = []; this.tube = []; this.react = [0, 0, 0]; this.flash = [0, 0, 0]; this.shake = 0; this.collectT = 0; this.deliverT = 0; this.unloadFlash = 0; this.missFlash = 0; this.winFlash = [0, 0, 0]; }
 
   /** Un fatto accaduto nel motore (raccolta, consegna, rotolo perso, livello…). */
   event(e, sim) {
@@ -358,7 +358,9 @@ export class Scene {
       this.deliverT = 0.5; this.unloadFlash = 0.5;
       for (let i = 0; i < e.a; i++) { this.tube.push({ t: -i * 0.16, desk: (this.deskNext++) % 3 }); }
       this.fx.push({ k: 'pop', txt: '+' + e.b, x: C.DELIVER_X, y: C.PLATFORM_Y - 44, t: 0 });
-    } else if (e.type === 'drop') {
+    } else if (e.type === 'drop' || e.type === 'bad') {
+      this.winFlash[Math.min(2, Math.max(0, (sim ? sim.lost : 1) - 1))] = 0.8;
+      if (e.type === 'bad') return;
       this.missFlash = 0.35; this.shake = 0.3;
       this.fx.push({ k: 'miss', x: e.a, y: C.PLATFORM_Y, t: 0 });
     }
@@ -371,6 +373,7 @@ export class Scene {
     this.collectT = Math.max(0, this.collectT - dt); this.deliverT = Math.max(0, this.deliverT - dt);
     this.unloadFlash = Math.max(0, this.unloadFlash - dt); this.missFlash = Math.max(0, this.missFlash - dt);
     this.shake = Math.max(0, this.shake - dt);
+    for (let i = 0; i < 3; i++) this.winFlash[i] = Math.max(0, this.winFlash[i] - dt);
     for (let i = 0; i < 3; i++) { this.react[i] = Math.max(0, this.react[i] - dt); this.flash[i] = Math.max(0, this.flash[i] - dt); }
     for (const r of this.tube) {
       r.t += dt;
@@ -420,6 +423,20 @@ export class Scene {
     rect(g, padOn ? P.cyanL : P.cyan, 80, C.PLATFORM_Y - 1, 20, 2);
     if (padOn) { g.fillStyle = 'rgba(111,211,255,.20)'; g.fillRect(78, C.PLATFORM_Y - 24, 24, 24); rect(g, 'rgba(111,211,255,.5)', 78, C.PLATFORM_Y - 1, 24, 1); }
     if (this.unloadFlash > 0) rect(g, P.cyanL, 79, C.PLATFORM_Y + 3, 22, 1);
+
+    // tre finestrelle sulla barra, a destra di UNLOAD: si riempiono con ogni rotolo perso (rosso preso o notizia caduta)
+    for (let i = 0; i < 3; i++) {
+      const wx = 108 + i * 13, wy = C.PLATFORM_Y + 3, kind = m.lostLog ? m.lostLog[i] : null, fl = this.winFlash[i] > 0 && Math.floor(this.winFlash[i] * 12) % 2;
+      rect(g, kind ? (fl ? P.ivoryL : P.red) : P.brassD, wx, wy, 12, 16);
+      rect(g, kind ? '#8a2a24' : P.brass, wx + 1, wy + 1, 10, 14);
+      rect(g, P.navyD, wx + 2, wy + 2, 8, 12);
+      rect(g, '#0a1124', wx + 2, wy + 2, 8, 1);
+      if (kind) {
+        g.save(); if (kind === 'drop') g.globalAlpha = 0.75;
+        g.drawImage((kind === 'red' ? this.rollsRed : this.rolls)[1], wx - 1, wy + 1); g.restore();
+        if (kind === 'drop') for (const [dx, dy] of [[0, 0], [4, 0], [1, 1], [3, 1], [2, 2], [1, 3], [3, 3], [0, 4], [4, 4]]) rect(g, P.red, wx + 4 + dx, wy + 5 + dy, 1, 1);
+      }
+    }
 
     // rotoli che cadono
     if (m.rolls) for (const r of m.rolls) {

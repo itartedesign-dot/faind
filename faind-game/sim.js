@@ -96,6 +96,7 @@ export class Sim {
     this.score = 0;
     this.delivered = 0;
     this.lost = 0;
+    this.lostLog = [];                    // per ogni rotolo perso: 'red' (rossa presa) o 'drop' (caduto), per le tre finestrelle
     this.streak = 0;
     this.mult = 1;
     this.rolls = [];                      // {id, x, y, vy, vent}
@@ -261,7 +262,7 @@ export class Sim {
       const inZone = Math.abs(r.x - this.x) <= C.PICK_HALF_W + C.ROLL_HALF_W &&
         r.y + C.ROLL_HALF_H >= pickTop && r.y - C.ROLL_HALF_H <= C.PLATFORM_Y;
       if (inZone && r.red) {                     // presa l'edizione rossa: vale come un rotolo perso
-        this.lost++; this.streak = 0; this.mult = 1;
+        this.lost++; this.lostLog.push('red'); this.streak = 0; this.mult = 1;
         this._emit('bad', r.x);
         if (this.lost >= C.MAX_LOST) this.over = true;
         continue;
@@ -274,7 +275,7 @@ export class Sim {
       }
       if (r.y + C.ROLL_HALF_H >= C.PLATFORM_Y) {
         if (r.red) { this._emit('redgone', r.x); continue; }   // la rossa lasciata cadere non costa nulla
-        this.lost++; this.streak = 0; this.mult = 1;
+        this.lost++; this.lostLog.push('drop'); this.streak = 0; this.mult = 1;
         this._emit('drop', r.x);
         if (this.lost >= C.MAX_LOST) this.over = true;
         continue;
