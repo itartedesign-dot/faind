@@ -293,6 +293,7 @@ on(document, 'keyup', (e) => {
   if (k === 'ArrowLeft' || k === 'a' || k === 'A') { inp.keyL = false; applyTarget(); }
   else if (k === 'ArrowRight' || k === 'd' || k === 'D') { inp.keyR = false; applyTarget(); }
 });
+on(document, 'pointerdown', () => { if (audio.ctx && state !== 'paused') audio.resume(); }, { capture: true });
 on(window, 'blur', releaseInputs);
 on(document, 'visibilitychange', () => { releaseInputs(); if (document.hidden) pause(true); else last = performance.now(); });
 on(window, 'pagehide', () => { audio.stopMusic(); if (state === 'playing' || state === 'countdown') pause(true); });
@@ -508,4 +509,4 @@ updateHud(true);
 requestAnimationFrame((n) => { last = n; raf = requestAnimationFrame(frame); });
 
 // per le prove automatiche e la diagnosi
-window.__faindGame = { get state() { return state; }, get sim() { return sim; }, get scene() { return scene; }, shutdown, config: C };
+window.__faindGame = { get state() { return state; }, get sim() { return sim; }, get scene() { return scene; }, get audio() { return audio; }, shutdown, config: C };
