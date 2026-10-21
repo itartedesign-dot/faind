@@ -135,3 +135,39 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 @keyframes gfull { 50% { background: #5a3508; } }
 @media (prefers-reduced-motion: reduce) { .g-cell--load.is-full { animation: none; } }
 .g-canvas { touch-action: none; cursor: ew-resize; }
+
+/* ---- carattere pixel anni '80/'90 (Silkscreen, SIL Open Font License, file in fonts/) per titoli, numeri, pulsanti ed etichette;
+   i testi lunghi restano nel carattere normale, più leggibile ---- */
+@font-face { font-family: "Silkscreen"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/silkscreen-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Silkscreen"; font-weight: 700; font-style: normal; font-display: swap; src: url("fonts/silkscreen-latin-700-normal.woff2") format("woff2"); }
+:root { --pix: "Silkscreen", var(--mono); }
+.g-brand__main, .g-brand__sub, .g-lbl, .g-val, .g-count, .g-toast, .g-title, .g-h2, .g-tag, .g-btn, .g-big, .g-lbl2, .g-badge, .g-stats dt, .g-stats dd,
+.g-rank, .g-tab, .g-list li, .g-drag, .g-input, .g-country { font-family: var(--pix); font-weight: 700; }
+.g-brand__main, .g-val, .g-count, .g-big, .g-h2, .g-title { font-weight: 700; letter-spacing: .04em; }
+.g-btn, .g-tab, .g-tag, .g-lbl, .g-lbl2, .g-stats dt, .g-drag { letter-spacing: .08em; }
+.g-countries button { font-family: var(--pix); font-weight: 400; font-size: 14px; }
+.g-input--wide { font-family: var(--mono); }
+.g-toast, .g-badge, .g-rank { letter-spacing: .06em; }
+
+/* regolazione: il pixel font è largo, quindi spaziatura quasi nulla e corpi un po' più piccoli per restare leggibile */
+.g-brand__main { font-size: calc(var(--u) * 7.2); letter-spacing: .01em; }
+.g-brand__sub { font-size: calc(var(--u) * 2.8); letter-spacing: .02em; font-weight: 400; }
+.g-lbl { font-size: calc(var(--u) * 2.8); letter-spacing: .02em; font-weight: 400; }
+.g-val { font-size: calc(var(--u) * 5.6); letter-spacing: 0; }
+.g-count { font-size: calc(var(--u) * 28); }
+.g-toast { font-size: calc(var(--u) * 5.6); } .g-toast small { font-size: calc(var(--u) * 3); }
+.g-title { font-size: calc(var(--u) * 8.6); letter-spacing: .01em; line-height: 1.25; }
+.g-h2 { font-size: calc(var(--u) * 8.4); letter-spacing: .01em; }
+.g-tag { font-size: max(11px, calc(var(--u) * 3.8)); letter-spacing: .02em; font-weight: 400; line-height: 1.5; }
+.g-btn { font-size: max(12px, calc(var(--u) * 4)); letter-spacing: .03em; }
+.g-panel--start .g-btn--main, .g-panel--pause .g-btn--main { font-size: max(15px, calc(var(--u) * 5.6)); }
+.g-lbl2, .g-stats dt { font-size: max(10px, calc(var(--u) * 3)); letter-spacing: .03em; font-weight: 400; }
+.g-big { font-size: calc(var(--u) * 14); letter-spacing: .02em; }
+.g-stats dd { font-size: calc(var(--u) * 6.6); }
+.g-badge, .g-rank { font-size: max(11px, calc(var(--u) * 3.6)); letter-spacing: .02em; }
+.g-tab { font-size: max(12px, calc(var(--u) * 3.6)); letter-spacing: .03em; }
+.g-list li { font-size: max(12px, calc(var(--u) * 4)); }
+.g-list .g-ini { letter-spacing: .08em; }
+.g-drag { font-size: max(9px, calc(var(--u) * 2.5)); letter-spacing: .02em; font-weight: 400; }
+.g-input { font-size: max(18px, calc(var(--u) * 6.4)); letter-spacing: .12em; }
+.g-country { font-size: max(11px, calc(var(--u) * 3.4)); font-weight: 400; }
