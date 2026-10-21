@@ -1,0 +1,12 @@
+# Configurazione del Worker della classifica di FAIND GAME (vedi README.md in questa cartella)
+name = "faind-game-api"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "faind-game"
+database_id = "INSERIRE-QUI-L-ID-DEL-DATABASE"
+
+[vars]
+ALLOWED_ORIGINS = "https://faind.org,https://www.faind.org"
