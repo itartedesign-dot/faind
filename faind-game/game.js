@@ -378,7 +378,7 @@ function frame(now) {
     x: sim.dir ? sim.x + sim.dir * Math.min(Math.abs(sim.target - sim.x), (C.MOVE_SPEED / C.TPS) * k) : sim.x,
     dir: state === 'playing' ? sim.dir : 0, load: sim.load, cap: sim.cap, tick: sim.tick, full: sim.load >= sim.cap && sim.load > 0,
     rolls: sim.rolls.map((r) => ({ x: r.x, y: r.y + r.vy * k, vent: r.vent, vy: r.vy, red: r.red })), pending: sim.pending,
-    arm: sim.armState(), rest: sim.rest, lv: sim.level
+    arm: sim.armState(), rest: sim.rest, lv: sim.level, lostLog: sim.lostLog
   } : { x: C.W / 2, dir: 0, load: 0, cap: C.CAPACITY[0], tick: 0, full: false, rolls: [], pending: [], arm: null, rest: 0, lv: 1 };
   scene.draw(m);
 }

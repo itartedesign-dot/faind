@@ -2,7 +2,7 @@
    FAIND GAME — News Rush: suoni ed effetti, generati in codice (Web Audio)
    ---------------------------------------------------------------------
    Niente file audio e nessuna licenza da rispettare: gli effetti e la
-   musica chiptune (composta per FAIND) sono sintetizzati qui. Il contesto
+   musica synth anni 80 (composta per FAIND) sono sintetizzati qui. Il contesto
    audio nasce solo dopo un gesto dell'utente; con il muto attivo (ricordato
    sul dispositivo) non esce alcun suono. Con pausa e uscita dal gioco la
    musica si ferma e le risorse vengono rilasciate.
@@ -89,10 +89,19 @@ export class Audio8 {
     }
   }
 
-  /* Musica: otto battute in la minore, 132 bpm, lead a onda quadra, basso triangolare, charleston di rumore */
+  /* Musica: ballata synth anni 80, 83 bpm, sol minore. Pad morbido, basso a battute di ottavo, arpeggio sui controtempi
+     con eco puntato, melodia di triangoli leggermente scordati, batteria appena accennata. Sedici battute (circa 46 s) in loop. */
   startMusic() {
     if (!this.ctx || this.musicOn) return;
-    this.musicOn = true; this.step = 0; this.nextT = this.ctx.currentTime + 0.08;
+    const c = this.ctx;
+    if (!this.mus) {
+      this.mus = c.createGain(); this.mus.gain.value = 1; this.mus.connect(this.master);
+      this.echo = c.createGain(); this.echo.gain.value = 1;
+      const dly = c.createDelay(1), fb = c.createGain(), lp = c.createBiquadFilter(), wet = c.createGain();
+      dly.delayTime.value = 60 / 83 * 0.75; fb.gain.value = 0.34; lp.type = 'lowpass'; lp.frequency.value = 2400; wet.gain.value = 0.3;
+      this.echo.connect(dly); dly.connect(lp); lp.connect(fb); fb.connect(dly); lp.connect(wet); wet.connect(this.mus);
+    }
+    this.musicOn = true; this.step = 0; this.nextT = c.currentTime + 0.08;
     this.timer = setInterval(() => this._schedule(), 90);
   }
   stopMusic() { this.musicOn = false; if (this.timer) clearInterval(this.timer); this.timer = 0; }
@@ -102,23 +111,55 @@ export class Audio8 {
   dispose() {
     this.stopMusic();
     if (this.ctx) { try { this.ctx.close(); } catch (e) {} }
-    this.ctx = null; this.master = null;
+    this.ctx = null; this.master = null; this.mus = null; this.echo = null;
+  }
+
+  /** Nota con attacco e rilascio morbidi (le note della musica non devono "schioccare"). */
+  _soft(type, f, t0, dur, vol, dest, att, detune) {
+    const c = this.ctx; if (!c || this.muted) return;
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.value = f; if (detune) o.detune.value = detune;
+    g.gain.setValueAtTime(0.0001, t0); g.gain.linearRampToValueAtTime(vol, t0 + att); g.gain.linearRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(dest); o.start(t0); o.stop(t0 + dur + 0.03);
   }
 
   _schedule() {
     const c = this.ctx; if (!c || !this.musicOn) return;
-    const sp = 60 / 132 / 2;   // un ottavo
-    const NOTES = { A: 220, B: 246.94, C: 261.63, D: 293.66, E: 329.63, F: 349.23, G: 392, a: 440, b: 493.88, c: 523.25, d: 587.33, e: 659.25, g: 783.99 };
-    const LEAD = 'a.c.e.d.c.b.a.E.|g.e.c.e.d.b.G.b.|a.c.e.a.g.e.d.c.|b.G.b.d.c.b.a...'.replace(/\|/g, '');
-    const BASS = 'A.A.A.A.G.G.G.G.F.F.F.F.E.E.G.G.A.A.A.A.G.G.G.G.F.F.F.F.E.E.E.E.'.replace(/\./g, '');
+    const sp = 60 / 83 / 4;   // una semicroma
+    const hz = (m) => 440 * Math.pow(2, (m - 69) / 12);
+    const PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+    const midi = (n) => { const m = /^([A-G])([#b]?)(\d)$/.exec(n); return 12 * (+m[3] + 1) + PC[m[1]] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0); };
+    // accordi (radice come classe di nota, terza minore o maggiore): Gm Eb Bb F | Gm Eb Bb F | Eb F Gm Gm | Eb F Bb D
+    const CH = [[7, 3], [3, 4], [10, 4], [5, 4], [7, 3], [3, 4], [10, 4], [5, 4], [3, 4], [5, 4], [7, 3], [7, 3], [3, 4], [5, 4], [10, 4], [2, 4]];
+    // melodia: per battuta, coppie [nota, durata in semicrome]; le pause sono null
+    const ML = [
+      [['D5', 4], ['G5', 4], ['F5', 2], ['D5', 2], ['Bb4', 4]], [['Bb4', 4], ['Eb5', 6], ['D5', 2], ['Bb4', 4]],
+      [['D5', 4], ['F5', 4], ['D5', 2], ['C5', 2], ['D5', 4]], [['C5', 6], ['A4', 2], ['C5', 4], ['F5', 4]],
+      [['G5', 6], ['F5', 2], ['D5', 4], ['Bb4', 4]], [['G5', 4], ['Eb5', 4], ['D5', 4], ['Eb5', 4]],
+      [['F5', 4], ['D5', 4], ['Bb4', 4], ['D5', 4]], [['A4', 4], ['C5', 4], ['F5', 8]],
+      [['Eb5', 4], ['G5', 4], ['Bb5', 8]], [['A5', 6], ['G5', 2], ['F5', 8]],
+      [['D5', 4], ['G5', 4], ['Bb5', 6], ['A5', 2]], [['G5', 12], [null, 4]],
+      [['Eb5', 4], ['G5', 4], ['Bb5', 4], ['G5', 4]], [['A5', 4], ['F5', 4], ['C6', 8]],
+      [['Bb5', 6], ['A5', 2], ['F5', 4], ['D5', 4]], [['A5', 4], ['F#5', 4], ['D5', 4], ['F#5', 4]]
+    ];
+    const LEAD = [];   // passo → [nota, durata]
+    ML.forEach((bar, b) => { let p = b * 16; for (const [n, d] of bar) { if (n) LEAD[p] = [midi(n), d]; p += d; } });
     while (this.nextT < c.currentTime + 0.35) {
-      const i = this.step, t = this.nextT;
-      const L = LEAD[i % LEAD.length];
+      const i = this.step % 256, bar = i >> 4, s = i & 15, t = this.nextT;
       if (!this.muted) {
-        if (L && L !== '.' && NOTES[L]) this._tone('square', NOTES[L] * (i % 2 ? 1 : 1), NOTES[L], t, sp * 1.7, 0.09);
-        const B = BASS[Math.floor(i / 1) % BASS.length];
-        if (i % 2 === 0 && NOTES[B]) this._tone('triangle', NOTES[B] / 2, NOTES[B] / 2, t, sp * 1.8, 0.2);
-        if (i % 2 === 1) this._noise(t, 0.04, 0.08, 6000, 5000);
+        const [pc, third] = CH[bar], root = 48 + pc, tones = [0, third, 7];
+        if (s === 0) for (const iv of tones) { this._soft('triangle', hz(root + 12 + iv), t, sp * 16.5, 0.032, this.mus, 0.35); this._soft('sine', hz(root + iv), t, sp * 16.5, 0.03, this.mus, 0.35); }
+        if (s % 2 === 0) this._soft('triangle', hz(root), t, sp * 1.7, s % 8 === 0 ? 0.2 : 0.15, this.mus, 0.012);
+        if (s % 2 === 1) { const k = (s >> 1) % 8, iv = [0, third, 7, 12, 7, third, 12, third][k]; this._soft('triangle', hz(root + 12 + iv), t, sp * 1.9, 0.05, this.echo, 0.01); }
+        const L = LEAD[i];
+        if (L) {
+          const d = sp * L[1] * 0.96;
+          this._soft('triangle', hz(L[0]), t, d, 0.075, this.echo, 0.03, -7); this._soft('triangle', hz(L[0]), t, d, 0.075, this.mus, 0.03, 7);
+          this._soft('sine', hz(L[0] + 12), t, d, 0.012, this.mus, 0.05);
+        }
+        if (s === 0 || s === 8) this._tone('sine', 120, 45, t, 0.16, 0.26);
+        if (s === 4 || s === 12) this._noise(t, 0.13, 0.07, 2200, 1200);
+        if (s % 2 === 0) this._noise(t, 0.035, s % 4 === 0 ? 0.05 : 0.03, 7000, 6500);
       }
       this.step++; this.nextT += sp;
     }
