@@ -16,11 +16,10 @@
    5. GET /leaderboard → Top 10 settimanale (da lunedì 00:00 a domenica, ora di Roma) e assoluta.
       A parità di punteggio precede chi è stato registrato prima dal server.
    ===================================================================== */
-import { replay, cleanInputs, END_TICK } from '../faind-game/sim.js';
+import { replay, cleanInputs } from '../faind-game/sim.js';
 
 const COUNTRIES = new Set('IT FR DE ES GB US PT NL BE CH AT IE SE NO DK FI PL CZ GR RO HU BG HR RS UA TR CA MX BR AR CL CO PE JP KR CN IN ID TH VN PH SG MY AU NZ ZA EG MA NG KE IL AE SA PK BD RU SK SI LT LV EE LU MT CY IS AL BA MK ME'.split(' '));
 const BLOCKED = new Set('ASS FUK FCK CUM SEX XXX KKK SS NAZ NZI HIV WTF TIT FAG GAY JEW CUL CAZ FIC MER STR TRO PUT PIS BUT GOD DIO'.split(' '));
-const MIN_ELAPSED_MS = 172000;               // una partita vera dura 180 s
 const MAX_ELAPSED_MS = 6 * 3600 * 1000;      // un gettone vecchio di ore non vale
 const LIMITS = { perMinute: 6, perHour: 60 };
 
@@ -114,15 +113,17 @@ export async function handle(request, env, now) {
       if (!tk || tk[0] !== 's') return reply({ error: 'bad_token' }, 400);
       const id = tk[1], seed = parseInt(tk[2], 10), created = parseInt(tk[3], 10);
       const elapsed = now - created;
-      if (elapsed < MIN_ELAPSED_MS) return reply({ error: 'too_fast' }, 422);
       if (elapsed > MAX_ELAPSED_MS) return reply({ error: 'expired' }, 422);
       const inputs = cleanInputs(body.inputs);
       if (!inputs) return reply({ error: 'bad_inputs' }, 422);
+      // la partita si rifà prima di usare il gettone; finisce a 180 s o al terzo rotolo perso
+      const sim = replay(seed, inputs);
+      if (!sim.done) return reply({ error: 'bad_game' }, 422);
+      // il tempo reale passato deve bastare per quanto è durata la partita (con un po' di margine)
+      if (elapsed < (sim.tick / 60) * 1000 * 0.95 - 3000) return reply({ error: 'too_fast' }, 422);
       // un gettone si usa una volta sola: l'aggiornamento è atomico, quindi due invii insieme non passano entrambi
       const used = await env.DB.prepare('UPDATE sessions SET submitted = 1 WHERE id = ? AND submitted = 0').bind(id).run();
       if (!used.meta || used.meta.changes !== 1) return reply({ error: 'already_submitted' }, 409);
-      const sim = replay(seed, inputs);
-      if (!sim.done || sim.tick !== END_TICK) return reply({ error: 'bad_game' }, 422);
       const week = romeWeek(now), score = sim.score;
       await env.DB.prepare('INSERT INTO scores (id, score, delivered, lost, created_at, week, initials, country) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL)').bind(id, score, sim.delivered, sim.lost, now, week).run();
       const rw = score > 0 ? await rankIn(env.DB, score, week) : 99, ra = score > 0 ? await rankIn(env.DB, score, null) : 99;
