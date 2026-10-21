@@ -11,6 +11,7 @@
    Nessuna funzione trascendente (sin, cos…): solo + − × ÷ e confronti, che
    danno lo stesso risultato in ogni browser e sul server.
 
+   Tra un livello e l'altro il motore si ferma 2 s (rest): il tempo di partita non scorre.
    Fine partita: allo scadere dei 180 s oppure al terzo rotolo perso (GAME OVER).
 
    TUTTI I PARAMETRI DI DIFFICOLTÀ STANNO IN CONFIG, qui sotto.
@@ -37,13 +38,23 @@ export const CONFIG = {
 
   // rotoli: velocità di caduta (unità/s), pausa media tra due uscite (s) e preavviso luminoso (tick)
   FALL_SPEED: [58, 60, 62, 64, 66],
-  SPAWN_GAP: [1.15, 1.25, 1.4, 1.65, 1.95],
+  SPAWN_GAP: [1.15, 1.25, 1.2, 1.15, 1.1],   // dal livello 3 escono più notizie (la capacità cala, ma l'equità sotto le tiene raggiungibili)
   SPAWN_JITTER: 0.25,                    // variazione casuale della pausa (± frazione)
   WARN_TICKS: 36,                        // la bocchetta si illumina prima del rilascio
   FIRST_SPAWN_TICK: 30,
   // equità: due rotoli non possono mai richiedere a Faindo di coprire più strada di quanto riesca
   // (REACH_FACTOR della sua velocità massima, più REACH_SLACK unità di margine)
   REACH_FACTOR: 0.7, REACH_SLACK: 11,
+
+  // passaggio di livello: il gioco si ferma 2 s (popup LEVEL n), i rotoli in volo spariscono, il carico resta
+  LEVEL_REST_TICKS: 120,
+
+  // braccio che porge una notizia in più (da destra, ogni tanto da sinistra): dura al massimo 2,5 s
+  ARM_GAP_MIN: 6.5, ARM_GAP_MAX: 10.5,   // secondi tra due bracci
+  ARM_TICKS: 150, ARM_EXTEND: 24, ARM_RETRACT: 30,
+  ARM_Y: 116,                            // altezza della notizia, all'altezza del busto di Faindo
+  ARM_RIGHT_X: [126, 158], ARM_LEFT_X: [22, 54], ARM_LEFT_CHANCE: 0.3,
+  ARM_FIRST_TICK: 360,
 
   // punteggio
   POINTS: 100, STREAK_STEP: 5, MAX_MULT: 5,
@@ -92,6 +103,10 @@ export class Sim {
     this.nextId = 1;
     this.spawned = 0; this.sinceRed = 99;  // per dosare le edizioni rosse
     this.nextSpawn = CONFIG.FIRST_SPAWN_TICK;
+    this.rest = 0;                        // tick di pausa rimasti al cambio livello
+    this.steps = 0;                       // tutti i passi eseguiti, pause comprese (tempo reale di gioco)
+    this.arm = null;                      // {side, xt, age, taken}
+    this.nextArm = CONFIG.ARM_FIRST_TICK;
     this.events = [];                     // svuotati dal chiamante dopo ogni step
     this.inputs = [];                     // [tick, target]
   }
@@ -123,8 +138,12 @@ export class Sim {
     }
     for (const v of order) {
       let ok = true;
+      // con capacità 1 (o 2) dopo ogni presa Faindo deve passare dalla bocchetta centrale: la strada tra due rotoli
+      // buoni comprende il viaggio fino al centro; con capacità maggiore basta andare da uno all'altro
+      const f = this.cap <= 1 ? 1 : this.cap === 2 ? 0.5 : 0;
       for (const o of others) {
-        if (Math.abs(C.VENTS[v] - o[0]) - C.REACH_SLACK > reach * Math.abs(land - o[1])) { ok = false; break; }
+        const travel = f * (Math.abs(C.VENTS[v] - C.DELIVER_X) + Math.abs(o[0] - C.DELIVER_X)) + (1 - f) * Math.abs(C.VENTS[v] - o[0]);
+        if (travel - C.REACH_SLACK > reach * Math.abs(land - o[1])) { ok = false; break; }
       }
       if (ok && red) for (const o of near) if (Math.abs(C.VENTS[v] - o[0]) < 32 && Math.abs(land - o[1]) < 55) { ok = false; break; }
       if (ok) return v;
@@ -148,21 +167,67 @@ export class Sim {
     this._emit('deliver', n, gained);
   }
 
+
+  /** Posizione attuale del braccio: {side, x, prog, taken} oppure null. */
+  armState() {
+    const a = this.arm; if (!a) return null;
+    const C = CONFIG, back = C.ARM_TICKS - C.ARM_RETRACT;
+    const prog = a.age < C.ARM_EXTEND ? a.age / C.ARM_EXTEND : a.age >= back ? Math.max(0, 1 - (a.age - back) / C.ARM_RETRACT) : 1;
+    const edge = a.side > 0 ? C.W + 8 : -8;
+    return { side: a.side, x: edge + (a.xt - edge) * prog, prog, taken: a.taken };
+  }
+
+  _arm() {
+    const C = CONFIG;
+    if (!this.arm) {
+      if (this.tick >= this.nextArm && this.tick < END_TICK - 200 && this.load < this.cap) {
+        const left = rand(this.rng) < C.ARM_LEFT_CHANCE, r = left ? C.ARM_LEFT_X : C.ARM_RIGHT_X;
+        const xt = r[0] + Math.floor(rand(this.rng) * (r[1] - r[0] + 1));
+        this.arm = { side: left ? -1 : 1, xt, age: 0, taken: false };
+        this._emit('arm', left ? -1 : 1);
+      }
+      if (!this.arm && this.tick >= this.nextArm) this.nextArm = this.tick + 30;   // pieno: riprova poco dopo
+      return;
+    }
+    const a = this.arm; a.age++;
+    const st = this.armState();
+    if (!a.taken && st.prog >= 0.5 && this.load < C.CAPACITY[this.level - 1] && this.load < this.cap && Math.abs(st.x - this.x) <= C.PICK_HALF_W + C.ROLL_HALF_W + 2) {
+      a.taken = true; this.load++;
+      this._emit('collect', st.x, C.ARM_Y); this._emit('armtake', st.x);
+      if (this.load >= this.cap) this._emit('full');
+    }
+    if (a.age >= C.ARM_TICKS) {
+      this.arm = null;
+      this.nextArm = this.tick + Math.round((C.ARM_GAP_MIN + rand(this.rng) * (C.ARM_GAP_MAX - C.ARM_GAP_MIN)) * C.TPS);
+    }
+  }
+
   /** Avanza di un tick (1/60 s). */
   step() {
     if (this.done) return;
     const C = CONFIG;
-    // 1. Faindo si muove verso il punto scelto
+    this.steps++;
+    // pausa tra i livelli: tutto fermo, il tempo di partita (tick) non scorre
+    if (this.rest > 0) { this.rest--; this.dir = 0; return; }
+
+    // 1. livello (cambia da solo ogni 36 s di gioco effettivo; il carico in eccesso resta)
+    const lv = Math.min(C.LEVELS, Math.floor(this.tick / LEVEL_TICKS) + 1);
+    if (lv !== this.level) {
+      this.level = lv; this.cap = C.CAPACITY[lv - 1];
+      this.rest = C.LEVEL_REST_TICKS; this.dir = 0;
+      this.rolls = []; this.pending = []; this.arm = null;            // reset: si riparte da campo libero
+      this.nextSpawn = this.tick + 50; this.nextArm = this.tick + 330;
+      this._emit('level', lv, this.cap);
+      return;
+    }
+
+    // 2. Faindo si muove verso il punto scelto
     const stepX = C.MOVE_SPEED / C.TPS, d = this.target - this.x;
     if (Math.abs(d) <= stepX) { this.x = this.target; this.dir = 0; }
     else { this.x += d > 0 ? stepX : -stepX; this.dir = d > 0 ? 1 : -1; }
 
-    // 2. livello (cambia da solo ogni 36 s di gioco effettivo; il carico in eccesso resta)
-    const lv = Math.min(C.LEVELS, Math.floor(this.tick / LEVEL_TICKS) + 1);
-    if (lv !== this.level) {
-      this.level = lv; this.cap = C.CAPACITY[lv - 1];
-      this._emit('level', lv, this.cap);
-    }
+    // 2b. il braccio con la notizia in più
+    this._arm();
 
     // 3. uscita dei rotoli: preavviso luminoso, poi rilascio
     if (this.tick >= this.nextSpawn && this.tick < END_TICK - 150) {
@@ -226,6 +291,7 @@ export class Sim {
     if (this.tick >= END_TICK) this.done = true;
   }
 
+  get resting() { return this.rest > 0; }
   get remainingTicks() { return Math.max(0, END_TICK - this.tick); }
 }
 

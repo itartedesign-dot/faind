@@ -120,7 +120,7 @@ export async function handle(request, env, now) {
       const sim = replay(seed, inputs);
       if (!sim.done) return reply({ error: 'bad_game' }, 422);
       // il tempo reale passato deve bastare per quanto è durata la partita (con un po' di margine)
-      if (elapsed < (sim.tick / 60) * 1000 * 0.95 - 3000) return reply({ error: 'too_fast' }, 422);
+      if (elapsed < (sim.steps / 60) * 1000 * 0.95 - 3000) return reply({ error: 'too_fast' }, 422);
       // un gettone si usa una volta sola: l'aggiornamento è atomico, quindi due invii insieme non passano entrambi
       const used = await env.DB.prepare('UPDATE sessions SET submitted = 1 WHERE id = ? AND submitted = 0').bind(id).run();
       if (!used.meta || used.meta.changes !== 1) return reply({ error: 'already_submitted' }, 409);

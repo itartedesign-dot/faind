@@ -121,6 +121,10 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 .g-noscript { position: absolute; z-index: 99; inset: 40% 10%; text-align: center; }
 .g-noscript a { color: var(--cyanL); }
 
+/* popup di cambio livello: grande, al centro, dura i 2 s di pausa */
+.g-toast.g-toast--lv { top: 30%; padding: calc(var(--u) * 4) calc(var(--u) * 9); font-size: calc(var(--u) * 11); border-width: 3px; border-color: var(--amber); color: var(--ivory); text-shadow: 0 calc(var(--u) * 1) 0 #000, 0 0 calc(var(--u) * 6) var(--cyan); animation: glevel 2s ease-out both; }
+.g-toast.g-toast--lv small { font-size: calc(var(--u) * 4.4); color: #ffd98a; }
+@keyframes glevel { 0% { opacity: 0; transform: translate(-50%, 0) scale(.6); } 12% { opacity: 1; transform: translate(-50%, 0) scale(1.12); } 22% { transform: translate(-50%, 0) scale(1); } 85% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, 0) scale(1); } }
 @media (prefers-reduced-motion: reduce) { .g-count.pop, .g-toast { animation: none; } }
 
 /* correzioni: [hidden] vince sempre; classifica e nazioni coprono del tutto la schermata sotto */
@@ -156,6 +160,7 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 .g-val { font-size: calc(var(--u) * 5.6); letter-spacing: 0; }
 .g-count { font-size: calc(var(--u) * 28); }
 .g-toast { font-size: calc(var(--u) * 5.6); } .g-toast small { font-size: calc(var(--u) * 3); }
+.g-toast.g-toast--lv { font-size: calc(var(--u) * 9); } .g-toast.g-toast--lv small { font-size: calc(var(--u) * 3.6); }
 .g-title { font-size: calc(var(--u) * 8.6); letter-spacing: .01em; line-height: 1.25; }
 .g-h2 { font-size: calc(var(--u) * 8.4); letter-spacing: .01em; }
 .g-tag { font-size: max(11px, calc(var(--u) * 3.8)); letter-spacing: .02em; font-weight: 400; line-height: 1.5; }

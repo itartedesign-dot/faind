@@ -325,8 +325,8 @@ function updateHud(force) {
     for (let i = 0; i < cap; i++) { const d = document.createElement('i'); d.className = 'g-slot' + (i < load ? ' on' : ''); el.slots.appendChild(d); }
   }
 }
-function toast(title, sub) {
-  el.toast.hidden = true; el.toast.textContent = '';
+function toast(title, sub, big) {
+  el.toast.hidden = true; el.toast.classList.toggle('g-toast--lv', !!big); el.toast.textContent = '';
   const b = document.createElement('div'); b.textContent = title; el.toast.appendChild(b);
   if (sub) { const s = document.createElement('small'); s.textContent = sub; el.toast.appendChild(s); }
   void el.toast.offsetWidth; el.toast.hidden = false;
@@ -343,7 +343,8 @@ function stepSim() {
     else if (e.type === 'drop' || e.type === 'bad') { audio.sfx('drop'); el.live.textContent = t('lost'); if (!sim.over) toast(t('missed', { n: sim.lost }), ''); }
     else if (e.type === 'release') audio.sfx('puff');
     else if (e.type === 'full') { audio.sfx('full'); el.live.textContent = t('full'); }
-    else if (e.type === 'level') { audio.sfx('level'); toast(t('levelUp', { n: e.a }), t('capacity', { n: e.b })); }
+    else if (e.type === 'level') { audio.sfx('newlevel'); el.live.textContent = t('levelUp', { n: e.a }); toast(t('levelUp', { n: e.a }), t('capacity', { n: e.b }), true); }
+    else if (e.type === 'arm') audio.sfx('arm');
   }
   sim.events.length = 0;
   if (sim.done) finish();
@@ -376,8 +377,9 @@ function frame(now) {
   const m = sim ? {
     x: sim.dir ? sim.x + sim.dir * Math.min(Math.abs(sim.target - sim.x), (C.MOVE_SPEED / C.TPS) * k) : sim.x,
     dir: state === 'playing' ? sim.dir : 0, load: sim.load, cap: sim.cap, tick: sim.tick, full: sim.load >= sim.cap && sim.load > 0,
-    rolls: sim.rolls.map((r) => ({ x: r.x, y: r.y + r.vy * k, vent: r.vent, vy: r.vy, red: r.red })), pending: sim.pending
-  } : { x: C.W / 2, dir: 0, load: 0, cap: C.CAPACITY[0], tick: 0, full: false, rolls: [], pending: [] };
+    rolls: sim.rolls.map((r) => ({ x: r.x, y: r.y + r.vy * k, vent: r.vent, vy: r.vy, red: r.red })), pending: sim.pending,
+    arm: sim.armState(), rest: sim.rest, lv: sim.level
+  } : { x: C.W / 2, dir: 0, load: 0, cap: C.CAPACITY[0], tick: 0, full: false, rolls: [], pending: [], arm: null, rest: 0, lv: 1 };
   scene.draw(m);
 }
 

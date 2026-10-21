@@ -37,23 +37,23 @@ async function play(ip, now, lazy) {
 
 // partita regolare
 let g = await play('2.2.2.2', T0, false);
-let r = await call('POST', '/score', { token: g.token, inputs: g.sim.inputs }, T0 + 181000);
+let r = await call('POST', '/score', { token: g.token, inputs: g.sim.inputs }, T0 + 191000);
 assert.equal(r.s, 200); assert.equal(r.j.score, g.sim.score); assert.ok(r.j.claim); assert.equal(r.j.weekly.rank, 1);
 console.log('punteggio verificato', r.j.score, 'rank', r.j.weekly.rank, r.j.all.rank);
 const claim1 = r.j.claim;
 // doppio invio
-r = await call('POST', '/score', { token: g.token, inputs: g.sim.inputs }, T0 + 182000); assert.equal(r.s, 409);
+r = await call('POST', '/score', { token: g.token, inputs: g.sim.inputs }, T0 + 192000); assert.equal(r.s, 409);
 // gettone manomesso / altro segreto
-r = await call('POST', '/score', { token: g.token.slice(0, -2) + 'xx', inputs: [] }, T0 + 182000); assert.equal(r.s, 400);
+r = await call('POST', '/score', { token: g.token.slice(0, -2) + 'xx', inputs: [] }, T0 + 192000); assert.equal(r.s, 400);
 // troppo veloce
 let g2 = await play('3.3.3.3', T0, false);
 r = await call('POST', '/score', { token: g2.token, inputs: g2.sim.inputs }, T0 + 30000); assert.equal(r.s, 422); assert.equal(r.j.error, 'too_fast');
 // comandi non validi
 let g3 = await play('4.4.4.4', T0, false);
-r = await call('POST', '/score', { token: g3.token, inputs: [[5, 9999]] }, T0 + 181000); assert.equal(r.s, 422);
+r = await call('POST', '/score', { token: g3.token, inputs: [[5, 9999]] }, T0 + 191000); assert.equal(r.s, 422);
 // punteggio non inviato dal client: anche con comandi diversi il server calcola il suo (partita pigra = punteggio basso)
 let g4 = await play('5.5.5.5', T0, true);
-r = await call('POST', '/score', { token: g4.token, inputs: g4.sim.inputs, score: 999999 }, T0 + 181000);
+r = await call('POST', '/score', { token: g4.token, inputs: g4.sim.inputs, score: 999999 }, T0 + 191000);
 assert.equal(r.s, 200); assert.equal(r.j.score, g4.sim.score); assert.ok(r.j.score < 5000);
 assert.ok(g4.sim.over && g4.sim.lost === 3 && g4.sim.tick < 10800, 'game over al terzo rotolo perso');
 // una partita finita presto non si può inviare prima che sia passato il tempo che è durata

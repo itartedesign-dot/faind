@@ -7,6 +7,8 @@ function aim(s) {
   let tg = s.target;
   const good = s.rolls.filter(r => !r.red);
   if (s.load >= s.cap || (s.load > 0 && !good.length)) tg = C.DELIVER_X; else if (good.length) tg = good.sort((a, b) => b.y - a.y)[0].x;
+  const a = s.armState();   // il braccio: lo si insegue solo se nessun rotolo buono sta per arrivare
+  if (a && !a.taken && s.load < s.cap && !good.some(r => r.y > 75)) tg = a.x;
   for (const r of s.rolls) if (r.red && r.y > 70 && Math.abs(r.x - s.x) < 22) { tg = r.x > s.x ? Math.max(C.FX_MIN, r.x - 34) : Math.min(C.FX_MAX, r.x + 34); }
   return tg;
 }
