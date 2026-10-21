@@ -56,7 +56,7 @@
     { k: 'strumenti', ids: ['trending', 'guide'], icon: true },   // prima i trending tool, poi gli strumenti da scaricare (Paolo, 12 ottobre 2026)
     { k: 'uomoai', ids: ['focus'], icon: true },   // l'ex sezione Focus: robot, casa, medicina, lavoro e clima
     { k: 'telegram', ids: ['telegram'], icon: true },
-    { k: 'gioca', ids: [], icon: true, link: 'faind-game/' },   // non apre un pannello: porta al gioco FAIND GAME (pagina propria, a tutto schermo)
+    { k: 'gioca', ids: [], icon: true, link: 'faind-game/', sub: 'FAIND GAME' },   // non apre un pannello: porta al gioco FAIND GAME (pagina propria, a tutto schermo)
     { k: 'contatti', ids: ['contatti'] },
     { k: 'sostieni', ids: ['sostieni'] },
     { k: 'feed', ids: ['feed'] }
@@ -200,7 +200,8 @@
   apps.className = 'h2apps';
   apps.innerHTML = PANELS.filter(function (p) { return p.icon; }).map(function (p) {
     var inner = '<span class="h2app__tile"><img src="assets/icone/' + p.k + '.webp?v=2" width="256" height="256" alt="" decoding="async"></span>' +
-      '<span class="h2app__lbl" data-h2="' + p.k + '"></span>';
+      '<span class="h2app__lbl" data-h2="' + p.k + '"></span>' +
+      (p.sub ? '<span class="h2app__sub">' + p.sub + '</span>' : '');   // seconda riga sotto l'etichetta (Gioca → FAIND GAME), uguale in tutte le lingue
     // le icone-collegamento (Gioca) sono veri link: stessa scheda, aprono anche con tasto centrale o da tastiera
     if (p.link) return '<a class="h2app h2app--link" href="' + p.link + '" data-link="' + p.k + '">' + inner + '</a>';
     return '<button type="button" class="h2app" data-panel="' + p.k + '" aria-pressed="false" aria-controls="h2panel">' + inner + '</button>';
