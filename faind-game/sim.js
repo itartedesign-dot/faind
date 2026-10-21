@@ -11,8 +11,9 @@
    Nessuna funzione trascendente (sin, cos…): solo + − × ÷ e confronti, che
    danno lo stesso risultato in ogni browser e sul server.
 
-   Tra un livello e l'altro il motore si ferma 2 s (rest): il tempo di partita non scorre.
-   Fine partita: allo scadere dei 180 s oppure al terzo rotolo perso (GAME OVER).
+   Livelli senza fine: ogni LEVEL_SCROLLS notizie consegnate si sale di livello e la difficoltà cresce
+   (capacità del carico, velocità di caduta, frequenza delle uscite). Tra un livello e l'altro il motore
+   si ferma 2 s (rest). Si gioca fino al terzo rotolo perso (GAME OVER); MAX_TICKS è solo un tetto di sicurezza.
 
    TUTTI I PARAMETRI DI DIFFICOLTÀ STANNO IN CONFIG, qui sotto.
    ===================================================================== */
@@ -27,8 +28,9 @@ export const CONFIG = {
 
   // tempo
   TPS: 60,                               // tick al secondo
-  LEVELS: 5, LEVEL_SECONDS: 36,          // 5 livelli da 36 s = 180 s
-  CAPACITY: [5, 4, 3, 2, 1],             // notizie trasportabili per livello
+  LEVEL_SCROLLS: 15,                     // notizie consegnate per salire di livello (livelli senza fine)
+  MAX_TICKS: 36000,                      // tetto di sicurezza: 10 minuti di gioco (tiene corto il tempo di verifica sul server)
+  CAPACITY: [5, 4, 3, 2, 1],             // notizie trasportabili per livello (dal 5 in poi resta 1)
 
   // Faindo
   FX_MIN: 12, FX_MAX: 168,               // limiti sinistro e destro della piattaforma
@@ -37,14 +39,17 @@ export const CONFIG = {
   ROLL_HALF_W: 3, ROLL_HALF_H: 6,        // mezza dimensione del rotolo
 
   // rotoli: velocità di caduta (unità/s), pausa media tra due uscite (s) e preavviso luminoso (tick)
-  FALL_SPEED: [58, 60, 62, 64, 66],
+  FALL_SPEED: [58, 60, 62, 64, 66],      // dal livello 6 +FALL_STEP a livello, fino a FALL_MAX
+  FALL_STEP: 3, FALL_MAX: 105,
   SPAWN_GAP: [1.15, 1.25, 1.2, 1.15, 1.1],   // dal livello 3 escono più notizie (la capacità cala, ma l'equità sotto le tiene raggiungibili)
+  GAP_STEP: 0.05, GAP_MIN: 0.6,          // dal livello 6 la pausa cala di GAP_STEP a livello, fino a GAP_MIN
   SPAWN_JITTER: 0.25,                    // variazione casuale della pausa (± frazione)
   WARN_TICKS: 36,                        // la bocchetta si illumina prima del rilascio
   FIRST_SPAWN_TICK: 30,
   // equità: due rotoli non possono mai richiedere a Faindo di coprire più strada di quanto riesca
   // (REACH_FACTOR della sua velocità massima, più REACH_SLACK unità di margine)
   REACH_FACTOR: 0.7, REACH_SLACK: 11,
+  REACH_STEP: 0.015, REACH_MAX: 0.95,    // dal livello 6 si chiede a Faindo sempre più della sua velocità massima
 
   // passaggio di livello: il gioco si ferma 2 s (popup LEVEL n), i rotoli in volo spariscono, il carico resta
   LEVEL_REST_TICKS: 120,
@@ -63,11 +68,19 @@ export const CONFIG = {
   MAX_LOST: 3,                           // al terzo rotolo perso la partita finisce (GAME OVER)
 
   // verifica lato server
-  MAX_INPUTS: 6000
+  MAX_INPUTS: 30000
 };
 
-export const END_TICK = CONFIG.LEVELS * CONFIG.LEVEL_SECONDS * CONFIG.TPS;   // 10800
-export const LEVEL_TICKS = CONFIG.LEVEL_SECONDS * CONFIG.TPS;                // 2160
+/** Parametri di un livello (senza fine): capacità, velocità di caduta (unità/s), pausa media tra le uscite (s), fattore di raggiungibilità. */
+export function levelParams(lv) {
+  const C = CONFIG, i = Math.min(lv, 5) - 1, over = Math.max(0, lv - 5);
+  return {
+    cap: C.CAPACITY[i],
+    fall: Math.min(C.FALL_MAX, C.FALL_SPEED[i] + over * C.FALL_STEP),
+    gap: Math.max(C.GAP_MIN, C.SPAWN_GAP[i] - over * C.GAP_STEP),
+    reach: Math.min(C.REACH_MAX, C.REACH_FACTOR + over * C.REACH_STEP)
+  };
+}
 
 function rand(st) {   // mulberry32
   st.s = (st.s + 0x6D2B79F5) | 0;
@@ -91,7 +104,7 @@ export class Sim {
     this.target = this.x;
     this.dir = 0;                         // -1, 0, 1: solo per l'animazione
     this.level = 1;
-    this.cap = CONFIG.CAPACITY[0];
+    this.cap = levelParams(1).cap;
     this.load = 0;
     this.score = 0;
     this.delivered = 0;
@@ -123,10 +136,10 @@ export class Sim {
   _emit(type, a, b) { this.events.push({ type, a, b }); }
 
   _pickVent(red) {
-    const C = CONFIG, vt = C.FALL_SPEED[this.level - 1] / C.TPS;
+    const C = CONFIG, lp = levelParams(this.level), vt = lp.fall / C.TPS;
     const fall = (C.PLATFORM_Y - C.ROLL_HALF_H - C.VENT_Y) / vt;
     const land = this.tick + C.WARN_TICKS + fall;
-    const reach = C.REACH_FACTOR * C.MOVE_SPEED / C.TPS;
+    const reach = lp.reach * C.MOVE_SPEED / C.TPS;
     const others = [];
     for (const r of this.rolls) if (!r.red) others.push([r.x, this.tick + (C.PLATFORM_Y - C.ROLL_HALF_H - r.y) / r.vy]);
     for (const p of this.pending) if (!p.red) others.push([C.VENTS[p.vent], p.at + fall]);
@@ -182,7 +195,7 @@ export class Sim {
   _arm() {
     const C = CONFIG;
     if (!this.arm) {
-      if (this.tick >= this.nextArm && this.tick < END_TICK - 200 && this.load < this.cap) {
+      if (this.tick >= this.nextArm && this.load < this.cap) {
         const left = rand(this.rng) < C.ARM_LEFT_CHANCE, r = left ? C.ARM_LEFT_X : C.ARM_RIGHT_X;
         const xt = r[0] + Math.floor(rand(this.rng) * (r[1] - r[0] + 1));
         this.arm = { side: left ? -1 : 1, xt, age: 0, taken: false };
@@ -193,7 +206,7 @@ export class Sim {
     }
     const a = this.arm; a.age++;
     const st = this.armState();
-    if (!a.taken && st.prog >= 0.5 && this.load < C.CAPACITY[this.level - 1] && this.load < this.cap && Math.abs(st.x - this.x) <= C.PICK_HALF_W + C.ROLL_HALF_W + 2) {
+    if (!a.taken && st.prog >= 0.5 && this.load < this.cap && Math.abs(st.x - this.x) <= C.PICK_HALF_W + C.ROLL_HALF_W + 2) {
       a.taken = true; a.takenAt = a.age; a.from = st.prog; this.load++;
       this._emit('collect', st.x, C.ARM_Y); this._emit('armtake', st.x);
       if (this.load >= this.cap) this._emit('full');
@@ -212,10 +225,10 @@ export class Sim {
     // pausa tra i livelli: tutto fermo, il tempo di partita (tick) non scorre
     if (this.rest > 0) { this.rest--; this.dir = 0; return; }
 
-    // 1. livello (cambia da solo ogni 36 s di gioco effettivo; il carico in eccesso resta)
-    const lv = Math.min(C.LEVELS, Math.floor(this.tick / LEVEL_TICKS) + 1);
+    // 1. livello (sale ogni LEVEL_SCROLLS notizie consegnate; il carico in eccesso resta)
+    const lv = Math.floor(this.delivered / C.LEVEL_SCROLLS) + 1;
     if (lv !== this.level) {
-      this.level = lv; this.cap = C.CAPACITY[lv - 1];
+      this.level = lv; this.cap = levelParams(lv).cap;
       this.rest = C.LEVEL_REST_TICKS; this.dir = 0;
       this.rolls = []; this.pending = []; this.arm = null;            // reset: si riparte da campo libero
       this.nextSpawn = this.tick + 50; this.nextArm = this.tick + 330;
@@ -232,7 +245,7 @@ export class Sim {
     this._arm();
 
     // 3. uscita dei rotoli: preavviso luminoso, poi rilascio
-    if (this.tick >= this.nextSpawn && this.tick < END_TICK - 150) {
+    if (this.tick >= this.nextSpawn) {
       const redRoll = rand(this.rng);
       const red = redRoll < C.RED_CHANCE && this.spawned >= C.RED_FIRST && this.sinceRed >= C.RED_MIN_GAP;
       const v = this._pickVent(red);
@@ -241,7 +254,7 @@ export class Sim {
         // edizione rossa: rara, mai due vicine, mai all'inizio (si pesca sempre, così la sequenza dipende solo dal seme)
         this.spawned++; this.sinceRed = red ? 0 : this.sinceRed + 1;
         this.pending.push({ vent: v, at: this.tick + C.WARN_TICKS, red });
-        const gap = C.SPAWN_GAP[this.level - 1] * C.TPS * (1 - C.SPAWN_JITTER + 2 * C.SPAWN_JITTER * rand(this.rng));
+        const gap = levelParams(this.level).gap * C.TPS * (1 - C.SPAWN_JITTER + 2 * C.SPAWN_JITTER * rand(this.rng));
         this.nextSpawn = this.tick + Math.max(20, Math.round(gap));
         this._emit('warn', v);
       }
@@ -250,7 +263,7 @@ export class Sim {
       const p = this.pending[i];
       if (this.tick >= p.at) {
         this.pending.splice(i, 1);
-        this.rolls.push({ id: this.nextId++, x: C.VENTS[p.vent], y: C.VENT_Y, vy: C.FALL_SPEED[this.level - 1] / C.TPS, vent: p.vent, red: p.red });
+        this.rolls.push({ id: this.nextId++, x: C.VENTS[p.vent], y: C.VENT_Y, vy: levelParams(this.level).fall / C.TPS, vent: p.vent, red: p.red });
         this._emit('release', p.vent);
       }
     }
@@ -290,11 +303,10 @@ export class Sim {
     if (this.load > 0 && Math.abs(this.x - C.DELIVER_X) <= C.DELIVER_HALF) this._deliver();
 
     this.tick++;
-    if (this.tick >= END_TICK) this.done = true;
+    if (this.tick >= C.MAX_TICKS) this.done = true;
   }
 
   get resting() { return this.rest > 0; }
-  get remainingTicks() { return Math.max(0, END_TICK - this.tick); }
 }
 
 /** Rifà una partita dal seme e dal registro dei comandi. Usato dal server per verificarla. */
@@ -318,7 +330,7 @@ export function cleanInputs(raw) {
     if (!Array.isArray(e) || e.length !== 2) return null;
     const t = e[0], g = e[1];
     if (!Number.isInteger(t) || !Number.isInteger(g)) return null;
-    if (t < last || t < 0 || t >= END_TICK) return null;
+    if (t < last || t < 0 || t >= CONFIG.MAX_TICKS) return null;
     if (g < CONFIG.FX_MIN || g > CONFIG.FX_MAX) return null;
     out.push([t, g]); last = t;
   }

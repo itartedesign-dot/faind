@@ -9,7 +9,7 @@
    2. Il browser gioca e registra solo i comandi (tick, punto verso cui va Faindo).
    3. POST /score    → il server rifà la partita da zero con lo stesso motore (faind-game/sim.js)
       e calcola lui il punteggio: il totale inviato dal browser non esiste nemmeno. Controlla
-      anche che sia passato il tempo di una partita vera (180 s), che il gettone sia suo e
+      anche che sia passato il tempo di una partita vera (tanto quanto è durata), che il gettone sia suo e
       che non sia già stato usato (niente doppi invii).
    4. POST /name     → se il punteggio entra in una Top 10, con il "claim" firmato si registrano
       tre lettere A–Z e la nazione. Senza claim non si scrive in classifica.
@@ -64,8 +64,8 @@ const json = (obj, status, headers) => new Response(JSON.stringify(obj), { statu
 
 async function readJson(request) {
   const len = +(request.headers.get('Content-Length') || 0);
-  if (len > 200000) return null;
-  try { const txt = await request.text(); if (txt.length > 200000) return null; return JSON.parse(txt); } catch (e) { return null; }
+  if (len > 400000) return null;
+  try { const txt = await request.text(); if (txt.length > 400000) return null; return JSON.parse(txt); } catch (e) { return null; }
 }
 
 async function rankIn(db, score, week) {
@@ -116,7 +116,7 @@ export async function handle(request, env, now) {
       if (elapsed > MAX_ELAPSED_MS) return reply({ error: 'expired' }, 422);
       const inputs = cleanInputs(body.inputs);
       if (!inputs) return reply({ error: 'bad_inputs' }, 422);
-      // la partita si rifà prima di usare il gettone; finisce a 180 s o al terzo rotolo perso
+      // la partita si rifà prima di usare il gettone; finisce al terzo rotolo perso (o al tetto di sicurezza)
       const sim = replay(seed, inputs);
       if (!sim.done) return reply({ error: 'bad_game' }, 422);
       // il tempo reale passato deve bastare per quanto è durata la partita (con un po' di margine)
