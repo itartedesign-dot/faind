@@ -24,22 +24,22 @@
   var L = {
     it: { intro: "Le notizie sull'intelligenza artificiale, aggiornate ogni ora da fonti italiane e internazionali. E poi video, glossario, approfondimenti e curiosità.",
       nav: 'Le sezioni di FAIND', close: 'Chiudi', all: 'Tutte le notizie', empty: 'Al momento non ci sono contenuti in questa sezione.',
-      notizie: 'Notizie', video: 'Video', impara: "Impara l'AI", curiosita: 'Curiosità', prezzi: 'Prezzi', lavoro: 'Lavoro', strumenti: 'Strumenti', telegram: 'Telegram', uomoai: 'Uomo e AI', gioca: 'Gioca',
+      notizie: 'Notizie', video: 'Video', impara: "Impara l'AI", curiosita: 'Curiosità', prezzi: 'Prezzi', lavoro: 'Lavoro', strumenti: 'Strumenti', telegram: 'Telegram', uomoai: 'Uomo e AI', gioca: 'Faind Game',
       contatti: 'Contatti', sostieni: 'Sostieni FAIND', feed: 'Feed RSS', change: 'Cambia sezione', smvAll: 'Tutte le curiosità', source: 'Fonte', more: 'Leggi tutto', less: 'Mostra meno', gloss: 'Glossario →',
       t_notizie: 'Tutte le notizie', t_video: "L'AI in video", t_impara: "Impara l'AI", t_curiosita: 'Curiosità', t_prezzi: 'Prezzi e offerte', t_lavoro: "Lavoro nell'AI", t_strumenti: 'Strumenti e guide', t_uomoai: 'Uomo e AI', t_telegram: 'FAIND su Telegram', t_contatti: 'Scrivici', t_sostieni: 'Sostieni FAIND', t_feed: 'Feed RSS' },
     en: { intro: 'Artificial intelligence news, updated every hour from Italian and international sources. Plus videos, a glossary, in-depth articles and fun facts.',
       nav: 'FAIND sections', close: 'Close', all: 'All news', empty: 'Nothing in this section right now.',
-      notizie: 'News', video: 'Video', impara: 'Learn AI', curiosita: 'Fun facts', prezzi: 'Prices', lavoro: 'Jobs', strumenti: 'Tools', telegram: 'Telegram', uomoai: 'Humans and AI', gioca: 'Play',
+      notizie: 'News', video: 'Video', impara: 'Learn AI', curiosita: 'Fun facts', prezzi: 'Prices', lavoro: 'Jobs', strumenti: 'Tools', telegram: 'Telegram', uomoai: 'Humans and AI', gioca: 'Faind Game',
       contatti: 'Contact', sostieni: 'Support FAIND', feed: 'RSS feeds', change: 'Change section', smvAll: 'All the fun facts', source: 'Source', more: 'Read more', less: 'Show less', gloss: 'Glossary →',
       t_notizie: 'All news', t_video: 'AI on video', t_impara: 'Learn AI', t_curiosita: 'Fun facts', t_prezzi: 'Prices and deals', t_lavoro: 'AI jobs', t_strumenti: 'Tools and guides', t_uomoai: 'Humans and AI', t_telegram: 'FAIND on Telegram', t_contatti: 'Contact us', t_sostieni: 'Support FAIND', t_feed: 'RSS feeds' },
     fr: { intro: "L'actualité de l'intelligence artificielle, mise à jour chaque heure à partir de sources italiennes et internationales. Et aussi des vidéos, un glossaire, des dossiers et des curiosités.",
       nav: 'Les rubriques de FAIND', close: 'Fermer', all: 'Toutes les actus', empty: 'Rien dans cette rubrique pour le moment.',
-      notizie: 'Actus', video: 'Vidéo', impara: "Apprendre l'IA", curiosita: 'Curiosités', prezzi: 'Prix', lavoro: 'Emploi', strumenti: 'Outils', telegram: 'Telegram', uomoai: "L'humain et l'IA", gioca: 'Jouer',
+      notizie: 'Actus', video: 'Vidéo', impara: "Apprendre l'IA", curiosita: 'Curiosités', prezzi: 'Prix', lavoro: 'Emploi', strumenti: 'Outils', telegram: 'Telegram', uomoai: "L'humain et l'IA", gioca: 'Faind Game',
       contatti: 'Contact', sostieni: 'Soutenir FAIND', feed: 'Flux RSS', change: 'Changer de rubrique', smvAll: 'Toutes les curiosités', source: 'Source', more: 'Lire la suite', less: 'Réduire', gloss: 'Glossaire →',
       t_notizie: 'Toutes les actus', t_video: "L'IA en vidéo", t_impara: "Apprendre l'IA", t_curiosita: 'Curiosités', t_prezzi: 'Prix et offres', t_lavoro: "Emplois dans l'IA", t_strumenti: 'Outils et guides', t_uomoai: "L'humain et l'IA", t_telegram: 'FAIND sur Telegram', t_contatti: 'Écrivez-nous', t_sostieni: 'Soutenir FAIND', t_feed: 'Flux RSS' },
     de: { intro: 'Nachrichten über künstliche Intelligenz, stündlich aktualisiert aus italienischen und internationalen Quellen. Dazu Videos, ein Glossar, Hintergründe und Kurioses.',
       nav: 'Die Bereiche von FAIND', close: 'Schließen', all: 'Alle Nachrichten', empty: 'In diesem Bereich gibt es gerade nichts.',
-      notizie: 'News', video: 'Video', impara: 'KI lernen', curiosita: 'Kurioses', prezzi: 'Preise', lavoro: 'Jobs', strumenti: 'Tools', telegram: 'Telegram', uomoai: 'Mensch und KI', gioca: 'Spielen',
+      notizie: 'News', video: 'Video', impara: 'KI lernen', curiosita: 'Kurioses', prezzi: 'Preise', lavoro: 'Jobs', strumenti: 'Tools', telegram: 'Telegram', uomoai: 'Mensch und KI', gioca: 'Faind Game',
       contatti: 'Kontakt', sostieni: 'FAIND unterstützen', feed: 'RSS-Feeds', change: 'Bereich wechseln', smvAll: 'Alle Kuriositäten', source: 'Quelle', more: 'Weiterlesen', less: 'Weniger', gloss: 'Glossar →',
       t_notizie: 'Alle Nachrichten', t_video: 'KI im Video', t_impara: 'KI lernen', t_curiosita: 'Kurioses', t_prezzi: 'Preise und Angebote', t_lavoro: 'KI-Jobs', t_strumenti: 'Tools und Anleitungen', t_uomoai: 'Mensch und KI', t_telegram: 'FAIND auf Telegram', t_contatti: 'Schreib uns', t_sostieni: 'FAIND unterstützen', t_feed: 'RSS-Feeds' }
   };
@@ -56,7 +56,7 @@
     { k: 'strumenti', ids: ['trending', 'guide'], icon: true },   // prima i trending tool, poi gli strumenti da scaricare (Paolo, 12 ottobre 2026)
     { k: 'uomoai', ids: ['focus'], icon: true },   // l'ex sezione Focus: robot, casa, medicina, lavoro e clima
     { k: 'telegram', ids: ['telegram'], icon: true },
-    { k: 'gioca', ids: [], icon: true, link: 'faind-game/', sub: 'FAIND GAME' },   // non apre un pannello: porta al gioco FAIND GAME (pagina propria, a tutto schermo)
+    { k: 'gioca', ids: [], icon: true, link: 'faind-game/' },   // non apre un pannello: porta al gioco FAIND GAME (pagina propria, a tutto schermo)
     { k: 'contatti', ids: ['contatti'] },
     { k: 'sostieni', ids: ['sostieni'] },
     { k: 'feed', ids: ['feed'] }
@@ -199,7 +199,7 @@
   var apps = document.createElement('nav');
   apps.className = 'h2apps';
   apps.innerHTML = PANELS.filter(function (p) { return p.icon; }).map(function (p) {
-    var inner = '<span class="h2app__tile"><img src="assets/icone/' + p.k + '.webp?v=2" width="256" height="256" alt="" decoding="async"></span>' +
+    var inner = '<span class="h2app__tile"><img src="assets/icone/' + p.k + '.webp?v=3" width="256" height="256" alt="" decoding="async"></span>' +
       '<span class="h2app__lbl" data-h2="' + p.k + '"></span>' +
       (p.sub ? '<span class="h2app__sub">' + p.sub + '</span>' : '');   // seconda riga sotto l'etichetta (Gioca → FAIND GAME), uguale in tutte le lingue
     // le icone-collegamento (Gioca) sono veri link: stessa scheda, aprono anche con tasto centrale o da tastiera
