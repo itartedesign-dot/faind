@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <title>FAIND GAME – News Rush, the free AI newsroom arcade game</title>
-  <meta name="description" content="FAIND GAME – News Rush: a free pixel-art arcade game. Help Faindo catch the news scrolls and deliver them to the newsroom in 180 seconds. Weekly and all-time leaderboard.">
+  <meta name="description" content="FAIND GAME – News Rush: a free pixel-art arcade game. Help Faindo catch the news scrolls and deliver them to the newsroom. Endless levels, weekly and all-time leaderboard.">
   <link rel="canonical" href="https://faind.org/faind-game/">
   <meta name="theme-color" content="#0b1226">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,8 +18,8 @@
   <meta name="twitter:card" content="summary">
   <link rel="icon" href="../assets/favicon-32.png?v=3" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
-  <link rel="stylesheet" href="game.css?v=20261021o">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"FAIND GAME – News Rush","url":"https://faind.org/faind-game/","description":"A free pixel-art arcade game: catch the news scrolls and deliver them to the newsroom in 180 seconds.","image":"https://faind.org/assets/icone/gioca.webp?v=3","genre":"Arcade","gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","inLanguage":["en","it","fr","de"],"isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"FAIND","url":"https://faind.org/"}}</script>
+  <link rel="stylesheet" href="game.css?v=20261021q">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"FAIND GAME – News Rush","url":"https://faind.org/faind-game/","description":"A free pixel-art arcade game: catch the news scrolls and deliver them to the newsroom, level after level.","image":"https://faind.org/assets/icone/gioca.webp?v=3","genre":"Arcade","gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","inLanguage":["en","it","fr","de"],"isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"FAIND","url":"https://faind.org/"}}</script>
 </head>
 <body>
 <div id="app" class="g-app" data-state="start">
@@ -34,8 +34,8 @@
             <span class="g-brand__main">F<i>A</i><b>I</b>ND</span><span class="g-brand__sub">NEWS RUSH</span>
           </a>
           <div class="g-cell g-cell--score"><span class="g-lbl" data-t="score">SCORE</span><span class="g-val" id="hScore">00000</span></div>
-          <div class="g-cell g-cell--time"><span class="g-lbl" id="hClock" aria-hidden="true">◷</span><span class="g-val" id="hTime" role="timer">03:00</span></div>
-          <div class="g-cell g-cell--level"><span class="g-lbl" data-t="level">LEVEL</span><span class="g-val" id="hLevel">1/5</span></div>
+          <div class="g-cell g-cell--top" id="hTopCell"><span class="g-val" id="hTopIni">BEST</span><span class="g-lbl" id="hTopScore">0</span></div>
+          <div class="g-cell g-cell--level"><span class="g-lbl" data-t="level">LEVEL</span><span class="g-val" id="hLevel">1</span></div>
           <div class="g-cell g-cell--load" id="hLoadCell"><span class="g-lbl"><span data-t="load">LOAD</span> <b id="hLoadN">0/5</b></span><span class="g-slots" id="hSlots"></span></div>
           <button type="button" class="g-pausebtn" id="btnPause" data-ta="pause" aria-label="Pause" hidden><span></span><span></span></button>
         </header>
@@ -131,7 +131,7 @@
   </div>
   <noscript><p class="g-noscript">FAIND GAME – News Rush needs JavaScript. <a href="../">Back to FAIND</a></p></noscript>
 </div>
-<script src="config.js?v=20261021p"></script>
-<script type="module" src="game.js?v=20261021o"></script>
+<script src="config.js?v=20261021q"></script>
+<script type="module" src="game.js?v=20261021q"></script>
 </body>
 </html>

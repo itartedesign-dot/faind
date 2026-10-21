@@ -25,7 +25,7 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 .g-lbl { font-size: calc(var(--u) * 3.3); color: #aebbd6; font-weight: 700; letter-spacing: .08em; line-height: 1; white-space: nowrap; }
 .g-lbl b { color: var(--cyanL); font-weight: 800; }
 .g-val { font-size: calc(var(--u) * 6.8); font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
-#hClock { color: var(--cyanL); font-size: calc(var(--u) * 4); }
+.g-cell--top .g-val { color: var(--amber); }
 .g-cell--load.is-full .g-lbl b { color: var(--amber); }
 .g-slots { display: flex; gap: calc(var(--u) * 1); height: calc(var(--u) * 4.2); align-items: center; }
 .g-slot { width: calc(var(--u) * 5.6); height: calc(var(--u) * 3.2); border-radius: calc(var(--u) * 1); background: #0a1124; border: 1px solid #2a4170; }

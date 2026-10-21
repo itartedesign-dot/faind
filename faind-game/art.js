@@ -502,7 +502,7 @@ export class Scene {
       const k = 1 - m.rest / C.LEVEL_REST_TICKS;
       g.fillStyle = 'rgba(8,14,30,' + Math.min(0.55, 0.15 + k * 2).toFixed(3) + ')'; g.fillRect(0, 0, W, H);
       if (k < 0.12) { g.fillStyle = 'rgba(255,250,240,' + (0.5 * (1 - k / 0.12)).toFixed(3) + ')'; g.fillRect(0, 0, W, H); }
-      for (let i = 0; i < 5; i++) rect(g, i < m.lv ? P.cyanL : P.steelD, 90 - 20 + i * 8, 120, 6, 3);
+      for (let i = 0; i < 5; i++) rect(g, i < (m.lv - 1) % 5 + 1 ? P.cyanL : P.steelD, 90 - 20 + i * 8, 120, 6, 3);   // cinque tacche, che si riempiono di nuovo a ogni giro
     }
     g.restore();
   }

@@ -1,5 +1,5 @@
 // Prova del motore: un "giocatore" automatico attraversa i cinque livelli; il replay deve dare lo stesso risultato.
-import { Sim, replay, CONFIG as C, END_TICK, LEVEL_TICKS } from '../faind-game/sim.js';
+import { Sim, replay, CONFIG as C } from '../faind-game/sim.js';
 import assert from 'node:assert';
 
 // giocatore automatico: insegue i rotoli buoni e si sposta se una rossa gli cade addosso
@@ -23,18 +23,23 @@ for (const skill of [1, 6, 12]) {
     const s = play(seed * 7919, skill);
     const r = replay(s.seed, s.inputs);
     assert.equal(r.score, s.score); assert.equal(r.delivered, s.delivered); assert.equal(r.lost, s.lost);
-    tot.push([s.score, s.delivered, s.lost]);
+    tot.push([s.score, s.delivered, s.lost, s.level, s.tick]);
   }
   const avg = i => (tot.reduce((a, b) => a + b[i], 0) / tot.length).toFixed(1);
-  console.log('reazione ogni', skill, 'tick -> punteggio medio', avg(0), 'consegnate', avg(1), 'perse', avg(2));
+  console.log('reazione ogni', skill, 'tick -> punteggio medio', avg(0), 'consegnate', avg(1), 'perse', avg(2), 'livello medio', (tot.reduce((a, b) => a + b[3], 0) / tot.length).toFixed(1), 'minuti', (tot.reduce((a, b) => a + b[4], 0) / tot.length / 3600).toFixed(1));
 }
-// capacità e livelli (giocatore automatico) e game over al terzo rotolo perso (nessun comando)
+// livelli senza fine: nessun limite di tempo, si sale ogni LEVEL_SCROLLS consegne, si finisce solo al terzo rotolo perso
 const s = new Sim(5); const lv = [];
 while (!s.done) {
   s.input(aim(s)); s.step(); for (const e of s.events) if (e.type === 'level') lv.push([s.tick, e.a, e.b]); s.events.length = 0;
 }
-console.log('cambi livello', JSON.stringify(lv), 'fine tick', s.tick, END_TICK);
-assert.equal(s.tick, 10800); assert.deepEqual(lv.map(x => x[2]), [4, 3, 2, 1]); assert.equal(s.over, false);
+console.log('cambi livello (tick, livello, capacità)', JSON.stringify(lv.slice(0, 8)), '... ultimo', JSON.stringify(lv[lv.length - 1]), 'fine tick', s.tick, 'consegnate', s.delivered);
+assert.ok(lv.length >= 4 && lv[0][1] === 2 && lv[0][2] === 4 && lv[3][2] === 1, 'la capacità scende fino a 1');
+assert.ok(lv.every((x, i) => x[1] === i + 2), 'un livello alla volta');
+assert.equal(s.level, Math.floor(s.delivered / C.LEVEL_SCROLLS) + 1);
 const idle = new Sim(5); while (!idle.done) { idle.step(); idle.events.length = 0; }
-assert.ok(idle.over && idle.lost === 3 && idle.tick < 10800); console.log('game over a tick', idle.tick, 'score', idle.score);
+assert.ok(idle.over && idle.lost === 3 && idle.tick < 1500); console.log('game over a tick', idle.tick, 'score', idle.score);
+// difficoltà crescente: parametri monotoni
+import { levelParams } from '../faind-game/sim.js';
+for (let l = 4; l <= 30; l++) { const a = levelParams(l - 1), b = levelParams(l); assert.ok(b.fall >= a.fall && b.gap <= a.gap && b.reach >= a.reach && b.cap <= a.cap); }
 console.log('OK');

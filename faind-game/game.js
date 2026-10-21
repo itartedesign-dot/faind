@@ -6,7 +6,7 @@
    Tutti i ricevitori di eventi usano un unico AbortController e il ciclo di
    animazione è uno solo: uscendo dal gioco (shutdown) si libera tutto.
    ===================================================================== */
-import { Sim, CONFIG as C, END_TICK } from './sim.js';
+import { Sim, CONFIG as C, levelParams } from './sim.js';
 import { Scene } from './art.js';
 import { Audio8 } from './audio.js';
 import { pickLang, makeT } from './i18n.js';
@@ -24,7 +24,7 @@ const on = (el, ev, fn, opt) => el.addEventListener(ev, fn, Object.assign({ sign
 
 const el = {
   app: $('app'), fit: $('fit'), frame: $('frame'), stage: $('stage'), cv: $('cv'), brand: $('brand'),
-  score: $('hScore'), time: $('hTime'), level: $('hLevel'), loadN: $('hLoadN'), loadCell: $('hLoadCell'), slots: $('hSlots'),
+  score: $('hScore'), topIni: $('hTopIni'), topScore: $('hTopScore'), topCell: $('hTopCell'), level: $('hLevel'), loadN: $('hLoadN'), loadCell: $('hLoadCell'), slots: $('hSlots'),
   pauseBtn: $('btnPause'), live: $('liveMsg'), toast: $('toast'), count: $('count'),
   pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pLb: $('pLb'), pCountry: $('pCountry'),
   offNote: $('offNote'), pauseAuto: $('pauseAuto'), controls: $('controls'), drag: $('drag'), btnL: $('btnL'), btnR: $('btnR')
@@ -130,6 +130,7 @@ function startGame() {
   audio.unlock(); audio.resume();
   askFullscreen();
   scene.reset();
+  loadTop();
   sim = null; session = null; acc = 0;
   // sessione di partita sul server: il seme dei rotoli lo decide lui; se non risponde si gioca comunque, fuori classifica
   sessionP = null;
@@ -309,15 +310,26 @@ on(document, 'fullscreenchange', () => setTimeout(layout, 60));
 
 /* ------------------------------ HUD ------------------------------ */
 const hc = {};
+// in alto: sigla e punteggio del primo della classifica assoluta (se la classifica non risponde, il record di questo dispositivo)
+let topInfo = null;
+function localBest() { try { return parseInt(localStorage.getItem(BEST_KEY) || '0', 10) || 0; } catch (e) { return 0; } }
+function setTop() {
+  const ini = topInfo ? topInfo.initials : t('topBest'), score = topInfo ? topInfo.score : localBest();
+  setText(el.topIni, 'topIni', ini); setText(el.topScore, 'topScore', String(score));
+  el.topCell.title = topInfo ? t('topTitle') : t('bestTitle');
+}
+async function loadTop() {
+  if (!API) return;
+  try { const r = await api('/leaderboard', null, 6000); const f = r && r.all && r.all[0]; topInfo = f && /^[A-Z]{3}$/.test(f.initials) ? { initials: f.initials, score: f.score | 0 } : null; } catch (e) { /* resta il record locale */ }
+  setTop();
+}
 function setText(n, key, v) { if (hc[key] !== v) { hc[key] = v; n.textContent = v; } }
 function updateHud(force) {
   const s = sim;
-  const score = s ? s.score : 0, load = s ? s.load : 0, cap = s ? s.cap : C.CAPACITY[0], lv = s ? s.level : 1;
-  const rem = s ? s.remainingTicks : END_TICK;
-  const sec = Math.ceil(rem / C.TPS), mm = String(Math.floor(sec / 60)).padStart(2, '0'), ss = String(sec % 60).padStart(2, '0');
+  const score = s ? s.score : 0, load = s ? s.load : 0, cap = s ? s.cap : levelParams(1).cap, lv = s ? s.level : 1;
   setText(el.score, 'score', String(score).padStart(5, '0'));
-  setText(el.time, 'time', mm + ':' + ss);
-  setText(el.level, 'lv', lv + '/' + C.LEVELS);
+  setTop();
+  setText(el.level, 'lv', String(lv));
   const full = load >= cap && load > 0;
   setText(el.loadN, 'load', full ? t('full') : load + '/' + cap);
   el.loadCell.classList.toggle('is-full', full);
@@ -382,7 +394,7 @@ function frame(now) {
     dir: state === 'playing' ? sim.dir : 0, load: sim.load, cap: sim.cap, tick: sim.tick, full: sim.load >= sim.cap && sim.load > 0,
     rolls: sim.rolls.map((r) => ({ x: r.x, y: r.y + r.vy * k, vent: r.vent, vy: r.vy, red: r.red })), pending: sim.pending,
     arm: sim.armState(), rest: sim.rest, lv: sim.level, lostLog: sim.lostLog
-  } : { x: C.W / 2, dir: 0, load: 0, cap: C.CAPACITY[0], tick: 0, full: false, rolls: [], pending: [], arm: null, rest: 0, lv: 1 };
+  } : { x: C.W / 2, dir: 0, load: 0, cap: levelParams(1).cap, tick: 0, full: false, rolls: [], pending: [], arm: null, rest: 0, lv: 1 };
   scene.draw(m);
 }
 
@@ -467,7 +479,7 @@ on($('nameForm'), 'submit', async (e) => {
   try {
     await api('/name', { claim, initials: ini, country: chosen }, 8000);
     $('nameForm').hidden = true; $('rNote').hidden = false; $('rNote').textContent = t('saved'); claim = null;
-    lbData = null;
+    lbData = null; loadTop();
   } catch (e2) { err.hidden = false; err.textContent = e2 && e2.status === 400 ? t('nameBad') : t('netError'); }
   $('btnSave').disabled = false;
 });
@@ -511,6 +523,7 @@ applyTexts();
 layout();
 if (!API) { el.offNote.hidden = false; el.offNote.textContent = t('offline'); }
 updateHud(true);
+loadTop();
 requestAnimationFrame((n) => { last = n; raf = requestAnimationFrame(frame); });
 
 // per le prove automatiche e la diagnosi
