@@ -47,6 +47,8 @@ export const CONFIG = {
 
   // punteggio
   POINTS: 100, STREAK_STEP: 5, MAX_MULT: 5,
+  RED_CHANCE: 0.07, RED_MIN_GAP: 7,       // ogni tanto esce un'edizione ROSSA: se Faindo la prende vale come 1 rotolo perso (non entra nel carico)
+  RED_FIRST: 4,                          // la prima rossa non esce prima del quinto rotolo
   MAX_LOST: 3,                           // al terzo rotolo perso la partita finisce (GAME OVER)
 
   // verifica lato server
@@ -88,6 +90,7 @@ export class Sim {
     this.rolls = [];                      // {id, x, y, vy, vent}
     this.pending = [];                    // {vent, at}: bocchette in preavviso
     this.nextId = 1;
+    this.spawned = 0; this.sinceRed = 99;  // per dosare le edizioni rosse
     this.nextSpawn = CONFIG.FIRST_SPAWN_TICK;
     this.events = [];                     // svuotati dal chiamante dopo ogni step
     this.inputs = [];                     // [tick, target]
@@ -103,14 +106,16 @@ export class Sim {
 
   _emit(type, a, b) { this.events.push({ type, a, b }); }
 
-  _pickVent() {
+  _pickVent(red) {
     const C = CONFIG, vt = C.FALL_SPEED[this.level - 1] / C.TPS;
     const fall = (C.PLATFORM_Y - C.ROLL_HALF_H - C.VENT_Y) / vt;
     const land = this.tick + C.WARN_TICKS + fall;
     const reach = C.REACH_FACTOR * C.MOVE_SPEED / C.TPS;
     const others = [];
-    for (const r of this.rolls) others.push([r.x, this.tick + (C.PLATFORM_Y - C.ROLL_HALF_H - r.y) / r.vy]);
-    for (const p of this.pending) others.push([C.VENTS[p.vent], p.at + fall]);
+    for (const r of this.rolls) if (!r.red) others.push([r.x, this.tick + (C.PLATFORM_Y - C.ROLL_HALF_H - r.y) / r.vy]);
+    for (const p of this.pending) if (!p.red) others.push([C.VENTS[p.vent], p.at + fall]);
+    const near = [];   // una rossa non cade mai sulla strada di un rotolo buono (stessa zona, tempi vicini)
+    if (red) for (const o of others) near.push(o);
     const order = [0, 1, 2, 3, 4];
     for (let i = order.length - 1; i > 0; i--) {   // mescolo (Fisher–Yates) con il seme
       const j = Math.floor(rand(this.rng) * (i + 1));
@@ -121,6 +126,7 @@ export class Sim {
       for (const o of others) {
         if (Math.abs(C.VENTS[v] - o[0]) - C.REACH_SLACK > reach * Math.abs(land - o[1])) { ok = false; break; }
       }
+      if (ok && red) for (const o of near) if (Math.abs(C.VENTS[v] - o[0]) < 32 && Math.abs(land - o[1]) < 55) { ok = false; break; }
       if (ok) return v;
     }
     return -1;
@@ -160,10 +166,14 @@ export class Sim {
 
     // 3. uscita dei rotoli: preavviso luminoso, poi rilascio
     if (this.tick >= this.nextSpawn && this.tick < END_TICK - 150) {
-      const v = this._pickVent();
+      const redRoll = rand(this.rng);
+      const red = redRoll < C.RED_CHANCE && this.spawned >= C.RED_FIRST && this.sinceRed >= C.RED_MIN_GAP;
+      const v = this._pickVent(red);
       if (v < 0) this.nextSpawn = this.tick + 6;
       else {
-        this.pending.push({ vent: v, at: this.tick + C.WARN_TICKS });
+        // edizione rossa: rara, mai due vicine, mai all'inizio (si pesca sempre, così la sequenza dipende solo dal seme)
+        this.spawned++; this.sinceRed = red ? 0 : this.sinceRed + 1;
+        this.pending.push({ vent: v, at: this.tick + C.WARN_TICKS, red });
         const gap = C.SPAWN_GAP[this.level - 1] * C.TPS * (1 - C.SPAWN_JITTER + 2 * C.SPAWN_JITTER * rand(this.rng));
         this.nextSpawn = this.tick + Math.max(20, Math.round(gap));
         this._emit('warn', v);
@@ -173,7 +183,7 @@ export class Sim {
       const p = this.pending[i];
       if (this.tick >= p.at) {
         this.pending.splice(i, 1);
-        this.rolls.push({ id: this.nextId++, x: C.VENTS[p.vent], y: C.VENT_Y, vy: C.FALL_SPEED[this.level - 1] / C.TPS, vent: p.vent });
+        this.rolls.push({ id: this.nextId++, x: C.VENTS[p.vent], y: C.VENT_Y, vy: C.FALL_SPEED[this.level - 1] / C.TPS, vent: p.vent, red: p.red });
         this._emit('release', p.vent);
       }
     }
@@ -185,13 +195,20 @@ export class Sim {
       r.y += r.vy;
       const inZone = Math.abs(r.x - this.x) <= C.PICK_HALF_W + C.ROLL_HALF_W &&
         r.y + C.ROLL_HALF_H >= pickTop && r.y - C.ROLL_HALF_H <= C.PLATFORM_Y;
-      if (inZone && this.load < this.cap) {
+      if (inZone && r.red) {                     // presa l'edizione rossa: vale come un rotolo perso
+        this.lost++; this.streak = 0; this.mult = 1;
+        this._emit('bad', r.x);
+        if (this.lost >= C.MAX_LOST) this.over = true;
+        continue;
+      }
+      if (inZone && !r.red && this.load < this.cap) {
         this.load++;
         this._emit('collect', r.x, r.y);
         if (this.load >= this.cap) this._emit('full');
         continue;
       }
       if (r.y + C.ROLL_HALF_H >= C.PLATFORM_Y) {
+        if (r.red) { this._emit('redgone', r.x); continue; }   // la rossa lasciata cadere non costa nulla
         this.lost++; this.streak = 0; this.mult = 1;
         this._emit('drop', r.x);
         if (this.lost >= C.MAX_LOST) this.over = true;

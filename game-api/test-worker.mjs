@@ -14,8 +14,8 @@ function bot(seed, lazy) {
   while (!s.done) {
     let tg = s.target;
     if (!lazy) {
-      if (s.load >= s.cap || (s.load > 0 && !s.rolls.length)) tg = C.DELIVER_X;
-      else if (s.rolls.length) tg = s.rolls.slice().sort((a, b) => b.y - a.y)[0].x;
+      if (s.load >= s.cap || (s.load > 0 && !s.rolls.some(r => !r.red))) tg = C.DELIVER_X;
+      else if (s.rolls.some(r => !r.red)) tg = s.rolls.filter(r => !r.red).sort((a, b) => b.y - a.y)[0].x;
     } else tg = 20;
     s.input(tg); s.step(); s.events.length = 0;
   }
