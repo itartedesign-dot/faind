@@ -17,6 +17,7 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 .g-brand { flex: 1.5 1 0; min-width: 0; display: flex; flex-direction: column; justify-content: center; text-decoration: none; color: var(--ivory); padding: 0 calc(var(--u) * 1.5); cursor: pointer; line-height: 1; touch-action: manipulation; }
 .g-brand__main { font-weight: 900; font-size: calc(var(--u) * 8.4); letter-spacing: .02em; text-shadow: 0 calc(var(--u) * .6) 0 #000; font-family: var(--mono); }
 .g-brand__main i { font-style: normal; color: var(--cyan); }
+.g-brand__main b { font-weight: inherit; color: var(--cyan); }
 .g-brand__sub { font-weight: 800; font-size: calc(var(--u) * 3.3); color: var(--cyan); letter-spacing: .12em; margin-top: calc(var(--u) * .8); white-space: nowrap; }
 .g-brand:focus-visible, .g-btn:focus-visible, .g-arrow:focus-visible, .g-pausebtn:focus-visible, .g-input:focus-visible, .g-tab:focus-visible, .g-countries button:focus-visible { outline: 3px solid var(--cyanL); outline-offset: 2px; }
 .g-cell { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #101a31; border: 1px solid #2a4170; border-radius: calc(var(--u) * 1.4); gap: calc(var(--u) * .6); }
@@ -127,3 +128,10 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 .g-panel--lb, .g-panel--country { z-index: 27; background: rgba(5,9,20,.97); }
 .g-list li { grid-template-columns: calc(var(--u) * 14) calc(var(--u) * 22) 1fr auto; }
 .g-list .g-pos { white-space: nowrap; }
+
+/* carico pieno: il riquadro si accende in arancio per ricordare di scaricare */
+.g-cell--load.is-full { background: #3a2208; border-color: var(--amber); box-shadow: 0 0 calc(var(--u) * 3) rgba(255,180,58,.55); animation: gfull 1s ease-in-out infinite; }
+.g-cell--load.is-full .g-lbl, .g-cell--load.is-full .g-lbl b { color: var(--amber); }
+@keyframes gfull { 50% { background: #5a3508; } }
+@media (prefers-reduced-motion: reduce) { .g-cell--load.is-full { animation: none; } }
+.g-canvas { touch-action: none; cursor: ew-resize; }

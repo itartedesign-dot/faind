@@ -251,20 +251,25 @@ function hold(btn, key) {
 }
 hold(el.btnL, 'left'); hold(el.btnR, 'right');
 
+// trascinamento col dito: sulla zona dei comandi in basso oppure direttamente sul campo di gioco
 let dragId = null;
-on(el.drag, 'pointerdown', (e) => {
-  e.preventDefault(); dragId = e.pointerId; try { el.drag.setPointerCapture(e.pointerId); } catch (er) {}
-  inp.drag = true; inp.dragX0 = e.clientX; inp.dragBase = sim ? sim.x : C.W / 2; inp.dragTarget = inp.dragBase;
-  el.drag.classList.add('is-down'); applyTarget();
-});
-on(el.drag, 'pointermove', (e) => {
-  if (!inp.drag || e.pointerId !== dragId) return;
-  inp.dragTarget = Math.max(C.FX_MIN, Math.min(C.FX_MAX, inp.dragBase + ((e.clientX - inp.dragX0) / unit) * 1.35));
-  applyTarget();
-});
-const dragEnd = (e) => { if (e && e.pointerId !== dragId) return; inp.drag = false; dragId = null; el.drag.classList.remove('is-down'); applyTarget(); };
-on(el.drag, 'pointerup', dragEnd); on(el.drag, 'pointercancel', dragEnd); on(el.drag, 'lostpointercapture', dragEnd);
-on(el.drag, 'contextmenu', (e) => e.preventDefault());
+function bindDrag(target) {
+  on(target, 'pointerdown', (e) => {
+    if (inp.drag) return;
+    e.preventDefault(); dragId = e.pointerId; try { target.setPointerCapture(e.pointerId); } catch (er) {}
+    inp.drag = true; inp.dragX0 = e.clientX; inp.dragBase = sim ? sim.x : C.W / 2; inp.dragTarget = inp.dragBase;
+    el.drag.classList.add('is-down'); applyTarget();
+  });
+  on(target, 'pointermove', (e) => {
+    if (!inp.drag || e.pointerId !== dragId) return;
+    inp.dragTarget = Math.max(C.FX_MIN, Math.min(C.FX_MAX, inp.dragBase + ((e.clientX - inp.dragX0) / unit) * 1.35));
+    applyTarget();
+  });
+  const end = (e) => { if (e && e.pointerId !== dragId) return; inp.drag = false; dragId = null; el.drag.classList.remove('is-down'); applyTarget(); };
+  on(target, 'pointerup', end); on(target, 'pointercancel', end); on(target, 'lostpointercapture', end);
+  on(target, 'contextmenu', (e) => e.preventDefault());
+}
+bindDrag(el.drag); bindDrag(el.cv);
 
 on(document, 'keydown', (e) => {
   if (e.altKey || e.ctrlKey || e.metaKey) return;
