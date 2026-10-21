@@ -32,9 +32,15 @@ for (const skill of [1, 6, 12]) {
   const avg = i => (tot.reduce((a, b) => a + b[i], 0) / tot.length).toFixed(1);
   console.log('reazione ogni', skill, 'tick -> punteggio medio', avg(0), 'consegnate', avg(1), 'perse', avg(2));
 }
-// capacità e livelli
+// capacità e livelli (giocatore automatico) e game over al terzo rotolo perso (nessun comando)
 const s = new Sim(5); const lv = [];
-while (!s.done) { s.step(); for (const e of s.events) if (e.type === 'level') lv.push([s.tick, e.a, e.b]); s.events.length = 0; }
+while (!s.done) {
+  let tg = s.target;
+  if (s.load >= s.cap || (s.load > 0 && !s.rolls.length)) tg = C.DELIVER_X; else if (s.rolls.length) tg = s.rolls.slice().sort((a, b) => b.y - a.y)[0].x;
+  s.input(tg); s.step(); for (const e of s.events) if (e.type === 'level') lv.push([s.tick, e.a, e.b]); s.events.length = 0;
+}
 console.log('cambi livello', JSON.stringify(lv), 'fine tick', s.tick, END_TICK);
-assert.equal(s.tick, 10800);
+assert.equal(s.tick, 10800); assert.deepEqual(lv.map(x => x[2]), [4, 3, 2, 1]); assert.equal(s.over, false);
+const idle = new Sim(5); while (!idle.done) { idle.step(); idle.events.length = 0; }
+assert.ok(idle.over && idle.lost === 3 && idle.tick < 10800); console.log('game over a tick', idle.tick, 'score', idle.score);
 console.log('OK');

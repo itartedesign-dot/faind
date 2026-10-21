@@ -11,6 +11,8 @@
    Nessuna funzione trascendente (sin, cos…): solo + − × ÷ e confronti, che
    danno lo stesso risultato in ogni browser e sul server.
 
+   Fine partita: allo scadere dei 180 s oppure al terzo rotolo perso (GAME OVER).
+
    TUTTI I PARAMETRI DI DIFFICOLTÀ STANNO IN CONFIG, qui sotto.
    ===================================================================== */
 
@@ -45,6 +47,7 @@ export const CONFIG = {
 
   // punteggio
   POINTS: 100, STREAK_STEP: 5, MAX_MULT: 5,
+  MAX_LOST: 3,                           // al terzo rotolo perso la partita finisce (GAME OVER)
 
   // verifica lato server
   MAX_INPUTS: 6000
@@ -70,6 +73,7 @@ export class Sim {
     this.rng = { s: this.seed };
     this.tick = 0;
     this.done = false;
+    this.over = false;                    // true se la partita è finita per i rotoli persi
     this.x = CONFIG.W / 2;
     this.target = this.x;
     this.dir = 0;                         // -1, 0, 1: solo per l'animazione
@@ -190,11 +194,13 @@ export class Sim {
       if (r.y + C.ROLL_HALF_H >= C.PLATFORM_Y) {
         this.lost++; this.streak = 0; this.mult = 1;
         this._emit('drop', r.x);
+        if (this.lost >= C.MAX_LOST) this.over = true;
         continue;
       }
       keep.push(r);
     }
     this.rolls = keep;
+    if (this.over) { this.tick++; this.done = true; return; }   // GAME OVER: niente consegna, le notizie portate non valgono
 
     // 5. consegna automatica sulla bocchetta centrale (anche se si è raccolto proprio qui)
     if (this.load > 0 && Math.abs(this.x - C.DELIVER_X) <= C.DELIVER_HALF) this._deliver();

@@ -149,6 +149,7 @@ function finish() {
   audio.stopMusic(); audio.sfx('end');
   releaseInputs();
   const score = sim.score;
+  const ot = $('overTitle'); ot.setAttribute('data-t', sim.over ? 'gameOverLost' : 'gameOver'); ot.textContent = t(sim.over ? 'gameOverLost' : 'gameOver');
   let best = 0; try { best = parseInt(localStorage.getItem(BEST_KEY) || '0', 10) || 0; } catch (e) {}
   const isBest = score > best;
   if (isBest) { best = score; try { localStorage.setItem(BEST_KEY, String(best)); } catch (e) {} }
@@ -338,7 +339,7 @@ function stepSim() {
     scene.event(e, sim);
     if (e.type === 'collect') audio.sfx('collect');
     else if (e.type === 'deliver') { audio.sfx('deliver', e.a); el.live.textContent = '+' + e.b; }
-    else if (e.type === 'drop') { audio.sfx('drop'); el.live.textContent = t('lost'); }
+    else if (e.type === 'drop') { audio.sfx('drop'); el.live.textContent = t('lost'); if (!sim.over) toast(t('missed', { n: sim.lost }), ''); }
     else if (e.type === 'release') audio.sfx('puff');
     else if (e.type === 'full') { audio.sfx('full'); el.live.textContent = t('full'); }
     else if (e.type === 'level') { audio.sfx('level'); toast(t('levelUp', { n: e.a }), t('capacity', { n: e.b })); }

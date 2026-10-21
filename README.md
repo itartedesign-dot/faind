@@ -215,7 +215,7 @@ Google impiega da qualche giorno a qualche settimana per mostrare un sito nuovo.
 
 ## FAIND GAME – News Rush (cartella `faind-game/`, indirizzo `/faind-game/`)
 
-Gioco arcade pixel art (180 s, 5 livelli da 36 s, capacità 5-4-3-2-1). Si apre dall'icona **Gioca / Play** della fila di icone in home (`home2.js`: voce `gioca` con `link`, è un vero link, non apre un pannello) oppure direttamente dall'indirizzo; la pagina è indicizzabile (testo vero, schema `VideoGame`, voce in sitemap) e non genera pagine in serie.
+Gioco arcade pixel art (180 s, 5 livelli da 36 s, capacità 5-4-3-2-1; al terzo rotolo perso è GAME OVER, `MAX_LOST` in `sim.js`). Si apre dall'icona **Gioca / Play** della fila di icone in home (`home2.js`: voce `gioca` con `link`, è un vero link, non apre un pannello) oppure direttamente dall'indirizzo; la pagina è indicizzabile (testo vero, schema `VideoGame`, voce in sitemap) e non genera pagine in serie.
 - `sim.js` regole e **parametri di difficoltà** (`CONFIG`): deterministico, passo fisso 60 Hz, seme dal server. È usato dal browser e dal server.
 - `art.js` grafica disegnata in codice (Faindo, rotoli, giornalisti, tubi separati e animati); `audio.js` effetti e musica chiptune sintetizzati (nessun file, nessuna licenza); `i18n.js` testi it/en/fr/de; `game.js` regia, comandi, pausa, classifica; `flags.js` bandiere (country-flag-icons, MIT), caricate solo alla classifica.
 - Il gioco ha schermo proprio, senza intestazione del sito; "FAIND" in alto a sinistra riporta sempre alla home (`../`) fermando partita, audio e animazioni, senza salvare partite abbandonate. Schermo intero nativo richiesto da START sui dispositivi touch, altrimenti vista a tutto viewport.

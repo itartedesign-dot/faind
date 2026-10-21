@@ -55,6 +55,11 @@ r = await call('POST', '/score', { token: g3.token, inputs: [[5, 9999]] }, T0 + 
 let g4 = await play('5.5.5.5', T0, true);
 r = await call('POST', '/score', { token: g4.token, inputs: g4.sim.inputs, score: 999999 }, T0 + 181000);
 assert.equal(r.s, 200); assert.equal(r.j.score, g4.sim.score); assert.ok(r.j.score < 5000);
+assert.ok(g4.sim.over && g4.sim.lost === 3 && g4.sim.tick < 10800, 'game over al terzo rotolo perso');
+// una partita finita presto non si può inviare prima che sia passato il tempo che è durata
+let g5 = await play('6.6.6.6', T0, true);
+r = await call('POST', '/score', { token: g5.token, inputs: g5.sim.inputs }, T0 + 1000); assert.equal(r.s, 422); assert.equal(r.j.error, 'too_fast');
+r = await call('POST', '/score', { token: g5.token, inputs: g5.sim.inputs }, T0 + 200000); assert.equal(r.s, 200);
 // nome: iniziali valide, nazione dall'elenco, una volta sola
 r = await call('POST', '/name', { claim: claim1, initials: 'ab1', country: 'IT' }, T0 + 183000); assert.equal(r.s, 400);
 r = await call('POST', '/name', { claim: claim1, initials: 'abc', country: 'ZZ' }, T0 + 183000); assert.equal(r.s, 400);
