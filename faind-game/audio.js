@@ -18,24 +18,30 @@ export class Audio8 {
 
   /** Va chiamato da un gesto dell'utente (START, tocco sul comando audio). */
   unlock() {
-    if (this.ctx) { if (this.ctx.state === 'suspended' && !this.suspended) this.ctx.resume().catch(() => {}); return; }
+    // iPhone: di default WebAudio tace con l'interruttore del silenzioso; la sessione audio "playback" lo rende udibile (Safari 17+)
+    try { if (navigator.audioSession && navigator.audioSession.type !== 'playback') navigator.audioSession.type = 'playback'; } catch (e) {}
+    if (this.ctx) { this.resume(); return; }
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
     try {
       this.ctx = new AC();
       this.master = this.ctx.createGain();
-      this.master.gain.value = this.muted ? 0 : 0.5;
+      this.master.gain.value = this.muted ? 0 : 0.9;
       this.master.connect(this.ctx.destination);
       const n = this.ctx.sampleRate * 0.5, buf = this.ctx.createBuffer(1, n, this.ctx.sampleRate), d = buf.getChannelData(0);
       for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
       this.noise = buf;
+      this.resume();
+      // buffer vuoto riprodotto dentro il gesto: sblocca l'audio su iOS
+      const b = this.ctx.createBuffer(1, 1, 22050), src = this.ctx.createBufferSource();
+      src.buffer = b; src.connect(this.ctx.destination); src.start(0);
     } catch (e) { this.ctx = null; }
   }
 
   setMuted(m) {
     this.muted = !!m;
     try { localStorage.setItem(KEY, this.muted ? '1' : '0'); } catch (e) {}
-    if (this.master) this.master.gain.value = this.muted ? 0 : 0.5;
+    if (this.master) this.master.gain.value = this.muted ? 0 : 0.9;
   }
 
   _tone(type, f0, f1, t0, dur, vol) {
@@ -56,7 +62,8 @@ export class Audio8 {
   }
 
   sfx(name, n) {
-    const c = this.ctx; if (!c || this.muted || c.state !== 'running') return;
+    const c = this.ctx; if (!c || this.muted) return;
+    if (c.state !== 'running') this.resume();     // se il contesto è sospeso i suoni partono appena riprende
     const t = c.currentTime;
     switch (name) {
       case 'puff': this._noise(t, 0.16, 0.22, 2400, 700); break;                                   // soffio pneumatico
@@ -84,7 +91,7 @@ export class Audio8 {
   }
   stopMusic() { this.musicOn = false; if (this.timer) clearInterval(this.timer); this.timer = 0; }
   pause() { this.stopMusic(); }
-  resume() { if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume().catch(() => {}); }
+  resume() { if (this.ctx && this.ctx.state !== 'running' && this.ctx.state !== 'closed') { try { const p = this.ctx.resume(); if (p && p.catch) p.catch(() => {}); } catch (e) {} } }
   /** Libera tutto: da chiamare quando si esce dal gioco. */
   dispose() {
     this.stopMusic();
@@ -102,10 +109,10 @@ export class Audio8 {
       const i = this.step, t = this.nextT;
       const L = LEAD[i % LEAD.length];
       if (!this.muted) {
-        if (L && L !== '.' && NOTES[L]) this._tone('square', NOTES[L] * (i % 2 ? 1 : 1), NOTES[L], t, sp * 1.7, 0.05);
+        if (L && L !== '.' && NOTES[L]) this._tone('square', NOTES[L] * (i % 2 ? 1 : 1), NOTES[L], t, sp * 1.7, 0.09);
         const B = BASS[Math.floor(i / 1) % BASS.length];
-        if (i % 2 === 0 && NOTES[B]) this._tone('triangle', NOTES[B] / 2, NOTES[B] / 2, t, sp * 1.8, 0.14);
-        if (i % 2 === 1) this._noise(t, 0.04, 0.05, 6000, 5000);
+        if (i % 2 === 0 && NOTES[B]) this._tone('triangle', NOTES[B] / 2, NOTES[B] / 2, t, sp * 1.8, 0.2);
+        if (i % 2 === 1) this._noise(t, 0.04, 0.08, 6000, 5000);
       }
       this.step++; this.nextT += sp;
     }
