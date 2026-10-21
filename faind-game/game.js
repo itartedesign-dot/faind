@@ -339,7 +339,7 @@ function stepSim() {
     scene.event(e, sim);
     if (e.type === 'collect') audio.sfx('collect');
     else if (e.type === 'deliver') { audio.sfx('deliver', e.a); el.live.textContent = '+' + e.b; }
-    else if (e.type === 'drop') { audio.sfx('drop'); el.live.textContent = t('lost'); if (!sim.over) toast(t('missed', { n: sim.lost }), ''); }
+    else if (e.type === 'drop' || e.type === 'bad') { audio.sfx('drop'); el.live.textContent = t('lost'); if (!sim.over) toast(t('missed', { n: sim.lost }), ''); }
     else if (e.type === 'release') audio.sfx('puff');
     else if (e.type === 'full') { audio.sfx('full'); el.live.textContent = t('full'); }
     else if (e.type === 'level') { audio.sfx('level'); toast(t('levelUp', { n: e.a }), t('capacity', { n: e.b })); }
@@ -375,7 +375,7 @@ function frame(now) {
   const m = sim ? {
     x: sim.dir ? sim.x + sim.dir * Math.min(Math.abs(sim.target - sim.x), (C.MOVE_SPEED / C.TPS) * k) : sim.x,
     dir: state === 'playing' ? sim.dir : 0, load: sim.load, cap: sim.cap, tick: sim.tick, full: sim.load >= sim.cap && sim.load > 0,
-    rolls: sim.rolls.map((r) => ({ x: r.x, y: r.y + r.vy * k, vent: r.vent, vy: r.vy })), pending: sim.pending
+    rolls: sim.rolls.map((r) => ({ x: r.x, y: r.y + r.vy * k, vent: r.vent, vy: r.vy, red: r.red })), pending: sim.pending
   } : { x: C.W / 2, dir: 0, load: 0, cap: C.CAPACITY[0], tick: 0, full: false, rolls: [], pending: [] };
   scene.draw(m);
 }

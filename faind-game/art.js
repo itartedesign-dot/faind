@@ -49,12 +49,13 @@ const ROLL_MAP = [
   '.oooo.', 'oiiIIo', 'oiSSio', 'oiiiio', 'occccO', 'oCCCCO', 'occccO', 'oiiiio', 'oiSSio', 'oiiiio', 'oiiiio', '.oooo.'
 ];
 const ROLL_COL = { o: P.navyD, i: P.ivory, I: P.ivoryL, S: P.ivoryS, c: P.cyan, C: P.cyanL, O: P.navyD };
-function makeRoll(shear) {
+const RED_COL = { i: '#f2a99f', I: '#ffd0c8', S: '#c97367', c: '#d8261c', C: '#ff7a6a' };
+function makeRoll(shear, red) {
   const cv = document.createElement('canvas'); cv.width = 14; cv.height = 14;
   const g = cv.getContext('2d');
   ROLL_MAP.forEach((row, y) => {
     const off = Math.round((y - 6) * shear);
-    for (let x = 0; x < 6; x++) { const ch = row[x]; if (ch !== '.') rect(g, ROLL_COL[ch], 4 + x + off, 1 + y, 1, 1); }
+    for (let x = 0; x < 6; x++) { const ch = row[x]; if (ch !== '.') rect(g, red ? (RED_COL[ch] || ROLL_COL[ch]) : ROLL_COL[ch], 4 + x + off, 1 + y, 1, 1); }
   });
   return cv;
 }
@@ -340,6 +341,7 @@ export class Scene {
     this.g = canvas.getContext('2d'); this.g.imageSmoothingEnabled = false;
     this.bg = buildBackground();
     this.rolls = [makeRoll(-0.25), makeRoll(0), makeRoll(0.25)];
+    this.rollsRed = [makeRoll(-0.25, true), makeRoll(0, true), makeRoll(0.25, true)];
     this.rollH = makeRollH();
     this.time = 0; this.fx = []; this.tube = []; this.react = [0, 0, 0]; this.flash = [0, 0, 0];
     this.shake = 0; this.collectT = 0; this.deliverT = 0; this.unloadFlash = 0; this.missFlash = 0; this.deskNext = 0;
@@ -402,12 +404,12 @@ export class Scene {
     // bocchette: preavviso luminoso prima del rilascio
     if (m.pending) for (const p of m.pending) {
       const vx = C.VENTS[p.vent], left = p.at - m.tick, pulse = Math.floor(left / 5) % 2;
-      rect(g, pulse ? P.amberL : P.amber, vx - 4, 48, 9, 2);
-      rect(g, 'rgba(255,200,90,.35)', vx - 6, 46, 13, 4);
-      rect(g, P.amberL, vx - 2, 51 + (left % 8 > 4 ? 1 : 0), 5, 1);
-      g.fillStyle = 'rgba(255,180,58,.18)'; g.beginPath(); g.moveTo(vx - 5, 48); g.lineTo(vx + 6, 48); g.lineTo(vx + 14, 80); g.lineTo(vx - 13, 80); g.closePath(); g.fill();
+      rect(g, pulse ? (p.red ? '#ff9a8c' : P.amberL) : (p.red ? P.red : P.amber), vx - 4, 48, 9, 2);
+      rect(g, p.red ? 'rgba(255,90,78,.45)' : 'rgba(255,200,90,.35)', vx - 6, 46, 13, 4);
+      rect(g, p.red ? '#ff9a8c' : P.amberL, vx - 2, 51 + (left % 8 > 4 ? 1 : 0), 5, 1);
+      g.fillStyle = p.red ? 'rgba(255,70,60,.22)' : 'rgba(255,180,58,.18)'; g.beginPath(); g.moveTo(vx - 5, 48); g.lineTo(vx + 6, 48); g.lineTo(vx + 14, 80); g.lineTo(vx - 13, 80); g.closePath(); g.fill();
       // il rotolo si affaccia alla bocchetta
-      if (left < 12) g.drawImage(this.rolls[1], vx - 7, 36 - 8 + (12 - left) * 0);
+      if (left < 12) g.drawImage((p.red ? this.rollsRed : this.rolls)[1], vx - 7, 36 - 8);
     }
     // lampade fisse delle bocchette
     for (const vx of C.VENTS) rect(g, P.amber, vx - 2, 50, 5, 1);
@@ -425,7 +427,7 @@ export class Scene {
       rect(g, 'rgba(160,220,255,.55)', Math.round(r.x), y - 8, 1, 5);
       rect(g, 'rgba(160,220,255,.35)', Math.round(r.x) - 3, y - 5, 1, 3);
       rect(g, 'rgba(160,220,255,.35)', Math.round(r.x) + 3, y - 6, 1, 4);
-      g.drawImage(this.rolls[tilt], x, y);
+      g.drawImage((r.red ? this.rollsRed : this.rolls)[tilt], x, y);
     }
 
     // Faindo
