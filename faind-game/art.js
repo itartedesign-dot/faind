@@ -9,6 +9,7 @@
    ===================================================================== */
 import { CONFIG as C } from './sim.js';
 import { SPRITE_W, SPRITE_H, drawFaindoSprite, poseFor, poseKey } from './faindo.js';
+import { loadPoses, poseNumber, STAND_PX, STAND_SHARE } from './faindo-sprites.js';
 
 const P = {
   navy: '#15213A', navyD: '#0b1226', navyM: '#1d2d4f', navyL: '#2a4170',
@@ -287,7 +288,8 @@ export class Scene {
     this.shake = 0; this.collectT = 0; this.deliverT = 0; this.unloadFlash = 0; this.missFlash = 0; this.deskNext = 0;
     this.winFlash = [0, 0, 0]; this.faindoX = W / 2;
     // Faindo ha una tela propria 48 × 64 (faindo.js) sovrapposta alla scena, ingrandita senza sfocature
-    this.fa = document.getElementById('fa'); this.faKey = '';
+    this.fa = document.getElementById('fa'); this.faKey = ''; this.poses = null; this.faMode = '';
+    this.ready = loadPoses().then((p) => { this.poses = p; return !!p; }, () => false);   // le sei pose si precaricano prima di START
     if (this.fa) { this.fa.width = SPRITE_W; this.fa.height = SPRITE_H; this.fag = this.fa.getContext('2d'); this.fag.imageSmoothingEnabled = false; } this.walkDir = 0; this.walkClock = 0;
   }
 
@@ -295,7 +297,7 @@ export class Scene {
 
   /** Un fatto accaduto nel motore (raccolta, consegna, rotolo perso, livello…). */
   event(e, sim) {
-    if (e.type === 'collect') { this.collectT = 0.28; this.fx.push({ k: 'flash', x: e.a, y: Math.min(e.b, C.PLATFORM_Y - 14), t: 0 }); }
+    if (e.type === 'collect') { this.collectT = 0.18; this.fx.push({ k: 'flash', x: e.a, y: Math.min(e.b, C.PLATFORM_Y - 14), t: 0 }); }
     else if (e.type === 'deliver') {
       this.deliverT = 0.5; this.unloadFlash = 0.5;
       for (let i = 0; i < e.a; i++) { this.tube.push({ t: -i * 0.16, desk: (this.deskNext++) % 3 }); }
@@ -329,10 +331,21 @@ export class Scene {
   /** Faindo: ridisegna il fotogramma solo se cambia e lo posiziona con i piedi sulla piattaforma (la collisione è quella del motore). */
   placeFaindo(m, st) {
     if (!this.fa) return;
-    const pose = poseFor(st), key = poseKey(pose);
-    if (key !== this.faKey) { this.faKey = key; drawFaindoSprite(this.fag, pose); }
-    const w = FA_W, h = w * SPRITE_H / SPRITE_W, x = Math.round(m.x) - w / 2, y = C.PLATFORM_Y - h;
     const s = this.fa.style;
+    let w, h;
+    if (this.poses) {                                                    // sei immagini: altezza da fermo = 22% della larghezza dell'area di gioco
+      const im0 = this.poses[0], k = (STAND_SHARE * W) / STAND_PX;      // unità di scena per pixel dell'immagine
+      w = im0.naturalWidth * k; h = im0.naturalHeight * k;
+      if (this.faMode !== 'img') { this.faMode = 'img'; this.faKey = ''; this.fa.width = im0.naturalWidth; this.fa.height = im0.naturalHeight; this.fag.imageSmoothingEnabled = false; }
+      const n = poseNumber(st.walk !== 0, this.walkClock, st.collect > 0);
+      if (n !== this.faKey) { this.faKey = n; this.fag.clearRect(0, 0, this.fa.width, this.fa.height); this.fag.drawImage(this.poses[n - 1], 0, 0); }
+    } else {                                                             // riserva: disegno in codice 48 × 64
+      w = 33; h = w * SPRITE_H / SPRITE_W;
+      if (this.faMode !== 'code') { this.faMode = 'code'; this.faKey = ''; this.fa.width = SPRITE_W; this.fa.height = SPRITE_H; this.fag.imageSmoothingEnabled = false; }
+      const pose = poseFor(st), key = poseKey(pose);
+      if (key !== this.faKey) { this.faKey = key; drawFaindoSprite(this.fag, pose); }
+    }
+    const x = Math.round(m.x) - w / 2, y = C.PLATFORM_Y - h;             // ancoraggio: centro tra i piedi, suole sul piano di calpestio
     s.left = (x / W * 100).toFixed(3) + '%'; s.top = (y / H * 100).toFixed(3) + '%';
     s.width = (w / W * 100).toFixed(3) + '%'; s.height = (h / H * 100).toFixed(3) + '%';
     s.transform = this.shake > 0 ? 'translateX(calc(' + Math.round(Math.sin(this.time * 90) * 1.5) + ' * var(--u, 2px)))' : '';
