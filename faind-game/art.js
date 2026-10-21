@@ -430,6 +430,26 @@ export class Scene {
       g.drawImage((r.red ? this.rollsRed : this.rolls)[tilt], x, y);
     }
 
+    // braccio meccanico che porge una notizia in più (da destra, ogni tanto da sinistra)
+    if (m.arm) {
+      const a = m.arm, dir = a.side, edge = dir > 0 ? W : 0, hx = Math.round(a.x), y = C.ARM_Y;
+      const x0 = Math.min(edge, hx), w = Math.abs(hx - edge);
+      rect(g, P.steelD, x0, y - 3, w, 6);
+      rect(g, P.steelL, x0, y - 3, w, 1);
+      rect(g, P.steel, x0, y - 2, w, 3);
+      for (let jx = edge - dir * 12; dir > 0 ? jx > hx + 4 : jx < hx - 4; jx -= dir * 14) { rect(g, P.cyanD, jx - 1, y - 4, 3, 8); rect(g, P.cyanL, jx, y - 2, 1, 1); }
+      rect(g, P.steelDD, edge - (dir > 0 ? 6 : 0), y - 7, 6, 14);
+      // pinza con il rotolo
+      const px = hx - dir * 1;
+      rect(g, P.steelD, px - 3, y - 6, 7, 3); rect(g, P.steelD, px - 3, y + 3, 7, 3);
+      rect(g, P.cyanL, px - 3 + (dir > 0 ? 0 : 6), y - 6, 1, 12);
+      if (!a.taken && a.prog > 0.05) {
+        const pulse = Math.floor(t * 8) % 2;
+        if (pulse) { g.fillStyle = 'rgba(255,217,138,.28)'; g.fillRect(hx - 9, y - 12, 18, 24); }
+        g.drawImage(this.rolls[1], hx - 7, y - 7 + (dir > 0 ? 0 : 0));
+      }
+    }
+
     // Faindo
     const st = {
       walk: m.dir, step: Math.floor(this.walkClock * 9) % 4, idle: Math.floor(t * 1.6) % 2, collect: this.collectT, deliver: this.deliverT,
@@ -465,6 +485,13 @@ export class Scene {
       } else if (f.k === 'paper') {
         rect(g, P.ivoryL, f.x - 8 + k * 12, f.y - k * 12, 3, 2); rect(g, P.ivory, f.x + 6 - k * 10, f.y + 2 - k * 9, 3, 2);
       }
+    }
+    // pausa tra un livello e l'altro: campo oscurato con un lampo all'inizio
+    if (m.rest > 0) {
+      const k = 1 - m.rest / C.LEVEL_REST_TICKS;
+      g.fillStyle = 'rgba(8,14,30,' + Math.min(0.55, 0.15 + k * 2).toFixed(3) + ')'; g.fillRect(0, 0, W, H);
+      if (k < 0.12) { g.fillStyle = 'rgba(255,250,240,' + (0.5 * (1 - k / 0.12)).toFixed(3) + ')'; g.fillRect(0, 0, W, H); }
+      for (let i = 0; i < 5; i++) rect(g, i < m.lv ? P.cyanL : P.steelD, 90 - 20 + i * 8, 120, 6, 3);
     }
     g.restore();
   }

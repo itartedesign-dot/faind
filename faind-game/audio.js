@@ -75,6 +75,12 @@ export class Audio8 {
       }
       case 'drop': this._tone('sawtooth', 300, 70, t, 0.28, 0.2); this._noise(t, 0.1, 0.15, 800, 200); break;
       case 'level': [523, 659, 784, 1047].forEach((f, i) => this._tone('square', f, f, t + i * 0.09, 0.14, 0.16)); break;
+      case 'newlevel': {   // fanfara di cambio livello: scala che sale, nota lunga e soffio finale
+        [392, 523, 659, 784, 1047].forEach((f, i) => this._tone('square', f, f, t + i * 0.1, 0.16, 0.17));
+        this._tone('square', 1047, 1568, t + 0.5, 0.5, 0.15); this._tone('triangle', 262, 262, t + 0.5, 0.6, 0.22);
+        this._noise(t, 0.35, 0.14, 500, 4000); break;
+      }
+      case 'arm': this._tone('sawtooth', 140, 320, t, 0.22, 0.1); this._noise(t, 0.18, 0.1, 900, 2200); break;   // il braccio si estende
       case 'full': this._tone('triangle', 880, 880, t, 0.07, 0.15); this._tone('triangle', 880, 880, t + 0.1, 0.07, 0.15); break;
       case 'beep': this._tone('square', 440, 440, t, 0.14, 0.15); break;
       case 'go': this._tone('square', 880, 880, t, 0.3, 0.18); break;
