@@ -68,10 +68,11 @@ export class Audio8 {
     switch (name) {
       case 'puff': this._noise(t, 0.16, 0.22, 2400, 700); break;                                   // soffio pneumatico
       case 'collect': this._tone('square', 660, 990, t, 0.09, 0.16); this._tone('square', 990, 1320, t + 0.07, 0.09, 0.12); break;
-      case 'deliver': {
-        const base = [523, 659, 784, 1047, 1319];
-        for (let i = 0; i < Math.min(5, n || 1); i++) this._tone('square', base[i], base[i], t + i * 0.07, 0.12, 0.15);
-        this._noise(t, 0.22, 0.18, 1800, 500); break;
+      case 'deliver': {   // soffio pneumatico + conferma morbida (due note di seno)
+        this._noise(t, 0.2, 0.16, 2200, 600);
+        const base = [659, 784, 988];
+        for (let i = 0; i < Math.min(3, 1 + Math.floor((n || 1) / 2)); i++) this._soft('sine', base[i], t + 0.06 + i * 0.08, 0.22, 0.2, this.master, 0.01);
+        break;
       }
       case 'drop': this._tone('sawtooth', 300, 70, t, 0.28, 0.2); this._noise(t, 0.1, 0.15, 800, 200); break;
       case 'level': [523, 659, 784, 1047].forEach((f, i) => this._tone('square', f, f, t + i * 0.09, 0.14, 0.16)); break;

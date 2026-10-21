@@ -28,8 +28,8 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 #hClock { color: var(--cyanL); font-size: calc(var(--u) * 4); }
 .g-cell--load.is-full .g-lbl b { color: var(--amber); }
 .g-slots { display: flex; gap: calc(var(--u) * 1); height: calc(var(--u) * 4.2); align-items: center; }
-.g-slot { width: calc(var(--u) * 5.6); height: calc(var(--u) * 3.2); border-radius: calc(var(--u) * 1.6); background: #0a1124; border: 1px solid #2a4170; }
-.g-slot.on { background: linear-gradient(90deg, var(--ivory) 0 38%, var(--cyan) 38% 62%, var(--ivory) 62%); border-color: #fff; box-shadow: 0 0 calc(var(--u) * 1.5) rgba(111,211,255,.6); }
+.g-slot { width: calc(var(--u) * 5.6); height: calc(var(--u) * 3.2); border-radius: calc(var(--u) * 1); background: #0a1124; border: 1px solid #2a4170; }
+.g-slot.on { background: linear-gradient(90deg, #cfc19f 0 16%, #fffaf0 16% 22%, var(--ivory) 22% 38%, var(--cyan) 38% 62%, var(--ivory) 62%); border-color: #0b1226; box-shadow: 0 0 0 1px rgba(255,250,240,.55), 0 0 calc(var(--u) * 1.5) rgba(111,211,255,.6); }   /* stesso rotolo del gioco: carta avorio, fascia ciano, estremità arrotolata, contorno scuro */
 .g-pausebtn { flex: 0 0 calc(var(--u) * 11); display: flex; align-items: center; justify-content: center; gap: calc(var(--u) * 1.4); background: #101a31; border: 1px solid #2a4170; border-radius: calc(var(--u) * 1.4); cursor: pointer; padding: 0; min-width: 40px; }
 .g-pausebtn span { width: calc(var(--u) * 1.8); height: calc(var(--u) * 5.6); background: var(--ivory); display: block; min-width: 3px; }
 .g-pausebtn[hidden] { display: none; }
