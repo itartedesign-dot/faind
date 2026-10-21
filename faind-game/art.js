@@ -285,11 +285,11 @@ export class Scene {
     this.rollH = makeRollH();
     this.rollsLean = [makeRoll(0.4), makeRoll(-0.4)];
     this.time = 0; this.fx = []; this.tube = []; this.react = [0, 0, 0]; this.flash = [0, 0, 0];
-    this.shake = 0; this.collectT = 0; this.deliverT = 0; this.unloadFlash = 0; this.missFlash = 0; this.deskNext = 0;
+    this.shake = 0; this.collectT = 0; this.reachSide = 1; this.deliverT = 0; this.unloadFlash = 0; this.missFlash = 0; this.deskNext = 0;
     this.winFlash = [0, 0, 0]; this.faindoX = W / 2;
     // Faindo ha una tela propria 48 × 64 (faindo.js) sovrapposta alla scena, ingrandita senza sfocature
     this.fa = document.getElementById('fa'); this.faKey = ''; this.poses = null; this.faMode = '';
-    this.ready = loadPoses().then((p) => { this.poses = p; return !!p; }, () => false);   // le sei pose si precaricano prima di START
+    this.ready = loadPoses().then((p) => { this.poses = p; return !!p; }, () => false);   // le pose si precaricano prima di START
     if (this.fa) { this.fa.width = SPRITE_W; this.fa.height = SPRITE_H; this.fag = this.fa.getContext('2d'); this.fag.imageSmoothingEnabled = false; } this.walkDir = 0; this.walkClock = 0;
   }
 
@@ -297,7 +297,7 @@ export class Scene {
 
   /** Un fatto accaduto nel motore (raccolta, consegna, rotolo perso, livello…). */
   event(e, sim) {
-    if (e.type === 'collect') { this.collectT = 0.18; this.fx.push({ k: 'flash', x: e.a, y: Math.min(e.b, C.PLATFORM_Y - 14), t: 0 }); }
+    if (e.type === 'collect') { this.collectT = 0.18; this.reachSide = e.a >= sim.x ? 1 : -1; this.fx.push({ k: 'flash', x: e.a, y: Math.min(e.b, C.PLATFORM_Y - 14), t: 0 }); }
     else if (e.type === 'deliver') {
       this.deliverT = 0.5; this.unloadFlash = 0.5;
       for (let i = 0; i < e.a; i++) { this.tube.push({ t: -i * 0.16, desk: (this.deskNext++) % 3 }); }
@@ -333,11 +333,11 @@ export class Scene {
     if (!this.fa) return;
     const s = this.fa.style;
     let w, h;
-    if (this.poses) {                                                    // sei immagini: altezza da fermo = 22% della larghezza dell'area di gioco
+    if (this.poses) {                                                    // immagini: altezza da fermo = 22% della larghezza dell'area di gioco
       const im0 = this.poses[0], k = (STAND_SHARE * W) / STAND_PX;      // unità di scena per pixel dell'immagine
       w = im0.naturalWidth * k; h = im0.naturalHeight * k;
       if (this.faMode !== 'img') { this.faMode = 'img'; this.faKey = ''; this.fa.width = im0.naturalWidth; this.fa.height = im0.naturalHeight; this.fag.imageSmoothingEnabled = false; }
-      const n = poseNumber(st.walk !== 0, this.walkClock, st.collect > 0);
+      const n = poseNumber(st.walk !== 0, this.walkClock, st.reach);
       if (n !== this.faKey) { this.faKey = n; this.fag.clearRect(0, 0, this.fa.width, this.fa.height); this.fag.drawImage(this.poses[n - 1], 0, 0); }
     } else {                                                             // riserva: disegno in codice 48 × 64
       w = 33; h = w * SPRITE_H / SPRITE_W;
@@ -462,7 +462,7 @@ export class Scene {
 
     // Faindo
     const st = {
-      walk: m.dir, step: Math.floor(this.walkClock * 9) % 4, idle: Math.floor(t * 1.6) % 2, collect: this.collectT, deliver: this.deliverT,
+      walk: m.dir, step: Math.floor(this.walkClock * 9) % 4, idle: Math.floor(t * 1.6) % 2, collect: this.collectT, reach: this.collectT > 0 ? this.reachSide : 0, deliver: this.deliverT,
       load: m.load, cap: m.cap, blink: Math.floor(t * 2.2) % 3 === 0, pulse: Math.floor(t * 5) % 2
     };
     this.placeFaindo(m, st);
