@@ -343,6 +343,7 @@ export class Scene {
     this.rolls = [makeRoll(-0.25), makeRoll(0), makeRoll(0.25)];
     this.rollsRed = [makeRoll(-0.25, true), makeRoll(0, true), makeRoll(0.25, true)];
     this.rollH = makeRollH();
+    this.rollsLean = [makeRoll(0.4), makeRoll(-0.4)];
     this.time = 0; this.fx = []; this.tube = []; this.react = [0, 0, 0]; this.flash = [0, 0, 0];
     this.shake = 0; this.collectT = 0; this.deliverT = 0; this.unloadFlash = 0; this.missFlash = 0; this.deskNext = 0;
     this.faindoX = W / 2; this.walkDir = 0; this.walkClock = 0;
@@ -430,24 +431,32 @@ export class Scene {
       g.drawImage((r.red ? this.rollsRed : this.rolls)[tilt], x, y);
     }
 
-    // braccio meccanico che porge una notizia in più (da destra, ogni tanto da sinistra)
+    // braccio umano (stile anni 80: manica a righe, fascia al polso) che porge una notizia nel pugno, inclinata verso Faindo
     if (m.arm) {
       const a = m.arm, dir = a.side, edge = dir > 0 ? W : 0, hx = Math.round(a.x), y = C.ARM_Y;
-      const x0 = Math.min(edge, hx), w = Math.abs(hx - edge);
-      rect(g, P.steelD, x0, y - 3, w, 6);
-      rect(g, P.steelL, x0, y - 3, w, 1);
-      rect(g, P.steel, x0, y - 2, w, 3);
-      for (let jx = edge - dir * 12; dir > 0 ? jx > hx + 4 : jx < hx - 4; jx -= dir * 14) { rect(g, P.cyanD, jx - 1, y - 4, 3, 8); rect(g, P.cyanL, jx, y - 2, 1, 1); }
-      rect(g, P.steelDD, edge - (dir > 0 ? 6 : 0), y - 7, 6, 14);
-      // pinza con il rotolo
-      const px = hx - dir * 1;
-      rect(g, P.steelD, px - 3, y - 6, 7, 3); rect(g, P.steelD, px - 3, y + 3, 7, 3);
-      rect(g, P.cyanL, px - 3 + (dir > 0 ? 0 : 6), y - 6, 1, 12);
+      const len = Math.max(1, Math.abs(hx - edge));
+      const OL = '#3a2018', SK = '#e8a77a', SKL = '#f6c79b', SKD = '#b8744c';
+      const lean = this.rollsLean[dir > 0 ? 0 : 1];   // la cima del rotolo punta verso Faindo
       if (!a.taken && a.prog > 0.05) {
-        const pulse = Math.floor(t * 8) % 2;
-        if (pulse) { g.fillStyle = 'rgba(255,217,138,.28)'; g.fillRect(hx - 9, y - 12, 18, 24); }
-        g.drawImage(this.rolls[1], hx - 7, y - 7 + (dir > 0 ? 0 : 0));
+        if (Math.floor(t * 8) % 2) { g.fillStyle = 'rgba(255,217,138,.28)'; g.fillRect(hx - 9, y - 20, 18, 26); }
+        g.drawImage(lean, hx - 7 - dir * 1, y - 14);
       }
+      // l'avambraccio sale leggermente dalla spalla al pugno; si disegna una colonna alla volta
+      for (let i = 0; i <= len; i++) {
+        const x = edge + (dir > 0 ? -i : i - 1), rise = Math.round((1 - i / len) * 7), top = y - 3 + rise;
+        const sleeve = i < 16, band = !sleeve && i > len - 14 && i < len - 8;
+        rect(g, OL, x, top - 1, 1, 8);
+        if (sleeve) { const stripe = i % 6 < 2; rect(g, stripe ? '#ff5ab0' : '#7b3fa0', x, top, 1, 6); rect(g, stripe ? '#ffa0d0' : '#a56ac8', x, top, 1, 1); }
+        else if (band) { rect(g, ((i - (len - 14)) % 2) ? P.cyan : P.ivoryL, x, top, 1, 6); }
+        else { rect(g, SK, x, top, 1, 6); rect(g, SKL, x, top, 1, 1); rect(g, SKD, x, top + 5, 1, 1); }
+      }
+      // pugno: nocche, dita che avvolgono il rotolo, pollice sopra
+      const fx = hx - (dir > 0 ? 2 : 4);
+      rect(g, OL, fx - 1, y - 5, 8, 10); rect(g, SK, fx, y - 4, 6, 8);
+      rect(g, SKL, fx, y - 4, 6, 1);
+      for (const fy of [-2, 0, 2]) rect(g, SKD, fx + (dir > 0 ? 0 : 2), y + fy, 4, 1);
+      rect(g, SKD, fx, y + 3, 6, 1);
+      rect(g, SKL, fx + (dir > 0 ? 4 : 0), y - 5, 2, 2); rect(g, OL, fx + (dir > 0 ? 3 : 1), y - 6, 3, 1);   // pollice
     }
 
     // Faindo
