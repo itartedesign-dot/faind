@@ -182,7 +182,7 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 
 /* ---- ritocchi: schermata iniziale essenziale, livello, carico pieno, record ---- */
 .g-panel--start .g-tag, .g-panel--start .g-keys { display: none; }
-.g-howto { white-space: pre-line; text-align: center; max-width: 98%; font-size: max(13px, calc(var(--u) * 5.2)); line-height: 1.65; letter-spacing: 0; color: #eef3ff; font-weight: 400; }
+.g-howto { text-align: center; max-width: 100%; font-size: max(13px, calc(var(--u) * 5.2)); line-height: 1.65; letter-spacing: 0; color: #eef3ff; font-weight: 700; }
 .g-rule { margin: 0; text-align: center; font-size: max(14px, calc(var(--u) * 5.8)); line-height: 1.4; letter-spacing: .04em; color: var(--amber); font-family: var(--pix); font-weight: 700; }
 .g-toast.g-toast--lv small { font-size: calc(var(--u) * 7); margin-top: calc(var(--u) * 2); color: #ffd98a; letter-spacing: .04em; line-height: 1.3; }
 .g-cell--load.is-full { animation: gfull2 .5s steps(1) infinite; }
@@ -197,3 +197,11 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 .g-panel--over.is-record #btnAgain, .g-panel--over.is-record #btnSave { background: #101a31; color: var(--ivory); border-color: #2a4170; }
 @keyframes gnews { 50% { box-shadow: 0 0 calc(var(--u) * 8) rgba(111,211,255,1); } }
 @media (prefers-reduced-motion: reduce) { .g-panel--over.is-record #btnNews { animation: none; } }
+
+/* istruzioni: riquadro ciano con bordi arrotondati su sfondo blu al 25%, testo centrato in grassetto, pallino ciano a inizio riga */
+.g-rules { display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 1.2); width: min(92%, calc(var(--u) * 150)); padding: calc(var(--u) * 3) calc(var(--u) * 3); border: 2px solid var(--cyan); border-radius: calc(var(--u) * 3); background: rgba(30, 100, 220, .25); box-sizing: border-box; }
+.g-rules .g-howto { margin: 0; }
+.g-rules .g-howto::before { content: ""; display: inline-block; width: .55em; height: .55em; margin-right: .6em; border-radius: 50%; background: var(--cyan); vertical-align: .05em; }
+.g-rules .g-howto { font-size: max(12px, calc(var(--u) * 5)); letter-spacing: 0; }
+.g-rules .g-rule { font-size: max(13px, calc(var(--u) * 5.2)); letter-spacing: .02em; }
+.g-rules { padding: calc(var(--u) * 2.4) calc(var(--u) * 2); }
