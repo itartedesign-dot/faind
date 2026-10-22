@@ -1,0 +1,4 @@
+/* Generato da sprites/build-atlas.py: coordinate [x, y, larghezza, altezza] degli sprite in atlas.png. */
+export const ATLAS = {"bldg_closed":[0,0,127,109],"bldg_open":[128,0,127,109],"tile0":[256,0,32,40],"tile1":[289,0,32,40],"tile2":[322,0,32,40],"tile3":[355,0,32,40],"scroll":[388,0,24,21],"scroll_s":[413,0,15,13],"f_front_0":[429,0,30,34],"f_front_1":[460,0,30,34],"f_front_2":[0,110,30,34],"f_back_0":[31,110,30,34],"f_back_1":[62,110,30,34],"f_back_2":[93,110,30,34],"f_left_0":[124,110,30,34],"f_left_1":[155,110,30,34],"f_left_2":[186,110,30,34],"f_right_0":[217,110,30,34],"f_right_1":[248,110,30,34],"f_right_2":[279,110,30,34],"ico_flash":[310,110,30,25],"ico_jump":[341,110,31,25],"life":[373,110,14,12]};
+export const TILE_W = 32, TILE_H = 40;
+export const BLDG_GAP = {"bldg_closed": 66.5, "bldg_open": 60.1};   // centro orizzontale del vano d'ingresso

@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Faind Game – free retro arcade games by FAIND</title>
-  <meta name="description" content="Faind Game: the free arcade games by FAIND. News Rush, a newsroom catching game, and Signal Maze, a top-down maze with keys, documents and robots. No sign-up, play in the browser.">
+  <title>Faind Games – free retro arcade games by FAIND</title>
+  <meta name="description" content="Faind Games: the free arcade games by FAIND. News Rush, a newsroom catching game, Signal Maze, a top-down maze with keys, documents and robots, and Lost Signal, a memory game on floating tiles. No sign-up, play in the browser.">
   <link rel="canonical" href="https://faind.org/games/">
   <meta name="theme-color" content="#0b1226">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="FAIND">
-  <meta property="og:title" content="Faind Game">
-  <meta property="og:description" content="Free retro arcade games by FAIND: News Rush and Signal Maze.">
+  <meta property="og:title" content="Faind Games">
+  <meta property="og:description" content="Free retro arcade games by FAIND: News Rush, Signal Maze and Lost Signal.">
   <meta property="og:url" content="https://faind.org/games/">
   <meta property="og:image" content="https://faind.org/assets/giochi/signal-maze.png">
   <meta name="twitter:card" content="summary">
   <link rel="icon" href="../assets/favicon-32.png?v=3" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Faind Game","url":"https://faind.org/games/","description":"Free retro arcade games by FAIND.","isPartOf":{"@type":"WebSite","name":"FAIND","url":"https://faind.org/"},"mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"url":"https://faind.org/faind-game/","name":"FAIND GAME – News Rush"},{"@type":"ListItem","position":2,"url":"https://faind.org/signal-maze/","name":"FAIND Signal Maze"}]}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Faind Games","url":"https://faind.org/games/","description":"Free retro arcade games by FAIND.","isPartOf":{"@type":"WebSite","name":"FAIND","url":"https://faind.org/"},"mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"url":"https://faind.org/faind-game/","name":"FAIND GAME – News Rush"},{"@type":"ListItem","position":2,"url":"https://faind.org/signal-maze/","name":"FAIND Signal Maze"},{"@type":"ListItem","position":3,"url":"https://faind.org/lost-signal/","name":"FAIND Lost Signal"}]}}</script>
   <style>
     @font-face { font-family: "Silkscreen"; font-weight: 400; font-display: swap; src: url("../faind-game/fonts/silkscreen-latin-400-normal.woff2") format("woff2"); }
     @font-face { font-family: "Silkscreen"; font-weight: 700; font-display: swap; src: url("../faind-game/fonts/silkscreen-latin-700-normal.woff2") format("woff2"); }
@@ -35,6 +35,7 @@
     .games { display: grid; gap: 16px; }
     .game { display: grid; grid-template-columns: minmax(120px, 38%) 1fr; gap: 16px; padding: 14px; background: rgba(21,33,58,.85); border: 2px solid var(--cyan); border-radius: 12px; box-shadow: 0 6px 0 #07101f; }
     .game img { width: 100%; height: auto; display: block; border: 2px solid #2a4170; border-radius: 6px; image-rendering: pixelated; background: #0b1226; aspect-ratio: 480 / 640; object-fit: cover; }
+    .game img.shot-tall { aspect-ratio: 480 / 709; }
     .game h2 { font-family: var(--pix); font-weight: 700; font-size: clamp(16px, 4.6vw, 22px); line-height: 1.25; margin: 0 0 10px; }
     .game h2 a { color: var(--ivory); text-decoration: none; }
     .game h2 a:hover { color: var(--cyanL); }
@@ -55,7 +56,7 @@
 <body>
 <div class="wrap">
   <div class="top"><a class="brand" href="../" aria-label="FAIND">F<i>A</i><b>I</b>ND</a><a class="back" href="../" id="back">FAIND HOME</a></div>
-  <h1 id="title">Faind Game</h1>
+  <h1 id="title">Faind Games</h1>
   <p class="lead" id="lead">Welcome to our games section</p>
   <div class="games">
     <article class="game" id="g1">
@@ -76,38 +77,52 @@
         <a class="play" href="../signal-maze/" id="play2">PLAY</a>
       </div>
     </article>
+    <article class="game" id="g3">
+      <a href="../lost-signal/" aria-label="FAIND Lost Signal"><img class="shot-tall" src="../assets/giochi/lost-signal.webp?v=1" width="480" height="709" alt="Screenshot of FAIND Lost Signal: Faindo on floating tiles leading to the FAIND Newsroom building, with newspaper scrolls on the way" loading="lazy" decoding="async"></a>
+      <div>
+        <h2><a href="../lost-signal/">FAIND – Lost Signal</a></h2>
+        <p class="rec" id="rec3"><span id="recL3">Record (1st place)</span> <b id="recI3">---</b><span class="flag" id="recF3" hidden></span><small id="recN3"></small></p>
+        <p class="how" id="how3">A memory game on floating tiles. Study the path for seven seconds, then walk and jump it in the dark to reach the newsroom. 15 levels, 3 lives, 20 flashes, no time limit.</p>
+        <a class="play" href="../lost-signal/" id="play3">PLAY</a>
+      </div>
+    </article>
   </div>
-  <footer id="foot">Both games are free, run in the browser and need no sign-up. They are made by <a href="../">FAIND</a>, the site that collects the day's AI news.</footer>
+  <footer id="foot">All the games are free, run in the browser and need no sign-up. They are made by <a href="../">FAIND</a>, the site that collects the day's AI news.</footer>
 </div>
 <script src="../stats.js?v=20261011a" defer></script>
 <script src="../faind-game/config.js?v=20261022c"></script>
 <script type="module">
-/* Faind Game: elenco dei giochi. Il record di News Rush (primo posto della classifica assoluta) arriva dal server della classifica;
-   per Signal Maze non esiste ancora una classifica online, quindi si mostra solo il miglior punteggio di questo dispositivo. */
+/* Faind Games: elenco dei giochi. Il record di News Rush (primo posto della classifica assoluta) arriva dal server della classifica;
+   per Signal Maze e Lost Signal non esiste ancora una classifica online, quindi si mostra solo il miglior punteggio di questo dispositivo. */
 const T = {
-  en: { title: 'Faind Game', lead: 'Welcome to our games section', rec: 'Record (1st place)', play: 'PLAY', home: 'FAIND HOME',
+  en: { title: 'Faind Games', lead: 'Welcome to our games section', rec: 'Record (1st place)', play: 'PLAY', home: 'FAIND HOME',
+    how3: 'A memory game on floating tiles. Study the path for seven seconds, then walk and jump it in the dark to reach the newsroom. 15 levels, 3 lives, 20 flashes, no time limit.',
     how1: 'Catch the news scrolls and deliver them to the newsroom before they hit the floor. Five levels, three minutes, weekly and all-time leaderboard.',
     how2: 'A top-down maze with an 80s look. Collect keys and documents, deliver them to the colour-coded offices and outrun the robots. 15 levels, 9 minutes in total.',
-    soon: 'Online leaderboard coming soon', yours: 'Your best on this device', foot: 'Both games are free, run in the browser and need no sign-up. They are made by' , foot2: ', the site that collects the day\'s AI news.' },
-  it: { title: 'Faind Game', lead: 'Benvenuto nella sezione dei nostri game', rec: 'Record (primo posto)', play: 'GIOCA', home: 'HOME FAIND',
+    soon: 'Online leaderboard coming soon', yours: 'Your best on this device', foot: 'All the games are free, run in the browser and need no sign-up. They are made by' , foot2: ', the site that collects the day\'s AI news.' },
+  it: { title: 'Faind Games', lead: 'Benvenuto nella sezione dei nostri games', rec: 'Record (primo posto)', play: 'GIOCA', home: 'HOME FAIND',
+    how3: 'Un gioco di memoria su zolle sospese. Studia il percorso per sette secondi, poi percorrilo a piedi e con i salti al buio fino alla redazione. 15 livelli, 3 vite, 20 flash, nessun limite di tempo.',
     how1: 'Prendi i rotoli di notizie e consegnali in redazione prima che cadano a terra. Cinque livelli, tre minuti, classifica settimanale e assoluta.',
     how2: 'Un labirinto visto dall\'alto con l\'estetica anni \'80. Raccogli chiavi e documenti, consegnali negli uffici dello stesso colore e sfuggi ai robot. 15 livelli, 9 minuti in tutto.',
-    soon: 'Classifica online in arrivo', yours: 'Il tuo record su questo dispositivo', foot: 'Entrambi i giochi sono gratuiti, si giocano nel browser e non richiedono registrazione. Li fa', foot2: ', il sito che raccoglie le notizie del giorno sull\'intelligenza artificiale.' },
-  fr: { title: 'Faind Game', lead: 'Bienvenue dans notre espace jeux', rec: 'Record (1re place)', play: 'JOUER', home: 'ACCUEIL FAIND',
+    soon: 'Classifica online in arrivo', yours: 'Il tuo record su questo dispositivo', foot: 'Tutti i giochi sono gratuiti, si giocano nel browser e non richiedono registrazione. Li fa', foot2: ', il sito che raccoglie le notizie del giorno sull\'intelligenza artificiale.' },
+  fr: { title: 'Faind Games', lead: 'Bienvenue dans notre espace jeux', rec: 'Record (1re place)', play: 'JOUER', home: 'ACCUEIL FAIND',
+    how3: 'Un jeu de mémoire sur des dalles flottantes. Étudie le chemin pendant sept secondes, puis parcours-le dans le noir, à pied et en sautant, jusqu\'à la rédaction. 15 niveaux, 3 vies, 20 flashs, sans limite de temps.',
     how1: 'Attrape les rouleaux d\'actualités et livre-les à la rédaction avant qu\'ils ne tombent. Cinq niveaux, trois minutes, classement hebdomadaire et général.',
     how2: 'Un labyrinthe vu de dessus, dans l\'esprit des années 80. Ramasse clés et documents, livre-les dans les bureaux de la même couleur et échappe aux robots. 15 niveaux, 9 minutes en tout.',
-    soon: 'Classement en ligne bientôt', yours: 'Ton record sur cet appareil', foot: 'Les deux jeux sont gratuits, se jouent dans le navigateur et sans inscription. Ils sont faits par', foot2: ', le site qui réunit l\'actualité du jour sur l\'intelligence artificielle.' },
-  de: { title: 'Faind Game', lead: 'Willkommen in unserem Spielebereich', rec: 'Rekord (Platz 1)', play: 'SPIELEN', home: 'FAIND START',
+    soon: 'Classement en ligne bientôt', yours: 'Ton record sur cet appareil', foot: 'Tous les jeux sont gratuits, se jouent dans le navigateur et sans inscription. Ils sont faits par', foot2: ', le site qui réunit l\'actualité du jour sur l\'intelligence artificielle.' },
+  de: { title: 'Faind Games', lead: 'Willkommen in unserem Spielebereich', rec: 'Rekord (Platz 1)', play: 'SPIELEN', home: 'FAIND START',
+    how3: 'Ein Gedächtnisspiel auf schwebenden Platten. Präge dir den Weg sieben Sekunden lang ein, dann geh und spring ihn im Dunkeln bis zur Redaktion. 15 Level, 3 Leben, 20 Blitze, kein Zeitlimit.',
     how1: 'Fang die Nachrichtenrollen und liefere sie in der Redaktion ab, bevor sie zu Boden fallen. Fünf Level, drei Minuten, Wochen- und Gesamtrangliste.',
     how2: 'Ein Labyrinth von oben im Stil der 80er. Sammle Schlüssel und Dokumente, liefere sie in den gleichfarbigen Büros ab und entkomme den Robotern. 15 Level, insgesamt 9 Minuten.',
-    soon: 'Online-Rangliste in Kürze', yours: 'Dein Rekord auf diesem Gerät', foot: 'Beide Spiele sind kostenlos, laufen im Browser und brauchen keine Anmeldung. Sie stammen von', foot2: ', der Seite mit den KI-Nachrichten des Tages.' }
+    soon: 'Online-Rangliste in Kürze', yours: 'Dein Rekord auf diesem Gerät', foot: 'Alle Spiele sind kostenlos, laufen im Browser und brauchen keine Anmeldung. Sie stammen von', foot2: ', der Seite mit den KI-Nachrichten des Tages.' }
 };
 let lang = 'en';
 try { const s = localStorage.getItem('faind-lang'); lang = s && T[s] ? s : (T[(navigator.language || 'en').slice(0, 2).toLowerCase()] ? (navigator.language || 'en').slice(0, 2).toLowerCase() : 'en'); } catch (e) {}
 const t = T[lang], $ = (id) => document.getElementById(id);
 document.documentElement.lang = lang;
-$('lead').textContent = t.lead; $('recL1').textContent = t.rec; $('recL2').textContent = t.rec; $('how1').textContent = t.how1; $('how2').textContent = t.how2;
-$('play1').textContent = t.play; $('play2').textContent = t.play; $('back').textContent = t.home;
+$('lead').textContent = t.lead; $('title').textContent = t.title; document.title = t.title + ' – free retro arcade games by FAIND';
+$('recL1').textContent = t.rec; $('recL2').textContent = t.rec; $('recL3').textContent = t.rec; $('how1').textContent = t.how1; $('how2').textContent = t.how2; $('how3').textContent = t.how3;
+$('play1').textContent = t.play; $('play2').textContent = t.play; $('play3').textContent = t.play; $('back').textContent = t.home;
 $('foot').innerHTML = t.foot + ' <a href="../">FAIND</a>' + t.foot2;
 
 // News Rush: primo posto della classifica assoluta
@@ -123,6 +138,9 @@ if (API) {
 // Signal Maze: nessuna classifica online ancora; solo il record locale, se c'è
 let best = 0; try { best = parseInt(localStorage.getItem('faind-maze-best') || '0', 10) || 0; } catch (e) {}
 $('recN2').textContent = best ? t.yours + ': ' + best : t.soon;
+// Lost Signal: stesso discorso, record separato (chiave propria)
+let bestL = 0; try { bestL = parseInt(localStorage.getItem('faind-lost-best') || '0', 10) || 0; } catch (e) {}
+$('recN3').textContent = bestL ? t.yours + ': ' + bestL : t.soon;
 </script>
 </body>
 </html>
