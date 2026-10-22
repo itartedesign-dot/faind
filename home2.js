@@ -56,7 +56,7 @@
     { k: 'strumenti', ids: ['trending', 'guide'], icon: true },   // prima i trending tool, poi gli strumenti da scaricare (Paolo, 12 ottobre 2026)
     { k: 'uomoai', ids: ['focus'], icon: true },   // l'ex sezione Focus: robot, casa, medicina, lavoro e clima
     { k: 'telegram', ids: ['telegram'], icon: true },
-    { k: 'gioca', ids: [], icon: true, link: 'faind-game/' },   // non apre un pannello: porta al gioco FAIND GAME (pagina propria, a tutto schermo)
+    { k: 'gioca', ids: [], icon: true, link: 'games/' },   // non apre un pannello: porta alla pagina Faind Game (elenco dei giochi: News Rush e Signal Maze)
     { k: 'contatti', ids: ['contatti'] },
     { k: 'sostieni', ids: ['sostieni'] },
     { k: 'feed', ids: ['feed'] }
