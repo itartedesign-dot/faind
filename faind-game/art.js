@@ -7,9 +7,9 @@
    separati e animati a ogni fotogramma. Il canvas è poi ingrandito dal
    browser senza sfocature (image-rendering: pixelated).
    ===================================================================== */
-import { CONFIG as C } from './sim.js';
-import { SPRITE_W, SPRITE_H, drawFaindoSprite, poseFor, poseKey } from './faindo.js';
-import { loadPoses, poseNumber, STAND_PX, STAND_SHARE } from './faindo-sprites.js';
+import { CONFIG as C } from './sim.js?v=20261022c';
+import { SPRITE_W, SPRITE_H, drawFaindoSprite, poseFor, poseKey } from './faindo.js?v=20261022c';
+import { loadPoses, poseNumber, STAND_PX, STAND_SHARE } from './faindo-sprites.js?v=20261022c';
 
 const P = {
   navy: '#15213A', navyD: '#0b1226', navyM: '#1d2d4f', navyL: '#2a4170',
