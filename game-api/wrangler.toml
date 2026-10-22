@@ -3,6 +3,10 @@ name = "faind-game-api"
 main = "worker.js"
 compatibility_date = "2026-01-01"
 
+# prima di ogni deploy copia il motore di Lost Signal in engines/lost/ (senza il "?v=" degli import, che esbuild non risolve)
+[build]
+command = "node sync-engines.mjs"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "faind-game"
