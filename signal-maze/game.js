@@ -6,10 +6,11 @@
    ciclo di animazione. Il tempo di 9 minuti vive nel motore e scorre solo quando il motore viene fatto avanzare:
    pausa, cambio livello, scheda in background e conto alla rovescia non lo toccano.
    ===================================================================== */
-import { Sim, CONFIG as C } from './sim.js?v=20261022g';
-import { Scene, CW, CH } from './art.js?v=20261022g';
-import { Audio8 } from './audio.js?v=20261022g';
-import { LEVELS } from './maze.js?v=20261022g';
+import { Sim, CONFIG as C } from './sim.js?v=20261022h';
+import { Scene, CW, CH } from './art.js?v=20261022h';
+import { Audio8 } from './audio.js?v=20261022h';
+import { LEVELS } from './maze.js?v=20261022h';
+import { createBoard } from '../faind-game/board.js?v=20261022h';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_MAZE_API || '').replace(/\/+$/, '');
@@ -27,6 +28,7 @@ const el = {
   pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pLb: $('pLb'), pauseAuto: $('pauseAuto'), controls: $('controls')
 };
 const chips = [...document.querySelectorAll('.m-chip')];
+const board = createBoard({ api: API, game: 'maze', bestKey: BEST_KEY, signal: ac.signal, isOver: () => state === 'over' });
 
 const scene = new Scene(el.cv);
 const audio = new Audio8();
@@ -35,7 +37,7 @@ let pausedFrom = null;
 let sim = new Sim(1);           // anteprima dietro alla schermata iniziale
 scene.setLevel(sim.L);
 let cdMs = 0, cdShown = -1, betweenMs = 0, betweenFor = 0;
-let acc = 0, last = 0, raf = 0, dead = false, lbOpener = null, lastTick = -1;
+let acc = 0, last = 0, raf = 0, dead = false, lastTick = -1;
 
 $('btnStart').disabled = true;
 Promise.race([scene.ready, new Promise((r) => setTimeout(r, 5000))]).then(() => { $('btnStart').disabled = false; });
@@ -89,11 +91,16 @@ function toggleSound() {
 function randomSeed() { try { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] | 0; } catch (e) { return (Math.random() * 4294967296) | 0; } }
 function startGame() {
   audio.unlock(); audio.resume(); askFullscreen(); releaseInputs();
-  sim = new Sim(randomSeed()); scene.setLevel(sim.L); scene.fx = []; acc = 0; lastTick = -1;
+  board.startSession();           // il server dà il seme e il gettone; la partita vera parte a fine conto alla rovescia
+  sim = new Sim(1); scene.setLevel(sim.L); scene.fx = []; acc = 0; lastTick = -1;
   cdMs = 0; cdShown = -1; el.live.textContent = '';
   updateHud(true); setState('countdown');
 }
-function beginPlay() { setState('playing'); audio.startMusic(); showLevelToast(1); updateHud(true); }
+function beginPlay() {
+  const seed = board.commit();
+  sim = new Sim(seed === null ? randomSeed() : seed); scene.setLevel(sim.L); scene.fx = []; acc = 0; lastTick = -1;
+  setState('playing'); audio.startMusic(); showLevelToast(1); updateHud(true);
+}
 
 function showLevelToast(n) {
   const sub = n === 1 ? 'COLLECT FREELY' : n === C.FREE_LEVELS + 1 ? 'ONE COLOUR AT A TIME' : '';
@@ -110,8 +117,9 @@ function finish() {
   if (isBest) { best = score; try { localStorage.setItem(BEST_KEY, String(best)); } catch (e) {} }
   $('rScore').textContent = String(score); $('rLevel').textContent = sim.level + '/' + LEVELS;
   $('rDel').textContent = String(sim.stats.delivered); $('rBestV').textContent = String(best); $('rBest').hidden = !isBest;
-  $('rNote').textContent = (won ? 'All 15 levels done, +' + sim.bonus + ' time bonus. ' : '') + (isBest ? 'New record saved on this device. ' : '') + 'The online leaderboard is not available yet.';
-  setTimeout(() => { if (state === 'over') { try { $('btnAgain').focus({ preventScroll: true }); } catch (e) {} } }, 400);
+  $('rNote').textContent = (won ? 'All 15 levels done, +' + sim.bonus + ' time bonus. ' : '') + (isBest ? 'New record saved on this device.' : '');
+  board.finish(sim.inputs);
+  setTimeout(() => { if (state === 'over' && !board.nameOpen) { try { $('btnAgain').focus({ preventScroll: true }); } catch (e) {} } }, 400);
 }
 function goHome(e) {
   if (e && (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) return;
@@ -170,8 +178,9 @@ const KEYS = { ArrowRight: 0, d: 0, D: 0, ArrowLeft: 1, a: 1, A: 1, ArrowDown: 2
 on(document, 'keydown', (e) => {
   if (e.altKey || e.ctrlKey || e.metaKey) return;
   const k = e.key;
+  if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName) && k !== 'Escape') return;     // sigla e ricerca nazione: le lettere sono lettere
   if (k === 'Escape') {
-    if (!el.pLb.hidden) { closeLb(); e.preventDefault(); return; }
+    if (board.escape()) { e.preventDefault(); return; }
     if (state === 'playing' || state === 'countdown' || state === 'between') { pause(false); e.preventDefault(); } else if (state === 'paused') { resume(); e.preventDefault(); }
     return;
   }
@@ -278,15 +287,6 @@ function frame(now) {
   scene.draw(sim, state === 'paused');
 }
 
-/* ------------------------------ Classifica ------------------------------ */
-function openLb() {
-  lbOpener = document.activeElement; el.pLb.hidden = false;
-  $('lbBest').textContent = String(localBest());
-  $('lbNote').textContent = API ? 'Loading…' : 'The online leaderboard for Signal Maze is not available yet. Your best score is saved on this device.';
-  try { $('btnLbClose').focus({ preventScroll: true }); } catch (e) {}
-}
-function closeLb() { el.pLb.hidden = true; if (lbOpener && lbOpener.focus && document.body.contains(lbOpener)) { try { lbOpener.focus({ preventScroll: true }); } catch (e) {} } }
-
 /* ------------------------------ Condivisione ------------------------------ */
 async function shareScore() {
   const url = new URL('./', location.href).href, text = 'I scored ' + sim.score + ' points in FAIND Signal Maze. Can you beat that?', note = $('shareNote');
@@ -302,7 +302,6 @@ async function shareScore() {
 /* ------------------------------ Collegamenti ------------------------------ */
 on(el.brand, 'click', goHome);
 on($('btnStart'), 'click', startGame);
-on($('btnLb'), 'click', openLb); on($('btnLbClose'), 'click', closeLb);
 on($('btnSound'), 'click', toggleSound); on($('btnSound2'), 'click', toggleSound);
 on(el.pauseBtn, 'click', () => pause(false));
 on($('btnResume'), 'click', resume);

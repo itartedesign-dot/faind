@@ -6,15 +6,18 @@
    animazione. Memorizzazione e flash vivono nel motore e scorrono solo quando il motore viene fatto avanzare: pausa,
    schede in background e schermate non li toccano e non regalano nuove accensioni.
    ===================================================================== */
-import { Sim, CFG, DIRV } from './sim.js?v=20261022a';
-import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261022a';
-import { Audio8 } from './audio.js?v=20261022a';
+import { Sim, CFG, DIRV } from './sim.js?v=20261022b';
+import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261022b';
+import { Audio8 } from './audio.js?v=20261022b';
+import { createBoard } from '../faind-game/board.js?v=20261022h';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_LOST_API || '').replace(/\/+$/, '');
 const LEVELS = Math.max(1, parseInt(window.FAIND_LOST_LEVELS || '15', 10) || 15);
 const BEST_KEY = 'faind-lost-best';
 const SWIPE_PX = 22, TAP_MS = 450;
+const QUANTUM = 5;              // il motore avanza a passi fissi di 5 ms: il server rifà la partita con gli stessi passi
+const RANKED_LEVELS = 15;       // la classifica vale solo per la partita da 15 livelli, quella che il server rifà
 
 const ac = new AbortController();
 const on = (el, ev, fn, opt) => el.addEventListener(ev, fn, Object.assign({ signal: ac.signal }, opt || {}));
@@ -25,11 +28,12 @@ const el = {
   pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pLb: $('pLb'), pauseAuto: $('pauseAuto')
 };
 
+const board = createBoard({ api: LEVELS === RANKED_LEVELS ? API : '', game: 'lost', sessionTimeout: 8000, bestKey: BEST_KEY, signal: ac.signal, isOver: () => state === 'over' });
 const scene = new Scene(el.cv);
 const audio = new Audio8();
 let state = 'start';            // start | running | paused | over
 let sim = new Sim(LEVELS);      // anteprima dietro alla schermata iniziale
-let last = 0, raf = 0, dead = false, lbOpener = null, tutorialDone = false, hintStep = -1, hintT = 0, lastSec = -1;
+let acc = 0, last = 0, raf = 0, dead = false, tutorialDone = false, hintStep = -1, hintT = 0, lastSec = -1;
 
 $('btnStart').disabled = true;
 Promise.race([scene.ready, new Promise((r) => setTimeout(r, 5000))]).then(() => { $('btnStart').disabled = false; });
@@ -80,7 +84,8 @@ function toggleSound() {
 /* ------------------------------ Partita ------------------------------ */
 function startGame() {
   audio.unlock(); audio.resume(); askFullscreen(); hideHint();
-  sim = new Sim(LEVELS); sim.events.length = 0; scene.vis = 1; scene.L = null; last = performance.now(); lastSec = -1;
+  board.startSession();                       // il gettone può arrivare anche a partita iniziata: qui non c'è un seme da aspettare
+  sim = new Sim(LEVELS); sim.events.length = 0; scene.vis = 1; scene.L = null; last = performance.now(); acc = 0; lastSec = -1;
   el.live.textContent = ''; updateHud(true); setState('running'); audio.startMusic(); levelToast();
 }
 function levelToast() {
@@ -95,8 +100,9 @@ function finish(won) {
   if (isBest) { best = score; try { localStorage.setItem(BEST_KEY, String(best)); } catch (e) {} }
   $('rScore').textContent = String(score); $('rLevel').textContent = sim.level + '/' + LEVELS; $('rNews').textContent = String(sim.stats.news);
   $('rBestV').textContent = String(best); $('rBest').hidden = !isBest;
-  $('rNote').textContent = (won ? 'You reached the newsroom on all ' + LEVELS + ' levels. ' : 'Level reached: ' + sim.level + '. ') + (isBest ? 'New record saved on this device. ' : '') + 'The online leaderboard is not available yet.';
-  setTimeout(() => { if (state === 'over') { try { $('btnAgain').focus({ preventScroll: true }); } catch (e) {} } }, 400);
+  $('rNote').textContent = (won ? 'You reached the newsroom on all ' + LEVELS + ' levels. ' : 'Level reached: ' + sim.level + '. ') + (isBest ? 'New record saved on this device.' : '');
+  board.finish(sim.log);
+  setTimeout(() => { if (state === 'over' && !board.nameOpen) { try { $('btnAgain').focus({ preventScroll: true }); } catch (e) {} } }, 400);
 }
 function goHome(e) {
   if (e && (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) return;
@@ -165,7 +171,7 @@ on(document, 'keydown', (e) => {
   if (e.altKey || e.ctrlKey || e.metaKey) return;
   const k = e.key, code = e.code;
   if (k === 'Escape') {
-    if (!el.pLb.hidden) { closeLb(); e.preventDefault(); return; }
+    if (board.escape()) { e.preventDefault(); return; }
     if (state === 'running') { pause(false); e.preventDefault(); } else if (state === 'paused') { resume(); e.preventDefault(); }
     return;
   }
@@ -273,22 +279,16 @@ function frame(now) {
   raf = requestAnimationFrame(frame);
   const dt = Math.min(100, now - (last || now)); last = now;
   if (state === 'running') {
-    sim.update(dt); handleEvents();
+    acc += dt; let n = 0;
+    while (acc >= QUANTUM && n < 30) { sim.update(QUANTUM); acc -= QUANTUM; n++; }
+    if (n >= 30) acc = 0;
+    handleEvents();
     if (sim.phase === 'memorize') { const sec = Math.ceil(sim.memMs / 1000); if (sec !== lastSec) { lastSec = sec; if (sec <= 3 && sec > 0) audio.sfx('tick'); } } else lastSec = -1;
     if (state === 'running') { tickHint(dt / 1000); updateHud(); }
   }
   if (state !== 'paused') scene.update(dt / 1000);
   scene.draw(sim, state === 'paused');
 }
-
-/* ------------------------------ Classifica ------------------------------ */
-function openLb() {
-  lbOpener = document.activeElement; el.pLb.hidden = false;
-  $('lbBest').textContent = String(localBest());
-  $('lbNote').textContent = API ? 'Loading…' : 'The online leaderboard for Lost Signal is not available yet. Your best score is saved on this device.';
-  try { $('btnLbClose').focus({ preventScroll: true }); } catch (e) {}
-}
-function closeLb() { el.pLb.hidden = true; if (lbOpener && lbOpener.focus && document.body.contains(lbOpener)) { try { lbOpener.focus({ preventScroll: true }); } catch (e) {} } }
 
 /* ------------------------------ Condivisione ------------------------------ */
 async function shareScore() {
@@ -305,7 +305,6 @@ async function shareScore() {
 /* ------------------------------ Collegamenti ------------------------------ */
 on(el.brand, 'click', goHome);
 on($('btnStart'), 'click', startGame);
-on($('btnLb'), 'click', openLb); on($('btnLbClose'), 'click', closeLb);
 on($('btnSound'), 'click', toggleSound); on($('btnSound2'), 'click', toggleSound);
 on(el.pauseBtn, 'click', () => pause(false));
 on($('btnResume'), 'click', resume);

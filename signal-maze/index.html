@@ -19,7 +19,7 @@
   <link rel="icon" href="../assets/favicon-32.png?v=3" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
   <link rel="stylesheet" href="../faind-game/game.css?v=20261022e">
-  <link rel="stylesheet" href="maze.css?v=20261022g">
+  <link rel="stylesheet" href="maze.css?v=20261022h">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"FAIND Signal Maze","url":"https://faind.org/signal-maze/","description":"A free top-down maze arcade game with an 80s look: collect keys and documents, deliver them to the colour-coded offices and avoid the robots across 15 levels in 9 minutes.","image":"https://faind.org/assets/giochi/signal-maze.png","genre":"Arcade","gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","inLanguage":"en","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"FAIND","url":"https://faind.org/"}}</script>
 </head>
 <body>
@@ -86,9 +86,22 @@
             <div><dt>Delivered</dt><dd id="rDel">0</dd></div>
             <div><dt>Your best</dt><dd id="rBestV">0</dd></div>
           </dl>
+          <p class="g-rank" id="rRank" hidden></p>
+          <form class="g-name" id="nameForm" hidden autocomplete="off">
+            <p class="g-note" data-t="enterName"></p>
+            <div class="g-name__row">
+              <label class="g-sr" for="nameIn" data-t="initials">Initials</label>
+              <input id="nameIn" class="g-input" maxlength="3" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="AAA" pattern="[A-Za-z]{3}">
+              <button type="button" class="g-btn g-country" id="btnCountry"><span class="g-flag" id="cFlag"></span><span id="cName" data-t="chooseCountry">Choose your country</span></button>
+            </div>
+            <p class="g-err" id="nameErr" hidden></p>
+            <div class="g-row"><button type="submit" class="g-btn g-btn--main" id="btnSave" data-t="save">SAVE</button><button type="button" class="g-btn" id="btnSkip" data-t="skip">Skip</button></div>
+          </form>
           <p class="g-note" id="rNote"></p>
+          <p class="g-note" id="rStatus" hidden></p>
           <div class="g-grid">
             <button type="button" class="g-btn g-btn--main" id="btnAgain">PLAY AGAIN</button>
+            <button type="button" class="g-btn" id="btnLb2" data-t="leaderboard">LEADERBOARD</button>
             <button type="button" class="g-btn" id="btnShare">SHARE SCORE</button>
             <a class="g-btn" id="btnMore" href="../games/">ALL GAMES</a>
             <a class="g-btn" id="btnNews" href="../#notizie">TODAY'S AI NEWS</a>
@@ -97,11 +110,23 @@
         </section>
 
         <section class="g-panel g-panel--lb" id="pLb" hidden role="dialog" aria-modal="true" aria-labelledby="lbTitle">
-          <h2 class="g-h2" id="lbTitle">LEADERBOARD</h2>
+          <h2 class="g-h2" id="lbTitle" data-t="leaderboard">LEADERBOARD</h2>
+          <div class="g-tabs" id="lbTabs" role="tablist">
+            <button type="button" role="tab" class="g-tab" id="tabW" aria-selected="true" data-t="weekly">THIS WEEK</button>
+            <button type="button" role="tab" class="g-tab" id="tabA" aria-selected="false" data-t="allTime">ALL TIME</button>
+          </div>
+          <ol class="g-list" id="lbList"></ol>
           <p class="g-note" id="lbNote"></p>
           <p class="g-big g-big--small" id="lbBest">0</p>
-          <p class="g-lbl2">YOUR BEST ON THIS DEVICE</p>
-          <div class="g-row"><button type="button" class="g-btn g-btn--main" id="btnLbClose">Close</button></div>
+          <p class="g-lbl2" data-t="bestTitle">YOUR BEST ON THIS DEVICE</p>
+          <div class="g-row"><button type="button" class="g-btn" id="btnLbRetry" hidden data-t="retry">Retry</button><button type="button" class="g-btn g-btn--main" id="btnLbClose" data-t="close">Close</button></div>
+        </section>
+
+        <section class="g-panel g-panel--country" id="pCountry" hidden role="dialog" aria-modal="true" aria-labelledby="coTitle">
+          <h2 class="g-h2" id="coTitle" data-t="chooseCountry">Choose your country</h2>
+          <input type="search" id="coSearch" class="g-input g-input--wide" autocomplete="off" data-ta="searchCountry">
+          <ul class="g-countries" id="coList" role="listbox"></ul>
+          <div class="g-row"><button type="button" class="g-btn" id="btnCoClose" data-t="close">Close</button></div>
         </section>
       </div>
 
@@ -113,7 +138,7 @@
   <noscript><p class="g-noscript">FAIND Signal Maze needs JavaScript. <a href="../">Back to FAIND</a></p></noscript>
 </div>
 <script src="../stats.js?v=20261011a" defer></script>
-<script src="config.js?v=20261022g"></script>
-<script type="module" src="game.js?v=20261022g"></script>
+<script src="config.js?v=20261022h"></script>
+<script type="module" src="game.js?v=20261022h"></script>
 </body>
 </html>

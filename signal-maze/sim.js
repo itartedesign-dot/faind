@@ -98,8 +98,10 @@ export class Sim {
       e, al rilascio, si ferma al centro della tile in cui sta andando, così resta sempre allineato ai corridoi. Con una diagonale tenuta
       prosegue dritto e, al primo incrocio libero nell'altra direzione, ci gira da solo ("prenotazione"): niente fermate per cambiare corridoio. */
   input(dirs) {
-    this.held = dirs && dirs.length ? dirs.slice(0, 2) : [];
-    this.inputs.push([this.tick, this.held.map((d) => DIRS.findIndex((q) => q[0] === d[0] && q[1] === d[1]))]);   // registro dei comandi: servirà alla verifica lato server
+    const held = dirs && dirs.length ? dirs.slice(0, 2) : [];
+    const same = held.length === this.held.length && held.every((d, i) => d[0] === this.held[i][0] && d[1] === this.held[i][1]);
+    this.held = held;
+    if (!same) this.inputs.push([this.tick, held.map((d) => DIRS.findIndex((q) => q[0] === d[0] && q[1] === d[1]))]);   // registro dei comandi (solo i cambi: lo scorrimento del dito li ripete a ogni movimento): servirà alla verifica lato server
   }
 
   /* ---------------- regole sul terreno ---------------- */
