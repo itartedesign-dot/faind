@@ -67,7 +67,6 @@ export class Sim {
     this.won = false; this.reason = ''; this.bonus = 0;
     this.events = []; this.inputs = []; this.tick = 0; this.stats = { delivered: 0, offices: 0, robots: 0 };
     this.held = [];
-    this.robotsOut = 0;         // robot eliminati per sempre: uno in più ogni volta che si distruggono tutti i robot di una stanza
     this.loadLevel(1);
   }
 
@@ -84,19 +83,15 @@ export class Sim {
     this.active = null;                          // colore attivo (dal livello 4)
     this.power = 0; this.exitActive = false; this.deskLatch = -1; this.doorOpen = L.offices.map(() => 0);
     const delays = robotDelays(n);
-    this.robots = L.robots.slice(0, L.robots.length - this.robotsOut).map((p, i) => ({ i, x: p[0] + 0.5, y: p[1] + 0.5, dx: 0, dy: 0, alive: true, delay: delays[i], mode: i === 3 ? 'patrol' : 'chase', modeT: 0, goal: null, face: 0 }));
-    this.held = [];
+    this.robots = L.robots.map((p, i) => ({ i, x: p[0] + 0.5, y: p[1] + 0.5, dx: 0, dy: 0, alive: true, delay: delays[i], mode: i === 3 ? 'patrol' : 'chase', modeT: 0, goal: null, face: 0 }));
+    this.held = []; this.lastKilled = null;
     const rc = this.L.grid; let rb = null;
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (rc[idx(x, y)] === T.FLOOR) { const d = Math.abs(x - 7) + Math.abs(y - 8.5); if (!rb || d < rb.d) rb = { d, x, y }; }
     this.centerTile = [rb.x, rb.y];   // dove ricompare Faindo dopo un contatto: al centro della mappa
   }
 
   /** Passa al livello successivo (chiamato dall'interfaccia dopo la pausa tra i livelli). */
-  advance() {
-    if (this.phase !== 'between') return;
-    // stanza ripulita (tutti i robot distrutti): l'ultimo ucciso non tornerà più, gli altri tornano nella stanza dopo; se ne resta anche uno vivo tornano tutti
-    if (this.robots.length > 1 && this.robots.every((r) => !r.alive)) this.robotsOut = Math.min(this.robotsOut + 1, this.L.robots.length - 1);
-    this.loadLevel(this.level + 1); this.phase = 'play'; this.events.push({ type: 'level', a: this.level }); }
+  advance() { if (this.phase !== 'between') return; this.loadLevel(this.level + 1); this.phase = 'play'; this.events.push({ type: 'level', a: this.level }); }
 
   /* ---------------- comandi ---------------- */
   /** dirs: elenco di direzioni tenute ([dx, dy], al massimo due: una diagonale vale come due direzioni). Faindo si muove solo mentre ce n'è almeno una
@@ -124,7 +119,7 @@ export class Sim {
     this.tick++;
     this.timeLeft -= DT;
     if (this.timeLeft <= 0) { this.timeLeft = 0; this.finish(false, 'time'); return; }
-    if (this.power > 0) { this.power -= DT; if (this.power <= 0) { this.power = 0; this.events.push({ type: 'powerEnd' }); } }
+    if (this.power > 0) { this.power -= DT; if (this.power <= 0) { this.power = 0; this.events.push({ type: 'powerEnd' }); this.reviveRobots(); } }
     if (this.f.inv > 0) this.f.inv = Math.max(0, this.f.inv - DT);
     if (this.f.spawn > 0) this.f.spawn = Math.max(0, this.f.spawn - DT);
     this.moveFaindo();
@@ -286,13 +281,26 @@ export class Sim {
     r.dx = best[0]; r.dy = best[1];
   }
 
+  /** Fine del potere: se Faindo ha distrutto tutti i robot, tornano tutti tranne l'ultimo ucciso, che non torna più
+      (5 → 4 → 3…, ne resta sempre almeno uno); altrimenti chi è stato distrutto resta distrutto. Al livello nuovo tornano tutti. */
+  reviveRobots() {
+    if (!this.robots.length || this.robots.some((r) => r.alive)) return;
+    if (this.robots.length > 1 && this.lastKilled) this.robots = this.robots.filter((r) => r !== this.lastKilled);
+    this.robots.forEach((r, k) => {
+      const p = this.L.robots[r.i];
+      Object.assign(r, { alive: true, x: p[0] + 0.5, y: p[1] + 0.5, dx: 0, dy: 0, delay: 1.5 + k * 0.8, modeT: 0, goal: null });   // rientrano uno alla volta dai punti di partenza
+    });
+    this.lastKilled = null;
+    this.events.push({ type: 'robotsBack', n: this.robots.length });
+  }
+
   contacts() {
     const f = this.f;
     for (const r of this.robots) {
       if (!r.alive || r.delay > 0) continue;
       if (Math.hypot(dW(r.x, f.x), dH(r.y, f.y)) >= C.HIT_DIST) continue;
       if (this.power > 0) {
-        r.alive = false; this.score += C.SCORE.ROBOT; this.stats.robots++;
+        r.alive = false; this.lastKilled = r; this.score += C.SCORE.ROBOT; this.stats.robots++;
         this.events.push({ type: 'kill', x: r.x, y: r.y, face: r.face, i: r.i });
       } else if (f.inv <= 0) { this.hit(); return; }
     }

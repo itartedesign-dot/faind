@@ -142,14 +142,18 @@ for (let n = 1; n <= LEVELS; n++) { const L = buildLevel(n); if (L.exit[0] !== 7
   const alive = s.robots.filter((q) => q.alive).length; for (let i = 0; i < 60 * 40; i++) { s.f.inv = 99; s.power = CONFIG.POWER_TIME; s.step(); }
   if (alive !== s.robots.length - 1 || s.robots.filter((q) => q.alive).length !== alive) fail('un robot distrutto non deve ricomparire');
 }
-/* ---- stanza ripulita: l'ultimo robot ucciso non torna più (-1, poi -2...); se non si distruggono tutti tornano tutti ---- */
+/* ---- fine potere: tutti distrutti → tornano tutti meno l'ultimo ucciso (5 → 4 → 3…); non tutti → i distrutti restano distrutti; livello nuovo → tornano tutti ---- */
 {
-  const s = new Sim(1); const n0 = s.robots.length;
-  const clear = (all) => { s.robots.forEach((r, i) => { r.alive = all ? false : i !== 0; }); s.phase = 'between'; s.advance(); };
-  clear(true);  if (s.robots.length !== n0 - 1 || s.robots.some((r) => !r.alive)) fail('dopo la prima stanza ripulita deve mancare 1 robot: ' + s.robots.length);
-  clear(false); if (s.robots.length !== n0 - 1) fail('stanza non ripulita: devono tornare tutti quelli rimasti, ' + s.robots.length);
-  clear(true);  if (s.robots.length !== n0 - 2) fail('seconda stanza ripulita: -2 in tutto, ' + s.robots.length);
-  clear(true); clear(true); clear(true); if (s.robots.length !== 1) fail('ne resta sempre almeno uno, ' + s.robots.length);
+  const s = new Sim(1); s.loadLevel(1); const n0 = s.robots.length;
+  const killAll = () => { s.power = 1 / 60; s.robots.forEach((r, i) => { r.alive = false; s.lastKilled = r; }); s.step(); s.step(); };
+  killAll(); if (s.robots.length !== n0 - 1 || s.robots.some((r) => !r.alive)) fail('primo potere con tutti i robot distrutti: ne devono tornare ' + (n0 - 1) + ', ' + s.robots.length);
+  const last = s.robots.length;
+  s.power = 1 / 60; s.robots[0].alive = false; s.step(); s.step();
+  if (s.robots.length !== last || s.robots.filter((r) => r.alive).length !== last - 1) fail('non tutti distrutti: il distrutto non torna e gli altri restano');
+  s.robots.forEach((r) => { r.alive = true; });
+  killAll(); if (s.robots.length !== n0 - 2) fail('secondo potere con tutti distrutti: ' + (n0 - 2) + ' attesi, ' + s.robots.length);
+  killAll(); killAll(); killAll(); if (s.robots.length !== 1) fail('ne resta sempre almeno uno, ' + s.robots.length);
+  s.loadLevel(2); if (s.robots.length !== n0) fail('livello nuovo: tornano tutti i robot');
 }
 console.log(bad ? bad + ' controlli falliti' : 'tutti i controlli superati');
 process.exit(bad ? 1 : 0);
