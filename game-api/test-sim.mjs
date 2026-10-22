@@ -39,6 +39,9 @@ assert.ok(lv.every((x, i) => x[1] === i + 2), 'un livello alla volta');
 assert.equal(s.level, Math.floor(s.delivered / C.LEVEL_SCROLLS) + 1);
 const idle = new Sim(5); while (!idle.done) { idle.step(); idle.events.length = 0; }
 assert.ok(idle.over && idle.lost === 3 && idle.tick < 1500); console.log('game over a tick', idle.tick, 'score', idle.score);
+// la notizia del braccio vale 1000 fissi, le altre 100 × moltiplicatore
+const sc = new Sim(1); sc.load = 3; sc.armLoad = 1; sc.x = C.DELIVER_X; sc.target = C.DELIVER_X; sc.step();
+assert.equal(sc.score, 1000 + 100 + 100); assert.equal(sc.armLoad, 0); assert.equal(sc.delivered, 3);
 // difficoltà crescente: parametri monotoni
 import { levelParams } from '../faind-game/sim.js';
 for (let l = 4; l <= 30; l++) { const a = levelParams(l - 1), b = levelParams(l); assert.ok(b.fall >= a.fall && b.gap <= a.gap && b.reach >= a.reach && b.cap <= a.cap); }
