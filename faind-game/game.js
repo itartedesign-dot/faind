@@ -149,7 +149,7 @@ function beginPlay() {
 }
 
 function finish() {
-  setState('over');
+  setState('over'); $('pOver').classList.remove('is-record');
   audio.stopMusic(); audio.sfx('end');
   releaseInputs();
   const score = sim.score;
@@ -181,7 +181,7 @@ async function submitScore() {
     if (r.weekly && r.weekly.rank) lines.push(t('topWeekly', { n: r.weekly.rank }));
     if (r.all && r.all.rank) lines.push(t('topAll', { n: r.all.rank }));
     if (lines.length && r.claim) {
-      claim = r.claim;
+      claim = r.claim; $('pOver').classList.add('is-record');
       $('rRank').hidden = false; $('rRank').textContent = t('top10') + '\n' + lines.join('\n'); $('rRank').style.whiteSpace = 'pre-line';
       note.hidden = true;
       $('nameForm').hidden = false; $('nameErr').hidden = true;
@@ -478,12 +478,12 @@ on($('nameForm'), 'submit', async (e) => {
   err.hidden = true; $('btnSave').disabled = true;
   try {
     await api('/name', { claim, initials: ini, country: chosen }, 8000);
-    $('nameForm').hidden = true; $('rNote').hidden = false; $('rNote').textContent = t('saved'); claim = null;
+    $('nameForm').hidden = true; $('rNote').hidden = false; $('rNote').textContent = t('saved'); claim = null; $('pOver').classList.remove('is-record');
     lbData = null; loadTop();
   } catch (e2) { err.hidden = false; err.textContent = e2 && e2.status === 400 ? t('nameBad') : t('netError'); }
   $('btnSave').disabled = false;
 });
-on($('btnSkip'), 'click', () => { $('nameForm').hidden = true; $('rRank').hidden = true; claim = null; });
+on($('btnSkip'), 'click', () => { $('pOver').classList.remove('is-record'); $('nameForm').hidden = true; $('rRank').hidden = true; claim = null; });
 on($('btnCountry'), 'click', openCountry);
 on($('btnCoClose'), 'click', closeCountry);
 

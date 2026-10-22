@@ -63,6 +63,7 @@ export const CONFIG = {
 
   // punteggio
   POINTS: 100, STREAK_STEP: 5, MAX_MULT: 5,
+  ARM_POINTS: 1000,                       // la notizia presa al braccio vale sempre 1000 (senza moltiplicatore)
   RED_CHANCE: 0.07, RED_MIN_GAP: 7,       // ogni tanto esce un'edizione ROSSA: se Faindo la prende vale come 1 rotolo perso (non entra nel carico)
   RED_FIRST: 4,                          // la prima rossa non esce prima del quinto rotolo
   MAX_LOST: 3,                           // al terzo rotolo perso la partita finisce (GAME OVER)
@@ -106,6 +107,7 @@ export class Sim {
     this.level = 1;
     this.cap = levelParams(1).cap;
     this.load = 0;
+    this.armLoad = 0;                     // quante notizie del carico vengono dal braccio
     this.score = 0;
     this.delivered = 0;
     this.lost = 0;
@@ -171,13 +173,13 @@ export class Sim {
     const n = this.load;
     for (let i = 0; i < n; i++) {
       const m = multFor(this.streak);          // il moltiplicatore si calcola per ogni notizia
-      gained += C.POINTS * m;
+      gained += i < this.armLoad ? C.ARM_POINTS : C.POINTS * m;
       this.streak++;
       this.delivered++;
     }
     this.mult = multFor(this.streak);
     this.score += gained;
-    this.load = 0;
+    this.load = 0; this.armLoad = 0;
     this._emit('deliver', n, gained);
   }
 
@@ -207,7 +209,7 @@ export class Sim {
     const a = this.arm; a.age++;
     const st = this.armState();
     if (!a.taken && st.prog >= 0.5 && this.load < this.cap && Math.abs(st.x - this.x) <= C.PICK_HALF_W + C.ROLL_HALF_W + 2) {
-      a.taken = true; a.takenAt = a.age; a.from = st.prog; this.load++;
+      a.taken = true; a.takenAt = a.age; a.from = st.prog; this.load++; this.armLoad++;
       this._emit('collect', st.x, C.ARM_Y); this._emit('armtake', st.x);
       if (this.load >= this.cap) this._emit('full');
     }
