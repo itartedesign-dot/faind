@@ -6,10 +6,10 @@
    ciclo di animazione. Il tempo di 9 minuti vive nel motore e scorre solo quando il motore viene fatto avanzare:
    pausa, cambio livello, scheda in background e conto alla rovescia non lo toccano.
    ===================================================================== */
-import { Sim, CONFIG as C } from './sim.js?v=20261022c';
-import { Scene, CW, CH } from './art.js?v=20261022c';
-import { Audio8 } from './audio.js?v=20261022c';
-import { LEVELS } from './maze.js?v=20261022c';
+import { Sim, CONFIG as C } from './sim.js?v=20261022d';
+import { Scene, CW, CH } from './art.js?v=20261022d';
+import { Audio8 } from './audio.js?v=20261022d';
+import { LEVELS } from './maze.js?v=20261022d';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_MAZE_API || '').replace(/\/+$/, '');
@@ -137,26 +137,34 @@ function resume() {
 function togglePause() { if (state === 'paused') resume(); else pause(false); }
 
 /* ------------------------------ Comandi ------------------------------ */
-let padDir = -1, keyDir = -1;
-function send(d) { if (sim && state === 'playing') sim.input(DIRV[d]); }
+let padDirs = '', keyHeld = [], swDirs = '';
+const dirsOf = (ids) => ids.map((d) => DIRV[d]);
+function sendDirs(ids) { if (sim && state === 'playing') sim.input(dirsOf(ids)); }
 function releaseInputs() {
-  padDir = -1; keyDir = -1; el.pad.querySelectorAll('.is-down').forEach((b) => b.classList.remove('is-down'));
-  if (sim && sim.phase === 'play') sim.input(null);
+  padDirs = ''; keyHeld = []; swDirs = ''; el.pad.querySelectorAll('.is-down').forEach((b) => b.classList.remove('is-down'));
+  if (sim && sim.phase === 'play') sim.input([]);
 }
-function setPad(d) {
-  if (d === padDir) return; padDir = d;
-  el.pad.querySelectorAll('.m-arrow').forEach((b) => b.classList.toggle('is-down', +b.dataset.dir === d));
-  if (d >= 0) send(d); else if (sim) sim.input(null);
+// croce: un lato solo, oppure due lati adiacenti vicino alla diagonale (prenotazione della svolta)
+function dirsFromVec(dx, dy) {
+  const ax = Math.abs(dx), ay = Math.abs(dy), h = dx > 0 ? 0 : 1, v = dy > 0 ? 2 : 3;
+  if (ax > 2.2 * ay) return [h];
+  if (ay > 2.2 * ax) return [v];
+  return [h, v];
+}
+function setPad(ids) {
+  const k = ids.join(','); if (k === padDirs) return; padDirs = k;
+  el.pad.querySelectorAll('.m-arrow').forEach((b) => b.classList.toggle('is-down', ids.includes(+b.dataset.dir)));
+  if (sim && sim.phase === 'play') sim.input(dirsOf(ids));
 }
 function dirFromPointer(e) {
   const r = el.pad.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
-  if (Math.hypot(dx, dy) < r.width * 0.14) return -1;   // al centro della croce: ferma
-  return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 0 : 1) : (dy > 0 ? 2 : 3);
+  if (Math.hypot(dx, dy) < r.width * 0.14) return [];   // al centro della croce: ferma
+  return dirsFromVec(dx, dy);
 }
 let padId = null;
 on(el.pad, 'pointerdown', (e) => { e.preventDefault(); padId = e.pointerId; try { el.pad.setPointerCapture(e.pointerId); } catch (er) {} setPad(dirFromPointer(e)); });
 on(el.pad, 'pointermove', (e) => { if (e.pointerId === padId) setPad(dirFromPointer(e)); });
-const padUp = (e) => { if (e.pointerId !== padId) return; padId = null; setPad(-1); };
+const padUp = (e) => { if (e.pointerId !== padId) return; padId = null; setPad([]); };
 on(el.pad, 'pointerup', padUp); on(el.pad, 'pointercancel', padUp); on(el.pad, 'lostpointercapture', padUp);
 on(el.pad, 'contextmenu', (e) => e.preventDefault());
 
@@ -165,12 +173,13 @@ let sw = null;
 on(el.cv, 'pointerdown', (e) => { e.preventDefault(); sw = { id: e.pointerId, x: e.clientX, y: e.clientY }; try { el.cv.setPointerCapture(e.pointerId); } catch (er) {} });
 on(el.cv, 'pointermove', (e) => {
   if (!sw || e.pointerId !== sw.id) return;
-  const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
-  if (Math.hypot(dx, dy) < 14) return;
-  send(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 0 : 1) : (dy > 0 ? 2 : 3));
-  sw.x = e.clientX; sw.y = e.clientY;
+  let dx = e.clientX - sw.x, dy = e.clientY - sw.y;
+  const d = Math.hypot(dx, dy);
+  if (d > 26) { sw.x = e.clientX - dx * 26 / d; sw.y = e.clientY - dy * 26 / d; dx = e.clientX - sw.x; dy = e.clientY - sw.y; }   // ancora che segue il dito
+  if (d < 14) return;
+  sendDirs(dirsFromVec(dx, dy));
 });
-const swEnd = (e) => { if (sw && e.pointerId === sw.id) { sw = null; if (sim && sim.phase === 'play') sim.input(null); } };
+const swEnd = (e) => { if (sw && e.pointerId === sw.id) { sw = null; if (sim && sim.phase === 'play') sim.input([]); } };
 on(el.cv, 'pointerup', swEnd); on(el.cv, 'pointercancel', swEnd); on(el.cv, 'lostpointercapture', swEnd);
 on(el.cv, 'contextmenu', (e) => e.preventDefault());
 
@@ -184,10 +193,10 @@ on(document, 'keydown', (e) => {
     return;
   }
   if (k === 'p' || k === 'P') { if (state === 'playing' || state === 'countdown' || state === 'paused' || state === 'between') { togglePause(); e.preventDefault(); } return; }
-  if (k in KEYS) { e.preventDefault(); if (state === 'playing') { keyDir = KEYS[k]; send(keyDir); } return; }
+  if (k in KEYS) { e.preventDefault(); if (state === 'playing') { const d = KEYS[k]; keyHeld = keyHeld.filter((x) => x !== d); keyHeld.push(d); sendDirs(keyHeld.slice(-2)); } return; }
   if ((k === 'Enter' || k === ' ') && state === 'start' && el.pLb.hidden && !$('btnStart').disabled && document.activeElement === document.body) { startGame(); e.preventDefault(); }
 });
-on(document, 'keyup', (e) => { if (e.key in KEYS && KEYS[e.key] === keyDir) { keyDir = -1; if (sim && sim.phase === 'play') sim.input(null); } });
+on(document, 'keyup', (e) => { if (e.key in KEYS) { keyHeld = keyHeld.filter((x) => x !== KEYS[e.key]); if (sim && sim.phase === 'play') sim.input(dirsOf(keyHeld.slice(-2))); } });
 on(document, 'pointerdown', () => { if (audio.ctx && state !== 'paused') audio.resume(); }, { capture: true });
 on(window, 'blur', releaseInputs);
 on(document, 'visibilitychange', () => { releaseInputs(); if (document.hidden) pause(true); else last = performance.now(); });

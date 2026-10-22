@@ -10,9 +10,9 @@ import { W, H, T, LEVELS, buildLevel, bfs, idx } from './maze.js';
 
 export const CONFIG = {
   // tempo unico: 9:06 = tempo medio di un percorso completo (circa 506 s, test-maze.mjs) + 40 s
-  TPS: 60, TOTAL_TIME: 546, LIVES: 3,
+  TPS: 60, TOTAL_TIME: 538, LIVES: 3,
   FAINDO_SPEED: 3.9,          // tile al secondo
-  POWER_TIME: 20, POWER_WARN: 3, INVULN: 2.0, ROBOT_RESPAWN: 4,
+  SPAWN_ANIM: 0.8, POWER_TIME: 20, POWER_WARN: 3, INVULN: 2.0,
   HIT_DIST: 0.62, PICK_DIST: 0.5,
   FREE_LEVELS: 3,             // livelli 1-3: si raccoglie tutto; dal 4 un colore alla volta
   DOC_PER_COLOR: 5,
@@ -66,14 +66,14 @@ export class Sim {
     this.phase = 'play';        // play | between | over
     this.won = false; this.reason = ''; this.bonus = 0;
     this.events = []; this.inputs = []; this.tick = 0; this.stats = { delivered: 0, offices: 0, robots: 0 };
-    this.held = null;
+    this.held = [];
     this.loadLevel(1);
   }
 
   loadLevel(n) {
     const L = this.L = levelData(n);
     this.level = n;
-    this.f = { x: L.start[0] + 0.5, y: L.start[1] + 0.5, dx: 0, dy: 0, face: 0, inv: 0 };
+    this.f = { x: L.start[0] + 0.5, y: L.start[1] + 0.5, dx: 0, dy: 0, face: 0, inv: 0, spawn: 0 };
     this.keys = [false, false, false];           // chiave posseduta, per colore
     this.carried = [0, 0, 0];                    // documenti in mano, per colore
     this.unlocked = L.offices.map(() => false);  // porta sbloccata, per ufficio
@@ -83,19 +83,23 @@ export class Sim {
     this.active = null;                          // colore attivo (dal livello 4)
     this.power = 0; this.exitActive = false; this.deskLatch = -1; this.doorOpen = L.offices.map(() => 0);
     const delays = robotDelays(n);
-    this.robots = L.robots.map((p, i) => ({ i, x: p[0] + 0.5, y: p[1] + 0.5, dx: 0, dy: 0, alive: true, respawn: 0, delay: delays[i], mode: i === 3 ? 'patrol' : 'chase', modeT: 0, goal: null, face: 0 }));
-    this.held = null;
+    this.robots = L.robots.map((p, i) => ({ i, x: p[0] + 0.5, y: p[1] + 0.5, dx: 0, dy: 0, alive: true, delay: delays[i], mode: i === 3 ? 'patrol' : 'chase', modeT: 0, goal: null, face: 0 }));
+    this.held = [];
+    const rc = this.L.grid; let rb = null;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (rc[idx(x, y)] === T.FLOOR) { const d = Math.abs(x - 7) + Math.abs(y - 8.5); if (!rb || d < rb.d) rb = { d, x, y }; }
+    this.centerTile = [rb.x, rb.y];   // dove ricompare Faindo dopo un contatto: al centro della mappa
   }
 
   /** Passa al livello successivo (chiamato dall'interfaccia dopo la pausa tra i livelli). */
   advance() { if (this.phase !== 'between') return; this.loadLevel(this.level + 1); this.phase = 'play'; this.events.push({ type: 'level', a: this.level }); }
 
   /* ---------------- comandi ---------------- */
-  /** dir: [dx, dy] oppure null (rilascio). Faindo si muove solo mentre c'è una direzione tenuta (dito sulla croce, tasto premuto,
-      dito che scorre sul campo); al rilascio si ferma al centro della tile in cui sta andando, così resta sempre allineato ai corridoi. */
-  input(dir) {
-    this.held = dir || null;
-    this.inputs.push([this.tick, dir ? DIRS.findIndex((d) => d[0] === dir[0] && d[1] === dir[1]) : -1]);   // registro dei comandi: servirà alla verifica lato server
+  /** dirs: elenco di direzioni tenute ([dx, dy], al massimo due: una diagonale vale come due direzioni). Faindo si muove solo mentre ce n'è almeno una
+      e, al rilascio, si ferma al centro della tile in cui sta andando, così resta sempre allineato ai corridoi. Con una diagonale tenuta
+      prosegue dritto e, al primo incrocio libero nell'altra direzione, ci gira da solo ("prenotazione"): niente fermate per cambiare corridoio. */
+  input(dirs) {
+    this.held = dirs && dirs.length ? dirs.slice(0, 2) : [];
+    this.inputs.push([this.tick, this.held.map((d) => DIRS.findIndex((q) => q[0] === d[0] && q[1] === d[1]))]);   // registro dei comandi: servirà alla verifica lato server
   }
 
   /* ---------------- regole sul terreno ---------------- */
@@ -117,6 +121,7 @@ export class Sim {
     if (this.timeLeft <= 0) { this.timeLeft = 0; this.finish(false, 'time'); return; }
     if (this.power > 0) { this.power -= DT; if (this.power <= 0) { this.power = 0; this.events.push({ type: 'powerEnd' }); } }
     if (this.f.inv > 0) this.f.inv = Math.max(0, this.f.inv - DT);
+    if (this.f.spawn > 0) this.f.spawn = Math.max(0, this.f.spawn - DT);
     this.moveFaindo();
     this.interact();
     if (this.phase !== 'play') return;
@@ -131,14 +136,22 @@ export class Sim {
   }
 
   moveFaindo() {
-    const f = this.f, want = this.held;
+    const f = this.f, held = this.held, has = (dx, dy) => held.some((h) => h[0] === dx && h[1] === dy);
     // inversione immediata: si può tornare indietro a metà corridoio
-    if (want && (f.dx || f.dy) && want[0] === -f.dx && want[1] === -f.dy) { f.dx = want[0]; f.dy = want[1]; }
+    if (held.length && (f.dx || f.dy) && has(-f.dx, -f.dy) && !has(f.dx, f.dy)) { f.dx = -f.dx; f.dy = -f.dy; }
     moveEntity(f, C.FAINDO_SPEED * DT, (e) => {
-      const w = this.held, cx = Math.floor(e.x), cy = Math.floor(e.y);
-      if (!w) { e.dx = 0; e.dy = 0; return; }                                     // rilasciato: si ferma qui
-      if (this.canF(cx + w[0], cy + w[1])) { e.dx = w[0]; e.dy = w[1]; }          // svolta richiesta
-      else if (e.dx || e.dy) { if (!this.canF(cx + e.dx, cy + e.dy)) { e.dx = 0; e.dy = 0; } }   // curva non ancora possibile: si prosegue dritto
+      const cx = Math.floor(e.x), cy = Math.floor(e.y);
+      if (!held.length) { e.dx = 0; e.dy = 0; return; }                                       // rilasciato: si ferma qui
+      const cur = e.dx || e.dy;
+      if (cur) {
+        for (let i = held.length - 1; i >= 0; i--) {                                          // svolta prenotata: direzione tenuta di traverso e libera
+          const h = held[i]; if (h[0] === e.dx && h[1] === e.dy) continue; if (h[0] === -e.dx && h[1] === -e.dy) continue;
+          if (this.canF(cx + h[0], cy + h[1])) { e.dx = h[0]; e.dy = h[1]; return; }
+        }
+        if (this.canF(cx + e.dx, cy + e.dy)) return;                                          // altrimenti dritto
+      }
+      for (const h of held) if (this.canF(cx + h[0], cy + h[1])) { e.dx = h[0]; e.dy = h[1]; return; }
+      e.dx = 0; e.dy = 0;
     });
     if (f.dx || f.dy) f.face = f.dx > 0 ? 3 : f.dx < 0 ? 2 : f.dy < 0 ? 1 : 0;   // 0 giù, 1 su, 2 sinistra, 3 destra
   }
@@ -237,7 +250,7 @@ export class Sim {
   moveRobots() {
     const f = this.f;
     for (const r of this.robots) {
-      if (!r.alive) { r.respawn -= DT; if (r.respawn <= 0) this.respawnRobot(r); continue; }
+      if (!r.alive) continue;
       if (r.delay > 0) { r.delay -= DT; continue; }
       if (r.i === 3) { r.modeT += DT; if (r.mode === 'patrol' && r.modeT > 6) { r.mode = 'chase'; r.modeT = 0; } else if (r.mode === 'chase' && r.modeT > 8) { r.mode = 'patrol'; r.modeT = 0; r.goal = null; } }
       const fleeing = this.power > 0;
@@ -268,26 +281,14 @@ export class Sim {
     r.dx = best[0]; r.dy = best[1];
   }
 
-  respawnRobot(r) {
-    const ft = this.outsideTile(this.f.x, this.f.y), d = bfs(this.L.grid, ft[0], ft[1]);
-    let best = null, bs = -1;
-    for (const p of this.L.robots) {
-      if (this.robots.some((o) => o !== r && o.alive && Math.floor(o.x) === p[0] && Math.floor(o.y) === p[1])) continue;
-      const s = d[idx(p[0], p[1])]; if (s > bs) { bs = s; best = p; }
-    }
-    if (!best) best = this.L.robots[r.i];
-    r.x = best[0] + 0.5; r.y = best[1] + 0.5; r.dx = 0; r.dy = 0; r.alive = true; r.goal = null;
-    this.events.push({ type: 'robotBack', x: r.x, y: r.y });
-  }
-
   contacts() {
     const f = this.f;
     for (const r of this.robots) {
       if (!r.alive || r.delay > 0) continue;
       if (Math.hypot(dW(r.x, f.x), dH(r.y, f.y)) >= C.HIT_DIST) continue;
       if (this.power > 0) {
-        r.alive = false; r.respawn = C.ROBOT_RESPAWN; this.score += C.SCORE.ROBOT; this.stats.robots++;
-        this.events.push({ type: 'kill', x: r.x, y: r.y });
+        r.alive = false; this.score += C.SCORE.ROBOT; this.stats.robots++;
+        this.events.push({ type: 'kill', x: r.x, y: r.y, face: r.face, i: r.i });
       } else if (f.inv <= 0) { this.hit(); return; }
     }
   }
@@ -295,14 +296,8 @@ export class Sim {
   hit() {
     this.lives--; this.events.push({ type: 'hit', x: this.f.x, y: this.f.y });
     if (this.lives <= 0) { this.finish(false, 'lives'); return; }
-    // ricompare nel corridoio più lontano da tutti i robot
-    const dists = this.robots.filter((r) => r.alive).map((r) => bfs(this.L.grid, Math.floor(r.x), Math.floor(r.y)));
-    let best = null, bs = -1;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (this.L.grid[idx(x, y)] === T.FLOOR) {
-      const m = dists.length ? Math.min(...dists.map((d) => d[idx(x, y)])) : 99;
-      if (m > bs) { bs = m; best = [x, y]; }
-    }
-    Object.assign(this.f, { x: best[0] + 0.5, y: best[1] + 0.5, dx: 0, dy: 0, inv: C.INVULN });
+    // ricompare al centro della mappa, ingrandito e lampeggiante (la grafica usa f.spawn)
+    Object.assign(this.f, { x: this.centerTile[0] + 0.5, y: this.centerTile[1] + 0.5, dx: 0, dy: 0, inv: C.INVULN, spawn: C.SPAWN_ANIM });
     this.deskLatch = -1;
   }
 }

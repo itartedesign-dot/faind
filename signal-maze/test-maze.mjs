@@ -64,7 +64,7 @@ function goTo(sim, tx, ty, limit) {
   for (let i = 0; i < limit; i++) {
     if (Math.floor(sim.f.x) === tx && Math.floor(sim.f.y) === ty && Math.abs(sim.f.x - tx - 0.5) + Math.abs(sim.f.y - ty - 0.5) <= 0.44) return true;
     let d = plan(sim, tx, ty); if (!d) d = [sim.f.dx, sim.f.dy]; if (!d[0] && !d[1]) return false;
-    sim.input(d); sim.step(); if (sim.phase !== 'play') return sim.phase === 'between';
+    sim.input([d]); sim.step(); if (sim.phase !== 'play') return sim.phase === 'between';
   }
   return false;
 }
@@ -125,6 +125,22 @@ console.log('tempo totale del percorso (senza nemici): ' + total.toFixed(0) + ' 
   if (inside) fail('robot dentro gli uffici: ' + inside);
   const s2 = new Sim(3); s2.loadLevel(3); const r0 = s2.robots[0]; r0.delay = 0; s2.f.x = r0.x; s2.f.y = r0.y; s2.step(); s2.step(); s2.step();
   if (s2.lives !== 2) fail('contatto: vite ' + s2.lives + ' (attese 2)');
+}
+/* ---- uscita fissa in alto al centro ---- */
+for (let n = 1; n <= LEVELS; n++) { const L = buildLevel(n); if (L.exit[0] !== 7 || L.exit[1] !== 0) fail('livello ' + n + ': uscita non in alto al centro'); }
+/* ---- prenotazione diagonale: si va dritto, ma alla prima svolta a destra si gira da soli ---- */
+{
+  const s = new Sim(1); s.loadLevel(1); s.robots.forEach((r) => { r.delay = 1e9; });
+  const g = s.L.grid; const row = (y) => { for (let x = 1; x < W - 2; x++) if (g[idx(x, y)] !== T.WALL && g[idx(x + 1, y)] !== T.WALL && g[idx(x, y + 1)] !== T.WALL && g[idx(x, y - 1)] === T.WALL) return x; return -1; };
+  let y0 = -1, x0 = -1; for (let y = 2; y < H - 2 && x0 < 0; y++) { x0 = row(y); if (x0 >= 0) y0 = y; }
+  if (x0 >= 0) { s.f.x = x0 + 0.5; s.f.y = y0 + 0.5; s.f.dx = 0; s.f.dy = 0; s.input([[1, 0], [0, 1]]); for (let i = 0; i < 120; i++) s.step(); if (s.f.x < x0 + 1) fail('prenotazione: Faindo non si muove'); s.input([]); for (let i = 0; i < 60; i++) s.step(); if (s.f.dx || s.f.dy) fail('rilasciando i tasti Faindo deve fermarsi'); }
+}
+/* ---- robot distrutto: non ricompare ---- */
+{
+  const s = new Sim(1); s.loadLevel(1); s.power = 20; const r = s.robots[0]; r.delay = 0; s.f.x = r.x; s.f.y = r.y;
+  for (let i = 0; i < 4; i++) s.step();
+  const alive = s.robots.filter((q) => q.alive).length; for (let i = 0; i < 60 * 40; i++) { s.f.inv = 99; s.power = 20; s.step(); }
+  if (alive !== s.robots.length - 1 || s.robots.filter((q) => q.alive).length !== alive) fail('un robot distrutto non deve ricomparire');
 }
 console.log(bad ? bad + ' controlli falliti' : 'tutti i controlli superati');
 process.exit(bad ? 1 : 0);

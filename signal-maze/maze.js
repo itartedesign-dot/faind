@@ -136,20 +136,10 @@ function generate(level, attempt) {
   return { rng, g: out, offices, level };
 }
 
-function ringExitCandidates(g, offices) {
-  const fronts = new Set(offices.map((o) => idx(o.front[0], o.front[1])));
-  const c = [];
-  for (let x = 2; x <= W - 3; x++) { c.push([x, 0, 0, 1]); c.push([x, H - 1, 0, -1]); }
-  for (let y = 2; y <= H - 3; y++) { c.push([0, y, 1, 0]); c.push([W - 1, y, -1, 0]); }
-  return c.filter(([x, y, dx, dy]) => g[idx(x, y)] === T.WALL && g[idx(x + dx, y + dy)] === T.FLOOR && !fronts.has(idx(x + dx, y + dy)) && (x !== 4 && x !== 10 || dy === 0));
-}
-
 export function buildLevel(level) {
   for (let attempt = 0; attempt < 400; attempt++) {
     const { rng, g, offices } = generate(level, attempt);
     if (!deadEndFree(g) || !connected(g)) continue;
-    const ex = ringExitCandidates(g, offices);
-    if (!ex.length) continue;
     // Faindo parte vicino al centro in basso, nel corridoio più vicino
     let best = null;
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (g[idx(x, y)] === T.FLOOR) {
@@ -161,12 +151,10 @@ export function buildLevel(level) {
     const dS = bfs(g, start[0], start[1]);
     const doorFronts = offices.map((o) => bfs(g, o.front[0], o.front[1]));
     const nearDoor = (i) => Math.min(...doorFronts.map((d) => d[i]));
-    // uscita: tra le più vicine al centro degli uffici, così l'ultimo tratto è breve
-    const mid = offices.reduce((a, o) => [a[0] + o.desk[0] / 3, a[1] + o.desk[1] / 3], [0, 0]);
-    const exits = ex.map((e) => ({ e, d: Math.abs(e[0] - mid[0]) + Math.abs(e[1] - mid[1]) })).sort((a, b) => a.d - b.d);
-    const ee = exits[Math.floor(rng() * Math.min(4, exits.length))].e;
-    const exit = [ee[0], ee[1]]; g[idx(exit[0], exit[1])] = T.EXIT;
-    const exitFront = [ee[0] + ee[2], ee[1] + ee[3]];
+    // uscita: sempre in alto al centro (muro in alto, colonna 7), davanti c'è il corridoio centrale
+    const exit = [7, 0], exitFront = [7, 1];
+    if (g[idx(7, 0)] !== T.WALL || g[idx(7, 1)] !== T.FLOOR) continue;
+    g[idx(7, 0)] = T.EXIT;
     // punti dove ricompaiono i robot: lontani da Faindo e dalle porte
     const floors = []; for (let i = 0; i < W * H; i++) if (g[i] === T.FLOOR && dS[i] >= 9 && nearDoor(i) >= 6) floors.push(i);
     if (floors.length < 4) continue;
