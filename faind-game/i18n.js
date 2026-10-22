@@ -4,7 +4,7 @@ const S = {
   en: {
     pageTitle: 'FAIND GAME – News Rush, the free AI newsroom arcade game',
     start: 'START', tagline: 'Catch the news. Deliver it to the newsroom.',
-    howto: 'MOVE left or right to catch the news.\nDELIVER at the centre hatch.\nAVOID red scrolls.', gameOverRule: '3 lost scrolls = GAME OVER',
+    howto1: 'MOVE left or right to catch the news.', howto2: 'DELIVER at the centre hatch.', howto3: 'AVOID red scrolls.', gameOverRule: '3 lost scrolls = GAME OVER',
     leaderboard: 'LEADERBOARD', soundOn: 'Sound on', soundOff: 'Sound off', pause: 'Pause', resume: 'RESUME', restart: 'RESTART', home: 'HOME',
     paused: 'PAUSED', pausedAuto: 'Paused while you were away.', score: 'SCORE', level: 'LEVEL', load: 'LOAD', full: 'FULL', topBest: 'BEST', topTitle: 'Top of the all-time leaderboard', bestTitle: 'Your best score on this device', time: 'Time',
     levelUp: 'LEVEL {n}', capacity: 'Max {n} news at a time', go: 'GO!', left: 'Move left', right: 'Move right', dragHint: 'CATCH THE NEWS · DELIVER TO THE NEWSROOM',
@@ -24,7 +24,7 @@ const S = {
   it: {
     pageTitle: 'FAIND GAME – News Rush, il gioco arcade gratuito della redazione AI',
     start: 'START', tagline: 'Cattura le notizie. Portale in redazione.',
-    howto: 'MUOVI a sinistra o a destra per prendere le notizie.\nCONSEGNA alla bocchetta centrale.\nEVITA i rotoli rossi.', gameOverRule: '3 rotoli persi = GAME OVER',
+    howto1: 'MUOVI a sinistra o a destra per prendere le notizie.', howto2: 'CONSEGNA alla bocchetta centrale.', howto3: 'EVITA i rotoli rossi.', gameOverRule: '3 rotoli persi = GAME OVER',
     leaderboard: 'CLASSIFICA', soundOn: 'Audio acceso', soundOff: 'Audio spento', pause: 'Pausa', resume: 'RIPRENDI', restart: 'RICOMINCIA', home: 'HOME',
     paused: 'IN PAUSA', pausedAuto: 'Messo in pausa mentre eri via.', score: 'PUNTI', level: 'LIVELLO', load: 'CARICO', full: 'PIENO', topBest: 'BEST', topTitle: 'Primo della classifica assoluta', bestTitle: 'Il tuo record su questo dispositivo', time: 'Tempo',
     levelUp: 'LIVELLO {n}', capacity: 'Max {n} notizie alla volta', go: 'VIA!', left: 'Vai a sinistra', right: 'Vai a destra', dragHint: 'CATTURA LE NOTIZIE · PORTALE IN REDAZIONE',
@@ -44,7 +44,7 @@ const S = {
   fr: {
     pageTitle: "FAIND GAME – News Rush, le jeu d'arcade gratuit de la rédaction IA",
     start: 'START', tagline: 'Attrape les infos. Livre-les à la rédaction.',
-    howto: 'DÉPLACE-toi à gauche ou à droite pour attraper les news.\nLIVRE à la trappe centrale.\nÉVITE les rouleaux rouges.', gameOverRule: '3 rouleaux perdus = GAME OVER',
+    howto1: 'DÉPLACE-toi à gauche ou à droite pour attraper les news.', howto2: 'LIVRE à la trappe centrale.', howto3: 'ÉVITE les rouleaux rouges.', gameOverRule: '3 rouleaux perdus = GAME OVER',
     leaderboard: 'CLASSEMENT', soundOn: 'Son activé', soundOff: 'Son coupé', pause: 'Pause', resume: 'REPRENDRE', restart: 'RECOMMENCER', home: 'ACCUEIL',
     paused: 'EN PAUSE', pausedAuto: 'Mis en pause pendant ton absence.', score: 'SCORE', level: 'NIVEAU', load: 'CHARGE', full: 'PLEIN', topBest: 'BEST', topTitle: 'Premier du classement général', bestTitle: 'Ton record sur cet appareil', time: 'Temps',
     levelUp: 'NIVEAU {n}', capacity: 'Max {n} news à la fois', go: 'GO !', left: 'Aller à gauche', right: 'Aller à droite', dragHint: 'ATTRAPE LES INFOS · LIVRE-LES À LA RÉDACTION',
@@ -64,7 +64,7 @@ const S = {
   de: {
     pageTitle: 'FAIND GAME – News Rush, das kostenlose Arcade-Spiel der KI-Redaktion',
     start: 'START', tagline: 'Fang die News. Bring sie in die Redaktion.',
-    howto: 'BEWEGE dich nach links oder rechts, um die News zu fangen.\nLIEFERE an der mittleren Luke ab.\nMEIDE rote Rollen.', gameOverRule: '3 verlorene Rollen = GAME OVER',
+    howto1: 'BEWEGE dich nach links oder rechts, um die News zu fangen.', howto2: 'LIEFERE an der mittleren Luke ab.', howto3: 'MEIDE rote Rollen.', gameOverRule: '3 verlorene Rollen = GAME OVER',
     leaderboard: 'BESTENLISTE', soundOn: 'Ton an', soundOff: 'Ton aus', pause: 'Pause', resume: 'WEITER', restart: 'NEUSTART', home: 'HOME',
     paused: 'PAUSE', pausedAuto: 'Pausiert, während du weg warst.', score: 'PUNKTE', level: 'LEVEL', load: 'LADUNG', full: 'VOLL', topBest: 'BEST', topTitle: 'Erster der ewigen Bestenliste', bestTitle: 'Dein Rekord auf diesem Gerät', time: 'Zeit',
     levelUp: 'LEVEL {n}', capacity: 'Max. {n} News gleichzeitig', go: 'LOS!', left: 'Nach links', right: 'Nach rechts', dragHint: 'FANG DIE NEWS · BRING SIE IN DIE REDAKTION',
