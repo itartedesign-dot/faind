@@ -6,10 +6,10 @@
    Tutti i ricevitori di eventi usano un unico AbortController e il ciclo di
    animazione è uno solo: uscendo dal gioco (shutdown) si libera tutto.
    ===================================================================== */
-import { Sim, CONFIG as C, levelParams } from './sim.js';
-import { Scene } from './art.js';
-import { Audio8 } from './audio.js';
-import { pickLang, makeT } from './i18n.js';
+import { Sim, CONFIG as C, levelParams } from './sim.js?v=20261022c';
+import { Scene } from './art.js?v=20261022c';
+import { Audio8 } from './audio.js?v=20261022c';
+import { pickLang, makeT } from './i18n.js?v=20261022c';
 
 const $ = (id) => document.getElementById(id);
 const lang = pickLang();
@@ -400,7 +400,7 @@ function frame(now) {
 
 /* ------------------------------ Classifica ------------------------------ */
 let flagsMod = null;
-const loadFlags = () => flagsMod ? Promise.resolve(flagsMod) : import('./flags.js').then((m) => (flagsMod = m)).catch(() => null);
+const loadFlags = () => flagsMod ? Promise.resolve(flagsMod) : import('./flags.js?v=20261022c').then((m) => (flagsMod = m)).catch(() => null);
 let lbTab = 'weekly', lbData = null;
 
 function flagEl(code) {

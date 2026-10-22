@@ -198,10 +198,10 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 @keyframes gnews { 50% { box-shadow: 0 0 calc(var(--u) * 8) rgba(111,211,255,1); } }
 @media (prefers-reduced-motion: reduce) { .g-panel--over.is-record #btnNews { animation: none; } }
 
-/* istruzioni: riquadro ciano con bordi arrotondati su sfondo blu al 25%, testo centrato in grassetto, pallino ciano a inizio riga */
-.g-rules { display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 1.2); width: min(92%, calc(var(--u) * 150)); padding: calc(var(--u) * 3) calc(var(--u) * 3); border: 2px solid var(--cyan); border-radius: calc(var(--u) * 3); background: rgba(30, 100, 220, .25); box-sizing: border-box; }
-.g-rules .g-howto { margin: 0; }
+/* schermata iniziale: un unico riquadro ciano (bordi arrotondati, sfondo blu al 25%) al centro, con dentro titolo, START, istruzioni e classifica */
+.g-panel--start { justify-content: center; padding-bottom: 0; background: linear-gradient(rgba(5,9,20,.2), rgba(5,9,20,.45)); }
+.g-startbox { display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 3); width: min(92%, calc(var(--u) * 150)); padding: calc(var(--u) * 4) calc(var(--u) * 3); border: 2px solid var(--cyan); border-radius: calc(var(--u) * 3.5); background: rgba(30, 100, 220, .25); box-sizing: border-box; }
+.g-rules { display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 1.2); width: 100%; }
+.g-rules .g-howto { margin: 0; text-align: center; font-weight: 700; font-size: max(12px, calc(var(--u) * 5)); letter-spacing: 0; }
 .g-rules .g-howto::before { content: ""; display: inline-block; width: .55em; height: .55em; margin-right: .6em; border-radius: 50%; background: var(--cyan); vertical-align: .05em; }
-.g-rules .g-howto { font-size: max(12px, calc(var(--u) * 5)); letter-spacing: 0; }
 .g-rules .g-rule { font-size: max(13px, calc(var(--u) * 5.2)); letter-spacing: .02em; }
-.g-rules { padding: calc(var(--u) * 2.4) calc(var(--u) * 2); }
