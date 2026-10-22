@@ -6,10 +6,10 @@
    ciclo di animazione. Il tempo di 5 minuti vive nel motore e scorre solo quando il motore viene fatto avanzare:
    pausa, cambio livello, scheda in background e conto alla rovescia non lo toccano.
    ===================================================================== */
-import { Sim, CONFIG as C } from './sim.js?v=20261022a';
-import { Scene, CW, CH } from './art.js?v=20261022a';
-import { Audio8 } from './audio.js?v=20261022a';
-import { LEVELS } from './maze.js?v=20261022a';
+import { Sim, CONFIG as C } from './sim.js?v=20261022b';
+import { Scene, CW, CH } from './art.js?v=20261022b';
+import { Audio8 } from './audio.js?v=20261022b';
+import { LEVELS } from './maze.js?v=20261022b';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_MAZE_API || '').replace(/\/+$/, '');
@@ -138,7 +138,7 @@ function togglePause() { if (state === 'paused') resume(); else pause(false); }
 
 /* ------------------------------ Comandi ------------------------------ */
 let padDir = -1, keyDir = -1;
-function send(d, hold) { if (sim && state === 'playing') sim.input(DIRV[d], hold); }
+function send(d) { if (sim && state === 'playing') sim.input(DIRV[d]); }
 function releaseInputs() {
   padDir = -1; keyDir = -1; el.pad.querySelectorAll('.is-down').forEach((b) => b.classList.remove('is-down'));
   if (sim && sim.phase === 'play') sim.input(null);
@@ -146,11 +146,11 @@ function releaseInputs() {
 function setPad(d) {
   if (d === padDir) return; padDir = d;
   el.pad.querySelectorAll('.m-arrow').forEach((b) => b.classList.toggle('is-down', +b.dataset.dir === d));
-  if (d >= 0) send(d, true); else if (sim) sim.input(null);
+  if (d >= 0) send(d); else if (sim) sim.input(null);
 }
 function dirFromPointer(e) {
   const r = el.pad.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
-  if (Math.hypot(dx, dy) < r.width * 0.1) return padDir;
+  if (Math.hypot(dx, dy) < r.width * 0.14) return -1;   // al centro della croce: ferma
   return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 0 : 1) : (dy > 0 ? 2 : 3);
 }
 let padId = null;
@@ -160,17 +160,17 @@ const padUp = (e) => { if (e.pointerId !== padId) return; padId = null; setPad(-
 on(el.pad, 'pointerup', padUp); on(el.pad, 'pointercancel', padUp); on(el.pad, 'lostpointercapture', padUp);
 on(el.pad, 'contextmenu', (e) => e.preventDefault());
 
-// scorrimento del dito sul campo di gioco
+// dito sul campo di gioco: la direzione dello scorrimento vale finché il dito resta appoggiato; sollevandolo Faindo si ferma
 let sw = null;
 on(el.cv, 'pointerdown', (e) => { e.preventDefault(); sw = { id: e.pointerId, x: e.clientX, y: e.clientY }; try { el.cv.setPointerCapture(e.pointerId); } catch (er) {} });
 on(el.cv, 'pointermove', (e) => {
   if (!sw || e.pointerId !== sw.id) return;
   const dx = e.clientX - sw.x, dy = e.clientY - sw.y;
-  if (Math.hypot(dx, dy) < 16) return;
-  send(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 0 : 1) : (dy > 0 ? 2 : 3), false);
+  if (Math.hypot(dx, dy) < 14) return;
+  send(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 0 : 1) : (dy > 0 ? 2 : 3));
   sw.x = e.clientX; sw.y = e.clientY;
 });
-const swEnd = (e) => { if (sw && e.pointerId === sw.id) sw = null; };
+const swEnd = (e) => { if (sw && e.pointerId === sw.id) { sw = null; if (sim && sim.phase === 'play') sim.input(null); } };
 on(el.cv, 'pointerup', swEnd); on(el.cv, 'pointercancel', swEnd); on(el.cv, 'lostpointercapture', swEnd);
 on(el.cv, 'contextmenu', (e) => e.preventDefault());
 
@@ -184,7 +184,7 @@ on(document, 'keydown', (e) => {
     return;
   }
   if (k === 'p' || k === 'P') { if (state === 'playing' || state === 'countdown' || state === 'paused' || state === 'between') { togglePause(); e.preventDefault(); } return; }
-  if (k in KEYS) { e.preventDefault(); if (state === 'playing') { keyDir = KEYS[k]; send(keyDir, true); } return; }
+  if (k in KEYS) { e.preventDefault(); if (state === 'playing') { keyDir = KEYS[k]; send(keyDir); } return; }
   if ((k === 'Enter' || k === ' ') && state === 'start' && el.pLb.hidden && !$('btnStart').disabled && document.activeElement === document.body) { startGame(); e.preventDefault(); }
 });
 on(document, 'keyup', (e) => { if (e.key in KEYS && KEYS[e.key] === keyDir) { keyDir = -1; if (sim && sim.phase === 'play') sim.input(null); } });

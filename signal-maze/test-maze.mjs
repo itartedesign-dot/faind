@@ -64,7 +64,7 @@ function goTo(sim, tx, ty, limit) {
   for (let i = 0; i < limit; i++) {
     if (Math.floor(sim.f.x) === tx && Math.floor(sim.f.y) === ty && Math.abs(sim.f.x - tx - 0.5) + Math.abs(sim.f.y - ty - 0.5) <= 0.44) return true;
     let d = plan(sim, tx, ty); if (!d) d = [sim.f.dx, sim.f.dy]; if (!d[0] && !d[1]) return false;
-    sim.input(d, true); sim.step(); if (sim.phase !== 'play') return sim.phase === 'between';
+    sim.input(d); sim.step(); if (sim.phase !== 'play') return sim.phase === 'between';
   }
   return false;
 }
