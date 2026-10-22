@@ -109,7 +109,7 @@ console.log('tempo totale del percorso (senza nemici): ' + total.toFixed(0) + ' 
   s.carried[o.color] = 5; s.f.x = o.desk[0] + 0.5; s.f.y = o.desk[1] + 0.5; s.robots.forEach((r) => { r.delay = 1e9; }); s.interact();
   if (!s.done[0] || Math.abs(s.power - 20) > 0.01) fail('potere non partito a 20 s');
   for (let i = 0; i < 600; i++) s.step();
-  if (Math.abs(s.power - 10) > 0.1 || Math.abs(s.timeLeft - 290) > 0.1) fail('timer potere e timer generale non distinti: ' + s.power + ' ' + s.timeLeft);
+  if (Math.abs(s.power - 10) > 0.1 || Math.abs(s.timeLeft - (CONFIG.TOTAL_TIME - 10)) > 0.1) fail('timer potere e timer generale non distinti: ' + s.power + ' ' + s.timeLeft);
   const o2 = s.L.offices[1]; s.carried[o2.color] = 5; s.f.x = o2.desk[0] + 0.5; s.f.y = o2.desk[1] + 0.5; s.interact();
   if (Math.abs(s.power - 20) > 0.01) fail('il potere si è sommato');
 }

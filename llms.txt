@@ -13,7 +13,7 @@ Le notizie sono raccolte in automatico e non riscritte: per il testo completo va
 - [Archivio](https://faind.org/archivio/): le notizie degli ultimi mesi
 - [Faind Game](https://faind.org/games/): i giochi arcade gratuiti di FAIND
 - [FAIND GAME – News Rush](https://faind.org/faind-game/): il gioco arcade gratuito di FAIND (livelli senza fine, classifica settimanale e assoluta)
-- [FAIND Signal Maze](https://faind.org/signal-maze/): labirinto arcade gratuito con chiavi, documenti e robot (15 livelli in 5 minuti)
+- [FAIND Signal Maze](https://faind.org/signal-maze/): labirinto arcade gratuito con chiavi, documenti e robot (15 livelli in 9 minuti)
 
 ## In altre lingue
 - [In depth (English)](https://faind.org/approfondimenti/en/)

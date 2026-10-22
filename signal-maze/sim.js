@@ -3,13 +3,14 @@
    ---------------------------------------------------------------------
    Passo fisso di 1/60 s. Le posizioni sono in tile (il centro della tile (c, r) è (c + .5, r + .5)) su un toro:
    uscendo da un lato si rientra dall'altro alla stessa altezza, quindi i passaggi sui bordi non hanno nessun
-   teletrasporto, solo l'aritmetica modulo W / H. Tutte le regole stanno qui: il tempo di 5 minuti è uno solo per
+   teletrasporto, solo l'aritmetica modulo W / H. Tutte le regole stanno qui: il tempo di 9 minuti è uno solo per
    tutta la partita e scorre soltanto mentre si chiama step() (pausa, cambio livello e sfondo non lo toccano).
    ===================================================================== */
 import { W, H, T, LEVELS, buildLevel, bfs, idx } from './maze.js';
 
 export const CONFIG = {
-  TPS: 60, TOTAL_TIME: 300, LIVES: 3,
+  // tempo unico: 9:06 = tempo medio di un percorso completo (circa 506 s, test-maze.mjs) + 40 s
+  TPS: 60, TOTAL_TIME: 546, LIVES: 3,
   FAINDO_SPEED: 3.9,          // tile al secondo
   POWER_TIME: 20, POWER_WARN: 3, INVULN: 2.0, ROBOT_RESPAWN: 4,
   HIT_DIST: 0.62, PICK_DIST: 0.5,

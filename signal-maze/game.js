@@ -3,13 +3,13 @@
    ---------------------------------------------------------------------
    Collega il motore (sim.js), la grafica (art.js), l'audio (audio.js) e l'interfaccia HTML: schermate, pausa, comandi,
    barra superiore. Stessa impostazione di News Rush: un solo AbortController per tutti i ricevitori di eventi e un solo
-   ciclo di animazione. Il tempo di 5 minuti vive nel motore e scorre solo quando il motore viene fatto avanzare:
+   ciclo di animazione. Il tempo di 9 minuti vive nel motore e scorre solo quando il motore viene fatto avanzare:
    pausa, cambio livello, scheda in background e conto alla rovescia non lo toccano.
    ===================================================================== */
-import { Sim, CONFIG as C } from './sim.js?v=20261022b';
-import { Scene, CW, CH } from './art.js?v=20261022b';
-import { Audio8 } from './audio.js?v=20261022b';
-import { LEVELS } from './maze.js?v=20261022b';
+import { Sim, CONFIG as C } from './sim.js?v=20261022c';
+import { Scene, CW, CH } from './art.js?v=20261022c';
+import { Audio8 } from './audio.js?v=20261022c';
+import { LEVELS } from './maze.js?v=20261022c';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_MAZE_API || '').replace(/\/+$/, '');
