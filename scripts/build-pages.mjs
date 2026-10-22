@@ -570,12 +570,13 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
     try { pending = [...(await readFile(path.join(root, 'sitemap.xml'), 'utf8')).matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]); } catch { /* resta vuoto */ }
   }
   const sent = await pingIndexNow(pending);
-  pending = [...new Set([...(sent ? [] : pending), ...fresh, ...newSubjects])].slice(-10000);
+  const gameUrls = archive.gamesPinged ? [] : ['faind-game/', 'games/', 'signal-maze/'].map(p => SITE + p);   // pagine dei giochi: avviso una volta sola
+  pending = [...new Set([...(sent ? [] : pending), ...fresh, ...newSubjects, ...gameUrls])].slice(-10000);
 
   // L'archivio aggiornato: il prossimo giro lo rilegge dal sito online
   await writeFile(path.join(root, 'archivio.json'), JSON.stringify({
     updated: new Date().toISOString(), items: archived, subjects: registry, pending,
-    indexnowStart: archive.indexnowStart || (sent ? today : '')
+    indexnowStart: archive.indexnowStart || (sent ? today : ''), gamesPinged: true
   }));
   out.archiveCount = archived.length;
 
