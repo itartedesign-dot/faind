@@ -10,9 +10,9 @@ import { W, H, T, LEVELS, buildLevel, bfs, idx } from './maze.js';
 
 export const CONFIG = {
   TPS: 60, TOTAL_TIME: 300, LIVES: 3,
-  FAINDO_SPEED: 7.8,          // tile al secondo
+  FAINDO_SPEED: 3.9,          // tile al secondo
   POWER_TIME: 20, POWER_WARN: 3, INVULN: 2.0, ROBOT_RESPAWN: 4,
-  HIT_DIST: 0.62, PICK_DIST: 0.5, BUFFER: 0.4,
+  HIT_DIST: 0.62, PICK_DIST: 0.5,
   FREE_LEVELS: 3,             // livelli 1-3: si raccoglie tutto; dal 4 un colore alla volta
   DOC_PER_COLOR: 5,
   SCORE: { DOC: 100, OFFICE: 500, ROBOT: 200, LEVEL: 1000, SECOND: 10 }
@@ -65,7 +65,7 @@ export class Sim {
     this.phase = 'play';        // play | between | over
     this.won = false; this.reason = ''; this.bonus = 0;
     this.events = []; this.inputs = []; this.tick = 0; this.stats = { delivered: 0, offices: 0, robots: 0 };
-    this.held = null; this.buf = null; this.bufT = 0;
+    this.held = null;
     this.loadLevel(1);
   }
 
@@ -83,19 +83,18 @@ export class Sim {
     this.power = 0; this.exitActive = false; this.deskLatch = -1; this.doorOpen = L.offices.map(() => 0);
     const delays = robotDelays(n);
     this.robots = L.robots.map((p, i) => ({ i, x: p[0] + 0.5, y: p[1] + 0.5, dx: 0, dy: 0, alive: true, respawn: 0, delay: delays[i], mode: i === 3 ? 'patrol' : 'chase', modeT: 0, goal: null, face: 0 }));
-    this.held = null; this.buf = null;
+    this.held = null;
   }
 
   /** Passa al livello successivo (chiamato dall'interfaccia dopo la pausa tra i livelli). */
   advance() { if (this.phase !== 'between') return; this.loadLevel(this.level + 1); this.phase = 'play'; this.events.push({ type: 'level', a: this.level }); }
 
   /* ---------------- comandi ---------------- */
-  /** dir: [dx, dy] oppure null (rilascio). hold = true: tasto o pulsante premuto (vale finché non si rilascia); false: gesto singolo.
-      In ogni caso la direzione resta in memoria per BUFFER secondi, così una svolta chiesta un attimo prima dell'incrocio riesce. */
-  input(dir, hold) {
-    if (!dir) { this.held = null; this.inputs.push([this.tick, -1, 0]); return; }
-    this.buf = dir; this.bufT = C.BUFFER; if (hold) this.held = dir;
-    this.inputs.push([this.tick, DIRS.findIndex((d) => d[0] === dir[0] && d[1] === dir[1]), hold ? 1 : 0]);   // registro dei comandi: servirà alla verifica lato server
+  /** dir: [dx, dy] oppure null (rilascio). Faindo si muove solo mentre c'è una direzione tenuta (dito sulla croce, tasto premuto,
+      dito che scorre sul campo); al rilascio si ferma al centro della tile in cui sta andando, così resta sempre allineato ai corridoi. */
+  input(dir) {
+    this.held = dir || null;
+    this.inputs.push([this.tick, dir ? DIRS.findIndex((d) => d[0] === dir[0] && d[1] === dir[1]) : -1]);   // registro dei comandi: servirà alla verifica lato server
   }
 
   /* ---------------- regole sul terreno ---------------- */
@@ -117,7 +116,6 @@ export class Sim {
     if (this.timeLeft <= 0) { this.timeLeft = 0; this.finish(false, 'time'); return; }
     if (this.power > 0) { this.power -= DT; if (this.power <= 0) { this.power = 0; this.events.push({ type: 'powerEnd' }); } }
     if (this.f.inv > 0) this.f.inv = Math.max(0, this.f.inv - DT);
-    if (this.bufT > 0) { this.bufT -= DT; if (this.bufT <= 0) this.buf = null; }
     this.moveFaindo();
     this.interact();
     if (this.phase !== 'play') return;
@@ -132,14 +130,14 @@ export class Sim {
   }
 
   moveFaindo() {
-    const f = this.f;
-    const want = this.held || this.buf;
+    const f = this.f, want = this.held;
     // inversione immediata: si può tornare indietro a metà corridoio
-    if (want && (f.dx || f.dy) && want[0] === -f.dx && want[1] === -f.dy) { f.dx = want[0]; f.dy = want[1]; if (this.buf === want) this.buf = null; }
+    if (want && (f.dx || f.dy) && want[0] === -f.dx && want[1] === -f.dy) { f.dx = want[0]; f.dy = want[1]; }
     moveEntity(f, C.FAINDO_SPEED * DT, (e) => {
-      const w = this.held || this.buf, cx = Math.floor(e.x), cy = Math.floor(e.y);
-      if (w && this.canF(cx + w[0], cy + w[1])) { e.dx = w[0]; e.dy = w[1]; if (this.buf === w) this.buf = null; }
-      else if (e.dx || e.dy) { if (!this.canF(cx + e.dx, cy + e.dy)) { e.dx = 0; e.dy = 0; } }
+      const w = this.held, cx = Math.floor(e.x), cy = Math.floor(e.y);
+      if (!w) { e.dx = 0; e.dy = 0; return; }                                     // rilasciato: si ferma qui
+      if (this.canF(cx + w[0], cy + w[1])) { e.dx = w[0]; e.dy = w[1]; }          // svolta richiesta
+      else if (e.dx || e.dy) { if (!this.canF(cx + e.dx, cy + e.dy)) { e.dx = 0; e.dy = 0; } }   // curva non ancora possibile: si prosegue dritto
     });
     if (f.dx || f.dy) f.face = f.dx > 0 ? 3 : f.dx < 0 ? 2 : f.dy < 0 ? 1 : 0;   // 0 giù, 1 su, 2 sinistra, 3 destra
   }
@@ -304,6 +302,6 @@ export class Sim {
       if (m > bs) { bs = m; best = [x, y]; }
     }
     Object.assign(this.f, { x: best[0] + 0.5, y: best[1] + 0.5, dx: 0, dy: 0, inv: C.INVULN });
-    this.buf = null; this.deskLatch = -1;
+    this.deskLatch = -1;
   }
 }

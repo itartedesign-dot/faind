@@ -8,8 +8,8 @@
    Il mondo è un toro: gli sprite vicini ai bordi vengono disegnati anche sul lato opposto, così un passaggio sul bordo
    è continuo, senza salti.
    ===================================================================== */
-import { W, H, T, COLORS, idx } from './maze.js?v=20261022a';
-import { ATLAS } from './sprites/atlas.js?v=20261022a';
+import { W, H, T, COLORS, idx } from './maze.js?v=20261022b';
+import { ATLAS } from './sprites/atlas.js?v=20261022b';
 
 export const TS = 16, CW = 240, CH = 324, OY = 36, MW = W * TS, MH = H * TS;
 export const HEX = ['#ff8a1f', '#ffd21f', '#29d6ff'];
@@ -36,8 +36,8 @@ export class Scene {
   constructor(cv) {
     this.cv = cv; cv.width = CW; cv.height = CH;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
-    this.atlas = new Image(); this.fx = []; this.clock = 0; this.flash = 0; this.L = null; this.walk = 0;
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.tint(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261022a'; });
+    this.atlas = new Image(); this.fx = []; this.lit = {}; this.clock = 0; this.flash = 0; this.L = null; this.walk = 0;
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.tint(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261022b'; });
   }
 
   /** copia azzurrina dei robot per il potere di Faindo */
@@ -49,7 +49,7 @@ export class Scene {
   }
 
   setLevel(L) {
-    this.L = L; this.fx = [];
+    this.L = L; this.fx = []; this.lit = {};
     const c = document.createElement('canvas'); c.width = MW; c.height = MH; this.stat = c;
     this.renderStatic(c.getContext('2d'), L);
   }
@@ -139,7 +139,7 @@ export class Scene {
     else if (e.type === 'office') { this.fx.push({ k: 't', s: '+500', x: tx, y: ty - 18, t: 0, life: 1.3, c: '#ffffff' }); burst(18, [HEX[e.color], '#ffffff', '#6fd3ff'], 60); this.flash = 0.25; }
     else if (e.type === 'kill') { this.fx.push({ k: 't', s: '+200', x: tx, y: ty - 8, t: 0, life: 1, c: '#ff8a1f' }); burst(14, ['#ff8a1f', '#ffd21f', '#ffffff'], 55); }
     else if (e.type === 'key' || e.type === 'doc') burst(5, [HEX[e.color], '#ffffff'], 25);
-    else if (e.type === 'unlock') burst(10, [HEX[e.color], '#ffffff'], 35);
+    else if (e.type === 'unlock') { burst(10, [HEX[e.color], '#ffffff'], 35); const o = this.L.offices.find((q) => q.color === e.color); if (o) this.lit[o.id] = this.clock; }
     else if (e.type === 'hit') { burst(16, ['#ff5a4e', '#ffffff'], 60); this.flash = -0.35; }
     else if (e.type === 'robotBack') burst(6, ['#ff8a1f', '#ffffff'], 20);
   }
@@ -161,8 +161,13 @@ export class Scene {
     this.drawOpenings(g, L, t);
     // porte
     for (const o of L.offices) this.drawDoor(g, o, sim, t);
-    // scrivanie
-    for (const o of L.offices) this.drawDesk(g, o, sim, t);
+    // uffici: neri finché la porta è chiusa a chiave; si accendono con un breve sfarfallio e restano accesi
+    for (const o of L.offices) {
+      const on = sim.unlocked[o.id], age = t - (this.lit[o.id] === undefined ? -9 : this.lit[o.id]);
+      const dark = !on || (age < 0.45 && Math.floor(age / 0.08) % 2 === 0);
+      if (dark) { g.fillStyle = '#04060c'; for (const c of o.cells) g.fillRect(c[0] * TS, OY + c[1] * TS, TS, TS); }
+      else this.drawDesk(g, o, sim, t);
+    }
     // uscita
     this.drawExit(g, L, sim, t);
     // chiavi e documenti
