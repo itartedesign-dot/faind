@@ -11,9 +11,10 @@ Le notizie sono raccolte in automatico e non riscritte: per il testo completo va
 - [Le AI a confronto](https://faind.org/confronto/): prezzi e caratteristiche dei principali assistenti AI
 - [Temi](https://faind.org/temi/): robot, medicina, lavoro, clima e casa
 - [Archivio](https://faind.org/archivio/): le notizie degli ultimi mesi
-- [Faind Game](https://faind.org/games/): i giochi arcade gratuiti di FAIND
+- [Faind Games](https://faind.org/games/): i giochi arcade gratuiti di FAIND
 - [FAIND GAME – News Rush](https://faind.org/faind-game/): il gioco arcade gratuito di FAIND (livelli senza fine, classifica settimanale e assoluta)
 - [FAIND Signal Maze](https://faind.org/signal-maze/): labirinto arcade gratuito con chiavi, documenti e robot (15 livelli in 9 minuti)
+- [FAIND Lost Signal](https://faind.org/lost-signal/): gioco di memoria gratuito su zolle sospese (15 livelli, 3 vite, 20 flash, senza limite di tempo)
 
 ## In altre lingue
 - [In depth (English)](https://faind.org/approfondimenti/en/)

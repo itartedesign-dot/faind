@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>FAIND Lost Signal – free retro memory arcade game</title>
+  <meta name="description" content="FAIND Lost Signal: a free 80s-style pixel-art memory game. Memorize the path of floating tiles, then walk and jump it in the dark to reach the newsroom. 15 levels, 3 lives, 20 flashes, no time limit.">
+  <link rel="canonical" href="https://faind.org/lost-signal/">
+  <meta name="theme-color" content="#0b1226">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FAIND">
+  <meta property="og:title" content="FAIND Lost Signal">
+  <meta property="og:description" content="Remember the path. Walk it in the dark. A free retro memory game by FAIND.">
+  <meta property="og:url" content="https://faind.org/lost-signal/">
+  <meta property="og:image" content="https://faind.org/assets/giochi/lost-signal.png">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="../assets/favicon-32.png?v=3" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
+  <link rel="stylesheet" href="../faind-game/game.css?v=20261022e">
+  <link rel="stylesheet" href="lost.css?v=20261022a">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"FAIND Lost Signal","url":"https://faind.org/lost-signal/","description":"A free pixel-art memory game with an 80s look: memorize a path of floating tiles, then walk and jump it in the dark to reach the newsroom across 15 levels, with 3 lives, 20 flashes and no time limit.","image":"https://faind.org/assets/giochi/lost-signal.png","genre":"Arcade","gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","inLanguage":"en","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"FAIND","url":"https://faind.org/"}}</script>
+</head>
+<body>
+<div id="app" class="g-app l-app" data-state="start">
+  <div id="fit" class="g-fit">
+    <div id="frame" class="g-frame">
+      <div id="stage" class="g-stage">
+        <canvas id="cv" class="g-canvas l-canvas" aria-label="FAIND Lost Signal" role="img"></canvas>
+
+        <header class="l-hud" id="hud">
+          <div class="l-row l-row1">
+            <a class="l-brand" id="brand" href="../" aria-label="FAIND"><span class="l-brand__main">F<i>A</i><b>I</b>ND</span><span class="l-brand__sub">LOST SIGNAL</span></a>
+            <div class="l-cell l-cell--score"><span class="l-lbl">SCORE</span><span class="l-val" id="hScore">00000</span></div>
+            <div class="l-cell l-cell--level"><span class="l-lbl">LEVEL</span><span class="l-val" id="hLevel">1/15</span></div>
+            <button type="button" class="l-btn" id="btnPause" aria-label="Pause" hidden><span class="l-pause"><i></i><i></i></span></button>
+            <button type="button" class="l-btn" id="btnSound" aria-pressed="false"><span class="g-ico" id="icoSound"></span></button>
+          </div>
+          <div class="l-row l-row2">
+            <div class="l-lives" id="hLives" aria-label="Lives"></div>
+            <div class="l-chip l-chip--news" id="hNewsChip" aria-label="Newspapers collected"><i class="l-scroll"></i><b id="hNews">0/3</b></div>
+            <div class="l-chip l-chip--timer" id="hTimer" hidden><span id="hTimerL">MEMORIZE</span><b id="hTimerV">7</b></div>
+          </div>
+        </header>
+
+        <div class="g-live" id="liveMsg" aria-live="polite"></div>
+        <div class="g-toast" id="toast" hidden></div>
+        <div class="l-hint" id="hint" hidden aria-hidden="true"></div>
+
+        <div class="l-bar" id="bar">
+          <button type="button" class="l-key l-key--flash" id="btnFlash" aria-label="Flash: show the path for 3 seconds"><i class="l-ico l-ico--flash"></i><span class="l-keytxt"><b id="flashN">×20</b><small>FLASH</small></span></button>
+          <p class="l-msg" id="barMsg"><span>REMEMBER THE PATH</span><i class="l-memb" id="memBar"></i></p>
+          <button type="button" class="l-key l-key--jump" id="btnJump" aria-label="Jump two tiles"><i class="l-ico l-ico--jump"></i><span class="l-keytxt"><small>JUMP</small></span></button>
+        </div>
+
+        <section class="g-panel g-panel--start" id="pStart">
+          <div class="g-startbox">
+            <h1 class="g-title"><span>FAIND</span> — LOST SIGNAL</h1>
+            <button type="button" class="g-btn g-btn--main" id="btnStart">START</button>
+            <div class="g-rules">
+              <p class="g-howto">Remember the path.</p>
+              <p class="g-howto">Swipe to walk. Tap beside Faindo to turn.</p>
+              <p class="g-howto">Jump the gaps. Flash to reveal.</p>
+            </div>
+            <p class="l-limits">3 lives • 20 flashes • No time limit</p>
+            <p class="l-kbd">Arrows or WASD walk · Shift + direction turns · Space jumps · F flash · P pause</p>
+            <div class="g-row">
+              <button type="button" class="g-btn" id="btnLb">LEADERBOARD</button>
+              <a class="g-btn" id="btnGames" href="../games/">ALL GAMES</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="g-panel g-panel--pause" id="pPause" hidden>
+          <h2 class="g-h2">PAUSED</h2>
+          <p class="g-note" id="pauseAuto" hidden>Paused while you were away. Lights and flashes did not run.</p>
+          <button type="button" class="g-btn g-btn--main" id="btnResume">RESUME</button>
+          <button type="button" class="g-btn" id="btnRestart">RESTART</button>
+          <button type="button" class="g-btn" id="btnHome">HOME</button>
+          <button type="button" class="g-btn g-btn--icon" id="btnSound2" aria-pressed="false"><span class="g-ico" id="icoSound2"></span></button>
+        </section>
+
+        <section class="g-panel g-panel--over" id="pOver" hidden>
+          <h2 class="g-h2" id="overTitle">GAME OVER</h2>
+          <p class="g-lbl2">FINAL SCORE</p>
+          <p class="g-big" id="rScore">0</p>
+          <p class="g-badge" id="rBest" hidden>NEW PERSONAL BEST!</p>
+          <dl class="g-stats">
+            <div><dt>Level</dt><dd id="rLevel">1</dd></div>
+            <div><dt>Newspapers</dt><dd id="rNews">0</dd></div>
+            <div><dt>Your best</dt><dd id="rBestV">0</dd></div>
+          </dl>
+          <p class="g-note" id="rNote"></p>
+          <div class="g-grid">
+            <button type="button" class="g-btn g-btn--main" id="btnAgain">PLAY AGAIN</button>
+            <button type="button" class="g-btn" id="btnShare">SHARE SCORE</button>
+            <a class="g-btn" id="btnMore" href="../games/">ALL GAMES</a>
+            <a class="g-btn" id="btnNews" href="../#notizie">TODAY'S AI NEWS</a>
+          </div>
+          <p class="g-note" id="shareNote" hidden></p>
+        </section>
+
+        <section class="g-panel g-panel--lb" id="pLb" hidden role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+          <h2 class="g-h2" id="lbTitle">LEADERBOARD</h2>
+          <p class="g-note" id="lbNote"></p>
+          <p class="g-big g-big--small" id="lbBest">0</p>
+          <p class="g-lbl2">YOUR BEST ON THIS DEVICE</p>
+          <div class="g-row"><button type="button" class="g-btn g-btn--main" id="btnLbClose">Close</button></div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <noscript><p class="g-noscript">FAIND Lost Signal needs JavaScript. <a href="../">Back to FAIND</a></p></noscript>
+</div>
+<script src="../stats.js?v=20261011a" defer></script>
+<script src="config.js?v=20261022a"></script>
+<script type="module" src="game.js?v=20261022a"></script>
+</body>
+</html>
+
