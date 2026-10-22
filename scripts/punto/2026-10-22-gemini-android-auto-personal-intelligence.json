@@ -1,0 +1,34 @@
+{
+ "slug": "gemini-android-auto-personal-intelligence",
+ "date": "2026-10-22",
+ "title": "Gemini in auto usa le tue mail e le tue foto: la novità di Android Auto e perché in Italia non c'è",
+ "desc": "Google porta Personal Intelligence su Android Auto: Gemini può rispondere usando Gmail, Calendar, Foto e Maps. Come funziona, cosa serve, come si disattiva e perché in Europa non è disponibile.",
+ "lede": "Il 20 ottobre Google ha cominciato a distribuire <strong>Personal Intelligence</strong> su Android Auto: l'assistente Gemini, mentre si guida, può attingere alle app collegate dell'utente per dare risposte su misura. Funziona solo se la si attiva di proposito e, per ora, non è disponibile in Italia né nel resto dello Spazio economico europeo.",
+ "brief": [
+  "Da fine ottobre Gemini su Android Auto può usare Gmail, Calendar, Foto, Maps, YouTube e la Ricerca per personalizzare le risposte a voce.",
+  "La funzione è disattivata di default: nessuna app viene collegata finché l'utente non la attiva dalle impostazioni di Gemini, e si può spegnere in qualsiasi momento.",
+  "È riservata ad account personali di maggiorenni: restano fuori gli account di lavoro, aziendali e scolastici.",
+  "Sono esclusi Spazio economico europeo (quindi l'Italia), Svizzera, Regno Unito e Nigeria; Google non ha spiegato perché.",
+  "Sulle auto con Google integrato arriverà «nei prossimi mesi»."
+ ],
+ "sections": [
+  ["Cosa cambia", "Gemini è su Android Auto dalla fine del 2025, ma finora rispondeva solo a domande generiche e comandi di navigazione, musica e chiamate. Con Personal Intelligence l'assistente può leggere, con il permesso dell'utente, le informazioni che l'utente ha già dentro i servizi di Google: la mail di conferma di un volo, un appuntamento in Calendario, una foto, un luogo salvato su Maps.\n\nGli esempi mostrati da Google sono quotidiani: chiedere il gate di imbarco e lo stato del volo, farsi proporre un ristorante lungo il percorso in base alle proprie abitudini, farsi portare a una visita medica senza dettare l'indirizzo, oppure trovare l'autolavaggio visto in una foto scattata la settimana prima. Il punto, secondo Google, è anche mettere insieme informazioni che stanno in app diverse in un'unica risposta."],
+  ["Come si attiva e cosa controlla l'utente", "Personal Intelligence è un'impostazione di Gemini e non è attiva da sola. Google scrive che le app «non sono collegate finché non decidi di attivarla»: l'utente sceglie quali servizi collegare e può spegnere tutto in qualsiasi momento. Se la funzione è già accesa nell'app Gemini del telefono, vale anche in auto.\n\nSenza Personal Intelligence l'assistente continua a funzionare per navigazione, musica, chiamate e domande generali, ma senza personalizzare le risposte. Sulle vetture con Google integrato le risposte personali arrivano solo se il telefono è connesso all'auto.", {"caption": "In breve", "head": ["Voce", "Dato"], "rows": [["Data di arrivo su Android Auto", "dal 20 ottobre 2026, distribuzione graduale"], ["Auto con Google integrato", "«nei prossimi mesi»"], ["App collegabili", "Gmail, Calendar, Foto, Maps, YouTube, Ricerca"], ["Chi può usarla", "account Google personali di maggiorenni"], ["Esclusi", "account di lavoro, aziendali e scolastici"], ["Paesi esclusi", "Spazio economico europeo (Italia compresa), Svizzera, Regno Unito, Nigeria"], ["Impostazione di partenza", "disattivata, serve il consenso"]]}],
+  ["Perché in Italia non c'è", "Google definisce Gemini in auto disponibile a livello globale, ma Personal Intelligence è limitata ai maggiorenni «a livello globale, esclusi lo Spazio economico europeo, la Svizzera, il Regno Unito e la Nigeria». In Europa Gemini continua a funzionare su Android Auto, solo senza l'accesso alle app personali.\n\nNessuna delle fonti che abbiamo letto riporta una spiegazione ufficiale dell'esclusione, e Notebookcheck sottolinea proprio che Google non ha detto perché. Non c'è nemmeno una data per un eventuale arrivo: l'articolo di Punto Informatico si limita a notare che l'Italia dovrà attendere."],
+  ["Privacy e dubbi", "Quando Personal Intelligence è stata lanciata a gennaio, Google ha dichiarato che Gemini non si addestra direttamente sulla casella Gmail o sulla libreria di Foto dell'utente, ma su dati più limitati come le richieste fatte a Gemini e le sue risposte, secondo quanto riporta Notebookcheck. Nel testo di Google sul lancio in auto non ci sono dettagli su come i dati vengano conservati o trattati.\n\nLe critiche, per ora, sono più pratiche che di principio. Punto Informatico osserva che Google non dice nulla sulla precisione delle risposte né su cosa succede quando Gemini sbaglia, e che concedere molti permessi significa aprire l'accesso a una parte consistente della propria vita online: conviene collegare solo le app che servono davvero. La stessa funzione, nell'app Gemini, è ancora indicata come beta per gli account personali."]
+ ],
+ "faq": [
+  ["Che cos'è Personal Intelligence su Android Auto?", "È una funzione di Gemini che, se l'utente la attiva, usa i dati di app Google come Gmail, Calendar, Foto e Maps per rispondere in modo personalizzato alle richieste fatte a voce mentre si guida."],
+  ["Posso usarla in Italia?", "No, per ora. Google la rende disponibile ai maggiorenni nel mondo ma esclude lo Spazio economico europeo, la Svizzera, il Regno Unito e la Nigeria. Gemini senza accesso alle app personali funziona comunque."],
+  ["È attiva automaticamente?", "No. Nessuna app viene collegata finché l'utente non attiva Personal Intelligence nelle impostazioni di Gemini, e può disattivarla quando vuole."],
+  ["Serve un abbonamento?", "Nelle fonti che abbiamo letto non compaiono abbonamenti o costi per la funzione."],
+  ["E sulle auto con Google integrato?", "Arriverà più avanti, «nei prossimi mesi» secondo Google, e le risposte personali saranno date solo con il telefono connesso all'auto."]
+ ],
+ "sources": [
+  {"name": "Google", "title": "Get hands-free personalized help on the road with Gemini", "url": "https://blog.google/products-and-platforms/platforms/android/android-auto-cars-with-google-built-in-gemini-personal-intelligence/"},
+  {"name": "Punto Informatico", "title": "Gemini su Android Auto con Personal Intelligence: quando arriva", "url": "https://www.punto-informatico.it/gemini-android-auto-personal-intelligence-quando-arriva/"},
+  {"name": "Tom's Hardware Italia", "title": "Gemini Personal Intelligence arriva in auto: quali dati userà", "url": "https://www.tomshw.it/hardware/gemini-personal-intelligence-arriva-in-auto-quali-dati-usera"},
+  {"name": "Notebookcheck", "title": "Gemini in Android Auto can now use your Gmail and Calendar", "url": "https://notebookcheck.net/Gemini-in-Android-Auto-can-now-use-your-Gmail-and-Calendar.1429991.0.html"}
+ ],
+ "deep": ["chatgpt-o-gemini-quale-scegliere", "intelligenza-artificiale-e-affidabile"]
+}
