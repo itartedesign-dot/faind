@@ -21,7 +21,7 @@ const NAMES = ['ORANGE', 'YELLOW', 'CYAN'];
 const ac = new AbortController();
 const on = (el, ev, fn, opt) => el.addEventListener(ev, fn, Object.assign({ signal: ac.signal }, opt || {}));
 const el = {
-  app: $('app'), fit: $('fit'), frame: $('frame'), stage: $('stage'), cv: $('cv'), brand: $('brand'), pad: $('pad'),
+  app: $('app'), fit: $('fit'), frame: $('frame'), stage: $('stage'), cv: $('cv'), brand: $('brand'), controls: $('controls'),
   score: $('hScore'), level: $('hLevel'), time: $('hTime'), timeCell: $('hTimeCell'), lives: $('hLives'),
   pauseBtn: $('btnPause'), live: $('liveMsg'), toast: $('toast'), count: $('count'),
   pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pLb: $('pLb'), pauseAuto: $('pauseAuto'), controls: $('controls')
@@ -55,14 +55,12 @@ function layout() {
   const cs = getComputedStyle(el.fit);
   const aw = el.fit.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
   const ah = el.fit.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-  const ctrlMin = Math.max(150, ah * 0.24);
+  const ctrlMin = 56;
   const cw = Math.max(200, Math.floor(Math.min(aw, ((ah - ctrlMin) * CW) / CH)));
   const ch = Math.round((cw * CH) / CW);
-  const fh = Math.min(ah, ch + 340);
-  const ctrlH = fh - ch;
+  const fh = Math.min(ah, ch + 220);
   const s = el.frame.style;
   s.setProperty('--cw', cw + 'px'); s.setProperty('--ch', ch + 'px'); s.setProperty('--fh', fh + 'px');
-  s.setProperty('--pad', Math.max(96, Math.min(ctrlH - 34, cw * 0.62, 230)) + 'px');
   document.documentElement.style.setProperty('--u', (cw / 180) + 'px');
   el.app.style.setProperty('--px', (cw / CW) + 'px');
 }
@@ -137,41 +135,25 @@ function resume() {
 function togglePause() { if (state === 'paused') resume(); else pause(false); }
 
 /* ------------------------------ Comandi ------------------------------ */
-let padDirs = '', keyHeld = [], swDirs = '';
+let keyHeld = [];
 const dirsOf = (ids) => ids.map((d) => DIRV[d]);
 function sendDirs(ids) { if (sim && state === 'playing') sim.input(dirsOf(ids)); }
 function releaseInputs() {
-  padDirs = ''; keyHeld = []; swDirs = ''; el.pad.querySelectorAll('.is-down').forEach((b) => b.classList.remove('is-down'));
+  keyHeld = []; sw = null;
   if (sim && sim.phase === 'play') sim.input([]);
 }
-// croce: un lato solo, oppure due lati adiacenti vicino alla diagonale (prenotazione della svolta)
+// scorrimento: un lato solo, oppure due lati adiacenti vicino alla diagonale (prenotazione della svolta)
 function dirsFromVec(dx, dy) {
   const ax = Math.abs(dx), ay = Math.abs(dy), h = dx > 0 ? 0 : 1, v = dy > 0 ? 2 : 3;
   if (ax > 2.2 * ay) return [h];
   if (ay > 2.2 * ax) return [v];
   return [h, v];
 }
-function setPad(ids) {
-  const k = ids.join(','); if (k === padDirs) return; padDirs = k;
-  el.pad.querySelectorAll('.m-arrow').forEach((b) => b.classList.toggle('is-down', ids.includes(+b.dataset.dir)));
-  if (sim && sim.phase === 'play') sim.input(dirsOf(ids));
-}
-function dirFromPointer(e) {
-  const r = el.pad.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
-  if (Math.hypot(dx, dy) < r.width * 0.14) return [];   // al centro della croce: ferma
-  return dirsFromVec(dx, dy);
-}
-let padId = null;
-on(el.pad, 'pointerdown', (e) => { e.preventDefault(); padId = e.pointerId; try { el.pad.setPointerCapture(e.pointerId); } catch (er) {} setPad(dirFromPointer(e)); });
-on(el.pad, 'pointermove', (e) => { if (e.pointerId === padId) setPad(dirFromPointer(e)); });
-const padUp = (e) => { if (e.pointerId !== padId) return; padId = null; setPad([]); };
-on(el.pad, 'pointerup', padUp); on(el.pad, 'pointercancel', padUp); on(el.pad, 'lostpointercapture', padUp);
-on(el.pad, 'contextmenu', (e) => e.preventDefault());
-
 // dito sul campo di gioco: la direzione dello scorrimento vale finché il dito resta appoggiato; sollevandolo Faindo si ferma
 let sw = null;
-on(el.cv, 'pointerdown', (e) => { e.preventDefault(); sw = { id: e.pointerId, x: e.clientX, y: e.clientY }; try { el.cv.setPointerCapture(e.pointerId); } catch (er) {} });
-on(el.cv, 'pointermove', (e) => {
+for (const zone of [el.cv, el.controls]) {
+on(zone, 'pointerdown', (e) => { e.preventDefault(); sw = { id: e.pointerId, x: e.clientX, y: e.clientY }; try { zone.setPointerCapture(e.pointerId); } catch (er) {} });
+on(zone, 'pointermove', (e) => {
   if (!sw || e.pointerId !== sw.id) return;
   let dx = e.clientX - sw.x, dy = e.clientY - sw.y;
   const d = Math.hypot(dx, dy);
@@ -180,8 +162,9 @@ on(el.cv, 'pointermove', (e) => {
   sendDirs(dirsFromVec(dx, dy));
 });
 const swEnd = (e) => { if (sw && e.pointerId === sw.id) { sw = null; if (sim && sim.phase === 'play') sim.input([]); } };
-on(el.cv, 'pointerup', swEnd); on(el.cv, 'pointercancel', swEnd); on(el.cv, 'lostpointercapture', swEnd);
-on(el.cv, 'contextmenu', (e) => e.preventDefault());
+on(zone, 'pointerup', swEnd); on(zone, 'pointercancel', swEnd); on(zone, 'lostpointercapture', swEnd);
+on(zone, 'contextmenu', (e) => e.preventDefault());
+}
 
 const KEYS = { ArrowRight: 0, d: 0, D: 0, ArrowLeft: 1, a: 1, A: 1, ArrowDown: 2, s: 2, S: 2, ArrowUp: 3, w: 3, W: 3 };
 on(document, 'keydown', (e) => {
