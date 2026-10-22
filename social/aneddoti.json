@@ -29,7 +29,7 @@
       "titolo": "Duecento milioni di indizi",
       "testo": "Una proteina cambia comportamento anche in base alla sua forma. Capire quella forma può richiedere molto lavoro. AlphaFold ha reso disponibili previsioni per oltre duecento milioni di strutture proteiche. Non sostituiscono tutti gli esperimenti, ma offrono ai ricercatori un enorme punto di partenza. Il mio archivio, al confronto, è un comodino.",
       "fonte": "Google DeepMind",
-      "verificato": false
+      "verificato": true
     },
     {
       "titolo": "Una voce dopo diciotto anni",
@@ -144,6 +144,10 @@
     {
       "n": 4,
       "day": "2026-10-19"
+    },
+    {
+      "n": 5,
+      "day": "2026-10-22"
     }
   ]
 }

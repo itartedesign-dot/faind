@@ -40,6 +40,16 @@
       "titolo": "L'AI ha progettato da zero nuovi antibiotici contro i superbatteri #Shorts",
       "testo": "Al MIT l'intelligenza artificiale generativa ha creato oltre 36 milioni di molecole mai viste prima e ha scelto le più promettenti contro due batteri resistenti ai farmaci: quello della gonorrea e lo stafilococco MRSA. Due candidati, NG1 e DN1, hanno funzionato in laboratorio e nei topi. Non sono ancora farmaci: ora vanno migliorati e provati.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Krishnan, Anahtar, Valeri, Collins et al., \"A generative deep learning approach to de novo antibiotic design\", Cell, 2025 (MIT)\nhttps://news.mit.edu/2025/using-generative-ai-researchers-design-compounds-kill-drug-resistant-bacteria-0814\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Antibiotici #Superbatteri #AIGenerativa #MIT #DalCassetto #FAIND",
       "telegram": "Stavolta l'AI non ha cercato tra le molecole che conosciamo: ne ha disegnate di nuove, contro due superbatteri."
+    },
+    {
+      "id": "dal-cassetto-05",
+      "aneddoto": 5,
+      "dalle": "2026-10-22T09:42:00Z",
+      "scade": "2026-10-22T11:16:17Z",
+      "video": "https://export-download.canva.com/6jX4s/DAHYud6jX4s/-1/0-3213838100746181861.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20261021%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261021T122650Z&X-Amz-Expires=82167&X-Amz-Signature=674cc7231ef2be114818577186235545edda216e40c0ba1dac6f92a15ec4bbc5&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Thu%2C%2022%20Oct%202026%2011%3A16%3A17%20GMT",
+      "titolo": "AlphaFold: l'AI ha previsto la forma di oltre 200 milioni di proteine #Shorts",
+      "testo": "Una proteina funziona in base alla sua forma, ma scoprirla in laboratorio richiede molto lavoro. Nel luglio 2022 DeepMind e l'EMBL-EBI hanno reso gratuite le previsioni di AlphaFold per oltre 200 milioni di strutture proteiche, quasi tutte le proteine catalogate. Non sostituiscono tutti gli esperimenti, ma sono un grande punto di partenza per chi fa ricerca.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: DeepMind ed EMBL-EBI, \"AlphaFold Protein Structure Database\" espanso a oltre 200 milioni di strutture, 28 luglio 2022 (EMBL)\nhttps://www.embl.org/news/science/alphafold-200-million/\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #AlphaFold #Proteine #Scienza #DeepMind #DalCassetto #FAIND",
+      "telegram": "Un'AI ha previsto la forma di oltre 200 milioni di proteine, e le ha messe gratis a disposizione di chiunque faccia ricerca."
     }
   ]
 }
