@@ -103,15 +103,15 @@ console.log('tempo totale del percorso (senza nemici): ' + total.toFixed(0) + ' 
   s4.f.x = a4.x + 0.5; s4.f.y = a4.y + 0.5; s4.interact(); s4.f.x = b4.x + 0.5; s4.f.y = b4.y + 0.5; s4.interact();
   if (s4.carried[0] !== 1 || s4.carried[1] !== 0 || s4.active !== 0) fail('livello 5: vincolo di colore non applicato');
 }
-/* ---- potere: 20 s, non si somma; timer generale distinto ---- */
+/* ---- potere: 10 s, non si somma; timer generale distinto ---- */
 {
   const s = new Sim(1); s.loadLevel(1); const o = s.L.offices[0];
   s.carried[o.color] = 5; s.f.x = o.desk[0] + 0.5; s.f.y = o.desk[1] + 0.5; s.robots.forEach((r) => { r.delay = 1e9; }); s.interact();
-  if (!s.done[0] || Math.abs(s.power - 20) > 0.01) fail('potere non partito a 20 s');
-  for (let i = 0; i < 600; i++) s.step();
-  if (Math.abs(s.power - 10) > 0.1 || Math.abs(s.timeLeft - (CONFIG.TOTAL_TIME - 10)) > 0.1) fail('timer potere e timer generale non distinti: ' + s.power + ' ' + s.timeLeft);
+  if (!s.done[0] || Math.abs(s.power - 10) > 0.01) fail('potere non partito a 10 s');
+  for (let i = 0; i < 300; i++) s.step();
+  if (Math.abs(s.power - 5) > 0.1 || Math.abs(s.timeLeft - (CONFIG.TOTAL_TIME - 5)) > 0.1) fail('timer potere e timer generale non distinti: ' + s.power + ' ' + s.timeLeft);
   const o2 = s.L.offices[1]; s.carried[o2.color] = 5; s.f.x = o2.desk[0] + 0.5; s.f.y = o2.desk[1] + 0.5; s.interact();
-  if (Math.abs(s.power - 20) > 0.01) fail('il potere si è sommato');
+  if (Math.abs(s.power - 10) > 0.01) fail('il potere si è sommato');
 }
 /* ---- robot: mai dentro agli uffici, anche dopo una partita lunga; una vita sola per contatto ---- */
 {
@@ -137,10 +137,19 @@ for (let n = 1; n <= LEVELS; n++) { const L = buildLevel(n); if (L.exit[0] !== 7
 }
 /* ---- robot distrutto: non ricompare ---- */
 {
-  const s = new Sim(1); s.loadLevel(1); s.power = 20; const r = s.robots[0]; r.delay = 0; s.f.x = r.x; s.f.y = r.y;
+  const s = new Sim(1); s.loadLevel(1); s.power = CONFIG.POWER_TIME; const r = s.robots[0]; r.delay = 0; s.f.x = r.x; s.f.y = r.y;
   for (let i = 0; i < 4; i++) s.step();
-  const alive = s.robots.filter((q) => q.alive).length; for (let i = 0; i < 60 * 40; i++) { s.f.inv = 99; s.power = 20; s.step(); }
+  const alive = s.robots.filter((q) => q.alive).length; for (let i = 0; i < 60 * 40; i++) { s.f.inv = 99; s.power = CONFIG.POWER_TIME; s.step(); }
   if (alive !== s.robots.length - 1 || s.robots.filter((q) => q.alive).length !== alive) fail('un robot distrutto non deve ricomparire');
+}
+/* ---- stanza ripulita: l'ultimo robot ucciso non torna più (-1, poi -2...); se non si distruggono tutti tornano tutti ---- */
+{
+  const s = new Sim(1); const n0 = s.robots.length;
+  const clear = (all) => { s.robots.forEach((r, i) => { r.alive = all ? false : i !== 0; }); s.phase = 'between'; s.advance(); };
+  clear(true);  if (s.robots.length !== n0 - 1 || s.robots.some((r) => !r.alive)) fail('dopo la prima stanza ripulita deve mancare 1 robot: ' + s.robots.length);
+  clear(false); if (s.robots.length !== n0 - 1) fail('stanza non ripulita: devono tornare tutti quelli rimasti, ' + s.robots.length);
+  clear(true);  if (s.robots.length !== n0 - 2) fail('seconda stanza ripulita: -2 in tutto, ' + s.robots.length);
+  clear(true); clear(true); clear(true); if (s.robots.length !== 1) fail('ne resta sempre almeno uno, ' + s.robots.length);
 }
 console.log(bad ? bad + ' controlli falliti' : 'tutti i controlli superati');
 process.exit(bad ? 1 : 0);

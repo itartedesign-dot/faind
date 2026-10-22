@@ -8,8 +8,9 @@
    Il mondo è un toro: gli sprite vicini ai bordi vengono disegnati anche sul lato opposto, così un passaggio sul bordo
    è continuo, senza salti.
    ===================================================================== */
-import { W, H, T, COLORS, idx } from './maze.js?v=20261022d';
-import { ATLAS } from './sprites/atlas.js?v=20261022d';
+import { W, H, T, COLORS, idx } from './maze.js?v=20261022f';
+import { CONFIG } from './sim.js?v=20261022f';
+import { ATLAS } from './sprites/atlas.js?v=20261022f';
 
 export const TS = 16, CW = 240, CH = 324, OY = 36, MW = W * TS, MH = H * TS;
 export const HEX = ['#ff8a1f', '#ffd21f', '#29d6ff'];
@@ -37,7 +38,7 @@ export class Scene {
     this.cv = cv; cv.width = CW; cv.height = CH;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
     this.atlas = new Image(); this.fx = []; this.lit = {}; this.clock = 0; this.flash = 0; this.L = null; this.walk = 0;
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.tint(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261022d'; });
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.tint(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261022f'; });
   }
 
   /** copia azzurrina dei robot per il potere di Faindo */
@@ -185,7 +186,7 @@ export class Scene {
     }
     // barra del potere sotto la barra superiore
     if (sim.power > 0) {
-      const frac = sim.power / 20, warn = sim.power <= 3 && Math.floor(t * 6) % 2 === 0;
+      const frac = sim.power / CONFIG.POWER_TIME, warn = sim.power <= 3 && Math.floor(t * 6) % 2 === 0;
       g.fillStyle = '#082a40'; g.fillRect(0, OY - 3, CW, 3); g.fillStyle = warn ? '#ffffff' : '#29d6ff'; g.fillRect(0, OY - 3, Math.round(CW * frac), 3);
     }
     if (this.flash) { g.fillStyle = this.flash > 0 ? 'rgba(255,255,255,' + this.flash * 1.2 + ')' : 'rgba(255,60,50,' + (-this.flash) * 1.1 + ')'; g.fillRect(0, OY, CW, CH - OY); }
