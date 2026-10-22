@@ -120,6 +120,24 @@ assert.equal(replayLost([[0, 0]]).error, 'bad_game');               // passo dur
 assert.equal(replayLost([[7000, 8], [7005, 9]]).error, 'bad_game'); // una partita che non finisce non è una partita
 assert.equal(replayMaze(1, []).score, 0);                           // chi sta fermo perde per tempo o per robot con 0 punti, senza errori
 
+/* ---------- continue: la partita prosegue ma il server la rifiuta ---------- */
+{
+  const mc = mazeBot(1, true), tickOver = mc.tick, wasTime = mc.reason === 'time';
+  assert.equal(mc.phase, 'over'); assert.ok(mc.revive(), 'Maze: il continue riparte dopo la sconfitta');
+  assert.equal(mc.phase, 'play'); assert.equal(mc.lives, 3); assert.ok(mc.timeLeft >= 60); assert.equal(mc.continues, 1); assert.ok(mc.f.inv > 0);
+  if (wasTime) assert.equal(mc.timeLeft, 60);
+  mc.input([[1, 0]]); for (let i = 0; i < 30; i++) { mc.step(); mc.events.length = 0; }
+  assert.ok(mc.tick > tickOver);
+  assert.equal(replayMaze(1, cleanMazeInputs(mc.inputs)).error, 'bad_game');
+  const wonSim = mazeBot(1, true); wonSim.won = true; assert.equal(wonSim.revive(), false, 'Maze: dopo una vittoria non c\'è continue');
+  const lc = lostBot(1), levelBefore = lc.level, flashesBefore = lc.flashes;
+  assert.ok(lc.over); assert.ok(lc.revive(), 'Lost: il continue riparte dopo l\'ultima vita');
+  assert.equal(lc.lives, 3); assert.equal(lc.phase, 'play'); assert.equal(lc.level, levelBefore); assert.equal(lc.flashes, flashesBefore); assert.equal(lc.continues, 1);
+  lc.jump(); lc.update(5);
+  assert.equal(replayLost(cleanLostInputs(lc.log)).error, 'bad_game');
+  assert.equal(new LostSim(15).revive(), false);
+}
+
 /* ---------- rotte del server ---------- */
 // il seme lo decide il server a caso: per le prove lo fisso (e rendo diversi gli id di sessione)
 const realRandom = globalThis.crypto.getRandomValues.bind(globalThis.crypto); let ctr = 0;
@@ -141,6 +159,7 @@ res = await call('POST', '/maze/score', { token: MZ2.token, inputs: [[9999999, [
 res = await call('POST', '/maze/score', { token: MZ2.token.slice(0, -2) + 'xx', inputs: [] }, T0 + 700000); assert.equal(res.s, 400);
 res = await call('POST', '/lost/score', { token: MZ2.token, inputs: [] }, T0 + 700000); assert.equal(res.s, 400);
 res = await call('POST', '/score', { token: MZ2.token, inputs: [] }, T0 + 700000); assert.equal(res.s, 400);
+res = await call('POST', '/maze/score', { token: MZ2.token, inputs: MZ2.sim.inputs, continued: true }, T0 + 700000); assert.equal(res.s, 422); assert.equal(res.j.error, 'bad_game');   // dichiara un continue: respinta, il gettone resta valido
 res = await call('POST', '/maze/score', { token: MZ2.token, inputs: MZ2.sim.inputs }, T0 + 700000); assert.equal(res.s, 200);   // dopo i rifiuti il gettone vale ancora (il tentativo respinto non lo consuma)
 // partita ferma: finisce senza errori e senza punti, nessun claim
 const se0 = await session('maze', T0, '12.0.0.1');

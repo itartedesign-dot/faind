@@ -38,6 +38,7 @@ export function replayMaze(seed, inputs) {
     sim.step(); sim.events.length = 0;
   }
   if (sim.phase !== 'over') return { error: 'bad_game' };
+  if (i < inputs.length) return { error: 'bad_game' };   // comandi dopo la fine: la partita è proseguita con un continue, che non va in classifica
   if (sim.score > MAX_SCORE.maze) return { error: 'bad_score' };
   return { score: sim.score, level: sim.level, detail: sim.stats.delivered, won: !!sim.won, ms: sim.tick / MAZE.TPS * 1000 };
 }
@@ -68,6 +69,7 @@ export function replayLost(inputs) {
     sim.update(LOST_QUANTUM); sim.events.length = 0;
   }
   if (!sim.over && sim.phase !== 'won') return { error: 'bad_game' };
+  if (i < inputs.length) return { error: 'bad_game' };   // comandi dopo la fine: la partita è proseguita con un continue, che non va in classifica
   if (sim.score > MAX_SCORE.lost) return { error: 'bad_score' };
   return { score: sim.score, level: sim.level, detail: sim.stats.news, won: sim.phase === 'won', ms: sim.clock };
 }

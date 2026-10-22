@@ -18,8 +18,8 @@
   <meta name="twitter:card" content="summary">
   <link rel="icon" href="../assets/favicon-32.png?v=3" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
-  <link rel="stylesheet" href="../faind-game/game.css?v=20261022e">
-  <link rel="stylesheet" href="maze.css?v=20261022h">
+  <link rel="stylesheet" href="../faind-game/game.css?v=20261023a">
+  <link rel="stylesheet" href="maze.css?v=20261023a">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"FAIND Signal Maze","url":"https://faind.org/signal-maze/","description":"A free top-down maze arcade game with an 80s look: collect keys and documents, deliver them to the colour-coded offices and avoid the robots across 15 levels in 9 minutes.","image":"https://faind.org/assets/giochi/signal-maze.png","genre":"Arcade","gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","inLanguage":"en","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"FAIND","url":"https://faind.org/"}}</script>
 </head>
 <body>
@@ -74,6 +74,15 @@
           <button type="button" class="g-btn" id="btnRestart">RESTART</button>
           <button type="button" class="g-btn" id="btnHome">HOME</button>
           <button type="button" class="g-btn g-btn--icon" id="btnSound2" aria-pressed="false"><span class="g-ico" id="icoSound2"></span></button>
+        </section>
+
+        <section class="g-panel g-panel--cont" id="pCont" hidden role="dialog" aria-modal="true" aria-labelledby="contTitle">
+          <h2 class="g-h2" id="contTitle">CONTINUE?</h2>
+          <p class="g-big g-cont__num" id="contNum" aria-hidden="true">10</p>
+          <p class="g-note" id="contInfo"></p>
+          <p class="g-note">A continued run is not ranked and cannot set a record.</p>
+          <button type="button" class="g-btn g-btn--main" id="btnContinue">CONTINUE</button>
+          <button type="button" class="g-btn" id="btnEnd">END RUN</button>
         </section>
 
         <section class="g-panel g-panel--over" id="pOver" hidden>
@@ -138,7 +147,7 @@
   <noscript><p class="g-noscript">FAIND Signal Maze needs JavaScript. <a href="../">Back to FAIND</a></p></noscript>
 </div>
 <script src="../stats.js?v=20261011a" defer></script>
-<script src="config.js?v=20261022h"></script>
-<script type="module" src="game.js?v=20261022h"></script>
+<script src="config.js?v=20261023a"></script>
+<script type="module" src="game.js?v=20261023a"></script>
 </body>
 </html>

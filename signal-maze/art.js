@@ -8,9 +8,9 @@
    Il mondo è un toro: gli sprite vicini ai bordi vengono disegnati anche sul lato opposto, così un passaggio sul bordo
    è continuo, senza salti.
    ===================================================================== */
-import { W, H, T, COLORS, idx } from './maze.js?v=20261022h';
-import { CONFIG } from './sim.js?v=20261022h';
-import { ATLAS } from './sprites/atlas.js?v=20261022h';
+import { W, H, T, COLORS, idx } from './maze.js?v=20261023a';
+import { CONFIG } from './sim.js?v=20261023a';
+import { ATLAS } from './sprites/atlas.js?v=20261023a';
 
 export const TS = 16, CW = 240, CH = 324, OY = 36, MW = W * TS, MH = H * TS;
 export const HEX = ['#ff8a1f', '#ffd21f', '#29d6ff'];
@@ -38,7 +38,7 @@ export class Scene {
     this.cv = cv; cv.width = CW; cv.height = CH;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
     this.atlas = new Image(); this.fx = []; this.lit = {}; this.clock = 0; this.flash = 0; this.L = null; this.walk = 0;
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.tint(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261022h'; });
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.tint(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261023a'; });
   }
 
   /** copia azzurrina dei robot per il potere di Faindo */

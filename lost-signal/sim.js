@@ -11,7 +11,7 @@
    REVIVE_MS tutto il percorso è acceso. Quattro zolle (tre dal livello 6, due dall'11…) restano sempre accese.
    Fasi: memorize | play | step | jump | fall | arrive | between | over | won
    ===================================================================== */
-import { getLevel, COLS, ROWS } from './levels.js?v=20261022c';
+import { getLevel, COLS, ROWS } from './levels.js?v=20261023a';
 
 export const CFG = {
   MEMORIZE_MS: 7000, FLASH_MS: 3000, FLASHES: 20, LIVES: 3, STEP_MS: 150, JUMP_MS: 400, FALL_MS: 900, WARN_MS: 1500, REVIVE_MS: 2500, ARRIVE_MS: 1700, BETWEEN_MS: 1500,
@@ -45,7 +45,7 @@ export class Sim {
   constructor(levels = 15) {
     this.levels = Math.max(1, levels | 0);
     this.level = 1; this.lives = CFG.LIVES; this.flashes = CFG.FLASHES; this.score = 0;
-    this.stats = { news: 0, falls: 0 };
+    this.stats = { news: 0, falls: 0 }; this.continues = 0;   // una partita con continue non può andare in classifica
     this.events = [];
     this.clock = 0; this.log = [];     // millisecondi avanzati e comandi accettati [clock, codice]: la verifica sul server rifà la partita da qui
 
@@ -155,6 +155,15 @@ export class Sim {
     this.lives--; this.stats.falls++; this.events.push({ type: 'life', lives: this.lives });
     if (this.lives <= 0) { this.phase = 'over'; this.over = true; this.events.push({ type: 'over' }); return; }
     this.pos = { c: this.safe.c, r: this.safe.r }; this.reviveMs = CFG.REVIVE_MS; this.warnMs = 0; this.phase = 'play'; this.events.push({ type: 'respawn' });
+  }
+
+  /** Continue dopo l'ultima vita: stesso livello, tre vite nuove, Faindo sull'ultima zolla sicura con il percorso acceso. Flash residui e giornali raccolti restano. */
+  revive() {
+    if (this.phase !== 'over') return false;
+    this.continues++; this.lives = CFG.LIVES; this.over = false;
+    this.pos = { c: this.safe.c, r: this.safe.r }; this.reviveMs = CFG.REVIVE_MS; this.warnMs = 0; this.phase = 'play';
+    this.events.push({ type: 'respawn' });
+    return true;
   }
 
   _complete() {
