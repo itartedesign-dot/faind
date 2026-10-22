@@ -6,10 +6,10 @@
    ciclo di animazione. Il tempo di 9 minuti vive nel motore e scorre solo quando il motore viene fatto avanzare:
    pausa, cambio livello, scheda in background e conto alla rovescia non lo toccano.
    ===================================================================== */
-import { Sim, CONFIG as C } from './sim.js?v=20261022d';
-import { Scene, CW, CH } from './art.js?v=20261022d';
-import { Audio8 } from './audio.js?v=20261022d';
-import { LEVELS } from './maze.js?v=20261022d';
+import { Sim, CONFIG as C } from './sim.js?v=20261022f';
+import { Scene, CW, CH } from './art.js?v=20261022f';
+import { Audio8 } from './audio.js?v=20261022f';
+import { LEVELS } from './maze.js?v=20261022f';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_MAZE_API || '').replace(/\/+$/, '');

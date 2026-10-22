@@ -12,7 +12,7 @@ export const CONFIG = {
   // tempo unico: 9:06 = tempo medio di un percorso completo (circa 506 s, test-maze.mjs) + 40 s
   TPS: 60, TOTAL_TIME: 538, LIVES: 3,
   FAINDO_SPEED: 3.9,          // tile al secondo
-  SPAWN_ANIM: 0.8, POWER_TIME: 20, POWER_WARN: 3, INVULN: 2.0,
+  SPAWN_ANIM: 0.8, POWER_TIME: 10, POWER_WARN: 3, INVULN: 2.0,
   HIT_DIST: 0.62, PICK_DIST: 0.5,
   FREE_LEVELS: 3,             // livelli 1-3: si raccoglie tutto; dal 4 un colore alla volta
   DOC_PER_COLOR: 5,
@@ -67,6 +67,7 @@ export class Sim {
     this.won = false; this.reason = ''; this.bonus = 0;
     this.events = []; this.inputs = []; this.tick = 0; this.stats = { delivered: 0, offices: 0, robots: 0 };
     this.held = [];
+    this.robotsOut = 0;         // robot eliminati per sempre: uno in più ogni volta che si distruggono tutti i robot di una stanza
     this.loadLevel(1);
   }
 
@@ -83,7 +84,7 @@ export class Sim {
     this.active = null;                          // colore attivo (dal livello 4)
     this.power = 0; this.exitActive = false; this.deskLatch = -1; this.doorOpen = L.offices.map(() => 0);
     const delays = robotDelays(n);
-    this.robots = L.robots.map((p, i) => ({ i, x: p[0] + 0.5, y: p[1] + 0.5, dx: 0, dy: 0, alive: true, delay: delays[i], mode: i === 3 ? 'patrol' : 'chase', modeT: 0, goal: null, face: 0 }));
+    this.robots = L.robots.slice(0, L.robots.length - this.robotsOut).map((p, i) => ({ i, x: p[0] + 0.5, y: p[1] + 0.5, dx: 0, dy: 0, alive: true, delay: delays[i], mode: i === 3 ? 'patrol' : 'chase', modeT: 0, goal: null, face: 0 }));
     this.held = [];
     const rc = this.L.grid; let rb = null;
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (rc[idx(x, y)] === T.FLOOR) { const d = Math.abs(x - 7) + Math.abs(y - 8.5); if (!rb || d < rb.d) rb = { d, x, y }; }
@@ -91,7 +92,11 @@ export class Sim {
   }
 
   /** Passa al livello successivo (chiamato dall'interfaccia dopo la pausa tra i livelli). */
-  advance() { if (this.phase !== 'between') return; this.loadLevel(this.level + 1); this.phase = 'play'; this.events.push({ type: 'level', a: this.level }); }
+  advance() {
+    if (this.phase !== 'between') return;
+    // stanza ripulita (tutti i robot distrutti): l'ultimo ucciso non tornerà più, gli altri tornano nella stanza dopo; se ne resta anche uno vivo tornano tutti
+    if (this.robots.length > 1 && this.robots.every((r) => !r.alive)) this.robotsOut = Math.min(this.robotsOut + 1, this.L.robots.length - 1);
+    this.loadLevel(this.level + 1); this.phase = 'play'; this.events.push({ type: 'level', a: this.level }); }
 
   /* ---------------- comandi ---------------- */
   /** dirs: elenco di direzioni tenute ([dx, dy], al massimo due: una diagonale vale come due direzioni). Faindo si muove solo mentre ce n'è almeno una
