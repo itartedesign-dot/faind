@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>FAIND Signal Maze – free retro maze arcade game</title>
+  <meta name="description" content="FAIND Signal Maze: a free 80s-style top-down maze arcade game. Collect matching keys and documents, deliver them to the colour-coded offices, outrun the robots. 15 levels, 5 minutes.">
+  <link rel="canonical" href="https://faind.org/signal-maze/">
+  <meta name="theme-color" content="#0b1226">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FAIND">
+  <meta property="og:title" content="FAIND Signal Maze">
+  <meta property="og:description" content="Keys, documents, offices and robots. 15 levels in 5 minutes. A free retro arcade game by FAIND.">
+  <meta property="og:url" content="https://faind.org/signal-maze/">
+  <meta property="og:image" content="https://faind.org/assets/giochi/signal-maze.png">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="../assets/favicon-32.png?v=3" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
+  <link rel="stylesheet" href="../faind-game/game.css?v=20261022e">
+  <link rel="stylesheet" href="maze.css?v=20261022a">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"FAIND Signal Maze","url":"https://faind.org/signal-maze/","description":"A free top-down maze arcade game with an 80s look: collect keys and documents, deliver them to the colour-coded offices and avoid the robots across 15 levels in 5 minutes.","image":"https://faind.org/assets/giochi/signal-maze.png","genre":"Arcade","gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","inLanguage":"en","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"FAIND","url":"https://faind.org/"}}</script>
+</head>
+<body>
+<div id="app" class="g-app m-app" data-state="start">
+  <div id="fit" class="g-fit">
+    <div id="frame" class="g-frame">
+      <div id="stage" class="g-stage">
+        <canvas id="cv" class="g-canvas m-canvas" aria-label="FAIND Signal Maze" role="img"></canvas>
+
+        <header class="m-hud" id="hud">
+          <div class="m-row m-row1">
+            <a class="m-brand" id="brand" href="../" aria-label="FAIND"><span class="m-brand__main">F<i>A</i><b>I</b>ND</span><span class="m-brand__sub">SIGNAL MAZE</span></a>
+            <div class="m-cell m-cell--score"><span class="m-lbl">SCORE</span><span class="m-val" id="hScore">00000</span></div>
+            <div class="m-cell m-cell--level"><span class="m-lbl">LEVEL</span><span class="m-val" id="hLevel">1/15</span></div>
+            <div class="m-cell m-cell--time" id="hTimeCell"><span class="m-lbl">TIME</span><span class="m-val" id="hTime">5:00</span></div>
+            <button type="button" class="m-btn" id="btnPause" aria-label="Pause" hidden><span class="m-pause"><i></i><i></i></span></button>
+            <button type="button" class="m-btn" id="btnSound" aria-pressed="false"><span class="g-ico" id="icoSound"></span></button>
+          </div>
+          <div class="m-row m-row2">
+            <div class="m-lives" id="hLives" aria-label="Lives"></div>
+            <div class="m-chip" data-c="0" title="Orange"><i class="m-ico m-key"></i><i class="m-ico m-doc"></i><b class="m-carry">×0</b><b class="m-del">0/5</b></div>
+            <div class="m-chip" data-c="1" title="Yellow"><i class="m-ico m-key"></i><i class="m-ico m-doc"></i><b class="m-carry">×0</b><b class="m-del">0/5</b></div>
+            <div class="m-chip" data-c="2" title="Cyan"><i class="m-ico m-key"></i><i class="m-ico m-doc"></i><b class="m-carry">×0</b><b class="m-del">0/5</b></div>
+          </div>
+        </header>
+
+        <div class="g-live" id="liveMsg" aria-live="polite"></div>
+        <div class="g-toast" id="toast" hidden></div>
+        <div class="g-count" id="count" hidden aria-hidden="true"></div>
+
+        <section class="g-panel g-panel--start" id="pStart">
+          <div class="g-startbox">
+            <h1 class="g-title"><span>FAIND</span> — SIGNAL MAZE</h1>
+            <button type="button" class="g-btn g-btn--main" id="btnStart">START</button>
+            <div class="g-rules">
+              <p class="g-howto">Collect matching keys and documents.</p>
+              <p class="g-howto">Cross the office desk to deliver.</p>
+              <p class="g-howto">Avoid the robots. Complete all 15 levels in 5 minutes.</p>
+            </div>
+            <p class="g-keys">Arrow keys or WASD to move · P or Esc to pause</p>
+            <div class="g-row">
+              <button type="button" class="g-btn" id="btnLb">LEADERBOARD</button>
+              <a class="g-btn" id="btnGames" href="../games/">ALL GAMES</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="g-panel g-panel--pause" id="pPause" hidden>
+          <h2 class="g-h2">PAUSED</h2>
+          <p class="g-note" id="pauseAuto" hidden>Paused while you were away.</p>
+          <button type="button" class="g-btn g-btn--main" id="btnResume">RESUME</button>
+          <button type="button" class="g-btn" id="btnRestart">RESTART</button>
+          <button type="button" class="g-btn" id="btnHome">HOME</button>
+          <button type="button" class="g-btn g-btn--icon" id="btnSound2" aria-pressed="false"><span class="g-ico" id="icoSound2"></span></button>
+        </section>
+
+        <section class="g-panel g-panel--over" id="pOver" hidden>
+          <h2 class="g-h2" id="overTitle">TIME UP</h2>
+          <p class="g-lbl2">FINAL SCORE</p>
+          <p class="g-big" id="rScore">0</p>
+          <p class="g-badge" id="rBest" hidden>NEW PERSONAL BEST!</p>
+          <dl class="g-stats">
+            <div><dt>Level</dt><dd id="rLevel">1</dd></div>
+            <div><dt>Delivered</dt><dd id="rDel">0</dd></div>
+            <div><dt>Your best</dt><dd id="rBestV">0</dd></div>
+          </dl>
+          <p class="g-note" id="rNote"></p>
+          <div class="g-grid">
+            <button type="button" class="g-btn g-btn--main" id="btnAgain">PLAY AGAIN</button>
+            <button type="button" class="g-btn" id="btnShare">SHARE SCORE</button>
+            <a class="g-btn" id="btnMore" href="../games/">ALL GAMES</a>
+            <a class="g-btn" id="btnNews" href="../#notizie">TODAY'S AI NEWS</a>
+          </div>
+          <p class="g-note" id="shareNote" hidden></p>
+        </section>
+
+        <section class="g-panel g-panel--lb" id="pLb" hidden role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+          <h2 class="g-h2" id="lbTitle">LEADERBOARD</h2>
+          <p class="g-note" id="lbNote"></p>
+          <p class="g-big g-big--small" id="lbBest">0</p>
+          <p class="g-lbl2">YOUR BEST ON THIS DEVICE</p>
+          <div class="g-row"><button type="button" class="g-btn g-btn--main" id="btnLbClose">Close</button></div>
+        </section>
+      </div>
+
+      <div class="m-controls" id="controls">
+        <div class="m-pad" id="pad" role="group" aria-label="Direction pad">
+          <button type="button" class="m-arrow m-up" data-dir="3" aria-label="Move up"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15l7-7 7 7"/></svg></button>
+          <button type="button" class="m-arrow m-left" data-dir="1" aria-label="Move left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <span class="m-hub" aria-hidden="true"></span>
+          <button type="button" class="m-arrow m-right" data-dir="0" aria-label="Move right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          <button type="button" class="m-arrow m-down" data-dir="2" aria-label="Move down"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg></button>
+        </div>
+        <p class="m-swipe"><span>SWIPE TO MOVE</span></p>
+      </div>
+    </div>
+  </div>
+  <noscript><p class="g-noscript">FAIND Signal Maze needs JavaScript. <a href="../">Back to FAIND</a></p></noscript>
+</div>
+<script src="../stats.js?v=20261011a" defer></script>
+<script src="config.js?v=20261022a"></script>
+<script type="module" src="game.js?v=20261022a"></script>
+</body>
+</html>

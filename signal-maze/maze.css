@@ -1,0 +1,72 @@
+/* FAIND SIGNAL MAZE — interfaccia. Usa i pannelli, i pulsanti e il carattere pixel di News Rush (../faind-game/game.css);
+   qui stanno solo la barra superiore, la croce direzionale e i ritocchi. --px = pixel dello schermo per pixel nativo
+   della tela (240 × 324). */
+.m-app { --px: 1.5px; }
+.m-canvas { cursor: default; image-rendering: pixelated; image-rendering: crisp-edges; image-rendering: pixelated; }
+
+/* ---- barra superiore: due righe ---- */
+.m-hud { position: absolute; z-index: 30; left: 0; top: 0; right: 0; height: calc(var(--px) * 36); display: flex; flex-direction: column; gap: calc(var(--px) * 1);
+  padding: calc(var(--px) * 2) calc(var(--px) * 2) calc(var(--px) * 1); background: linear-gradient(#0d1730, #0a1226); border-bottom: 2px solid #2a4170; font-family: var(--pix); }
+.m-row { display: flex; gap: calc(var(--px) * 2); align-items: stretch; min-height: 0; }
+.m-row1 { flex: 17 1 0; } .m-row2 { flex: 15 1 0; }
+.m-brand { flex: 1.9 1 0; min-width: 0; display: flex; flex-direction: column; justify-content: center; text-decoration: none; color: var(--ivory); line-height: 1; cursor: pointer; touch-action: manipulation; }
+.m-brand__main { font-weight: 700; font-size: calc(var(--px) * 11); letter-spacing: .01em; text-shadow: 0 calc(var(--px) * 1) 0 #000; }
+.m-brand__main i, .m-brand__main b { font-style: normal; font-weight: 700; color: var(--cyan); }
+.m-brand__sub { font-size: calc(var(--px) * 5); color: var(--cyan); margin-top: calc(var(--px) * 1); white-space: nowrap; }
+.m-brand:focus-visible, .m-btn:focus-visible, .m-arrow:focus-visible { outline: 3px solid var(--cyanL); outline-offset: 2px; }
+.m-cell { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--px) * 1); background: #101a31; border: 1px solid #2a4170; border-radius: calc(var(--px) * 2); }
+.m-cell--score { flex: 1.35 1 0; } .m-cell--level { flex: 1.05 1 0; } .m-cell--time { flex: 1.1 1 0; }
+.m-lbl { font-size: calc(var(--px) * 5); color: #aebbd6; line-height: 1; white-space: nowrap; }
+.m-val { font-size: calc(var(--px) * 8); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.m-cell--time.is-low { border-color: var(--red); } .m-cell--time.is-low .m-val { color: var(--red); animation: mblink 1s steps(1) infinite; }
+@keyframes mblink { 50% { opacity: .35; } }
+.m-btn { flex: 0 0 calc(var(--px) * 17); min-width: 28px; display: flex; align-items: center; justify-content: center; background: #101a31; border: 1px solid #2a4170; border-radius: calc(var(--px) * 2); cursor: pointer; padding: 0; color: var(--ivory); touch-action: manipulation; }
+.m-btn[hidden] { display: none; }
+.m-btn .g-ico { width: calc(var(--px) * 9); height: calc(var(--px) * 9); min-width: 14px; min-height: 14px; }
+.m-btn[aria-pressed="true"] { color: #8fa2c6; }
+.m-pause { display: flex; gap: calc(var(--px) * 2); } .m-pause i { display: block; width: calc(var(--px) * 2.4); height: calc(var(--px) * 8); background: var(--ivory); min-width: 3px; }
+
+/* ---- seconda riga: vite e inventario dei tre colori ---- */
+.m-lives { flex: 0 0 auto; display: flex; gap: calc(var(--px) * 1.5); align-items: center; padding: 0 calc(var(--px) * 1); }
+.m-life { width: calc(var(--px) * 14); height: calc(var(--px) * 12); background: url("sprites/atlas.png?v=20261022a") calc(var(--px) * -69) calc(var(--px) * -17) / calc(var(--px) * 256) auto no-repeat; image-rendering: pixelated; }
+.m-life.is-lost { opacity: .18; filter: grayscale(1); }
+.m-chip { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: calc(var(--px) * 1); padding: 0 calc(var(--px) * 1.5); background: #0d1730; border: 1px solid #2a4170; border-radius: calc(var(--px) * 2); font-size: calc(var(--px) * 6); line-height: 1; position: relative; }
+.m-chip[data-c="0"] { --cc: #ff8a1f; } .m-chip[data-c="1"] { --cc: #ffd21f; } .m-chip[data-c="2"] { --cc: #29d6ff; }
+.m-chip b { font-weight: 700; color: var(--cc); }
+.m-chip .m-carry { color: #eef3ff; min-width: calc(var(--px) * 8); }
+.m-chip .m-del { margin-left: auto; }
+.m-ico { flex: none; display: block; image-rendering: pixelated; background-image: url("sprites/atlas.png?v=20261022a"); background-repeat: no-repeat; background-size: calc(var(--px) * 256) auto; position: relative; }
+.m-chip[data-c="0"] .m-key { background-position: 0 0; } .m-chip[data-c="1"] .m-key { background-position: calc(var(--px) * -14) 0; } .m-chip[data-c="2"] .m-key { background-position: calc(var(--px) * -28) 0; }
+.m-chip[data-c="0"] .m-doc { background-position: calc(var(--px) * -42) 0; } .m-chip[data-c="1"] .m-doc { background-position: calc(var(--px) * -54) 0; } .m-chip[data-c="2"] .m-doc { background-position: calc(var(--px) * -66) 0; }
+.m-key { width: calc(var(--px) * 13); height: calc(var(--px) * 14); opacity: .25; filter: grayscale(.8); }
+.m-doc { width: calc(var(--px) * 11); height: calc(var(--px) * 14); opacity: .3; }
+.m-chip.has-key .m-key { opacity: 1; filter: none; animation: mkey .8s steps(1) infinite; }
+.m-chip.is-open .m-key { opacity: .55; filter: none; animation: none; }
+.m-chip.is-open .m-key::after { content: "✓"; position: absolute; right: -2px; bottom: -3px; font-size: calc(var(--px) * 8); color: #7dffb0; text-shadow: 0 0 2px #000, 1px 1px 0 #000; font-family: var(--mono); font-weight: 900; }
+@keyframes mkey { 50% { filter: brightness(1.6); } }
+.m-chip.has-docs .m-doc { opacity: 1; }
+.m-chip.has-docs .m-carry { color: #fff; }
+.m-chip.is-done { border-color: #3fe07a; } .m-chip.is-done .m-del { color: #7dffb0; }
+.m-chip.is-active { border-color: var(--cc); box-shadow: 0 0 calc(var(--px) * 3) var(--cc); }
+.m-chip.is-locked { opacity: .45; }
+
+/* ---- pannelli: iniziano sotto la barra ---- */
+.m-app .g-panel { top: calc(var(--px) * 36 + 2px); }
+.m-app .g-toast { top: calc(var(--px) * 56); }
+.m-app .g-toast.g-toast--lv { top: 30%; }
+.g-big--small { font-size: calc(var(--u) * 11); }
+.g-title { margin-bottom: calc(var(--u) * 1); }
+
+/* ---- croce direzionale ---- */
+.m-controls { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * 1.5); padding: calc(var(--u) * 2) calc(var(--u) * 3); background: linear-gradient(#0b1226, #070c1a); border-top: 2px solid #2a4170; position: relative; overflow: hidden; }
+.m-controls::before, .m-controls::after { content: ""; position: absolute; top: 18%; bottom: 18%; width: 17%; border: 2px solid #12335a; border-radius: 4px; opacity: .55; pointer-events: none; background: repeating-linear-gradient(90deg, #12335a 0 3px, transparent 3px 8px); }
+.m-controls::before { left: 5%; } .m-controls::after { right: 5%; }
+.m-pad { position: relative; z-index: 1; width: var(--pad, 150px); height: var(--pad, 150px); display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 0; touch-action: none; flex: none; }
+.m-arrow { display: flex; align-items: center; justify-content: center; padding: 0; background: #0e2a52; border: 3px solid var(--cyan); border-radius: 10px; cursor: pointer; touch-action: none; color: var(--cyanL); box-shadow: 0 3px 0 #07101f; }
+.m-arrow svg { width: 62%; height: 62%; fill: none; stroke: currentColor; stroke-width: 3.4; stroke-linecap: square; stroke-linejoin: miter; pointer-events: none; }
+.m-up { grid-column: 2; grid-row: 1; } .m-left { grid-column: 1; grid-row: 2; } .m-right { grid-column: 3; grid-row: 2; } .m-down { grid-column: 2; grid-row: 3; }
+.m-hub { grid-column: 2; grid-row: 2; background: #0a1c3a; border: 3px solid #1b5f9a; }
+.m-arrow.is-down { background: #14507a; box-shadow: inset 0 0 12px rgba(111,211,255,.55); transform: translateY(2px); }
+.m-swipe { margin: 0; position: relative; z-index: 1; font-family: var(--pix); font-size: max(10px, calc(var(--u) * 3)); color: #d9e4f7; letter-spacing: .06em; display: flex; gap: .8em; align-items: center; }
+.m-swipe::before, .m-swipe::after { content: ""; width: 1.6em; height: 2px; background: var(--cyan); }
+@media (hover: hover) and (pointer: fine) { .m-swipe span::after { content: " · ARROWS / WASD"; } }

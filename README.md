@@ -221,6 +221,16 @@ Gioco arcade pixel art (livelli senza fine: ogni `LEVEL_SCROLLS` rotoli consegna
 - Il gioco ha schermo proprio, senza intestazione del sito; "FAIND" in alto a sinistra riporta sempre alla home (`../`) fermando partita, audio e animazioni, senza salvare partite abbandonate. Schermo intero nativo richiesto da START sui dispositivi touch, altrimenti vista a tutto viewport.
 - Classifica condivisa: `game-api/` (Cloudflare Worker + D1), con verifica dei punteggi rifacendo la partita sul server. Finché `faind-game/config.js` non ha l'indirizzo del Worker il gioco dichiara che la classifica online non è disponibile. Istruzioni in `game-api/README.md`.
 
+## Faind Game e FAIND Signal Maze (cartelle `games/` e `signal-maze/`)
+
+- `games/` è la pagina **Faind Game** (indirizzo `/games/`): elenco dei due giochi con screenshot (`assets/giochi/`), titolo e riga Record (primo posto, tre lettere e bandierina). Il bottone Gioca della home porta qui. Il record di News Rush arriva dal Worker della classifica; per Signal Maze mostra "classifica online in arrivo" (o il miglior punteggio del dispositivo) finché non esiste il Worker.
+- `signal-maze/` è il secondo gioco: labirinto visto dall'alto, 15 livelli, 5 minuti in tutto, tre vite. Stile, font, pulsanti e pannelli di News Rush (`../faind-game/game.css`, audio come classe derivata).
+  - `maze.js` mappe: reticolo di corridoi con tre uffici a L o a T più un riempimento, otto aperture sui bordi collegate a coppie (mondo toroidale), chiavi e documenti raggruppati attorno a ogni ufficio. Seme fisso per livello: le mappe sono sempre le stesse.
+  - `sim.js` regole (passo fisso 60 Hz, parametri in `CONFIG`): tempo unico, inventario libero nei livelli 1-3 e a colore attivo dal 4, consegna sulla scrivania, potere di 20 s, quattro robot con comportamenti diversi. Registra i comandi in `sim.inputs` per una futura verifica lato server.
+  - `art.js` grafica (tela 240 × 324 px nativi); gli sprite sono ritagli del foglio di riferimento (`sprites/sheet-source.png`) ridotti da `sprites/build-atlas.py` in `sprites/atlas.png`. `audio.js` musica e effetti. `game.js` regia e comandi (croce, scorrimenti, frecce/WASD).
+  - Prove: `node signal-maze/test-maze.mjs` verifica mappe, regole e un giocatore automatico su tutti i livelli.
+  - **Da fare più tardi (serve Cloudflare):** il Worker della classifica di Signal Maze. Finché `signal-maze/config.js` ha `FAIND_MAZE_API = ''` il gioco salva il record sul dispositivo e dichiara che la classifica online non è disponibile; nessuna classifica simulata. Il Worker andrà derivato da `game-api/worker.js` (stesso schema di sessione firmata, nomi di tre lettere e nazione), con database e percorso `/leaderboard` separati e verifica rifacendo la partita con `signal-maze/sim.js` e i comandi registrati.
+
 ## Aggiornamenti del 3–4 ottobre 2026
 
 - **Dominio:** il sito è su `https://faind.org` (dominio IONOS, record A verso GitHub Pages, custom domain nelle impostazioni Pages). Mail: `info@faind.org`.

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Faind Game – free retro arcade games by FAIND</title>
+  <meta name="description" content="Faind Game: the free arcade games by FAIND. News Rush, a newsroom catching game, and Signal Maze, a top-down maze with keys, documents and robots. No sign-up, play in the browser.">
+  <link rel="canonical" href="https://faind.org/games/">
+  <meta name="theme-color" content="#0b1226">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FAIND">
+  <meta property="og:title" content="Faind Game">
+  <meta property="og:description" content="Free retro arcade games by FAIND: News Rush and Signal Maze.">
+  <meta property="og:url" content="https://faind.org/games/">
+  <meta property="og:image" content="https://faind.org/assets/giochi/signal-maze.png">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="../assets/favicon-32.png?v=3" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Faind Game","url":"https://faind.org/games/","description":"Free retro arcade games by FAIND.","isPartOf":{"@type":"WebSite","name":"FAIND","url":"https://faind.org/"},"mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"url":"https://faind.org/faind-game/","name":"FAIND GAME – News Rush"},{"@type":"ListItem","position":2,"url":"https://faind.org/signal-maze/","name":"FAIND Signal Maze"}]}}</script>
+  <style>
+    @font-face { font-family: "Silkscreen"; font-weight: 400; font-display: swap; src: url("../faind-game/fonts/silkscreen-latin-400-normal.woff2") format("woff2"); }
+    @font-face { font-family: "Silkscreen"; font-weight: 700; font-display: swap; src: url("../faind-game/fonts/silkscreen-latin-700-normal.woff2") format("woff2"); }
+    :root { --navy: #15213A; --navyD: #0b1226; --navyM: #1d2d4f; --ivory: #F3E9D2; --cyan: #1E9BD7; --cyanL: #6fd3ff; --amber: #ffb43a; --pix: "Silkscreen", ui-monospace, Menlo, Consolas, monospace; --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { background: #04070f; }
+    body { margin: 0; min-height: 100vh; color: var(--ivory); font-family: var(--mono); background: radial-gradient(120% 70% at 50% 0%, #12203f 0%, #070c1a 70%) fixed; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 18px 16px 40px; }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .brand { font-family: var(--pix); font-weight: 700; font-size: 26px; color: var(--ivory); text-decoration: none; letter-spacing: .02em; text-shadow: 0 2px 0 #000; }
+    .brand i, .brand b { font-style: normal; color: var(--cyan); }
+    .top a.back { font-family: var(--pix); font-size: 12px; color: var(--cyanL); text-decoration: none; border: 2px solid #2a4170; border-radius: 6px; padding: 8px 12px; }
+    h1 { font-family: var(--pix); font-weight: 700; font-size: clamp(30px, 8vw, 46px); line-height: 1.15; margin: 26px 0 6px; text-shadow: 0 3px 0 #000, 0 0 18px rgba(30,155,215,.7); }
+    h1 span { color: var(--cyanL); }
+    .lead { margin: 0 0 24px; font-size: 16px; line-height: 1.5; color: #c7d3ea; }
+    .games { display: grid; gap: 16px; }
+    .game { display: grid; grid-template-columns: minmax(120px, 38%) 1fr; gap: 16px; padding: 14px; background: rgba(21,33,58,.85); border: 2px solid var(--cyan); border-radius: 12px; box-shadow: 0 6px 0 #07101f; }
+    .game img { width: 100%; height: auto; display: block; border: 2px solid #2a4170; border-radius: 6px; image-rendering: pixelated; background: #0b1226; aspect-ratio: 480 / 640; object-fit: cover; }
+    .game h2 { font-family: var(--pix); font-weight: 700; font-size: clamp(16px, 4.6vw, 22px); line-height: 1.25; margin: 0 0 10px; }
+    .game h2 a { color: var(--ivory); text-decoration: none; }
+    .game h2 a:hover { color: var(--cyanL); }
+    .rec { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin: 0 0 12px; font-family: var(--pix); font-size: 13px; color: #aebbd6; }
+    .rec b { color: var(--amber); font-weight: 700; letter-spacing: .12em; font-size: 16px; }
+    .flag { display: inline-block; width: 24px; height: 16px; border: 1px solid #5b6c8f; border-radius: 2px; background: #0a1124 center/cover no-repeat; }
+    .flag[hidden] { display: none; }
+    .rec small { flex-basis: 100%; font-family: var(--mono); font-size: 12px; color: #8fa2c6; }
+    .game p.how { margin: 0 0 14px; font-size: 14px; line-height: 1.5; color: #c7d3ea; }
+    .play { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 22px; font-family: var(--pix); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: .04em; color: var(--navyD); background: var(--cyan); border: 2px solid var(--cyanL); border-radius: 6px; text-decoration: none; box-shadow: 0 3px 0 #07101f; }
+    .play:hover { background: var(--cyanL); }
+    .play:focus-visible, .brand:focus-visible, .back:focus-visible, .game h2 a:focus-visible { outline: 3px solid var(--cyanL); outline-offset: 2px; }
+    footer { margin-top: 28px; font-size: 13px; color: #8fa2c6; line-height: 1.6; }
+    footer a { color: var(--cyanL); }
+    @media (max-width: 460px) { .game { grid-template-columns: 1fr 1.15fr; gap: 12px; padding: 12px; } .game p.how { font-size: 13px; } }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a class="brand" href="../" aria-label="FAIND">F<i>A</i><b>I</b>ND</a><a class="back" href="../" id="back">FAIND HOME</a></div>
+  <h1 id="title">Faind Game</h1>
+  <p class="lead" id="lead">Welcome to our games section</p>
+  <div class="games">
+    <article class="game" id="g1">
+      <a href="../faind-game/" aria-label="FAIND News Rush"><img src="../assets/giochi/news-rush.webp?v=1" width="480" height="640" alt="Screenshot of FAIND News Rush: Faindo catching news scrolls in the newsroom" loading="eager" decoding="async"></a>
+      <div>
+        <h2><a href="../faind-game/">FAIND – News Rush</a></h2>
+        <p class="rec" id="rec1"><span id="recL1">Record (1st place)</span> <b id="recI1">---</b><span class="flag" id="recF1" hidden></span></p>
+        <p class="how" id="how1">Catch the news scrolls and deliver them to the newsroom before they hit the floor. Five levels, three minutes, weekly and all-time leaderboard.</p>
+        <a class="play" href="../faind-game/" id="play1">PLAY</a>
+      </div>
+    </article>
+    <article class="game" id="g2">
+      <a href="../signal-maze/" aria-label="FAIND Signal Maze"><img src="../assets/giochi/signal-maze.webp?v=1" width="480" height="648" alt="Screenshot of FAIND Signal Maze: Faindo in a top-down office maze with robots, keys and documents" loading="eager" decoding="async"></a>
+      <div>
+        <h2><a href="../signal-maze/">FAIND – Signal Maze</a></h2>
+        <p class="rec" id="rec2"><span id="recL2">Record (1st place)</span> <b id="recI2">---</b><span class="flag" id="recF2" hidden></span><small id="recN2"></small></p>
+        <p class="how" id="how2">A top-down maze with an 80s look. Collect keys and documents, deliver them to the colour-coded offices and outrun the robots. 15 levels, 5 minutes in total.</p>
+        <a class="play" href="../signal-maze/" id="play2">PLAY</a>
+      </div>
+    </article>
+  </div>
+  <footer id="foot">Both games are free, run in the browser and need no sign-up. They are made by <a href="../">FAIND</a>, the site that collects the day's AI news.</footer>
+</div>
+<script src="../stats.js?v=20261011a" defer></script>
+<script src="../faind-game/config.js?v=20261022c"></script>
+<script type="module">
+/* Faind Game: elenco dei giochi. Il record di News Rush (primo posto della classifica assoluta) arriva dal server della classifica;
+   per Signal Maze non esiste ancora una classifica online, quindi si mostra solo il miglior punteggio di questo dispositivo. */
+const T = {
+  en: { title: 'Faind Game', lead: 'Welcome to our games section', rec: 'Record (1st place)', play: 'PLAY', home: 'FAIND HOME',
+    how1: 'Catch the news scrolls and deliver them to the newsroom before they hit the floor. Five levels, three minutes, weekly and all-time leaderboard.',
+    how2: 'A top-down maze with an 80s look. Collect keys and documents, deliver them to the colour-coded offices and outrun the robots. 15 levels, 5 minutes in total.',
+    soon: 'Online leaderboard coming soon', yours: 'Your best on this device', foot: 'Both games are free, run in the browser and need no sign-up. They are made by' , foot2: ', the site that collects the day\'s AI news.' },
+  it: { title: 'Faind Game', lead: 'Benvenuto nella sezione dei nostri game', rec: 'Record (primo posto)', play: 'GIOCA', home: 'HOME FAIND',
+    how1: 'Prendi i rotoli di notizie e consegnali in redazione prima che cadano a terra. Cinque livelli, tre minuti, classifica settimanale e assoluta.',
+    how2: 'Un labirinto visto dall\'alto con l\'estetica anni \'80. Raccogli chiavi e documenti, consegnali negli uffici dello stesso colore e sfuggi ai robot. 15 livelli, 5 minuti in tutto.',
+    soon: 'Classifica online in arrivo', yours: 'Il tuo record su questo dispositivo', foot: 'Entrambi i giochi sono gratuiti, si giocano nel browser e non richiedono registrazione. Li fa', foot2: ', il sito che raccoglie le notizie del giorno sull\'intelligenza artificiale.' },
+  fr: { title: 'Faind Game', lead: 'Bienvenue dans notre espace jeux', rec: 'Record (1re place)', play: 'JOUER', home: 'ACCUEIL FAIND',
+    how1: 'Attrape les rouleaux d\'actualités et livre-les à la rédaction avant qu\'ils ne tombent. Cinq niveaux, trois minutes, classement hebdomadaire et général.',
+    how2: 'Un labyrinthe vu de dessus, dans l\'esprit des années 80. Ramasse clés et documents, livre-les dans les bureaux de la même couleur et échappe aux robots. 15 niveaux, 5 minutes en tout.',
+    soon: 'Classement en ligne bientôt', yours: 'Ton record sur cet appareil', foot: 'Les deux jeux sont gratuits, se jouent dans le navigateur et sans inscription. Ils sont faits par', foot2: ', le site qui réunit l\'actualité du jour sur l\'intelligence artificielle.' },
+  de: { title: 'Faind Game', lead: 'Willkommen in unserem Spielebereich', rec: 'Rekord (Platz 1)', play: 'SPIELEN', home: 'FAIND START',
+    how1: 'Fang die Nachrichtenrollen und liefere sie in der Redaktion ab, bevor sie zu Boden fallen. Fünf Level, drei Minuten, Wochen- und Gesamtrangliste.',
+    how2: 'Ein Labyrinth von oben im Stil der 80er. Sammle Schlüssel und Dokumente, liefere sie in den gleichfarbigen Büros ab und entkomme den Robotern. 15 Level, insgesamt 5 Minuten.',
+    soon: 'Online-Rangliste in Kürze', yours: 'Dein Rekord auf diesem Gerät', foot: 'Beide Spiele sind kostenlos, laufen im Browser und brauchen keine Anmeldung. Sie stammen von', foot2: ', der Seite mit den KI-Nachrichten des Tages.' }
+};
+let lang = 'en';
+try { const s = localStorage.getItem('faind-lang'); lang = s && T[s] ? s : (T[(navigator.language || 'en').slice(0, 2).toLowerCase()] ? (navigator.language || 'en').slice(0, 2).toLowerCase() : 'en'); } catch (e) {}
+const t = T[lang], $ = (id) => document.getElementById(id);
+document.documentElement.lang = lang;
+$('lead').textContent = t.lead; $('recL1').textContent = t.rec; $('recL2').textContent = t.rec; $('how1').textContent = t.how1; $('how2').textContent = t.how2;
+$('play1').textContent = t.play; $('play2').textContent = t.play; $('back').textContent = t.home;
+$('foot').innerHTML = t.foot + ' <a href="../">FAIND</a>' + t.foot2;
+
+// News Rush: primo posto della classifica assoluta
+const API = String(window.FAIND_GAME_API || '').replace(/\/+$/, '');
+if (API) {
+  const ctl = new AbortController(); setTimeout(() => ctl.abort(), 6000);
+  fetch(API + '/leaderboard', { signal: ctl.signal, cache: 'no-store' }).then((r) => r.json()).then(async (j) => {
+    const f = j && j.all && j.all[0]; if (!f || !/^[A-Z]{3}$/.test(f.initials)) return;
+    $('recI1').textContent = f.initials;
+    try { const m = await import('../faind-game/flags.js?v=20261022c'); if (m.FLAGS[f.country]) { const fl = $('recF1'); fl.style.backgroundImage = 'url("' + m.flagSrc(f.country) + '")'; fl.title = f.country; fl.hidden = false; } } catch (e) {}
+  }).catch(() => {});
+}
+// Signal Maze: nessuna classifica online ancora; solo il record locale, se c'è
+let best = 0; try { best = parseInt(localStorage.getItem('faind-maze-best') || '0', 10) || 0; } catch (e) {}
+$('recN2').textContent = best ? t.yours + ': ' + best : t.soon;
+</script>
+</body>
+</html>

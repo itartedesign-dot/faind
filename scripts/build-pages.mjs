@@ -507,7 +507,7 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
 
   const today = new Date().toISOString().slice(0, 10);
   const urls = [`<url><loc>${SITE}</loc><lastmod>${today}</lastmod><changefreq>hourly</changefreq><priority>1.0</priority></url>`,
-    ...['redazione.html', 'cos-e-faind.html', 'about.html', 'a-propos.html', 'ueber-uns.html', 'incorpora.html', 'faind-game/'].map(p => `<url><loc>${SITE}${p}</loc><priority>0.6</priority></url>`)]
+    ...['redazione.html', 'cos-e-faind.html', 'about.html', 'a-propos.html', 'ueber-uns.html', 'incorpora.html', 'faind-game/', 'games/', 'signal-maze/'].map(p => `<url><loc>${SITE}${p}</loc><priority>0.6</priority></url>`)]
     .concat(everything.filter(indexable).map(n =>
       `<url><loc>${SITE}${n.page}</loc><lastmod>${toDate(n.date).toISOString().slice(0, 10)}</lastmod></url>`));
   await writeFile(path.join(root, 'sitemap.xml'),
