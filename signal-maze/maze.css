@@ -13,8 +13,7 @@
 .m-brand__main { font-weight: 700; font-size: calc(var(--px) * 11); letter-spacing: .01em; text-shadow: 0 calc(var(--px) * 1) 0 #000; }
 .m-brand__main i, .m-brand__main b { font-style: normal; font-weight: 700; color: var(--cyan); }
 .m-brand__sub { font-size: calc(var(--px) * 5); color: var(--cyan); margin-top: calc(var(--px) * 1); white-space: nowrap; }
-.m-brand:focus-visible, .m-btn:focus-visible, .m-arrow:focus-visible { outline: 3px solid var(--cyanL); outline-offset: 2px; }
-.m-cell { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--px) * 1); background: #101a31; border: 1px solid #2a4170; border-radius: calc(var(--px) * 2); }
+.m-brand:focus-visible, .m-btn:focus-visible, .m-cell { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--px) * 1); background: #101a31; border: 1px solid #2a4170; border-radius: calc(var(--px) * 2); }
 .m-cell--score { flex: 1.35 1 0; } .m-cell--level { flex: 1.05 1 0; } .m-cell--time { flex: 1.1 1 0; }
 .m-lbl { font-size: calc(var(--px) * 5); color: #aebbd6; line-height: 1; white-space: nowrap; }
 .m-val { font-size: calc(var(--px) * 8); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -59,15 +58,9 @@
 .g-title { margin-bottom: calc(var(--u) * 1); }
 
 /* ---- croce direzionale ---- */
-.m-controls { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * 1.5); padding: calc(var(--u) * 2) calc(var(--u) * 3); background: linear-gradient(#0b1226, #070c1a); border-top: 2px solid #2a4170; position: relative; overflow: hidden; }
+.m-controls { flex: 1 1 0; min-height: 0; display: flex; touch-action: none; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * 1.5); padding: calc(var(--u) * 2) calc(var(--u) * 3); background: linear-gradient(#0b1226, #070c1a); border-top: 2px solid #2a4170; position: relative; overflow: hidden; }
 .m-controls::before, .m-controls::after { content: ""; position: absolute; top: 18%; bottom: 18%; width: 17%; border: 2px solid #12335a; border-radius: 4px; opacity: .55; pointer-events: none; background: repeating-linear-gradient(90deg, #12335a 0 3px, transparent 3px 8px); }
 .m-controls::before { left: 5%; } .m-controls::after { right: 5%; }
-.m-pad { position: relative; z-index: 1; width: var(--pad, 150px); height: var(--pad, 150px); display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 0; touch-action: none; flex: none; }
-.m-arrow { display: flex; align-items: center; justify-content: center; padding: 0; background: #0e2a52; border: 3px solid var(--cyan); border-radius: 10px; cursor: pointer; touch-action: none; color: var(--cyanL); box-shadow: 0 3px 0 #07101f; }
-.m-arrow svg { width: 62%; height: 62%; fill: none; stroke: currentColor; stroke-width: 3.4; stroke-linecap: square; stroke-linejoin: miter; pointer-events: none; }
-.m-up { grid-column: 2; grid-row: 1; } .m-left { grid-column: 1; grid-row: 2; } .m-right { grid-column: 3; grid-row: 2; } .m-down { grid-column: 2; grid-row: 3; }
-.m-hub { grid-column: 2; grid-row: 2; background: #0a1c3a; border: 3px solid #1b5f9a; }
-.m-arrow.is-down { background: #14507a; box-shadow: inset 0 0 12px rgba(111,211,255,.55); transform: translateY(2px); }
-.m-swipe { margin: 0; position: relative; z-index: 1; font-family: var(--pix); font-size: max(10px, calc(var(--u) * 3)); color: #d9e4f7; letter-spacing: .06em; display: flex; gap: .8em; align-items: center; }
+.m-swipe { margin: 0; position: relative; z-index: 1; font-family: var(--pix); font-size: max(12px, calc(var(--u) * 4)); color: #d9e4f7; letter-spacing: .06em; display: flex; gap: .8em; align-items: center; }
 .m-swipe::before, .m-swipe::after { content: ""; width: 1.6em; height: 2px; background: var(--cyan); }
 @media (hover: hover) and (pointer: fine) { .m-swipe span::after { content: " · ARROWS / WASD"; } }
