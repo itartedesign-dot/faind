@@ -90,7 +90,7 @@
   <footer id="foot">All the games are free, run in the browser and need no sign-up. They are made by <a href="../">FAIND</a>, the site that collects the day's AI news.</footer>
 </div>
 <script src="../stats.js?v=20261011a" defer></script>
-<script src="../faind-game/config.js?v=20261022c"></script>
+<script src="../faind-game/config.js?v=20261023a"></script>
 <script type="module">
 /* Faind Games: elenco dei giochi. Il record di News Rush (primo posto della classifica assoluta) arriva dal server della classifica;
    per Signal Maze e Lost Signal non esiste ancora una classifica online, quindi si mostra solo il miglior punteggio di questo dispositivo. */
@@ -132,7 +132,7 @@ if (API) {
   fetch(API + '/leaderboard', { signal: ctl.signal, cache: 'no-store' }).then((r) => r.json()).then(async (j) => {
     const f = j && j.all && j.all[0]; if (!f || !/^[A-Z]{3}$/.test(f.initials)) return;
     $('recI1').textContent = f.initials;
-    try { const m = await import('../faind-game/flags.js?v=20261022c'); if (m.FLAGS[f.country]) { const fl = $('recF1'); fl.style.backgroundImage = 'url("' + m.flagSrc(f.country) + '")'; fl.title = f.country; fl.hidden = false; } } catch (e) {}
+    try { const m = await import('../faind-game/flags.js?v=20261023a'); if (m.FLAGS[f.country]) { const fl = $('recF1'); fl.style.backgroundImage = 'url("' + m.flagSrc(f.country) + '")'; fl.title = f.country; fl.hidden = false; } } catch (e) {}
   }).catch(() => {});
 }
 // Signal Maze: nessuna classifica online ancora; solo il record locale, se c'è

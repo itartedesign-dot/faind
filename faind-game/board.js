@@ -5,7 +5,7 @@
    lo ricalcola il server), tre lettere e nazione se si entra in una Top 10, classifica settimanale e assoluta. Testi nelle quattro
    lingue del sito (i18n.js). Se il server non risponde si gioca lo stesso: il record resta sul dispositivo, distinto per gioco.
    ===================================================================== */
-import { pickLang, makeT } from './i18n.js?v=20261022c';
+import { pickLang, makeT } from './i18n.js?v=20261023a';
 
 const $ = (id) => document.getElementById(id);
 
@@ -58,6 +58,10 @@ export function createBoard(cfg) {
     setStatus(t('verifying'));
     submit(inputs, session.token, mine);
   }
+  /** Partita con continue: niente invio e niente record. Chiude ogni invio in corso e pulisce i riquadri del risultato. */
+  function unranked() {
+    run++; claim = null; session = null; pOver.classList.remove('is-record'); $('rRank').hidden = true; $('nameForm').hidden = true; $('shareNote').hidden = true; setStatus('');
+  }
   async function submit(inputs, token, mine) {
     let r = null, err = null;
     for (let attempt = 0; attempt < 2 && !r; attempt++) {
@@ -79,7 +83,7 @@ export function createBoard(cfg) {
   }
 
   /* ---------- bandiere e nazioni ---------- */
-  const loadFlags = () => flagsMod ? Promise.resolve(flagsMod) : import('./flags.js?v=20261022c').then((m) => (flagsMod = m)).catch(() => null);
+  const loadFlags = () => flagsMod ? Promise.resolve(flagsMod) : import('./flags.js?v=20261023a').then((m) => (flagsMod = m)).catch(() => null);
   function countryName(code) { try { return new Intl.DisplayNames([lang], { type: 'region' }).of(code) || code; } catch (e) { return code; } }
   function flagEl(code) {
     const s = document.createElement('span'); s.className = 'g-flag';
@@ -173,5 +177,5 @@ export function createBoard(cfg) {
   on($('btnSkip'), 'click', () => { pOver.classList.remove('is-record'); $('nameForm').hidden = true; $('rRank').hidden = true; claim = null; });
 
   translate();
-  return { enabled: !!API, t, translate, startSession, commit, finish, openLb, closeLb, escape, localBest, get nameOpen() { return !$('nameForm').hidden; } };
+  return { enabled: !!API, t, translate, startSession, commit, finish, unranked, openLb, closeLb, escape, localBest, get nameOpen() { return !$('nameForm').hidden; } };
 }

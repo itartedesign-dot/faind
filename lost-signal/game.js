@@ -6,10 +6,10 @@
    animazione. Memorizzazione e flash vivono nel motore e scorrono solo quando il motore viene fatto avanzare: pausa,
    schede in background e schermate non li toccano e non regalano nuove accensioni.
    ===================================================================== */
-import { Sim, CFG, DIRV } from './sim.js?v=20261022c';
-import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261022c';
-import { Audio8 } from './audio.js?v=20261022c';
-import { createBoard } from '../faind-game/board.js?v=20261022h';
+import { Sim, CFG, DIRV } from './sim.js?v=20261023a';
+import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261023a';
+import { Audio8 } from './audio.js?v=20261023a';
+import { createBoard } from '../faind-game/board.js?v=20261023a';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_LOST_API || '').replace(/\/+$/, '');
@@ -25,14 +25,15 @@ const el = {
   app: $('app'), fit: $('fit'), frame: $('frame'), stage: $('stage'), cv: $('cv'), brand: $('brand'),
   score: $('hScore'), level: $('hLevel'), lives: $('hLives'), news: $('hNews'), timer: $('hTimer'), timerL: $('hTimerL'), timerV: $('hTimerV'),
   pauseBtn: $('btnPause'), live: $('liveMsg'), toast: $('toast'), hint: $('hint'), flashN: $('flashN'), btnFlash: $('btnFlash'), btnJump: $('btnJump'), memBar: $('memBar'), barMsg: $('barMsg'),
-  pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pLb: $('pLb'), pauseAuto: $('pauseAuto')
+  pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pCont: $('pCont'), pLb: $('pLb'), pauseAuto: $('pauseAuto')
 };
 
 const board = createBoard({ api: LEVELS === RANKED_LEVELS ? API : '', game: 'lost', sessionTimeout: 8000, bestKey: BEST_KEY, signal: ac.signal, isOver: () => state === 'over' });
 const scene = new Scene(el.cv);
 const audio = new Audio8();
-let state = 'start';            // start | running | paused | over
+let state = 'start';            // start | running | paused | continue | over
 let sim = new Sim(LEVELS);      // anteprima dietro alla schermata iniziale
+let continued = false, contMs = 0, contShown = -1;   // continue: dopo l'uso la partita non è più valida per record e classifica
 let acc = 0, last = 0, raf = 0, dead = false, tutorialDone = false, hintStep = -1, hintT = 0, lastSec = -1;
 
 $('btnStart').disabled = true;
@@ -41,7 +42,7 @@ try { if (document.fonts && document.fonts.load) document.fonts.load('8px Silksc
 
 function setState(s) {
   state = s; el.app.setAttribute('data-state', s);
-  el.pStart.hidden = s !== 'start'; el.pPause.hidden = s !== 'paused'; el.pOver.hidden = s !== 'over';
+  el.pStart.hidden = s !== 'start'; el.pPause.hidden = s !== 'paused'; el.pOver.hidden = s !== 'over'; el.pCont.hidden = s !== 'continue';
   el.pauseBtn.hidden = s !== 'running';
   if (document.activeElement && document.activeElement !== document.body) { try { document.activeElement.blur(); } catch (e) {} }
 }
@@ -84,6 +85,7 @@ function toggleSound() {
 /* ------------------------------ Partita ------------------------------ */
 function startGame() {
   audio.unlock(); audio.resume(); askFullscreen(); hideHint();
+  continued = false;
   board.startSession();                       // il gettone può arrivare anche a partita iniziata: qui non c'è un seme da aspettare
   sim = new Sim(LEVELS); sim.events.length = 0; scene.vis = 1; scene.L = null; last = performance.now(); acc = 0; lastSec = -1;
   el.live.textContent = ''; updateHud(true); setState('running'); audio.startMusic(); levelToast();
@@ -92,16 +94,37 @@ function levelToast() {
   toast('LEVEL ' + sim.level, 'REMEMBER THE PATH', true);
 }
 function localBest() { try { return parseInt(localStorage.getItem(BEST_KEY) || '0', 10) || 0; } catch (e) { return 0; } }
+/** Ultima vita persa: per CONT_SECONDS secondi si può continuare dallo stesso livello; scaduto il tempo si chiude con il game over vero. */
+const CONT_SECONDS = 10;
+function offerContinue() {
+  setState('continue'); audio.stopMusic(); audio.sfx('end'); hideHint(); gesture = null;
+  contMs = CONT_SECONDS * 1000; contShown = -1;
+  $('contInfo').textContent = 'Level ' + sim.level + ' restarts with ' + CFG.LIVES + ' lives. Flashes and newspapers are kept.';
+  tickContinue(0);
+  try { $('btnContinue').focus({ preventScroll: true }); } catch (e) {}
+}
+function tickContinue(dt) {
+  contMs -= dt;
+  const n = Math.max(0, Math.ceil(contMs / 1000));
+  if (n !== contShown) { contShown = n; $('contNum').textContent = String(n); if (n > 0 && n <= 3 && dt) audio.sfx('tick'); }
+  if (contMs <= 0) finish(false);
+}
+function takeContinue() {
+  if (state !== 'continue' || !sim.revive()) return;
+  continued = true; audio.resume(); gesture = null;
+  setState('running'); audio.startMusic(); acc = 0; last = performance.now();
+  handleEvents(); toast('CONTINUE', 'NO RECORD', true); updateHud(true);
+}
 function finish(won) {
-  setState('over'); audio.stopMusic(); audio.sfx(won ? 'win' : 'end'); hideHint();
+  setState('over'); audio.stopMusic(); if (won) audio.sfx('win'); hideHint();
   const score = sim.score;
   $('overTitle').textContent = won ? 'YOU WIN' : 'GAME OVER';
-  let best = localBest(); const isBest = score > best;
+  let best = localBest(); const isBest = !continued && score > best;
   if (isBest) { best = score; try { localStorage.setItem(BEST_KEY, String(best)); } catch (e) {} }
   $('rScore').textContent = String(score); $('rLevel').textContent = sim.level + '/' + LEVELS; $('rNews').textContent = String(sim.stats.news);
   $('rBestV').textContent = String(best); $('rBest').hidden = !isBest;
-  $('rNote').textContent = (won ? 'You reached the newsroom on all ' + LEVELS + ' levels. ' : 'Level reached: ' + sim.level + '. ') + (isBest ? 'New record saved on this device.' : '');
-  board.finish(sim.log);
+  $('rNote').textContent = (won ? 'You reached the newsroom on all ' + LEVELS + ' levels. ' : 'Level reached: ' + sim.level + '. ') + (continued ? 'Continued run: no record, not ranked.' : isBest ? 'New record saved on this device.' : '');
+  if (continued) board.unranked(); else board.finish(sim.log);
   setTimeout(() => { if (state === 'over' && !board.nameOpen) { try { $('btnAgain').focus({ preventScroll: true }); } catch (e) {} } }, 400);
 }
 function goHome(e) {
@@ -176,6 +199,7 @@ on(document, 'keydown', (e) => {
     return;
   }
   if (k === 'p' || k === 'P') { if (state === 'running' || state === 'paused') { togglePause(); e.preventDefault(); } return; }
+  if ((k === 'Enter' || k === ' ') && state === 'continue' && document.activeElement !== $('btnEnd')) { takeContinue(); e.preventDefault(); return; }
   const onBtn = document.activeElement && document.activeElement !== document.body && /^(BUTTON|A)$/.test(document.activeElement.tagName);
   if (code in CODES) { if (state === 'running') { e.preventDefault(); if (!e.repeat) { if (e.shiftKey) doTurn(CODES[code]); else doStep(CODES[code]); } } return; }
   if (state === 'running' && !onBtn) {
@@ -269,7 +293,7 @@ function handleEvents() {
       case 'memorizeEnd': audio.sfx('ready'); el.live.textContent = 'The path is hidden. Go.'; if (sim.level === 1 && !tutorialDone) showHint(0); break;
       case 'levelDone': { audio.sfx('clear'); const pts = CFG.SCORE.ARRIVE + CFG.SCORE.NEWS * e.news; toast('LEVEL ' + e.level + ' CLEAR', '+' + pts + (e.news ? '  ·  ' + e.news + '/3 NEWSPAPERS' : ''), true); break; }
       case 'level': if (e.level > 1 && state === 'running') { hideHint(); levelToast(); } else if (e.level > 1) hideHint(); break;
-      case 'over': finish(false); break;
+      case 'over': offerContinue(); break;
       case 'won': finish(true); break;
     }
   }
@@ -287,6 +311,7 @@ function frame(now) {
     if (sim.phase === 'memorize') { const sec = Math.ceil(sim.memMs / 1000); if (sec !== lastSec) { lastSec = sec; if (sec <= 3 && sec > 0) audio.sfx('tick'); } } else lastSec = -1;
     if (state === 'running') { tickHint(dt / 1000); updateHud(); }
   }
+  if (state === 'continue') tickContinue(dt);
   if (state !== 'paused') scene.update(dt / 1000);
   scene.draw(sim, state === 'paused');
 }
@@ -311,6 +336,8 @@ on(el.pauseBtn, 'click', () => pause(false));
 on($('btnResume'), 'click', resume);
 on($('btnRestart'), 'click', () => { audio.resume(); setState('start'); startGame(); });
 on($('btnHome'), 'click', () => goHome());
+on($('btnContinue'), 'click', takeContinue);
+on($('btnEnd'), 'click', () => { if (state === 'continue') finish(false); });
 on($('btnAgain'), 'click', () => startGame());
 on($('btnShare'), 'click', shareScore);
 on($('btnNews'), 'click', () => { shutdown(); }); on($('btnMore'), 'click', () => { shutdown(); }); on($('btnGames'), 'click', () => { shutdown(); });

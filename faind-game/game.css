@@ -205,3 +205,9 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 .g-rules .g-howto { margin: 0; text-align: center; font-weight: 700; font-size: max(12px, calc(var(--u) * 5)); letter-spacing: 0; }
 .g-rules .g-howto::before { content: ""; display: inline-block; width: .55em; height: .55em; margin-right: .6em; border-radius: 50%; background: var(--cyan); vertical-align: .05em; }
 .g-rules .g-rule { font-size: max(13px, calc(var(--u) * 5.2)); letter-spacing: .02em; }
+
+/* continue dopo il game over: conto alla rovescia da 10 */
+.g-panel--cont { background: rgba(5,9,20,.82); }
+.g-panel--cont .g-btn { min-width: calc(var(--u) * 70); }
+.g-panel--cont .g-btn--main { min-width: calc(var(--u) * 80); font-size: max(15px, calc(var(--u) * 5.6)); min-height: max(52px, calc(var(--u) * 16)); }
+.g-cont__num { color: var(--amber); }

@@ -94,6 +94,7 @@ const GAMES = {
   maze: {
     sessions: 'game_sessions', scores: 'game_scores', game: 'maze',
     verify(seed, body, elapsed) {
+      if (body.continued) return { error: 'bad_game' };   // il browser non invia partite con continue; se lo dichiara, non è in classifica
       const inputs = cleanMazeInputs(body.inputs);
       if (!inputs) return { error: 'bad_inputs' };
       const r = replayMaze(seed, inputs);
@@ -105,6 +106,7 @@ const GAMES = {
   lost: {
     sessions: 'game_sessions', scores: 'game_scores', game: 'lost',
     verify(seed, body, elapsed) {
+      if (body.continued) return { error: 'bad_game' };
       const inputs = cleanLostInputs(body.inputs);
       if (!inputs) return { error: 'bad_inputs' };
       const r = replayLost(inputs);

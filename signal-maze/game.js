@@ -6,11 +6,11 @@
    ciclo di animazione. Il tempo di 9 minuti vive nel motore e scorre solo quando il motore viene fatto avanzare:
    pausa, cambio livello, scheda in background e conto alla rovescia non lo toccano.
    ===================================================================== */
-import { Sim, CONFIG as C } from './sim.js?v=20261022h';
-import { Scene, CW, CH } from './art.js?v=20261022h';
-import { Audio8 } from './audio.js?v=20261022h';
-import { LEVELS } from './maze.js?v=20261022h';
-import { createBoard } from '../faind-game/board.js?v=20261022h';
+import { Sim, CONFIG as C } from './sim.js?v=20261023a';
+import { Scene, CW, CH } from './art.js?v=20261023a';
+import { Audio8 } from './audio.js?v=20261023a';
+import { LEVELS } from './maze.js?v=20261023a';
+import { createBoard } from '../faind-game/board.js?v=20261023a';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_MAZE_API || '').replace(/\/+$/, '');
@@ -25,17 +25,18 @@ const el = {
   app: $('app'), fit: $('fit'), frame: $('frame'), stage: $('stage'), cv: $('cv'), brand: $('brand'), controls: $('controls'),
   score: $('hScore'), level: $('hLevel'), time: $('hTime'), timeCell: $('hTimeCell'), lives: $('hLives'),
   pauseBtn: $('btnPause'), live: $('liveMsg'), toast: $('toast'), count: $('count'),
-  pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pLb: $('pLb'), pauseAuto: $('pauseAuto'), controls: $('controls')
+  pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pCont: $('pCont'), pLb: $('pLb'), pauseAuto: $('pauseAuto'), controls: $('controls')
 };
 const chips = [...document.querySelectorAll('.m-chip')];
 const board = createBoard({ api: API, game: 'maze', bestKey: BEST_KEY, signal: ac.signal, isOver: () => state === 'over' });
 
 const scene = new Scene(el.cv);
 const audio = new Audio8();
-let state = 'start';            // start | countdown | playing | between | paused | over
+let state = 'start';            // start | countdown | playing | between | paused | continue | over
 let pausedFrom = null;
 let sim = new Sim(1);           // anteprima dietro alla schermata iniziale
 scene.setLevel(sim.L);
+let continued = false, contMs = 0, contShown = -1;   // continue: dopo l'uso la partita non è più valida per record e classifica
 let cdMs = 0, cdShown = -1, betweenMs = 0, betweenFor = 0;
 let acc = 0, last = 0, raf = 0, dead = false, lastTick = -1;
 
@@ -46,7 +47,7 @@ try { if (document.fonts && document.fonts.load) document.fonts.load('8px Silksc
 
 function setState(s) {
   state = s; el.app.setAttribute('data-state', s);
-  el.pStart.hidden = s !== 'start'; el.pPause.hidden = s !== 'paused'; el.pOver.hidden = s !== 'over';
+  el.pStart.hidden = s !== 'start'; el.pPause.hidden = s !== 'paused'; el.pOver.hidden = s !== 'over'; el.pCont.hidden = s !== 'continue';
   el.pauseBtn.hidden = !(s === 'playing' || s === 'countdown' || s === 'between');
   if (s !== 'countdown') el.count.hidden = true;
   if (document.activeElement && document.activeElement !== document.body) { try { document.activeElement.blur(); } catch (e) {} }
@@ -91,6 +92,7 @@ function toggleSound() {
 function randomSeed() { try { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] | 0; } catch (e) { return (Math.random() * 4294967296) | 0; } }
 function startGame() {
   audio.unlock(); audio.resume(); askFullscreen(); releaseInputs();
+  continued = false;
   board.startSession();           // il server dà il seme e il gettone; la partita vera parte a fine conto alla rovescia
   sim = new Sim(1); scene.setLevel(sim.L); scene.fx = []; acc = 0; lastTick = -1;
   cdMs = 0; cdShown = -1; el.live.textContent = '';
@@ -108,17 +110,39 @@ function showLevelToast(n) {
 }
 
 function localBest() { try { return parseInt(localStorage.getItem(BEST_KEY) || '0', 10) || 0; } catch (e) { return 0; } }
+/** Sconfitta: per CONT_SECONDS secondi si può continuare dallo stesso punto; scaduto il tempo si chiude con il game over vero. */
+const CONT_SECONDS = 10;
+function offerContinue() {
+  setState('continue'); audio.stopMusic(); audio.sfx('end'); releaseInputs();
+  contMs = CONT_SECONDS * 1000; contShown = -1;
+  $('contTitle').textContent = sim.reason === 'lives' ? 'GAME OVER' : 'TIME UP';
+  $('contInfo').textContent = 'Level ' + sim.level + ' restarts with ' + C.LIVES + ' lives' + (sim.timeLeft < C.CONTINUE_TIME ? ' and ' + C.CONTINUE_TIME + ' seconds.' : '.');
+  tickContinue(0);
+  try { $('btnContinue').focus({ preventScroll: true }); } catch (e) {}
+}
+function tickContinue(dt) {
+  contMs -= dt;
+  const n = Math.max(0, Math.ceil(contMs / 1000));
+  if (n !== contShown) { contShown = n; $('contNum').textContent = String(n); if (n > 0 && n <= 3 && dt) audio.sfx('tick'); }
+  if (contMs <= 0) finish();
+}
+function takeContinue() {
+  if (state !== 'continue' || !sim.revive()) return;
+  continued = true; audio.resume(); releaseInputs(); lastTick = -1;
+  setState('playing'); audio.startMusic(); acc = 0; last = performance.now();
+  handleEvents(); toast('CONTINUE', 'NO RECORD', true); updateHud(true);
+}
 function finish() {
   const won = sim.won;
-  setState('over'); audio.stopMusic(); audio.sfx(won ? 'win' : 'end'); releaseInputs();
+  setState('over'); audio.stopMusic(); if (won) audio.sfx('win'); releaseInputs();
   const score = sim.score;
   $('overTitle').textContent = won ? 'YOU WIN' : sim.reason === 'lives' ? 'GAME OVER' : 'TIME UP';
-  let best = localBest(); const isBest = score > best;
+  let best = localBest(); const isBest = !continued && score > best;
   if (isBest) { best = score; try { localStorage.setItem(BEST_KEY, String(best)); } catch (e) {} }
   $('rScore').textContent = String(score); $('rLevel').textContent = sim.level + '/' + LEVELS;
   $('rDel').textContent = String(sim.stats.delivered); $('rBestV').textContent = String(best); $('rBest').hidden = !isBest;
-  $('rNote').textContent = (won ? 'All 15 levels done, +' + sim.bonus + ' time bonus. ' : '') + (isBest ? 'New record saved on this device.' : '');
-  board.finish(sim.inputs);
+  $('rNote').textContent = (won ? 'All 15 levels done, +' + sim.bonus + ' time bonus. ' : '') + (continued ? 'Continued run: no record, not ranked.' : isBest ? 'New record saved on this device.' : '');
+  if (continued) board.unranked(); else board.finish(sim.inputs);
   setTimeout(() => { if (state === 'over' && !board.nameOpen) { try { $('btnAgain').focus({ preventScroll: true }); } catch (e) {} } }, 400);
 }
 function goHome(e) {
@@ -186,6 +210,7 @@ on(document, 'keydown', (e) => {
   }
   if (k === 'p' || k === 'P') { if (state === 'playing' || state === 'countdown' || state === 'paused' || state === 'between') { togglePause(); e.preventDefault(); } return; }
   if (k in KEYS) { e.preventDefault(); if (state === 'playing') { const d = KEYS[k]; keyHeld = keyHeld.filter((x) => x !== d); keyHeld.push(d); sendDirs(keyHeld.slice(-2)); } return; }
+  if ((k === 'Enter' || k === ' ') && state === 'continue' && document.activeElement !== $('btnEnd')) { takeContinue(); e.preventDefault(); return; }
   if ((k === 'Enter' || k === ' ') && state === 'start' && el.pLb.hidden && !$('btnStart').disabled && document.activeElement === document.body) { startGame(); e.preventDefault(); }
 });
 on(document, 'keyup', (e) => { if (e.key in KEYS) { keyHeld = keyHeld.filter((x) => x !== KEYS[e.key]); if (sim && sim.phase === 'play') sim.input(dirsOf(keyHeld.slice(-2))); } });
@@ -258,7 +283,7 @@ function stepSim() {
   sim.step(); handleEvents();
   if (sim.power > 0 && sim.power <= 3 && Math.ceil(sim.power) !== lastTick) { lastTick = Math.ceil(sim.power); audio.sfx('tick'); }
   if (sim.phase === 'between') { betweenFor = sim.level + 1 === C.FREE_LEVELS + 1 ? 3200 : 1900; betweenMs = 0; setState('between'); releaseInputs(); toast('LEVEL ' + sim.level + ' CLEAR', '+' + C.SCORE.LEVEL, true); }
-  else if (sim.phase === 'over') finish();
+  else if (sim.phase === 'over') { if (sim.won) finish(); else offerContinue(); }
 }
 
 function frame(now) {
@@ -273,6 +298,8 @@ function frame(now) {
   } else if (state === 'between') {
     betweenMs += dt;
     if (betweenMs >= betweenFor) { sim.advance(); scene.setLevel(sim.L); lastTick = -1; setState('playing'); acc = 0; handleEvents(); showLevelToast(sim.level); updateHud(true); }
+  } else if (state === 'continue') {
+    tickContinue(dt);
   } else if (state === 'countdown') {
     cdMs += dt;
     const idx = Math.floor(cdMs / COUNT_MS);
@@ -307,6 +334,8 @@ on(el.pauseBtn, 'click', () => pause(false));
 on($('btnResume'), 'click', resume);
 on($('btnRestart'), 'click', () => { audio.resume(); setState('start'); startGame(); });
 on($('btnHome'), 'click', () => goHome());
+on($('btnContinue'), 'click', takeContinue);
+on($('btnEnd'), 'click', () => { if (state === 'continue') finish(); });
 on($('btnAgain'), 'click', () => startGame());
 on($('btnShare'), 'click', shareScore);
 on($('btnNews'), 'click', () => { shutdown(); }); on($('btnMore'), 'click', () => { shutdown(); }); on($('btnGames'), 'click', () => { shutdown(); });

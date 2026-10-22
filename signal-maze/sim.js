@@ -14,6 +14,7 @@ export const CONFIG = {
   FAINDO_SPEED: 3.9,          // tile al secondo
   SPAWN_ANIM: 0.8, POWER_TIME: 10, POWER_WARN: 3, INVULN: 2.0,
   HIT_DIST: 0.62, PICK_DIST: 0.5,
+  CONTINUE_TIME: 60,          // continue: se restano meno di 60 s se ne concedono 60, altrimenti il tempo residuo resta
   FREE_LEVELS: 3,             // livelli 1-3: si raccoglie tutto; dal 4 un colore alla volta
   DOC_PER_COLOR: 5,
   SCORE: { DOC: 100, OFFICE: 500, ROBOT: 200, LEVEL: 1000, SECOND: 10 }
@@ -65,6 +66,7 @@ export class Sim {
     this.level = 1; this.timeLeft = C.TOTAL_TIME; this.lives = C.LIVES; this.score = 0;
     this.phase = 'play';        // play | between | over
     this.won = false; this.reason = ''; this.bonus = 0;
+    this.continues = 0;         // quante volte si è usato il continue: una partita con continue non può andare in classifica
     this.events = []; this.inputs = []; this.tick = 0; this.stats = { delivered: 0, offices: 0, robots: 0 };
     this.held = [];
     this.loadLevel(1);
@@ -92,6 +94,18 @@ export class Sim {
 
   /** Passa al livello successivo (chiamato dall'interfaccia dopo la pausa tra i livelli). */
   advance() { if (this.phase !== 'between') return; this.loadLevel(this.level + 1); this.phase = 'play'; this.events.push({ type: 'level', a: this.level }); }
+
+  /** Continue dopo una sconfitta (vite o tempo): stesso livello, stato del livello intatto, tre vite nuove, Faindo al centro con la protezione
+      di un contatto. Il tempo residuo resta, ma non scende sotto CONTINUE_TIME. Dopo un continue la partita non vale più per la classifica. */
+  revive() {
+    if (this.phase !== 'over' || this.won) return false;
+    this.continues++; this.phase = 'play'; this.reason = ''; this.lives = C.LIVES;
+    this.timeLeft = Math.max(this.timeLeft, C.CONTINUE_TIME);
+    Object.assign(this.f, { x: this.centerTile[0] + 0.5, y: this.centerTile[1] + 0.5, dx: 0, dy: 0, inv: C.INVULN, spawn: C.SPAWN_ANIM });
+    this.deskLatch = -1; this.held = [];
+    this.events.push({ type: 'continue' });
+    return true;
+  }
 
   /* ---------------- comandi ---------------- */
   /** dirs: elenco di direzioni tenute ([dx, dy], al massimo due: una diagonale vale come due direzioni). Faindo si muove solo mentre ce n'è almeno una

@@ -5,7 +5,7 @@
    risorse rilasciate all'uscita), con effetti propri e un tema chiptune originale: 124 bpm, la minore, onde quadre
    e triangolari, basso a ottavi, arpeggio con eco e batteria appena accennata. Sedici battute (circa 31 s) in loop.
    ===================================================================== */
-import { Audio8 as Base } from '../faind-game/audio.js?v=20261022c';
+import { Audio8 as Base } from '../faind-game/audio.js?v=20261023a';
 
 const BPM = 124;
 const CHORDS = [[45, 0], [41, 0], [48, 0], [43, 0], [45, 0], [41, 0], [48, 0], [43, 0], [38, 0], [45, 0], [40, 1], [45, 0], [38, 0], [41, 0], [40, 1], [40, 1]];   // [radice, 1 = accordo maggiore]
