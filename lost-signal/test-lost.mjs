@@ -2,7 +2,7 @@
 import { getLevel, COLS, ROWS } from './levels.js';
 import { LEVEL_DATA } from './levels-data.js';
 import { analyze, params } from './levelgen.js';
-import { Sim, CFG, DIRV } from './sim.js';
+import { Sim, CFG, DIRV, anchorCount } from './sim.js';
 
 let fails = 0, checks = 0;
 const ok = (c, msg) => { checks++; if (!c) { fails++; console.error('FALLITO:', msg); } };
@@ -49,6 +49,8 @@ function plan(L, targets) {
 }
 function run(sim, ms) { for (let t = 0; t < ms; t += 16) sim.update(16); }
 function settle(sim) { for (let i = 0; i < 400 && !(sim.phase === 'play' || sim.phase === 'arrive' || sim.phase === 'over' || sim.phase === 'won'); i++) sim.update(16); }
+// verso il vuoto a percorso spento: il primo comando avvisa, il secondo (o il primo a percorso acceso) fa cadere
+function stepOff(sim, d) { sim.step(d); if (sim.phase === 'play') sim.step(d); }
 function play(sim, moves) {
   for (const m of moves) {
     ok(sim.phase === 'play', 'pronto a muoversi'); if (sim.phase !== 'play') return;
@@ -81,14 +83,28 @@ for (let n = 1; n <= N; n++) {
 { const s = new Sim(15); run(s, 7100); const L = s.L;
   play(s, plan(L, [L.news[0]])); const got = s.collected, fl0 = s.flashes;
   ok(got >= 1, 'giornale raccolto');
-  s.flash(); ok(s.flashes === fl0 - 1 && s.flashMs === 3000, 'flash: 20 → 19, 3 secondi'); ok(!s.flash(), 'niente secondo flash mentre è acceso');
+  s.flash(); ok(s.flashes === fl0 - 1 && s.flashMs === 3000, 'flash: 20 → 19, 3 secondi'); ok(!s.flash(), 'niente secondo flash mentre è acceso'); run(s, 3100); ok(!s.tilesVisible, 'flash spento dopo 3 secondi');
   // passo nel vuoto: cerco una direzione verso una cella senza zolla
   let d = -1; for (let k = 0; k < 4; k++) { const [dx, dy] = DIRV[k], c = s.pos.c + dx, r = s.pos.r + dy; if (!s.isTile(c, r)) { d = k; break; } }
-  ok(d >= 0, 'esiste un vuoto accanto'); s.step(d); run(s, CFG.STEP_MS + 20); ok(s.phase === 'fall', 'caduta nel vuoto');
+  ok(d >= 0, 'esiste un vuoto accanto'); const here = { c: s.pos.c, r: s.pos.r };
+  ok(!s.tilesVisible, 'percorso spento'); s.facing = (d + 1) % 4; s.step(d);
+  ok(s.phase === 'play' && s.facing === d && s.pos.c === here.c && s.pos.r === here.r && s.warnMs > 0, 'primo comando verso il vuoto: solo orientamento e avviso');
+  run(s, CFG.WARN_MS + 20); ok(s.warnMs === 0, 'avviso scaduto'); s.step(d); ok(s.phase === 'play', 'dopo la finestra serve di nuovo l\'avviso');
+  run(s, 600); ok(s.jump() && s.phase === 'jump', 'il salto non è toccato dall\'avviso'); run(s, CFG.JUMP_MS + CFG.FALL_MS + 20); ok(s.lives === 2, 'il salto nel vuoto fa cadere'); run(s, CFG.REVIVE_MS);
+  ok(s.pos.c === here.c && s.pos.r === here.r, 'dopo la caduta ripartenza dove si era'); s.lives = 3; s.warnMs = 0; s.facing = (d + 1) % 4; s.step(d); s.step(d); run(s, CFG.STEP_MS + 20); ok(s.phase === 'fall', 'caduta nel vuoto con comando ripetuto');
   ok(!s.step(0) && !s.jump() && !s.flash(), 'comandi bloccati durante la caduta'); run(s, CFG.FALL_MS + 20);
-  ok(s.lives === 2 && s.phase === 'play' && s.pos.c === L.start.c && s.pos.r === L.start.r, 'una vita in meno, ripartenza');
+  ok(s.lives === 2 && s.phase === 'play' && s.pos.c === here.c && s.pos.r === here.r, 'una vita in meno, ripartenza dal punto della caduta');
+  ok(s.tilesVisible && s.reviveMs > CFG.REVIVE_MS - 100 && !s.flash(), 'dopo la caduta tutto acceso per 2,5 s, senza consumare flash'); run(s, CFG.REVIVE_MS - 200); ok(s.tilesVisible, "ancora acceso"); run(s, 220); ok(!s.tilesVisible, 'spento dopo 2,5 s');
   ok(s.collected === got && s.flashes === fl0 - 1 && s.level === 1, 'giornali e flash conservati'); ok(s.memMs === 0, 'niente nuova memorizzazione');
-  run(s, 3000); ok(!s.tilesVisible, 'flash spento dopo 3 secondi'); }
+}
+
+// zolle sempre accese: 4, poi una in meno ogni 5 livelli, sul percorso, mai su partenza e portone
+for (const [n, k] of [[1, 4], [5, 4], [6, 3], [10, 3], [11, 2], [15, 2]]) {
+  const s = new Sim(15); s.loadLevel(n); const L = s.L, a = [...s.anchors];
+  ok(anchorCount(n) === k && a.length === k, `livello ${n}: ${k} zolle sempre accese (${a.length})`);
+  ok(a.every((i) => L.tiles.has(i) && i !== L.start.r * COLS + L.start.c && i !== L.goal.r * COLS + L.goal.c), `livello ${n}: zolle accese valide`);
+  run(s, 7100); ok(!s.tilesVisible, `livello ${n}: dopo la memorizzazione il resto è spento`);
+}
 
 // salto: esattamente due caselle, nessun ritiro dei giornali sorvolati
 { const s = new Sim(15); run(s, 7100); const L = s.L; s.pos = { c: 5, r: 6 }; s.L = { ...L, tiles: new Set([6 * COLS + 5, 6 * COLS + 7]), news: [{ c: 5, r: 6 }, { c: 6, r: 6 }, { c: 7, r: 6 }], goal: { c: 0, r: 0 } };
@@ -98,7 +114,7 @@ for (let n = 1; n <= N; n++) {
 
 // tre cadute: fine partita
 { const s = new Sim(15); run(s, 7100);
-  for (let i = 0; i < 3; i++) { let d = 0; for (let k = 0; k < 4; k++) { const [dx, dy] = DIRV[k]; if (!s.isTile(s.pos.c + dx, s.pos.r + dy)) { d = k; break; } } s.step(d); run(s, CFG.STEP_MS + CFG.FALL_MS + 60); }
+  for (let i = 0; i < 3; i++) { let d = 0; for (let k = 0; k < 4; k++) { const [dx, dy] = DIRV[k]; if (!s.isTile(s.pos.c + dx, s.pos.r + dy)) { d = k; break; } } stepOff(s, d); run(s, CFG.STEP_MS + CFG.FALL_MS + 60); }
   ok(s.phase === 'over' && s.lives === 0, 'game over a zero vite'); }
 
 // flash: 20 in tutto, poi si gioca a memoria
