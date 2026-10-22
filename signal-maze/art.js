@@ -8,8 +8,8 @@
    Il mondo è un toro: gli sprite vicini ai bordi vengono disegnati anche sul lato opposto, così un passaggio sul bordo
    è continuo, senza salti.
    ===================================================================== */
-import { W, H, T, COLORS, idx } from './maze.js?v=20261022c';
-import { ATLAS } from './sprites/atlas.js?v=20261022c';
+import { W, H, T, COLORS, idx } from './maze.js?v=20261022d';
+import { ATLAS } from './sprites/atlas.js?v=20261022d';
 
 export const TS = 16, CW = 240, CH = 324, OY = 36, MW = W * TS, MH = H * TS;
 export const HEX = ['#ff8a1f', '#ffd21f', '#29d6ff'];
@@ -17,7 +17,7 @@ const DARK = ['#8a3d00', '#8a6e00', '#0b6f8a'];
 const hash = (x, y, k) => { let h = (x * 374761393 + y * 668265263 + (k || 0) * 2147483647) | 0; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 
 /* cifre 3 × 5 per i numeri dentro alla scena (restano nitide a qualsiasi ingrandimento) */
-const GLYPH = { 0: '111101101101111', 1: '010110010010111', 2: '111001111100111', 3: '111001111001111', 4: '101101111001001', 5: '111100111001111', 6: '111100111101111', 7: '111001001010010', 8: '111101111101111', 9: '111101111001111', '/': '001001010100100', '+': '000010111010000', 'x': '000101010101000' };
+const GLYPH = { 0: '111101101101111', 1: '010110010010111', 2: '111001111100111', 3: '111001111001111', 4: '101101111001001', 5: '111100111001111', 6: '111100111101111', 7: '111001001010010', 8: '111101111101111', 9: '111101111001111', '/': '001001010100100', '+': '000010111010000', 'x': '000101010101000', E: '111100110100111', X: '101101010101101', I: '111010010010111', T: '111010010010010' };
 function text(g, s, x, y, color, scale, outline) {
   const sc = scale || 1;
   const put = (ox, oy, col) => {
@@ -37,7 +37,7 @@ export class Scene {
     this.cv = cv; cv.width = CW; cv.height = CH;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
     this.atlas = new Image(); this.fx = []; this.lit = {}; this.clock = 0; this.flash = 0; this.L = null; this.walk = 0;
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.tint(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261022c'; });
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.tint(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261022d'; });
   }
 
   /** copia azzurrina dei robot per il potere di Faindo */
@@ -118,12 +118,12 @@ export class Scene {
   }
 
   /* ---------------- sprite ---------------- */
-  spr(img, name, cx, by, flip, alpha) {
+  spr(img, name, cx, by, flip, alpha, scale) {
     const r = ATLAS[name]; if (!r) return;
-    const g = this.g, w = r[2], h = r[3], dx = Math.round(cx - w / 2), dy = Math.round(by - h);
+    const g = this.g, w = r[2], h = r[3], sw = scale ? Math.round(w * scale) : w, sh = scale ? Math.round(h * scale) : h, dx = Math.round(cx - sw / 2), dy = Math.round(by - sh);
     if (alpha !== undefined && alpha !== 1) g.globalAlpha = alpha;
-    if (flip) { g.save(); g.translate(dx + w, dy); g.scale(-1, 1); g.drawImage(img, r[0], r[1], w, h, 0, 0, w, h); g.restore(); }
-    else g.drawImage(img, r[0], r[1], w, h, dx, dy, w, h);
+    if (flip) { g.save(); g.translate(dx + sw, dy); g.scale(-1, 1); g.drawImage(img, r[0], r[1], w, h, 0, 0, sw, sh); g.restore(); }
+    else g.drawImage(img, r[0], r[1], w, h, dx, dy, sw, sh);
     if (alpha !== undefined && alpha !== 1) g.globalAlpha = 1;
   }
   /** disegna dove serve anche l'immagine sul lato opposto (passaggi sui bordi) */
@@ -137,11 +137,10 @@ export class Scene {
     const burst = (n, cols, sp) => { for (let i = 0; i < n; i++) { const a = Math.random() * 6.283, v = (0.4 + Math.random()) * (sp || 40); this.fx.push({ k: 'p', x: tx, y: ty, vx: Math.cos(a) * v, vy: Math.sin(a) * v, t: 0, life: 0.5 + Math.random() * 0.3, c: cols[i % cols.length] }); } };
     if (e.type === 'deliver') { this.fx.push({ k: 't', s: '+' + (e.n * 100), x: tx, y: ty - 8, t: 0, life: 1, c: HEX[e.color] }); burst(8, [HEX[e.color], '#ffffff']); }
     else if (e.type === 'office') { this.fx.push({ k: 't', s: '+500', x: tx, y: ty - 18, t: 0, life: 1.3, c: '#ffffff' }); burst(18, [HEX[e.color], '#ffffff', '#6fd3ff'], 60); this.flash = 0.25; }
-    else if (e.type === 'kill') { this.fx.push({ k: 't', s: '+200', x: tx, y: ty - 8, t: 0, life: 1, c: '#ff8a1f' }); burst(14, ['#ff8a1f', '#ffd21f', '#ffffff'], 55); }
+    else if (e.type === 'kill') { this.fx.push({ k: 't', s: '+200', x: tx, y: ty - 8, t: 0, life: 1, c: '#ff8a1f' }); burst(14, ['#ff8a1f', '#ffd21f', '#ffffff'], 55); this.fx.push({ k: 'b', x: e.x * TS, y: OY + e.y * TS, face: e.face, t: 0, life: 0.9 }); }
     else if (e.type === 'key' || e.type === 'doc') burst(5, [HEX[e.color], '#ffffff'], 25);
     else if (e.type === 'unlock') { burst(10, [HEX[e.color], '#ffffff'], 35); const o = this.L.offices.find((q) => q.color === e.color); if (o) this.lit[o.id] = this.clock; }
     else if (e.type === 'hit') { burst(16, ['#ff5a4e', '#ffffff'], 60); this.flash = -0.35; }
-    else if (e.type === 'robotBack') burst(6, ['#ff8a1f', '#ffffff'], 20);
   }
 
   update(dt) {
@@ -165,7 +164,7 @@ export class Scene {
     for (const o of L.offices) {
       const on = sim.unlocked[o.id], age = t - (this.lit[o.id] === undefined ? -9 : this.lit[o.id]);
       const dark = !on || (age < 0.45 && Math.floor(age / 0.08) % 2 === 0);
-      if (dark) { g.fillStyle = '#04060c'; for (const c of o.cells) g.fillRect(c[0] * TS, OY + c[1] * TS, TS, TS); }
+      if (dark) { this.drawDesk(g, o, sim, t); g.fillStyle = 'rgba(3,5,11,.68)'; for (const c of o.cells) g.fillRect(c[0] * TS, OY + c[1] * TS, TS, TS); }
       else this.drawDesk(g, o, sim, t);
     }
     // uscita
@@ -180,6 +179,7 @@ export class Scene {
     for (const e of ents) { if (e.f) this.drawFaindo(g, sim, t); else this.drawRobot(g, e.r, sim, t); }
     // effetti
     for (const p of this.fx) {
+      if (p.k === 'b') { this.drawBurn(g, p); continue; }
       if (p.k === 'p') { g.fillStyle = p.c; g.globalAlpha = Math.max(0, 1 - p.t / p.life); g.fillRect(Math.round(p.x), Math.round(p.y), 2, 2); g.globalAlpha = 1; }
       else { const w = textW(p.s, 2); g.globalAlpha = Math.min(1, (p.life - p.t) * 2.5); text(g, p.s, Math.round(p.x - w / 2), Math.round(p.y), p.c, 2, '#000'); g.globalAlpha = 1; }
     }
@@ -244,9 +244,27 @@ export class Scene {
   }
 
   drawExit(g, L, sim, t) {
-    const x = L.exit[0], y = L.exit[1], px = x * TS + 8, py = OY + y * TS + 16, on = sim.exitActive;
-    if (on) { const a = 0.35 + 0.25 * Math.sin(t * 6); g.fillStyle = 'rgba(41,214,255,' + a + ')'; g.fillRect(x * TS - 2, OY + y * TS - 4, TS + 4, TS + 6); }
+    const x = L.exit[0], y = L.exit[1], px = x * TS + 8, py = OY + y * TS + 16, on = sim.exitActive, ty = OY + y * TS;
+    // alone sempre visibile (ambra a uscita chiusa, azzurro a uscita aperta) e freccia che indica la porta
+    const col = on ? '41,214,255' : '255,196,64', a = on ? 0.4 + 0.25 * Math.sin(t * 6) : 0.22 + 0.1 * Math.sin(t * 3);
+    const gr = g.createRadialGradient(px, ty + 10, 2, px, ty + 10, 30); gr.addColorStop(0, 'rgba(' + col + ',' + (a + 0.25) + ')'); gr.addColorStop(1, 'rgba(' + col + ',0)');
+    g.fillStyle = gr; g.fillRect(px - 32, ty - 2, 64, 56);
+    g.fillStyle = 'rgba(' + col + ',' + a + ')'; g.fillRect(x * TS - 2, ty - 1, TS + 4, TS + 3);
     this.spr(this.atlas, on ? 'exit_on' : 'exit_off', px, py);
+    g.strokeStyle = 'rgb(' + col + ')'; g.lineWidth = 1; g.strokeRect(x * TS - 1.5, ty + 0.5, TS + 3, TS - 1);
+    const w = textW('EXIT', 1), lx = Math.round(px - w / 2), ly = ty + TS + 3 + (on ? Math.round(Math.sin(t * 7)) : 0);
+    g.fillStyle = 'rgba(0,0,0,.7)'; g.fillRect(lx - 2, ly - 1, w + 4, 7);
+    text(g, 'EXIT', lx, ly, on ? '#9ff0ff' : '#ffc440', 1);
+  }
+
+  /** fiammella anni '80 sul robot appena distrutto: il robot lampeggia e brucia, poi sparisce */
+  drawBurn(g, p) {
+    const cx = Math.round(p.x), by = Math.round(p.y) + 7, k = Math.floor(p.t * 14), R = (c, x, y, w, h) => { g.fillStyle = c; g.fillRect(cx + x, by + y, w, h); };
+    if (p.t < 0.5 && k % 2 === 0) this.spr(this.atlas, p.face === 0 ? 'robot0' : p.face === 1 ? 'robot2' : 'robot1', cx, by + 1, false, 0.7 - p.t);
+    const fade = p.t > 0.65 ? 1 - (p.t - 0.65) / 0.25 : 1, sh = (k % 2) * 1, hgt = Math.round((7 + sh) * fade);
+    if (hgt <= 0) return;
+    R('#d4281c', -3, -3, 6, 3); R('#d4281c', -2, -3 - 2, 4, 2); R('#ff9a1a', -2, -3, 4, 2); R('#ff9a1a', -1, -3 - Math.max(2, hgt - 3), 2, Math.max(2, hgt - 3));
+    R('#ffe36b', -1, -2, 2, 2); R(k % 3 === 0 ? '#ff9a1a' : '#d4281c', k % 2 ? 1 : -2, -3 - hgt, 1, 2);
   }
 
   drawFaindo(g, sim, t) {
@@ -254,7 +272,7 @@ export class Scene {
     if (moving) this.walk += 1; else this.walk = 0;
     const frame = moving ? [0, 1, 0, 2][Math.floor(this.walk / 6) % 4] : 0;
     const name = 'faindo' + f.face + '_' + frame;
-    const blink = f.inv > 0 && Math.floor(t * 12) % 2 === 0;
+    const blink = f.inv > 0 && Math.floor(t * (f.spawn > 0 ? 18 : 12)) % 2 === 0, sc = f.spawn > 0 ? 1 + f.spawn / 0.8 : 0;
     this.wrapped(px, py, 12, 14, (ox, oy) => {
       const cx = px + ox, cy = py + oy;
       if (sim.power > 0) {   // aura azzurra; negli ultimi tre secondi lampeggia
@@ -268,7 +286,8 @@ export class Scene {
         const n = String(Math.ceil(sim.power)), w = textW(n, 1); text(g, n, Math.round(cx - w / 2), Math.round(cy - 21), warn ? '#ffffff' : '#29d6ff', 1, '#000');
       }
       if (f.inv > 0) { g.strokeStyle = blink ? 'rgba(255,255,255,.9)' : 'rgba(255,90,78,.8)'; g.strokeRect(Math.round(cx - 8) + 0.5, Math.round(cy - 8) + 0.5, 16, 16); }
-      this.spr(this.atlas, name, cx, cy + 7, false, blink ? 0.3 : 1);
+      if (f.spawn > 0) { g.strokeStyle = 'rgba(255,255,255,' + (f.spawn / 0.8) + ')'; const rr = 8 + (1 - f.spawn / 0.8) * 0 + f.spawn * 22; g.strokeRect(Math.round(cx - rr) + 0.5, Math.round(cy - rr) + 0.5, rr * 2, rr * 2); }
+      this.spr(this.atlas, name, cx, cy + 7 + (sc ? Math.round(sc * 3) : 0), false, blink ? 0.3 : 1, sc || undefined);
     });
   }
 
