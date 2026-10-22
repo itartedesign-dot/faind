@@ -8,9 +8,9 @@
    Quando il percorso è spento si vedono solo la palazzina con la zolla davanti al portone, i giornali e Faindo: niente
    ombre, contorni o particelle sotto le zolle nascoste.
    ===================================================================== */
-import { ATLAS, BLDG_GAP } from './sprites/atlas.js?v=20261022b';
-import { COLS, ROWS } from './levels.js?v=20261022b';
-import { CFG } from './sim.js?v=20261022b';
+import { ATLAS, BLDG_GAP } from './sprites/atlas.js?v=20261022c';
+import { COLS, ROWS } from './levels.js?v=20261022c';
+import { CFG } from './sim.js?v=20261022c';
 
 export const TS = 32, CW = COLS * TS, HUD = 54, BAR = 48, MIN_H = 612, MAX_H = 780;
 const SOIL = 8, BLDG_ABOVE = 80;                 // altezza della palazzina sopra la riga 0
@@ -22,7 +22,7 @@ export class Scene {
     this.cv = cv; this.H = MIN_H; cv.width = CW; cv.height = this.H;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
     this.atlas = new Image(); this.clock = 0; this.vis = 1; this.hint = null; this.L = null; this.variant = [];
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261022b'; });
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261022c'; });
     this.setSize(MIN_H);
   }
 
@@ -106,7 +106,7 @@ export class Scene {
     for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
       const i = r * COLS + c; if (!L.tiles.has(i)) continue;
       const isGoal = c === L.goal.c && r === L.goal.r;
-      const a = isGoal ? 1 : this.vis; if (a <= 0) continue;
+      const a = isGoal || sim.anchors.has(i) ? 1 : this.vis; if (a <= 0) continue;
       this.spr('tile' + (isGoal ? 0 : this.variant[i]), this.cellX(c), this.cellY(r), a);
     }
     // giornali non ancora raccolti (restano visibili anche a percorso spento)
@@ -127,6 +127,13 @@ export class Scene {
         g.globalAlpha = 0.34 * env * pulse; this.disc(fx + tip[0], fy + tip[1], 8, '#6fe9ff');
         g.globalAlpha = 0.5 * env; this.disc(fx + tip[0], fy + tip[1], 4, '#c8f6ff'); g.globalAlpha = 1;
       }
+    }
+    if (sim.warnMs > 0 && sim.phase === 'play') {     // avviso morbido: bordo della zolla verso il vuoto che pulsa piano, nessun lampo
+      const [wx, wy] = [[0, -1], [1, 0], [0, 1], [-1, 0]][sim.warnDir], x0 = this.cellX(sim.pos.c), y0 = this.cellY(sim.pos.r);
+      const k = Math.min(1, sim.warnMs / 300), pul = (0.5 + 0.5 * Math.sin(this.clock * 9)) * 0.35 + 0.4;
+      g.globalAlpha = pul * k; g.fillStyle = '#ff8a6b';
+      if (wx) g.fillRect(wx > 0 ? x0 + TS - 3 : x0, y0 + 4, 3, TS - 8); else g.fillRect(x0 + 4, wy > 0 ? y0 + TS - 3 : y0, TS - 8, 3);
+      g.globalAlpha = 1;
     }
     if (this.hint && !paused) this.drawHint(sim, this.hint);
   }

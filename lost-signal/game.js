@@ -6,9 +6,9 @@
    animazione. Memorizzazione e flash vivono nel motore e scorrono solo quando il motore viene fatto avanzare: pausa,
    schede in background e schermate non li toccano e non regalano nuove accensioni.
    ===================================================================== */
-import { Sim, CFG, DIRV } from './sim.js?v=20261022b';
-import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261022b';
-import { Audio8 } from './audio.js?v=20261022b';
+import { Sim, CFG, DIRV } from './sim.js?v=20261022c';
+import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261022c';
+import { Audio8 } from './audio.js?v=20261022c';
 import { createBoard } from '../faind-game/board.js?v=20261022h';
 
 const $ = (id) => document.getElementById(id);
@@ -230,14 +230,14 @@ function updateHud(force) {
     for (let i = 0; i < CFG.LIVES; i++) { const d = document.createElement('i'); d.className = 'l-life' + (i < s.lives ? '' : ' is-lost'); el.lives.appendChild(d); }
   }
   setText(el.flashN, 'fl', '×' + s.flashes);
-  const flashOk = s.flashes > 0 && s.flashMs <= 0 && (s.phase === 'play' || s.phase === 'step' || s.phase === 'jump');
+  const flashOk = s.flashes > 0 && s.flashMs <= 0 && s.reviveMs <= 0 && (s.phase === 'play' || s.phase === 'step' || s.phase === 'jump');
   if (hc.fo !== flashOk) { hc.fo = flashOk; el.btnFlash.classList.toggle('is-off', !flashOk); el.btnFlash.setAttribute('aria-disabled', String(!flashOk)); }
   const jumpOk = s.phase === 'play';
   if (hc.jo !== jumpOk) { hc.jo = jumpOk; el.btnJump.classList.toggle('is-off', !jumpOk); el.btnJump.setAttribute('aria-disabled', String(!jumpOk)); }
   // piccolo contatore: secondi di memorizzazione o di flash rimasti (non è un limite di tempo di partita)
   let tl = '', tv = '';
   if (s.phase === 'memorize') { tl = 'MEMORIZE'; tv = String(Math.ceil(s.memMs / 1000)); }
-  else if (s.flashMs > 0) { tl = 'LIT'; tv = String(Math.ceil(s.flashMs / 1000)); }
+  else if (s.flashMs > 0 || s.reviveMs > 0) { tl = 'LIT'; tv = String(Math.ceil(Math.max(s.flashMs, s.reviveMs) / 1000)); }
   if (hc.tl !== tl + tv) { hc.tl = tl + tv; el.timer.hidden = !tl; el.timerL.textContent = tl; el.timerV.textContent = tv; el.timer.classList.toggle('is-lit', tl === 'LIT'); }
   const mem = s.phase === 'memorize';
   if (hc.mem !== mem) { hc.mem = mem; el.barMsg.classList.toggle('is-mem', mem); }
@@ -257,6 +257,7 @@ function handleEvents() {
     switch (e.type) {
       case 'step': audio.sfx('step', sim.stepFoot); break;
       case 'turn': audio.sfx('turn'); break;
+      case 'warn': audio.sfx('turn'); el.live.textContent = 'Edge ahead. Repeat the move to step off.'; break;
       case 'jump': audio.sfx('jump'); break;
       case 'land': audio.sfx('land'); break;
       case 'news': audio.sfx('news'); el.live.textContent = 'Newspaper ' + e.n + ' of 3'; break;

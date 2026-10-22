@@ -14,7 +14,9 @@ Gioco di memoria ed esplorazione in pixel art (terzo gioco di FAIND, pagina `/lo
 ## Regole in breve
 
 - Passo di una casella per ogni scorrimento o tasto; tocco breve accanto a Faindo (o Maiusc + direzione) orienta senza muovere; salto di due caselle esatte (Spazio o JUMP); flash (F o FLASH).
-- Cadere nel vuoto toglie una vita e riporta alla partenza dello stesso percorso; giornali raccolti e flash restano. Con zero vite: GAME OVER.
+- Percorso spento: il primo comando verso una casella senza zolla orienta soltanto Faindo e accende un bordo che pulsa piano (1,5 s); per cadere va ripetuto lo stesso comando in quella finestra. Il salto non cambia.
+- Cadere nel vuoto toglie una vita e fa ripartire Faindo dalla zolla da cui è caduto, con tutto il percorso acceso per 2,5 secondi (si può muovere subito); giornali raccolti e flash restano. Con zero vite: GAME OVER.
+- Quattro zolle restano sempre accese lungo il percorso (tre dal livello 6, due dall'11, una dal 16).
 - Punteggio una sola volta per livello: 1.000 per l'arrivo, 500 per giornale (massimo 2.500).
 
 ## Record
