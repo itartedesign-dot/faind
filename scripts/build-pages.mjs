@@ -507,11 +507,15 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
 
   const today = new Date().toISOString().slice(0, 10);
   const urls = [`<url><loc>${SITE}</loc><lastmod>${today}</lastmod><changefreq>hourly</changefreq><priority>1.0</priority></url>`,
-    ...['redazione.html', 'cos-e-faind.html', 'about.html', 'a-propos.html', 'ueber-uns.html', 'incorpora.html', 'faind-game/', 'games/', 'signal-maze/', 'lost-signal/'].map(p => `<url><loc>${SITE}${p}</loc><priority>0.6</priority></url>`)]
+    ...['redazione.html', 'cos-e-faind.html', 'about.html', 'a-propos.html', 'ueber-uns.html', 'incorpora.html'].map(p => `<url><loc>${SITE}${p}</loc><priority>0.6</priority></url>`),
+    // pagine dei giochi: con lo screenshot, così Google Immagini li indicizza
+    ...[['games/', 'signal-maze', 'Free retro arcade games by FAIND: Signal Maze, one of the pixel-art games'], ['faind-game/', 'news-rush', 'News Rush screenshot: Faindo catching news scrolls in a pixel-art newsroom'],
+      ['signal-maze/', 'signal-maze', 'Signal Maze screenshot: Faindo in a top-down office maze with robots, keys and documents'], ['lost-signal/', 'lost-signal', 'Lost Signal screenshot: Faindo on floating tiles leading to the FAIND newsroom building']]
+      .map(([p, img, cap]) => `<url><loc>${SITE}${p}</loc><lastmod>${today}</lastmod><priority>0.7</priority><image:image><image:loc>${SITE}assets/giochi/${img}.webp</image:loc><image:title>${cap}</image:title></image:image></url>`)]
     .concat(everything.filter(indexable).map(n =>
       `<url><loc>${SITE}${n.page}</loc><lastmod>${toDate(n.date).toISOString().slice(0, 10)}</lastmod></url>`));
   await writeFile(path.join(root, 'sitemap.xml'),
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join('\n')}\n</urlset>\n`);
   await writeFile(path.join(root, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}sitemap.xml\n`);
   await writeFile(path.join(root, `${INDEXNOW_KEY}.txt`), INDEXNOW_KEY);
 
@@ -570,13 +574,13 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
     try { pending = [...(await readFile(path.join(root, 'sitemap.xml'), 'utf8')).matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]); } catch { /* resta vuoto */ }
   }
   const sent = await pingIndexNow(pending);
-  const gameUrls = [...(archive.gamesPinged ? [] : ['faind-game/', 'games/', 'signal-maze/']), ...(archive.lostPinged ? [] : ['lost-signal/', 'games/'])].map(p => SITE + p);   // pagine dei giochi: avviso una volta sola ciascuna (Lost Signal e la pagina games aggiornata)
+  const gameUrls = (archive.gamesSeoPinged ? [] : ['games/', 'faind-game/', 'signal-maze/', 'lost-signal/']).map(p => SITE + p);   // pagine dei giochi: avviso una volta sola ciascuna (Lost Signal e la pagina games aggiornata)
   pending = [...new Set([...(sent ? [] : pending), ...fresh, ...newSubjects, ...gameUrls])].slice(-10000);
 
   // L'archivio aggiornato: il prossimo giro lo rilegge dal sito online
   await writeFile(path.join(root, 'archivio.json'), JSON.stringify({
     updated: new Date().toISOString(), items: archived, subjects: registry, pending,
-    indexnowStart: archive.indexnowStart || (sent ? today : ''), gamesPinged: true, lostPinged: true
+    indexnowStart: archive.indexnowStart || (sent ? today : ''), gamesSeoPinged: true
   }));
   out.archiveCount = archived.length;
 
