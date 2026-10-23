@@ -5,7 +5,7 @@
    dispositivo, risorse rilasciate all'uscita). Tema chiptune originale e discreto: 100 bpm, re minore, basso a quarti,
    arpeggio morbido con eco, melodia a onde quadre e nessuna batteria invadente. Sedici battute (circa 38 s) in loop.
    ===================================================================== */
-import { Audio8 as Base } from '../faind-game/audio.js?v=20261023b';
+import { Audio8 as Base } from '../faind-game/audio.js?v=20261023c';
 
 const BPM = 100;
 const CHORDS = [[38, 0], [34, 1], [41, 1], [36, 1], [38, 0], [34, 1], [43, 0], [33, 1], [38, 0], [34, 1], [41, 1], [36, 1], [43, 0], [33, 1], [38, 0], [38, 0]];   // [radice, 1 = accordo maggiore]
@@ -46,6 +46,9 @@ export class Audio8 extends Base {
       case 'ready': this._tone('square', 660, 990, t, 0.12, 0.1); this._tone('square', 990, 1320, t + 0.1, 0.16, 0.1); break;
       case 'win': [523, 659, 784, 1047, 784, 1047, 1319, 1568].forEach((f, i) => this._tone('square', f, f, t + i * 0.12, 0.2, 0.14)); this._tone('triangle', 262, 262, t, 1.3, 0.22); break;
       case 'end': [659, 587, 494, 392, 330].forEach((f, i) => this._tone('square', f, f, t + i * 0.15, 0.22, 0.13)); break;
+      case 'bonus': [880, 1175, 1568].forEach((f, i) => this._tone('square', f, f * 1.02, t + i * 0.07, 0.12, 0.12)); this._tone('triangle', 440, 880, t, 0.3, 0.1); break;
+      case 'rockWarn': this._tone('square', 220, 220, t, 0.07, 0.09); this._tone('square', 220, 220, t + 0.18, 0.07, 0.09); this._tone('square', 262, 262, t + 0.36, 0.1, 0.09); break;
+      case 'hit': this._noise(t, 0.22, 0.16, 700, 90); this._tone('square', 260, 70, t, 0.3, 0.14); this._tone('sawtooth', 150, 45, t + 0.02, 0.35, 0.1); break;
       case 'click': this._tone('square', 520, 520, t, 0.04, 0.1); break;
     }
   }

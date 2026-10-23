@@ -6,18 +6,19 @@
    animazione. Memorizzazione e flash vivono nel motore e scorrono solo quando il motore viene fatto avanzare: pausa,
    schede in background e schermate non li toccano e non regalano nuove accensioni.
    ===================================================================== */
-import { Sim, CFG, DIRV } from './sim.js?v=20261023b';
-import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261023b';
-import { Audio8 } from './audio.js?v=20261023b';
-import { createBoard } from '../faind-game/board.js?v=20261023b';
+import { Sim, CFG, DIRV } from './sim.js?v=20261023c';
+import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261023c';
+import { Audio8 } from './audio.js?v=20261023c';
+import { ROWS } from './levels.js?v=20261023c';
+import { createBoard } from '../faind-game/board.js?v=20261023c';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_LOST_API || '').replace(/\/+$/, '');
-const LEVELS = Math.max(1, parseInt(window.FAIND_LOST_LEVELS || '15', 10) || 15);
+const LEVELS = Math.max(1, parseInt(window.FAIND_LOST_LEVELS || '50', 10) || 50);
 const BEST_KEY = 'faind-lost-best';
 const SWIPE_PX = 22, TAP_MS = 450;
 const QUANTUM = 5;              // il motore avanza a passi fissi di 5 ms: il server rifà la partita con gli stessi passi
-const RANKED_LEVELS = 15;       // la classifica vale solo per la partita da 15 livelli, quella che il server rifà
+const RANKED_LEVELS = 50;       // la classifica vale solo per la partita da 50 livelli, quella che il server rifà
 
 const ac = new AbortController();
 const on = (el, ev, fn, opt) => el.addEventListener(ev, fn, Object.assign({ signal: ac.signal }, opt || {}));
@@ -285,11 +286,14 @@ function handleEvents() {
       case 'warn': audio.sfx('turn'); el.live.textContent = 'Edge ahead. Repeat the move to step off.'; break;
       case 'jump': audio.sfx('jump'); break;
       case 'land': audio.sfx('land'); break;
-      case 'news': audio.sfx('news'); el.live.textContent = 'Newspaper ' + e.n + ' of 3'; break;
+      case 'news': audio.sfx('news'); el.live.textContent = 'Newspaper ' + e.n + ' of 3'; scene.float('+' + e.pts, scene.cellX(e.c) + TS / 2, scene.cellY(e.r) + 2, '#ffd21f'); break;
+      case 'bonusFlash': audio.sfx('bonus'); el.live.textContent = 'Bonus flash. ' + e.left + ' flashes'; scene.float('+1 FLASH', CW / 2, scene.cellY(ROWS - 2), '#6fe9ff', true); break;
+      case 'rockWarn': audio.sfx('rockWarn'); break;
+      case 'hit': audio.sfx('hit'); break;
       case 'flash': audio.sfx('flash'); el.live.textContent = 'Flash. ' + e.left + ' left'; break;
       case 'flashEnd': audio.sfx('flashEnd'); break;
       case 'fall': audio.sfx('fall'); break;
-      case 'life': audio.sfx('life'); el.live.textContent = e.lives > 0 ? 'You fell. ' + e.lives + (e.lives === 1 ? ' life left' : ' lives left') : 'You fell. No lives left'; break;
+      case 'life': audio.sfx('life'); el.live.textContent = e.lives > 0 ? (e.cause === 'rock' ? 'A rock hit you. ' : 'You fell. ') + e.lives + (e.lives === 1 ? ' life left' : ' lives left') : (e.cause === 'rock' ? 'A rock hit you. ' : 'You fell. ') + 'No lives left'; break;
       case 'arrive': audio.sfx('door'); break;
       case 'memorizeEnd': audio.sfx('ready'); el.live.textContent = 'The path is hidden. Go.'; if (sim.level === 1 && !tutorialDone) showHint(0); break;
       case 'levelDone': { audio.sfx('clear'); const pts = CFG.SCORE.ARRIVE + CFG.SCORE.NEWS * e.news; toast('LEVEL ' + e.level + ' CLEAR', '+' + pts + (e.news ? '  ·  ' + e.news + '/3 NEWSPAPERS' : ''), true); break; }

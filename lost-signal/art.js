@@ -8,12 +8,12 @@
    Quando il percorso è spento si vedono solo la palazzina con la zolla davanti al portone, i giornali e Faindo: niente
    ombre, contorni o particelle sotto le zolle nascoste.
    ===================================================================== */
-import { ATLAS, BLDG_GAP } from './sprites/atlas.js?v=20261023b';
-import { COLS, ROWS } from './levels.js?v=20261023b';
-import { CFG } from './sim.js?v=20261023b';
+import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261023c';
+import { COLS, ROWS } from './levels.js?v=20261023c';
+import { CFG } from './sim.js?v=20261023c';
 
-export const TS = 32, CW = COLS * TS, HUD = 54, BAR = 48, MIN_H = 612, MAX_H = 780;
-const SOIL = 8, BLDG_ABOVE = 80;                 // altezza della palazzina sopra la riga 0
+export const TS = 32, CW = COLS * TS, HUD = 54, BAR = 48, MIN_H = 632, MAX_H = 780;
+const SOIL = 8, BLDG_ABOVE = 88;                 // altezza della palazzina sopra la riga 0 (la sua zolla d'ingresso è la zolla del portone)
 const FACE = ['back', 'right', 'front', 'left'];  // verso: su, destra, giù, sinistra
 const hash = (a, b, c) => { let h = (a * 374761393 + b * 668265263 + c * 2147483647) | 0; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 
@@ -21,8 +21,8 @@ export class Scene {
   constructor(cv) {
     this.cv = cv; this.H = MIN_H; cv.width = CW; cv.height = this.H;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
-    this.atlas = new Image(); this.clock = 0; this.vis = 1; this.hint = null; this.L = null; this.variant = [];
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261023b'; });
+    this.atlas = new Image(); this.clock = 0; this.vis = 1; this.hint = null; this.L = null; this.variant = []; this.floaters = [];
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261023c'; });
     this.setSize(MIN_H);
   }
 
@@ -47,7 +47,7 @@ export class Scene {
   }
 
   setLevel(L) {
-    this.L = L; this.hint = null; this.variant = [];
+    this.L = L; this.hint = null; this.variant = []; this.floaters = [];
     for (let i = 0; i < COLS * ROWS; i++) this.variant[i] = Math.floor(hash(L.n, i, 7) * 4) % 4;
     // ogni livello mostra tutte e quattro le varianti decorative
     const ts = [...L.tiles]; for (let k = 0; k < 4 && k < ts.length; k++) this.variant[ts[(k * 5 + L.n) % ts.length]] = k;
@@ -55,6 +55,21 @@ export class Scene {
 
   update(dt) {
     this.clock += dt;
+    this.floaters = this.floaters.filter((f) => this.clock - f.t0 < f.life);
+  }
+
+  /** scritta arcade che svolazza e svanisce: (x, y) in pixel della tela, partenza al centro della scritta */
+  float(text, x, y, color, big) { this.floaters.push({ text, x, y, color, big: !!big, t0: this.clock, life: big ? 1.9 : 1.25 }); }
+  drawFloaters() {
+    const g = this.g; g.textAlign = 'center'; g.textBaseline = 'middle';
+    for (const f of this.floaters) {
+      const p = (this.clock - f.t0) / f.life, rise = f.big ? 26 : 22, x = Math.round(f.x + Math.sin(p * 11 + f.t0 * 5) * (f.big ? 4 : 3) * (0.4 + p)), y = Math.round(f.y - rise * (1 - (1 - p) * (1 - p)));
+      g.globalAlpha = p < 0.65 ? 1 : Math.max(0, 1 - (p - 0.65) / 0.35);
+      g.font = (f.big ? '16px ' : '12px ') + 'Silkscreen, "Courier New", monospace';
+      g.fillStyle = '#05080f'; for (const [ox, oy] of [[-1, 0], [1, 0], [0, -1], [0, 1], [1, 1]]) g.fillText(f.text, x + ox, y + oy);
+      g.fillStyle = f.color; g.fillText(f.text, x, y);
+    }
+    g.globalAlpha = 1; g.textAlign = 'start'; g.textBaseline = 'alphabetic';
   }
 
   cellX(c) { return this.gx + c * TS; }
@@ -74,11 +89,17 @@ export class Scene {
   pose(sim) {
     let c = sim.pos.c, r = sim.pos.r, z = 0, alpha = 1, frame = 0, dy = 0;
     const mv = sim.mv;
+    if (sim.riding >= 0) { const f = sim.fpos(); c = f.x; r = f.y; }
     if (mv) {
       const p = Math.min(1, mv.t / mv.dur);
       c = mv.from.c + (mv.to.c - mv.from.c) * p; r = mv.from.r + (mv.to.r - mv.from.r) * p;
       if (mv.kind === 'step') { frame = sim.stepFoot ? 1 : 2; z = Math.sin(p * Math.PI) * 2; }
       else { z = Math.sin(p * Math.PI) * 17; frame = p > 0.15 && p < 0.85 ? (sim.stepFoot ? 1 : 2) : 0; }
+    } else if (sim.phase === 'fall' && sim.cause === 'rock' && sim.hitAt) {
+      // colpito da una roccia: sbalzato nel verso del rotolamento, un salto e dissolvenza
+      const p = Math.min(1, sim.fallT / CFG.FALL_MS), h = sim.hitAt, dir = h.side ? -1 : 1;
+      c = h.x + (h.axis === 'h' ? dir * p * 1.3 : 0); r = h.y + (h.axis === 'v' ? dir * p * 1.3 : 0);
+      z = Math.sin(Math.min(1, p * 1.6) * Math.PI) * 12; alpha = p < 0.5 ? (Math.floor(p * 24) % 2 ? 0.45 : 1) : 1 - (p - 0.5) / 0.5; frame = 1;
     } else if (sim.phase === 'fall') {
       const p = Math.min(1, sim.fallT / CFG.FALL_MS); dy = p * p * 80; alpha = p < 0.55 ? 1 : 1 - (p - 0.55) / 0.45; frame = 1;
     } else if (sim.phase === 'arrive') {
@@ -100,15 +121,16 @@ export class Scene {
     // palazzina: porta chiusa durante il livello, aperta quando Faindo ha raggiunto la zolla davanti al portone
     const open = sim.phase === 'arrive' && sim.arriveT > 180 || sim.phase === 'between' || sim.phase === 'won';
     const name = open ? 'bldg_open' : 'bldg_closed';
-    const gx = this.cellX(L.goal.c) + TS / 2, bx = gx - BLDG_GAP[name], by = this.cellY(0) - BLDG_ABOVE;
+    const gx = this.cellX(L.goal.c) + TS / 2, bx = gx - BLDG_GAP[name], by = this.cellY(0) + 3 - BLDG_FACE[name];
     this.spr(name, bx, by);
     // zolle, dall'alto verso il basso: lo spessore di una zolla finisce sotto la faccia di quella di sotto
     for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
       const i = r * COLS + c; if (!L.tiles.has(i)) continue;
-      const isGoal = c === L.goal.c && r === L.goal.r;
-      const a = isGoal || sim.anchors.has(i) ? 1 : this.vis; if (a <= 0) continue;
-      this.spr('tile' + (isGoal ? 0 : this.variant[i]), this.cellX(c), this.cellY(r), a);
+      if (c === L.goal.c && r === L.goal.r) continue;                // la zolla del portone è quella d'ingresso della palazzina
+      const a = sim.anchors.has(i) ? 1 : this.vis; if (a <= 0) continue;
+      this.spr('tile' + this.variant[i], this.cellX(c), this.cellY(r), a);
     }
+    this.drawLifts(sim);
     // giornali non ancora raccolti (restano visibili anche a percorso spento)
     L.news.forEach((n, k) => {
       if (sim.got.has(k)) return;
@@ -135,7 +157,59 @@ export class Scene {
       if (wx) g.fillRect(wx > 0 ? x0 + TS - 3 : x0, y0 + 4, 3, TS - 8); else g.fillRect(x0 + 4, wy > 0 ? y0 + TS - 3 : y0, TS - 8, 3);
       g.globalAlpha = 1;
     }
+    this.drawRocks(sim);
+    this.drawFloaters();
     if (this.hint && !paused) this.drawHint(sim, this.hint);
+  }
+
+  /** ascensori: guida tratteggiata, fermate e piattaforma sempre accesa (alone azzurro che pulsa, uguale a percorso acceso o spento) */
+  drawLifts(sim) {
+    const g = this.g, L = sim.L, pul = 0.5 + 0.5 * Math.sin(this.clock * 4);
+    L.lifts.forEach((lf, i) => {
+      const n = lf.len, sx = Math.sign(lf.b.c - lf.a.c), sy = Math.sign(lf.b.r - lf.a.r);
+      g.fillStyle = '#29d6ff';
+      for (let k = 0; k <= n; k++) {
+        const cx = this.cellX(lf.a.c + sx * k) + TS / 2, cy = this.cellY(lf.a.r + sy * k) + TS / 2;
+        if (k === 0 || k === n) { g.globalAlpha = 0.5; g.fillRect(cx - 14, cy - 14, 28, 1); g.fillRect(cx - 14, cy + 13, 28, 1); g.fillRect(cx - 14, cy - 14, 1, 28); g.fillRect(cx + 13, cy - 14, 1, 28); }
+        g.globalAlpha = 0.45; if (k < n) for (let d = 4; d < TS; d += 8) g.fillRect(cx + sx * d - (sy ? 1 : 0), cy + sy * d - (sx ? 1 : 0), sx ? 2 : 2, sy ? 2 : 2);
+      }
+      g.globalAlpha = 1;
+      const s = sim.liftState(i), x = this.cellX(s.x), y = this.cellY(s.y);
+      g.globalAlpha = 0.16 + 0.1 * pul; g.fillStyle = '#6fe9ff'; g.fillRect(Math.round(x) - 3, Math.round(y) - 3, TS + 6, TS + 6);
+      g.globalAlpha = 1; this.spr('tile2', x, y);
+      g.fillStyle = '#9ff3ff'; g.globalAlpha = 0.65 + 0.35 * pul;
+      const X = Math.round(x), Y = Math.round(y);
+      g.fillRect(X, Y, TS, 2); g.fillRect(X, Y + TS - 2, TS, 2); g.fillRect(X, Y, 2, TS); g.fillRect(X + TS - 2, Y, 2, TS);
+      g.globalAlpha = 1;
+    });
+  }
+
+  /** rocce: strisce di avviso sulla corsia, freccia all'ingresso, poi la roccia che rotola (quattro fotogrammi) con ombra */
+  drawRocks(sim) {
+    const g = this.g;
+    for (let j = 0; j < sim.rocks.length; j++) {
+      const r = sim.rockState(j); if (!r) continue;
+      const d = sim.rocks[j], h = r.axis === 'h';
+      if (r.warn) {
+        const pul = 0.5 + 0.5 * Math.sin(this.clock * 14), blink = Math.floor(this.clock * 8) % 2, dx = h ? (r.side ? -1 : 1) : 0, dy = h ? 0 : (r.side ? -1 : 1);
+        g.fillStyle = '#ff5a3c'; g.globalAlpha = 0.1 + 0.2 * pul * r.prog;
+        if (h) g.fillRect(0, this.cellY(d.lane), CW, TS); else g.fillRect(this.cellX(d.lane), this.cellY(0), TS, ROWS * TS);
+        g.globalAlpha = 0.5 + 0.3 * pul; g.fillStyle = '#ffd21f';
+        if (h) { g.fillRect(0, this.cellY(d.lane), CW, 1); g.fillRect(0, this.cellY(d.lane) + TS - 1, CW, 1); } else { g.fillRect(this.cellX(d.lane), this.cellY(0), 1, ROWS * TS); g.fillRect(this.cellX(d.lane) + TS - 1, this.cellY(0), 1, ROWS * TS); }
+        const cx = h ? (r.side ? CW - 12 : 12) : this.cellX(d.lane) + TS / 2, cy = h ? this.cellY(d.lane) + TS / 2 : (r.side ? this.cellY(ROWS) - 10 : this.cellY(0) - 14);
+        g.globalAlpha = blink ? 1 : 0.5;
+        for (const [col, off] of [['#05080f', 1], ['#ffd21f', 0]]) {      // freccia che indica il verso di arrivo, con contorno
+          g.fillStyle = col;
+          for (let i = 0; i < 7; i++) for (let w = -(6 - i) - off; w <= 6 - i + off; w++) g.fillRect(Math.round(cx + dx * (i - 3) + dy * w), Math.round(cy + dy * (i - 3) + dx * w), 1, 1);
+        }
+        g.globalAlpha = 1; continue;
+      }
+      const cells = r.prog * (d.N + 2), fade = Math.min(1, cells / 0.9, (d.N + 2 - cells) / 0.9);
+      const frame = Math.floor(cells * 3.2) % 4, f = r.side ? 3 - frame : frame, x = this.cellX(r.x) + TS / 2, y = this.cellY(r.y) + TS / 2, bob = Math.round(Math.abs(Math.sin(cells * 5)) * 1.5);
+      g.globalAlpha = 0.32 * fade; g.fillStyle = '#000'; g.fillRect(Math.round(x) - 11, Math.round(y) + 10, 22, 3); g.globalAlpha = 1;
+      this.spr('rock' + f, x - 14, y - 14 - bob, fade);
+    }
+    g.globalAlpha = 1;
   }
 
   /** mano pixel animata per la breve dimostrazione del primo livello (swipe o tocco accanto a Faindo) */

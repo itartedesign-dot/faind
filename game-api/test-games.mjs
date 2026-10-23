@@ -87,7 +87,7 @@ function lostPlan(L) {
   return moves;
 }
 function lostBot(levels) {
-  const sim = new LostSim(15);
+  const sim = new LostSim(50);
   const run = (ms) => { for (let t = 0; t < ms; t += 5) { sim.update(5); sim.events.length = 0; } };
   const until = (ph) => { for (let i = 0; i < 4000 && !ph.includes(sim.phase); i++) { sim.update(5); sim.events.length = 0; } };
   for (let n = 1; n <= levels; n++) {
@@ -108,6 +108,9 @@ assert.equal(r.score, mb.score); assert.equal(r.level, mb.level); assert.equal(r
 const lb = lostBot(2);
 assert.ok(lb.score >= 2000 && lb.over, 'il giocatore automatico di Lost completa due livelli e poi perde: ' + lb.score + ' ' + lb.phase);
 let rl = replayLost(cleanLostInputs(lb.log));
+{ const l10 = lostBot(10), r10 = replayLost(cleanLostInputs(l10.log));     // fino al livello 10: ascensori e rocce rifatti identici dal server
+  assert.ok(l10.level >= 10, 'il giocatore automatico arriva al livello 10: ' + l10.level);
+  assert.equal(r10.score, l10.score); assert.equal(r10.level, l10.level); assert.equal(r10.detail, l10.stats.news); assert.equal(r10.ms, l10.clock); }
 assert.equal(rl.score, lb.score); assert.equal(rl.level, lb.level); assert.equal(rl.detail, lb.stats.news); assert.equal(rl.ms, lb.clock);
 console.log('replay Maze', r.score, 'punti,', Math.round(r.ms / 1000), 's di gioco; replay Lost', rl.score, 'punti,', Math.round(rl.ms / 1000), 's di gioco');
 // comandi non validi o contraffatti
@@ -212,5 +215,5 @@ res = await call('POST', '/session', {}, T0 + 500000, '9.9.9.9'); assert.equal(r
 assert.equal((await call('GET', '/maze/altro', null, T0)).s, 404);
 assert.equal((await call('GET', '/mazes/leaderboard', null, T0)).s, 404);
 // tetti di punteggio plausibile
-assert.ok(MAX_SCORE.lost === 15 * (1000 + 3 * 500) && MAX_SCORE.maze > 15 * 4800);
+assert.ok(MAX_SCORE.lost === 50 * (1000 + 3 * 500) && MAX_SCORE.maze > 15 * 4800);
 console.log('OK');

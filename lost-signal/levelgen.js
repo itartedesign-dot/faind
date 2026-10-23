@@ -237,3 +237,98 @@ export function generate(level, seed = 1) {
   }
   return null;
 }
+
+/* =====================================================================
+   Ascensori (piattaforme mobili) e rocce rotolanti, dal livello 10.
+   Un ascensore è un segmento di caselle vuote in linea (orizzontale o verticale) fra due caselle di fermata A e B, ognuna accanto ad
+   almeno una zolla: la piattaforma fa la spola fra A e B e Faindo sale e scende solo quando è ferma a una fermata. Ogni ascensore deve
+   accorciare davvero il percorso fra partenza e portone (non è un ornamento). Una roccia rotola lungo una corsia (una riga o una colonna
+   intera) e la corsia è scelta in modo che OGNI zolla su di essa abbia una zolla accanto, di lato rispetto alla traiettoria: da lì Faindo
+   si mette in salvo con un solo passo. Le corsie non toccano mai le caselle degli ascensori (su una piattaforma in movimento non si può
+   scendere, quindi lì una roccia sarebbe ingiusta).
+   ===================================================================== */
+export const LIFT_FROM = 10, DOUBLE_FROM = 20, LANE_MIN_ROW = 2;
+/** quanti ascensori e quante rocce ha il livello n */
+export const extrasFor = (n) => (n < LIFT_FROM ? 0 : n < DOUBLE_FROM ? 1 : 2);
+export const LIFT_CELL_MS = 520, LIFT_DWELL_MS = 2400;
+/** durata di un ciclo completo dell'ascensore (andata e ritorno con le due soste) */
+export const liftCycle = (len) => 2 * (LIFT_DWELL_MS + len * LIFT_CELL_MS);
+
+/** distanza (mosse: passo, salto da due o ascensore, ognuna 1) fra partenza e portone, con gli ascensori dati */
+function distToGoal(M, lifts) {
+  const t = M.tiles, adj = new Map();
+  const add = (a, b) => { if (!adj.has(a)) adj.set(a, []); adj.get(a).push(b); };
+  for (const L of lifts) {
+    const ends = [L.a, L.b].map((p) => DIRS.map(([dx, dy]) => [p[0] + dx, p[1] + dy]).filter(([c, r]) => inb(c, r) && t.has(idx(c, r))).map(([c, r]) => idx(c, r)));
+    for (const x of ends[0]) for (const y of ends[1]) { add(x, y); add(y, x); }
+  }
+  const dist = new Map([[M.start, 0]]), q = [M.start];
+  for (let h = 0; h < q.length; h++) {
+    const cur = q[h], c = cur % COLS, r = (cur / COLS) | 0, d = dist.get(cur);
+    const nxt = [];
+    for (const [dx, dy] of DIRS) for (const k of [1, 2]) { const nc = c + dx * k, nr = r + dy * k; if (inb(nc, nr) && t.has(idx(nc, nr))) nxt.push(idx(nc, nr)); }
+    for (const x of adj.get(cur) || []) nxt.push(x);
+    for (const n of nxt) if (!dist.has(n)) { dist.set(n, d + 1); q.push(n); }
+  }
+  return dist.get(M.goal) ?? 1e9;
+}
+
+/** celle attraversate da un ascensore, fermate comprese */
+export function liftCells(L) {
+  const out = [], n = Math.abs(L.b[0] - L.a[0]) + Math.abs(L.b[1] - L.a[1]), sx = Math.sign(L.b[0] - L.a[0]), sy = Math.sign(L.b[1] - L.a[1]);
+  for (let i = 0; i <= n; i++) out.push([L.a[0] + sx * i, L.a[1] + sy * i]);
+  return out;
+}
+
+/** Ascensori e corsie per la mappa `rows` al livello n, oppure null se la mappa non li ammette. rnd: generatore casuale con seme. */
+export function makeExtras(rows, n, rnd) {
+  const count = extrasFor(n); if (!count) return { lifts: [], rocks: [] };
+  const M = parse(rows), t = M.tiles, d0 = distToGoal(M, []);
+  const isVoid = (c, r) => inb(c, r) && !t.has(idx(c, r));
+  const nearTile = (c, r) => DIRS.some(([dx, dy]) => inb(c + dx, r + dy) && t.has(idx(c + dx, r + dy)));
+  const cands = [];
+  for (let r = LANE_MIN_ROW; r < ROWS; r++) for (let c = 0; c < COLS; c++) for (const [dx, dy] of [[1, 0], [0, 1]]) for (let len = 3; len <= 6; len++) {
+    const L = { a: [c, r], b: [c + dx * len, r + dy * len] };
+    if (!inb(L.b[0], L.b[1])) continue;
+    const cells = liftCells(L); if (!cells.every(([x, y]) => isVoid(x, y) && y >= LANE_MIN_ROW)) continue;
+    if (!nearTile(L.a[0], L.a[1]) || !nearTile(L.b[0], L.b[1])) continue;
+    const gain = d0 - distToGoal(M, [L]); if (gain < 4) continue;
+    cands.push({ L, gain, cells });
+  }
+  if (cands.length < count) return null;
+  const far = (A, B) => A.cells.every(([x, y]) => B.cells.every(([u, v]) => Math.max(Math.abs(x - u), Math.abs(y - v)) >= 2));
+  const picked = [];
+  for (let tries = 0; tries < 60 && picked.length < count; tries++) {
+    const c = cands[Math.floor(rnd() * cands.length)];
+    if (picked.every((p) => far(p, c))) picked.push(c);
+  }
+  if (picked.length < count) return null;
+  const used = new Set(); picked.forEach((p) => p.cells.forEach(([x, y]) => used.add(idx(x, y))));
+  // corsie valide: ogni zolla della corsia ha una zolla di fianco; la corsia non incrocia gli ascensori; almeno 3 zolle
+  const lanes = [];
+  for (let r = LANE_MIN_ROW; r < ROWS; r++) {
+    let ok = true, tiles = 0;
+    for (let c = 0; c < COLS && ok; c++) {
+      if (used.has(idx(c, r))) ok = false;
+      else if (t.has(idx(c, r))) { tiles++; if (!(t.has(idx(c, r - 1)) || t.has(idx(c, r + 1)))) ok = false; }
+    }
+    if (ok && tiles >= 3) lanes.push({ axis: 'h', lane: r, tiles });
+  }
+  for (let c = 0; c < COLS; c++) {
+    let ok = true, tiles = 0;
+    for (let r = 0; r < ROWS && ok; r++) {
+      if (used.has(idx(c, r))) ok = false;
+      else if (t.has(idx(c, r))) { tiles++; if (!(t.has(idx(c - 1, r)) || t.has(idx(c + 1, r)))) ok = false; }
+    }
+    if (ok && tiles >= 3) lanes.push({ axis: 'v', lane: c, tiles });
+  }
+  if (lanes.length < count) return null;
+  const rocks = [];
+  for (let tries = 0; tries < 60 && rocks.length < count; tries++) {
+    const l = lanes[Math.floor(rnd() * lanes.length)];
+    if (rocks.every((o) => !(o.axis === l.axis && Math.abs(o.lane - l.lane) < 3) && !(o.axis === l.axis && o.lane === l.lane))) rocks.push({ axis: l.axis, lane: l.lane });
+  }
+  if (rocks.length < count) return null;
+  const lifts = picked.map((p) => ({ a: p.L.a, b: p.L.b, off: Math.floor(rnd() * (liftCycle(Math.abs(p.L.b[0] - p.L.a[0]) + Math.abs(p.L.b[1] - p.L.a[1])) / 100)) * 100 }));
+  return { lifts, rocks };
+}
