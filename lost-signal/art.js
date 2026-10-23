@@ -8,9 +8,9 @@
    Quando il percorso è spento si vedono solo la palazzina con la zolla davanti al portone, i giornali e Faindo: niente
    ombre, contorni o particelle sotto le zolle nascoste.
    ===================================================================== */
-import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261024c';
-import { COLS, ROWS } from './levels.js?v=20261024c';
-import { CFG } from './sim.js?v=20261024c';
+import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261025a';
+import { COLS, ROWS } from './levels.js?v=20261025a';
+import { CFG } from './sim.js?v=20261025a';
 
 export const TS = 32, CW = COLS * TS, HUD = 54, BAR = 48, MIN_H = 632, MAX_H = 780;
 const SOIL = 8, BLDG_ABOVE = 88;                 // altezza della palazzina sopra la riga 0 (la sua zolla d'ingresso è la zolla del portone)
@@ -22,7 +22,7 @@ export class Scene {
     this.cv = cv; this.H = MIN_H; cv.width = CW; cv.height = this.H;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
     this.atlas = new Image(); this.clock = 0; this.vis = 1; this.hint = null; this.L = null; this.variant = []; this.floaters = [];
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261024c'; });
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261025a'; });
     this.setSize(MIN_H);
   }
 
@@ -123,13 +123,33 @@ export class Scene {
     const name = open ? 'bldg_open' : 'bldg_closed';
     const gx = this.cellX(L.goal.c) + TS / 2, bx = gx - BLDG_GAP[name], by = this.cellY(0) + 3 - BLDG_FACE[name];
     this.spr(name, bx, by);
-    // zolle, dall'alto verso il basso: lo spessore di una zolla finisce sotto la faccia di quella di sotto
+    // zolle, dall'alto verso il basso: lo spessore di una zolla finisce sotto la faccia di quella di sotto.
+    // Speciali: cascata (animata) e lampione sempre accesi, legno e ponte come le altre; l'alone del lampione lascia intravedere le zolle vicine
+    const lamps = []; for (const [i, k] of L.deco) if (k === 'lantern') lamps.push([i % COLS, (i / COLS) | 0]);
+    const glow = (alpha, op) => {
+      for (const [lc, lr] of lamps) {
+        const x = this.cellX(lc) + TS - 8, y = this.cellY(lr) + 4, f = 0.85 + 0.15 * Math.sin(this.clock * 6 + lc), gr = g.createRadialGradient(x, y, 2, x, y, 66 * f);
+        gr.addColorStop(0, 'rgba(255,196,96,' + alpha + ')'); gr.addColorStop(1, 'rgba(255,150,40,0)');
+        g.globalCompositeOperation = op; g.fillStyle = gr; g.fillRect(x - 70, y - 70, 140, 140); g.globalCompositeOperation = 'source-over';
+      }
+    };
+    glow(0.4, 'source-over');
+    const fall = 'fall' + (Math.floor(this.clock * 6) % 3);
     for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
       const i = r * COLS + c; if (!L.tiles.has(i)) continue;
       if (c === L.goal.c && r === L.goal.r) continue;                // la zolla del portone è quella d'ingresso della palazzina
-      const a = sim.anchors.has(i) ? 1 : this.vis; if (a <= 0) continue;
-      this.spr('tile' + this.variant[i], this.cellX(c), this.cellY(r), a);
+      const kind = L.deco.get(i); let a = sim.anchors.has(i) || kind === 'fall' || kind === 'lantern' ? 1 : this.vis;
+      for (const [lc, lr] of lamps) { const d = Math.hypot(c - lc, r - lr); if (d < 2.1) a = Math.max(a, 1.1 * (1 - d / 2.1)); }
+      if (a <= 0) continue;
+      const x = this.cellX(c), y = this.cellY(r);
+      if (kind === 'fall') this.spr(fall, x, y, a);
+      else if (kind === 'lantern') this.spr('lantern', x, y - 4, a);
+      else if (kind === 'bridge') {
+        const hz = L.deco.get(i - 1) === 'bridge' || L.deco.get(i + 1) === 'bridge' || (L.deco.get(i - COLS) !== 'bridge' && L.deco.get(i + COLS) !== 'bridge' && !L.tiles.has(i - COLS) && !L.tiles.has(i + COLS));
+        this.spr(hz ? 'bridge_h' : 'bridge_v', x, y, a);
+      } else this.spr(kind === 'wood' ? 'tile4' : 'tile' + this.variant[i], x, y, a);
     }
+    glow(0.12, 'lighter');
     this.drawLifts(sim);
     // giornali non ancora raccolti (restano visibili anche a percorso spento)
     L.news.forEach((n, k) => {
@@ -137,15 +157,15 @@ export class Scene {
       const bob = Math.round(Math.sin(this.clock * 3 + k * 2) * 1.4);
       this.spr('scroll', this.cellX(n.c) + (TS - 24) / 2, this.cellY(n.r) + 6 + bob);
     });
-    // flash e mini Faindo da raccogliere (dal livello 10): sempre visibili, come i giornali
+    // boccette (flash) e mini Faindo con il più verde (vita) da raccogliere: sempre visibili, come i giornali
     L.flashes.forEach((f, k) => {
       if (sim.gotFlash.has(k)) return;
-      const bob = Math.round(Math.sin(this.clock * 3.4 + k * 1.7) * 1.4), a = ATLAS.ico_flash;
-      this.g.drawImage(this.atlas, a[0], a[1], a[2], a[3], Math.round(this.cellX(f.c) + (TS - 22) / 2), this.cellY(f.r) + 8 + bob, 22, 18);
+      const bob = Math.round(Math.sin(this.clock * 3.4 + k * 1.7) * 1.4);
+      this.spr('vial', this.cellX(f.c) + (TS - 22) / 2, this.cellY(f.r) + 5 + bob);
     });
-    if (L.life && !sim.gotLife) {
-      const bob = Math.round(Math.sin(this.clock * 3 + 1) * 1.6), a = ATLAS.f_front_0;
-      this.g.drawImage(this.atlas, a[0], a[1], a[2], a[3], Math.round(this.cellX(L.life.c) + (TS - 21) / 2), this.cellY(L.life.r) + 3 + bob, 21, 24);
+    if (L.life && !sim.gotLife && sim.lives < CFG.MAX_LIVES) {
+      const bob = Math.round(Math.sin(this.clock * 3 + 1) * 1.6);
+      this.spr('life_plus', this.cellX(L.life.c) + (TS - 24) / 2, this.cellY(L.life.r) + 3 + bob);
     }
     // Faindo
     const P = this.pose(sim);
@@ -172,17 +192,17 @@ export class Scene {
     if (this.hint && !paused) this.drawHint(sim, this.hint);
   }
 
-  /** ascensori: piattaforma sempre accesa (alone azzurro che pulsa, uguale a percorso acceso o spento) */
+  /** ascensori: una corda al centro lungo tutto il percorso (sempre visibile) e, sopra, la piattaforma */
   drawLifts(sim) {
-    const g = this.g, L = sim.L, pul = 0.5 + 0.5 * Math.sin(this.clock * 4);
+    const L = sim.L;
     L.lifts.forEach((lf, i) => {
-      const s = sim.liftState(i), x = this.cellX(s.x), y = this.cellY(s.y);
-      g.globalAlpha = 0.16 + 0.1 * pul; g.fillStyle = '#6fe9ff'; g.fillRect(Math.round(x) - 3, Math.round(y) - 3, TS + 6, TS + 6);
-      g.globalAlpha = 1; this.spr('tile2', x, y);
-      g.fillStyle = '#9ff3ff'; g.globalAlpha = 0.65 + 0.35 * pul;
-      const X = Math.round(x), Y = Math.round(y);
-      g.fillRect(X, Y, TS, 2); g.fillRect(X, Y + TS - 2, TS, 2); g.fillRect(X, Y, 2, TS); g.fillRect(X + TS - 2, Y, 2, TS);
-      g.globalAlpha = 1;
+      const v = lf.a.c === lf.b.c, r0 = Math.min(lf.a.r, lf.b.r), c0 = Math.min(lf.a.c, lf.b.c);
+      for (let k = 0; k < lf.len; k++) {
+        if (v) this.spr('rope_v', this.cellX(lf.a.c) + (TS - 9) / 2, this.cellY(r0) + TS / 2 + k * TS);
+        else this.spr('rope_h', this.cellX(c0) + TS / 2 + k * TS, this.cellY(lf.a.r) + (TS - 9) / 2);
+      }
+      const s = sim.liftState(i);
+      this.spr('tile2', this.cellX(s.x), this.cellY(s.y));
     });
   }
 

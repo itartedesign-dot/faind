@@ -171,7 +171,10 @@ ok(rockSpeed(10) === 3 && rockSpeed(50) <= 4.5 && rockSpeed(30) > rockSpeed(10),
   for (const d of [0, 1, 2, 3, 0, 2, 1, 3]) ok(s.turn(d) && s.riding === 0 && s.phase === 'play', 'sulla piattaforma ci si gira quante volte si vuole senza cadere');
   for (let k = 0; k < 4000 && s.liftState(0).rest >= 0; k++) s.update(5);
   ok(s.liftState(0).rest === -1 && s.riding === 0 && s.phase === 'play', 'la piattaforma parte con Faindo sopra');
-  const n1 = s.log.length; ok(!s.step(0) && !s.jump() && s.log.length === n1, 'in viaggio non si scende né si salta');
+  run(s, 100); ok(s.liftGrip(0) && s.liftState(0).rest === -1, 'poco dopo la partenza la piattaforma è ancora a tolleranza: si scende e si salta lo stesso');
+  { const u = Object.assign(Object.create(Object.getPrototypeOf(s)), s); u.log = []; u.mv = null; ok(u.jump() && u.phase === 'jump', 'salto dalla piattaforma appena partita'); }
+  run(s, 400);
+  const n1 = s.log.length; ok(!s.liftGrip(0) && !s.step(0) && !s.jump() && s.log.length === n1, 'a metà corsa non si scende né si salta');
   ok(s.turn(1) && s.phase === 'play', 'in viaggio ci si gira ancora');
   run(s, 400); const mid = s.fpos(); ok(Math.abs(mid.x - lf.a.c) + Math.abs(mid.y - lf.a.r) > 0, 'Faindo viaggia con la piattaforma');
   ok(wait(1, 300), 'arrivo alla fermata B'); ok(s.pos.c === lf.b.c && s.pos.r === lf.b.r, 'posizione logica = fermata B');
@@ -216,21 +219,24 @@ ok(rockSpeed(10) === 3 && rockSpeed(50) <= 4.5 && rockSpeed(30) > rockSpeed(10),
   const s3 = new Sim(50); s3.loadLevel(20); ok(s3.rocks.length === 2 && s3.L.lifts.length === 2, 'livello 20: due rocce e due ascensori');
 }
 
-// oggetti da raccogliere dal livello 10: flash (4, +1 ogni 2 livelli, al massimo 8) e un mini Faindo che regala una vita
+// oggetti da raccogliere: flash dal 10 (4, +1 ogni 2 livelli fino al 13; dopo il 13 due, un livello sì e due no) e mini Faindo con il più ogni 5 livelli
+const wantFlashes = (n) => n < 10 ? 0 : n <= 13 ? 4 + Math.floor((n - 10) / 2) : (n - 14) % 3 === 0 ? 2 : 0;
 for (let n = 1; n <= N; n++) {
-  const L = getLevel(n), want = n < 10 ? 0 : Math.min(8, 4 + Math.floor((n - 10) / 2)), seen = new Set([L.start, L.goal, ...L.news].map((p) => p.r * COLS + p.c));
-  ok(L.flashes.length === want && (n < 10 ? L.life === null : !!L.life), `livello ${n}: ${want} flash e ${n < 10 ? 'nessuna' : 'una'} vita da raccogliere`);
+  const L = getLevel(n), want = wantFlashes(n), seen = new Set([L.start, L.goal, ...L.news].map((p) => p.r * COLS + p.c));
+  ok(L.flashes.length === want && (n % 5 === 0 ? !!L.life : L.life === null), `livello ${n}: ${want} flash e ${n % 5 === 0 ? 'una' : 'nessuna'} vita da raccogliere`);
   for (const p of [...L.flashes, ...(L.life ? [L.life] : [])]) { const i = p.r * COLS + p.c; ok(L.tiles.has(i) && !seen.has(i), `livello ${n}: oggetto su una zolla libera e distinta`); seen.add(i); }
+  for (const [i, k] of L.deco) ok(L.tiles.has(i) && i !== L.goal.r * COLS + L.goal.c && i !== L.start.r * COLS + L.start.c && ['wood', 'lantern', 'fall', 'bridge'].includes(k), `livello ${n}: zolla speciale valida`);
 }
 { const s = new Sim(50); s.loadLevel(10); s.rocks = []; run(s, 7100); const L = s.L, f0 = s.flashes;
   s.pos = { c: L.flashes[0].c, r: L.flashes[0].r }; s.mv = { kind: 'step', from: { c: L.flashes[0].c, r: L.flashes[0].r }, to: { c: L.flashes[0].c, r: L.flashes[0].r }, t: 0, dur: 1, fromLift: false, toLift: -1 }; s.phase = 'step'; run(s, 50);
   ok(s.flashes === f0 + 1 && s.gotFlash.size === 1 && s.events.some((e) => e.type === 'flashPick'), 'flash raccolto: +1 flash'); s.events.length = 0;
   s.mv = { kind: 'step', from: { c: L.flashes[0].c, r: L.flashes[0].r }, to: { c: L.flashes[0].c, r: L.flashes[0].r }, t: 0, dur: 1, fromLift: false, toLift: -1 }; s.phase = 'step'; run(s, 50);
   ok(s.flashes === f0 + 1, 'un flash si raccoglie una sola volta');
-  const l0 = s.lives; s.mv = { kind: 'step', from: { c: L.life.c, r: L.life.r }, to: { c: L.life.c, r: L.life.r }, t: 0, dur: 1, fromLift: false, toLift: -1 }; s.phase = 'step'; run(s, 50);
-  ok(s.lives === l0 + 1 && s.gotLife, 'mini Faindo: +1 vita');
-  const t = new Sim(50); t.loadLevel(12); t.rocks = []; t.lives = 5; t.mv = { kind: 'step', from: { c: t.L.life.c, r: t.L.life.r }, to: { c: t.L.life.c, r: t.L.life.r }, t: 0, dur: 1, fromLift: false, toLift: -1 }; t.phase = 'step'; run(t, 50);
-  ok(t.lives === 5 && t.gotLife, 'le vite non superano 5'); }
+  const onLife = (q) => { q.mv = { kind: 'step', from: { c: q.L.life.c, r: q.L.life.r }, to: { c: q.L.life.c, r: q.L.life.r }, t: 0, dur: 1, fromLift: false, toLift: -1 }; q.phase = 'step'; run(q, 50); };
+  s.lives = 2; onLife(s);
+  ok(s.lives === 3 && s.gotLife, 'mini Faindo con due vite: +1 vita');
+  const t = new Sim(50); t.loadLevel(10); t.rocks = []; ok(t.lives === 3, 'si parte con tre vite'); onLife(t);
+  ok(t.lives === 3 && !t.gotLife, 'con tre vite il mini Faindo non si prende'); }
 
 // punteggio svolazzante: l'evento giornale porta posizione e punti
 { const s = new Sim(50); s.rocks = []; run(s, 7100); const L = s.L; play(s, plan(L, [L.news[0]]));

@@ -15,13 +15,13 @@
    più all'inizio dei livelli 20, 23, 26… Tutto è funzione del tempo di gioco (nessun caso): il server rifà la stessa partita.
    Fasi: memorize | play | step | jump | fall | arrive | between | over | won
    ===================================================================== */
-import { getLevel, COLS, ROWS } from './levels.js?v=20261024c';
-import { LIFT_CELL_MS, LIFT_DWELL_MS } from './levelgen.js?v=20261024c';
+import { getLevel, COLS, ROWS } from './levels.js?v=20261025a';
+import { LIFT_CELL_MS, LIFT_DWELL_MS } from './levelgen.js?v=20261025a';
 
 export const CFG = {
   MEMORIZE_MS: 7000, FLASH_MS: 3000, FLASHES: 20, LIVES: 3, STEP_MS: 150, JUMP_MS: 400, FALL_MS: 900, WARN_MS: 1500, REVIVE_MS: 2500, ARRIVE_MS: 1700, BETWEEN_MS: 1500,
   SCORE: { ARRIVE: 1000, NEWS: 500 },
-  MAX_LIVES: 5, ROCK_WARN_MS: 1300, ROCK_FIRST_MS: 3000, ROCK_HIT: 0.62, FLASH_BONUS_FROM: 20
+  MAX_LIVES: 3, ROCK_WARN_MS: 1300, ROCK_FIRST_MS: 3000, ROCK_HIT: 0.62, FLASH_BONUS_FROM: 20
 };
 export const DIRV = [[0, -1], [1, 0], [0, 1], [-1, 0]];     // su, destra, giù, sinistra
 
@@ -102,6 +102,11 @@ export class Sim {
     const f = (t - 2 * D - T) / T;
     return { x: L.b.c + (L.a.c - L.b.c) * f, y: L.b.r + (L.a.r - L.b.r) * f, rest: -1, left: 0 };
   }
+  /** vero se l'ascensore i è fermo o a meno di 0,4 caselle da una fermata: da lì si scende o si salta anche se non è perfettamente allineato (la posizione è già la fermata) */
+  liftGrip(i) {
+    const L = this.L.lifts[i], s = this.liftState(i);
+    return s.rest >= 0 || Math.min(Math.abs(s.x - L.a.c) + Math.abs(s.y - L.a.r), Math.abs(s.x - L.b.c) + Math.abs(s.y - L.b.r)) <= 0.4;
+  }
   /** ascensore fermo nella casella (c, r) con almeno minLeft ms di sosta davanti, oppure -1 */
   liftAtRest(c, r, minLeft) {
     for (let i = 0; i < this.L.lifts.length; i++) { const s = this.liftState(i); if (s.rest >= 0 && s.x === c && s.y === r && s.left >= minLeft) return i; }
@@ -137,7 +142,7 @@ export class Sim {
   /** Un passo di una casella nella direzione d (orienta e muove). A percorso spento, verso il vuoto, la prima volta orienta soltanto e avvisa. */
   step(d) {
     if (this.phase !== 'play') return false;
-    if (this.riding >= 0 && this.liftState(this.riding).rest < 0) return false;                // su una piattaforma in viaggio ci si può solo girare
+    if (this.riding >= 0 && !this.liftGrip(this.riding)) return false;                         // a metà corsa ci si può solo girare
     const [dx, dy] = DIRV[d], tc = this.pos.c + dx, tr = this.pos.r + dy;
     let toLift = -1;
     if (!this.isTile(tc, tr)) {
@@ -170,7 +175,7 @@ export class Sim {
   /** Salto di esattamente due caselle nella direzione in cui Faindo è rivolto. */
   jump() {
     if (this.phase !== 'play') return false;
-    if (this.riding >= 0 && this.liftState(this.riding).rest < 0) return false;
+    if (this.riding >= 0 && !this.liftGrip(this.riding)) return false;
     this.log.push([this.clock, 8]); this.warnMs = 0;
     const [dx, dy] = DIRV[this.facing];
     this.mv = { kind: 'jump', from: { c: this.pos.c, r: this.pos.r }, to: { c: this.pos.c + dx * 2, r: this.pos.r + dy * 2 }, t: 0, dur: CFG.JUMP_MS, fromLift: this.riding >= 0, toLift: -1 };
@@ -248,7 +253,7 @@ export class Sim {
     const fk = this.L.flashes.findIndex((f) => f.c === to.c && f.r === to.r);
     if (fk >= 0 && !this.gotFlash.has(fk)) { this.gotFlash.add(fk); this.flashes++; this.events.push({ type: 'flashPick', c: to.c, r: to.r, left: this.flashes }); }
     const lf = this.L.life;
-    if (lf && !this.gotLife && lf.c === to.c && lf.r === to.r) { this.gotLife = true; if (this.lives < CFG.MAX_LIVES) this.lives++; this.events.push({ type: 'lifePick', c: to.c, r: to.r, lives: this.lives }); }
+    if (lf && !this.gotLife && lf.c === to.c && lf.r === to.r && this.lives < CFG.MAX_LIVES) { this.gotLife = true; this.lives++; this.events.push({ type: 'lifePick', c: to.c, r: to.r, lives: this.lives }); }
     if (k >= 0 && !this.got.has(k)) { this.got.add(k); this.events.push({ type: 'news', n: this.got.size, c: to.c, r: to.r, pts: CFG.SCORE.NEWS }); }
     if (to.c === this.L.goal.c && to.r === this.L.goal.r) { this.phase = 'arrive'; this.arriveT = 0; this.events.push({ type: 'arrive' }); return; }
     this.phase = 'play';

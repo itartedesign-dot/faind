@@ -6,10 +6,10 @@
    animazione. Memorizzazione e flash vivono nel motore e scorrono solo quando il motore viene fatto avanzare: pausa,
    schede in background e schermate non li toccano e non regalano nuove accensioni.
    ===================================================================== */
-import { Sim, CFG, DIRV } from './sim.js?v=20261024c';
-import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261024c';
-import { Audio8 } from './audio.js?v=20261024c';
-import { ROWS } from './levels.js?v=20261024c';
+import { Sim, CFG, DIRV } from './sim.js?v=20261025a';
+import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261025a';
+import { Audio8 } from './audio.js?v=20261025a';
+import { ROWS } from './levels.js?v=20261025a';
 import { createBoard } from '../faind-game/board.js?v=20261024b';
 
 const $ = (id) => document.getElementById(id);
@@ -162,9 +162,12 @@ function togglePause() { if (state === 'paused') resume(); else pause(false); }
 
 /* ------------------------------ Comandi ------------------------------ */
 const canAct = () => state === 'running' && sim.phase === 'play';
-function doStep(d) { if (canAct()) { sim.step(d); noteAction('step'); } }
-function doTurn(d) { if (canAct()) { sim.turn(d); noteAction('turn'); } }
-function doJump() { if (canAct()) { sim.jump(); noteAction('jump'); } }
+// un comando rifiutato (ascensore a metà corsa o in arrivo) resta in attesa per 0,7 s di gioco: parte appena è possibile
+let pend = null;
+const later = (fn) => { if (!fn() && sim.phase === 'play') pend = { fn, until: sim.clock + 700 }; else pend = null; };
+function doStep(d) { if (canAct()) { later(() => sim.step(d)); noteAction('step'); } }
+function doTurn(d) { if (canAct()) { pend = null; sim.turn(d); noteAction('turn'); } }
+function doJump() { if (canAct()) { later(() => sim.jump()); noteAction('jump'); } }
 function doFlash() { if (state === 'running') { sim.flash(); noteAction('flash'); } }
 
 // scorrimento: un gesto = un passo. Tocco breve: orienta Faindo verso il lato toccato, senza spostarlo.
@@ -324,7 +327,7 @@ function frame(now) {
   const dt = Math.min(100, now - (last || now)); last = now;
   if (state === 'running') {
     acc += dt; let n = 0;
-    while (acc >= QUANTUM && n < 30) { sim.update(QUANTUM); acc -= QUANTUM; n++; }
+    while (acc >= QUANTUM && n < 30) { sim.update(QUANTUM); acc -= QUANTUM; n++; if (pend) { if (sim.phase !== 'play' || sim.clock > pend.until || pend.fn()) pend = null; } }
     if (n >= 30) acc = 0;
     handleEvents();
     if (sim.phase === 'memorize') { const sec = Math.ceil(sim.memMs / 1000); if (sec !== lastSec) { lastSec = sec; if (sec <= 3 && sec > 0) audio.sfx('tick'); } } else lastSec = -1;
