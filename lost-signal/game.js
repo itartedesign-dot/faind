@@ -6,10 +6,10 @@
    animazione. Memorizzazione e flash vivono nel motore e scorrono solo quando il motore viene fatto avanzare: pausa,
    schede in background e schermate non li toccano e non regalano nuove accensioni.
    ===================================================================== */
-import { Sim, CFG, DIRV } from './sim.js?v=20261023a';
-import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261023a';
-import { Audio8 } from './audio.js?v=20261023a';
-import { createBoard } from '../faind-game/board.js?v=20261023a';
+import { Sim, CFG, DIRV } from './sim.js?v=20261023b';
+import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261023b';
+import { Audio8 } from './audio.js?v=20261023b';
+import { createBoard } from '../faind-game/board.js?v=20261023b';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_LOST_API || '').replace(/\/+$/, '');
@@ -230,6 +230,7 @@ function showHint(i) {
   hintStep = i; hintT = 0; const h = HINTS[i];
   el.hint.textContent = ''; const a = document.createElement('b'); a.textContent = h.text; el.hint.appendChild(a);
   const s = document.createElement('small'); s.textContent = h.sub; el.hint.appendChild(s); el.hint.hidden = false;
+  el.hint.className = 'l-hint' + (h.kind === 'jump' || h.kind === 'flash' ? ' l-hint--key l-hint--' + h.kind : '');
   el.btnJump.classList.toggle('is-hint', h.kind === 'jump'); el.btnFlash.classList.toggle('is-hint', h.kind === 'flash');
   scene.hint = h.kind === 'swipe' || h.kind === 'tap' ? { kind: h.kind, dir: h.dir, t0: scene.clock } : null;
 }
