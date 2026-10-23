@@ -10,7 +10,7 @@ import { Sim, CONFIG as C } from './sim.js?v=20261023a';
 import { Scene, CW, CH } from './art.js?v=20261023a';
 import { Audio8 } from './audio.js?v=20261023a';
 import { LEVELS } from './maze.js?v=20261023a';
-import { createBoard } from '../faind-game/board.js?v=20261023a';
+import { createBoard } from '../faind-game/board.js?v=20261024a';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_MAZE_API || '').replace(/\/+$/, '');
