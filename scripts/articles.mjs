@@ -26,6 +26,25 @@ const SITE = 'https://faind.org/';
 const DIR = 'approfondimenti/';
 const UPDATED = '2026-10-17';
 
+// Testo alternativo delle illustrazioni degli approfondimenti: descrive l'immagine (non ripete il titolo), nella lingua della pagina
+const IMG_ALT = {
+  'art-01.webp': { it: 'Infermiera che stringe la mano a un paziente anziano in una sala d\'attesa, con braccia robotiche alle postazioni di lavoro', en: 'A nurse holding an elderly patient\'s hand in a waiting room, with robotic arms at the workstations behind them', fr: 'Une infirmière tient la main d\'un patient âgé dans une salle d\'attente, avec des bras robotisés aux postes de travail', de: 'Eine Pflegekraft hält im Wartebereich die Hand eines älteren Patienten, im Hintergrund Roboterarme an den Arbeitsplätzen' },
+  'art-02.webp': { it: 'Tre escursionisti e un piccolo robot sul bordo di una rupe, davanti a una porta aperta sul paesaggio', en: 'Three hikers and a small robot on a cliff edge beside an open door above a mountain valley', fr: 'Trois randonneurs et un petit robot au bord d\'une falaise, près d\'une porte ouverte sur la vallée', de: 'Drei Wanderer und ein kleiner Roboter am Rand einer Klippe neben einer offenen Tür über dem Tal' },
+  'art-03.webp': { it: 'Persona che entra da una porta illuminata in una parete di cavi blu dentro un data center', en: 'A person stepping through a lit doorway in a wall of blue cables inside a data center', fr: 'Une personne franchit une porte éclairée dans un mur de câbles bleus à l\'intérieur d\'un data center', de: 'Eine Person tritt durch eine beleuchtete Tür in einer Wand aus blauen Kabeln in einem Rechenzentrum' },
+  'art-04.webp': { it: 'Artigiano che regge una lampada di resina luminosa, con un braccio robotico accanto sul banco di lavoro', en: 'A craftsman holding a glowing resin lamp at his workbench, a robotic arm beside him', fr: 'Un artisan tient une lampe en résine lumineuse à son établi, un bras robotisé à ses côtés', de: 'Ein Handwerker hält an seiner Werkbank eine leuchtende Harzlampe, neben ihm ein Roboterarm' },
+  'art-05.webp': { it: 'Escursionista su un ponte di vetro sospeso sopra un canyon al tramonto', en: 'A hiker on a glass bridge suspended over a canyon at sunset', fr: 'Un randonneur sur un pont de verre suspendu au-dessus d\'un canyon au coucher du soleil', de: 'Ein Wanderer auf einer gläsernen Brücke über einer Schlucht bei Sonnenuntergang' },
+  'art-06.webp': { it: 'Schema di un data center con i consumi di energia da una parte e l\'impronta idrica del raffreddamento dall\'altra', en: 'Diagram of a data center showing energy consumption on one side and the water footprint of cooling on the other', fr: 'Schéma d\'un data center : consommation d\'énergie d\'un côté, empreinte hydrique du refroidissement de l\'autre', de: 'Schema eines Rechenzentrums mit Energieverbrauch auf der einen und Wasserfußabdruck der Kühlung auf der anderen Seite' },
+  'art-07.webp': { it: 'Donna con una mela in mano davanti a uno specchio che mostra il suo riflesso con una pera', en: 'A woman holding an apple while her mirror reflection holds a pear', fr: 'Une femme tient une pomme alors que son reflet dans le miroir tient une poire', de: 'Eine Frau hält einen Apfel, ihr Spiegelbild hält eine Birne' },
+  'art-08.webp': { it: 'Distributore automatico di libri e riviste in un ufficio, accanto a un tavolo con della frutta secca', en: 'A vending machine stocked with books and magazines in an office lounge, next to a table with a bowl of nuts', fr: 'Un distributeur automatique de livres et de magazines dans un espace de bureau, près d\'une table avec un bol de fruits secs', de: 'Ein Automat mit Büchern und Magazinen in einem Büro, neben einem Tisch mit einer Schale Nüsse' },
+  'art-09.webp': { it: 'Mano su un mappamondo decorato, con un martelletto da giudice in primo piano', en: 'A hand resting on an ornate globe, with a judge\'s gavel in the foreground', fr: 'Une main posée sur un globe ornemental, avec un marteau de juge au premier plan', de: 'Eine Hand auf einem verzierten Globus, im Vordergrund ein Richterhammer' },
+  'art-10.webp': { it: 'Scanner di sicurezza che controlla su un nastro quadri, foto e dischi musicali', en: 'A security scanner on a conveyor belt checking paintings, photos and music discs', fr: 'Un scanner de sécurité sur un tapis roulant qui contrôle des tableaux, des photos et des disques', de: 'Ein Sicherheitsscanner auf einem Förderband prüft Gemälde, Fotos und Musikdisks' },
+  'art-11.webp': { it: 'Rete astratta di punti luminosi collegati su sfondo blu scuro, più fitta al centro', en: 'Abstract network of glowing connected dots on a dark blue background, denser in the center', fr: 'Réseau abstrait de points lumineux reliés sur fond bleu sombre, plus dense au centre', de: 'Abstraktes Netz aus leuchtenden, verbundenen Punkten auf dunkelblauem Grund, in der Mitte dichter' },
+  'art-12.webp': { it: 'Rete di punti luminosi turchesi e viola collegati tra loro su sfondo scuro', en: 'Network of teal and violet glowing dots joined by thin lines on a dark background', fr: 'Réseau de points lumineux turquoise et violets reliés par de fines lignes sur fond sombre', de: 'Netz aus türkisfarbenen und violetten leuchtenden Punkten, durch feine Linien verbunden, auf dunklem Grund' },
+  'art-13.webp': { it: 'Due gruppi di punti luminosi collegati che si incontrano al centro, su sfondo blu notte', en: 'Two clusters of connected glowing dots meeting in the middle on a midnight-blue background', fr: 'Deux groupes de points lumineux reliés qui se rejoignent au centre sur fond bleu nuit', de: 'Zwei Gruppen verbundener Leuchtpunkte, die sich in der Mitte treffen, auf nachtblauem Grund' },
+  'art-14.webp': { it: 'Reticolo regolare di punti luminosi collegati su sfondo blu scuro, come una griglia', en: 'Regular lattice of glowing connected dots on a dark blue background, like a grid', fr: 'Réseau régulier de points lumineux reliés sur fond bleu sombre, comme une grille', de: 'Regelmäßiges Gitter aus verbundenen Leuchtpunkten auf dunkelblauem Grund' },
+};
+const imgAlt = (img, lang, fallback) => (IMG_ALT[img] && (IMG_ALT[img][lang] || IMG_ALT[img].en)) || fallback;
+
 export const ARTICLES = [
   { slug: 'intelligenza-artificiale-sostituira-uomo-lavori-a-rischio', img: 'art-01.webp',
     title: 'L\'intelligenza artificiale sostituirà l\'uomo? I lavori a rischio e quelli no',
@@ -351,7 +370,7 @@ export function articleBySlug(slug, lang = 'it') {
 
 // file = nome della pagina dentro la cartella della lingua ('' per l'indice); langs = lingue in cui la pagina esiste
 // dir: cartella della pagina se non è quella degli approfondimenti (Il punto usa la stessa veste)
-export function shell({ lang, file, langs, title, desc, image, jsonld, main, type = 'article', dir = ARTICLE_DIR[lang] }) {
+export function shell({ lang, file, langs, title, desc, image, imageAlt = 'FAIND – Flash AI News Daily', imageSize = [1200, 630], jsonld, main, type = 'article', dir = ARTICLE_DIR[lang] }) {
   const u = UI[lang], up = upOf(lang), url = `${SITE}${dir}${file}`;
   const alts = langs.length > 1 ? langs.map(k => `  <link rel="alternate" hreflang="${k}" href="${SITE}${ARTICLE_DIR[k]}${file}">`).join('\n') + `\n  <link rel="alternate" hreflang="x-default" href="${SITE}${ARTICLE_DIR.it}${file}">\n` : '';
   const sw = langs.length > 1 ? `    <p class="lsw"><span class="lsw__lab">${u.pageLang}:</span> ${langs.map(k => k === lang
@@ -372,7 +391,12 @@ ${alts}  <meta name="robots" content="index, follow, max-image-preview:large">
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(desc)}">
   <meta property="og:image" content="${image}">
+  <meta property="og:image:width" content="${imageSize[0]}">
+  <meta property="og:image:height" content="${imageSize[1]}">
+  <meta property="og:image:alt" content="${esc(imageAlt)}">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="${image}">
+  <meta name="twitter:image:alt" content="${esc(imageAlt)}">
   <link rel="icon" href="${up}assets/favicon.png?v=3" type="image/png">
   <link rel="apple-touch-icon" href="${up}assets/icon-180.png?v=3">
   <link rel="manifest" href="${up}manifest.webmanifest">
@@ -431,7 +455,7 @@ ${main.replace('<!--lsw-->\n', sw)}
 `;
 }
 
-const cardHtml = (a, up) => `<a href="${a.slug}.html"><img src="${up}assets/${a.img}" alt="" loading="lazy" width="1024" height="576"><strong>${esc(a.title)}</strong><span>${esc(a.card)}</span></a>`;
+const cardHtml = (a, up, lang = 'it') => `<a href="${a.slug}.html"><img src="${up}assets/${a.img}" alt="${esc(imgAlt(a.img, lang, ''))}" loading="lazy" width="1024" height="576"><strong>${esc(a.title)}</strong><span>${esc(a.card)}</span></a>`;
 
 // Le ultime notizie che rimandano a questo approfondimento (stessa regola delle pagine notizia), prima quelle nella lingua della pagina
 const LATEST_MAX = 5;
@@ -461,7 +485,7 @@ function articlePage(base, lang, news = [], linker = null) {
   const date = new Intl.DateTimeFormat(u.locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(updated + 'T12:00:00Z'));
   const others = listFor(lang).filter(x => x.slug !== a.slug).slice(0, 4);
   const jsonld = { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'Article', '@id': url + '#article', headline: a.title, description: a.desc, image, inLanguage: u.locale, datePublished: UPDATED, dateModified: updated, mainEntityOfPage: url,
+    { '@type': 'Article', '@id': url + '#article', headline: a.title, description: a.desc, image: { '@type': 'ImageObject', url: image, width: 1024, height: 576, caption: imgAlt(a.img, lang, a.title) }, inLanguage: u.locale, datePublished: UPDATED, dateModified: updated, mainEntityOfPage: url,
       author: { '@type': 'Organization', name: 'Redazione FAIND', url: SITE + u.about }, publisher: { '@id': SITE + '#org' } },
     { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'FAIND', item: SITE }, { '@type': 'ListItem', position: 2, name: u.name, item: SITE + ARTICLE_DIR[lang] }, { '@type': 'ListItem', position: 3, name: a.title, item: url }] },
     { '@type': 'FAQPage', mainEntity: a.faq.map(([q, r]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: r } })) }
@@ -471,7 +495,7 @@ function articlePage(base, lang, news = [], linker = null) {
     <a class="art__kick" href="./">${u.name}</a>
     <h1 class="legal__title">${esc(a.title)}</h1>
     <p class="legal__updated">${u.by.replace('{about}', up + u.about)} · ${u.updated} ${date}</p>
-    <img class="art__img" src="${up}assets/${a.img}" width="1024" height="576" alt="${esc(a.title)}">
+    <img class="art__img" src="${up}assets/${a.img}" width="1024" height="576" fetchpriority="high" decoding="async" alt="${esc(imgAlt(a.img, lang, a.title))}">
     <p class="legal__lede">${link(a.lede)}</p>
 
     <div class="art__brief">
@@ -494,10 +518,10 @@ ${a.sources.length ? `
 ${latestHtml(a.slug, lang, news, up, u)}
     <section>
       <h2>${u.more}</h2>
-      <div class="art__grid">${others.map(o => cardHtml(o, up)).join('')}</div>
+      <div class="art__grid">${others.map(o => cardHtml(o, up, lang)).join('')}</div>
     </section>
 `;
-  return shell({ lang, file, langs, title: a.title, desc: a.desc, image, jsonld, main });
+  return shell({ lang, file, langs, title: a.title, desc: a.desc, image, imageAlt: imgAlt(a.img, lang, a.title), imageSize: [1024, 576], jsonld, main });
 }
 
 function indexPage(lang) {
@@ -508,19 +532,20 @@ function indexPage(lang) {
 <!--lsw-->
     <h1 class="legal__title">${esc(u.idxH1)}</h1>
     <p class="legal__lede">${esc(u.idxLede)}</p>
-    <div class="art__grid">${items.map(a => cardHtml(a, up)).join('')}</div>
+    <div class="art__grid">${items.map(a => cardHtml(a, up, lang)).join('')}</div>
 `;
   return shell({ lang, file: '', langs: LANGS.filter(k => listFor(k).length), title: u.idxTitle, desc: u.idxDesc, image: SITE + 'assets/og-image.png', jsonld, main, type: 'website' });
 }
 
 // Schede per la home (HTML statico da incollare in index.html)
-export const homeCards = () => ARTICLES.map(a => `          <a class="deep__card" href="${DIR}${a.slug}.html" data-deep="${a.slug}"><img src="assets/${a.img}" alt="" loading="lazy" decoding="async" width="1024" height="576"><strong>${esc(a.title)}</strong><span>${esc(a.card)}</span></a>`).join('\n');
+export const articleImages = () => ARTICLES.map(a => [`${DIR}${a.slug}.html`, a.img, imgAlt(a.img, 'it', a.title)]);
+export const homeCards = () => ARTICLES.map(a => `          <a class="deep__card" href="${DIR}${a.slug}.html" data-deep="${a.slug}"><img src="assets/${a.img}" alt="${esc(imgAlt(a.img, 'it', ''))}" loading="lazy" decoding="async" width="1024" height="576"><strong>${esc(a.title)}</strong><span>${esc(a.card)}</span></a>`).join('\n');
 
 // Titoli e sommari tradotti per le schede della home: finiscono in approfondimenti/cards.json, letto da script.js
-const homeI18n = () => Object.fromEntries(LANGS.filter(k => k !== 'it').map(k => [k, Object.fromEntries(listFor(k).map(a => [a.slug, [a.title, a.card]]))]));
+const homeI18n = () => Object.fromEntries(LANGS.filter(k => k !== 'it').map(k => [k, Object.fromEntries(listFor(k).map(a => [a.slug, [a.title, a.card, imgAlt(a.img, k, '')]]))]));
 
 export async function buildArticles(root, news = [], linker = null) {
-  const urls = [];
+  const urls = [], thumbs = {};
   let pages = 0;
   for (const lang of LANGS) {
     const items = listFor(lang);
@@ -532,7 +557,9 @@ export async function buildArticles(root, news = [], linker = null) {
     for (const a of ARTICLES) {
       if (!tr(a, lang)) continue;
       await writeFile(path.join(dir, `${a.slug}.html`), articlePage(a, lang, news, linker));
-      urls.push(`${SITE}${ARTICLE_DIR[lang]}${a.slug}.html`);
+      const loc = `${SITE}${ARTICLE_DIR[lang]}${a.slug}.html`;
+      urls.push(loc);
+      thumbs[loc] = [a.img, imgAlt(a.img, lang, tr(a, lang).title)];
       pages++;
     }
   }
@@ -540,7 +567,8 @@ export async function buildArticles(root, news = [], linker = null) {
   try {
     const file = path.join(root, 'sitemap.xml');
     const xml = await readFile(file, 'utf8');
-    const extra = urls.filter(u => !xml.includes(`<loc>${u}</loc>`)).map(u => `<url><loc>${u}</loc><lastmod>${UPDATED}</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>`).join('\n');
+    const imgXml = (u) => thumbs[u] ? `<image:image><image:loc>${SITE}assets/${thumbs[u][0]}</image:loc><image:title>${esc(thumbs[u][1])}</image:title></image:image>` : '';
+    const extra = urls.filter(u => !xml.includes(`<loc>${u}</loc>`)).map(u => `<url><loc>${u}</loc><lastmod>${UPDATED}</lastmod><changefreq>monthly</changefreq><priority>0.9</priority>${imgXml(u)}</url>`).join('\n');
     if (extra) await writeFile(file, xml.replace('</urlset>', extra + '\n</urlset>'));
   } catch (e) { console.warn('  sitemap non aggiornata con gli approfondimenti:', e.message); }
   console.log(`📚 approfondimenti: ${ARTICLES.length} articoli, ${pages} pagine in ${LANGS.length} lingue`);
