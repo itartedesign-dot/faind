@@ -912,15 +912,16 @@
     var all = $('.deep__all');
     if (all) all.setAttribute('href', tr ? 'approfondimenti/' + lang + '/' : 'approfondimenti/');
     $$('.deep__card').forEach(function (c) {
-      var strong = c.querySelector('strong'), span = c.querySelector('span');
+      var strong = c.querySelector('strong'), span = c.querySelector('span'), pic = c.querySelector('img');
       if (!strong || !span) return;
       if (!c.dataset.slug) {
         c.dataset.slug = (c.getAttribute('href') || '').split('/').pop().replace(/\.html$/, '');
-        c.dataset.itTitle = strong.textContent; c.dataset.itCard = span.textContent;
+        c.dataset.itTitle = strong.textContent; c.dataset.itCard = span.textContent; if (pic) c.dataset.itAlt = pic.getAttribute('alt') || '';
       }
       var x = tr ? tr[c.dataset.slug] : null;
       strong.textContent = x ? x[0] : c.dataset.itTitle;
       span.textContent = x ? x[1] : c.dataset.itCard;
+      if (pic) pic.setAttribute('alt', x && x[2] ? x[2] : c.dataset.itAlt);
       c.setAttribute('href', 'approfondimenti/' + (x ? lang + '/' : '') + c.dataset.slug + '.html');
     });
   }
