@@ -21,6 +21,8 @@ Gioco di memoria ed esplorazione in pixel art (terzo gioco di FAIND, pagina `/lo
 - Quattro zolle restano sempre accese lungo il percorso (tre dal livello 6, due dall'11, una dal 16).
 - Punteggio una sola volta per livello: 1.000 per l'arrivo, 500 per giornale (massimo 2.500; +500 svolazza sul giornale quando lo si prende).
 
+- Salvataggio: all'inizio di ogni livello il gioco salva livello, punteggio, vite e flash sul dispositivo (`faind-lost-save`). Dalla schermata iniziale: CONTINUE · LEVEL N oppure NEW GAME. Una partita ripresa non va in classifica né fa record (come il continue). Il salvataggio si cancella a game over o vittoria.
+
 ## Record
 
 Il record è separato dagli altri giochi (chiave `faind-lost-best` sul dispositivo). Finché `config.js` ha `FAIND_LOST_API = ''` il gioco lo dichiara e non mostra nessuna classifica globale.
