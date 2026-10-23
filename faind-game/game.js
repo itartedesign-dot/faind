@@ -10,6 +10,7 @@ import { Sim, CONFIG as C, levelParams } from './sim.js?v=20261023a';
 import { Scene } from './art.js?v=20261023a';
 import { Audio8 } from './audio.js?v=20261023a';
 import { pickLang, makeT } from './i18n.js?v=20261023a';
+import { mountInitials } from './initials.js?v=20261024a';
 
 const $ = (id) => document.getElementById(id);
 const lang = pickLang();
@@ -185,8 +186,8 @@ async function submitScore() {
       $('rRank').hidden = false; $('rRank').textContent = t('top10') + '\n' + lines.join('\n'); $('rRank').style.whiteSpace = 'pre-line';
       note.hidden = true;
       $('nameForm').hidden = false; $('nameErr').hidden = true;
-      $('nameIn').value = ''; setCountry(null);
-      setTimeout(() => { try { $('nameIn').focus({ preventScroll: true }); } catch (e) {} }, 50);
+      nameIni.reset(); setCountry(null);
+      setTimeout(() => nameIni.focus(), 50);
     } else note.hidden = true;
   } catch (e) {
     if (state !== 'over') return;
@@ -470,7 +471,7 @@ on($('coSearch'), 'input', (e) => {
   $('coList').querySelectorAll('li').forEach((li) => { li.hidden = q && li.firstChild.dataset.name.indexOf(q) < 0; });
 });
 on($('coList'), 'click', (e) => { const b = e.target.closest('button'); if (!b) return; setCountry(b.dataset.code); closeCountry(); });
-on($('nameIn'), 'input', (e) => { e.target.value = e.target.value.replace(/[^a-z]/gi, '').toUpperCase().slice(0, 3); });
+const nameIni = mountInitials($('nameIn'), ac.signal);
 on($('nameForm'), 'submit', async (e) => {
   e.preventDefault();
   const ini = $('nameIn').value.toUpperCase(), err = $('nameErr');

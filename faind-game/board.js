@@ -6,6 +6,7 @@
    lingue del sito (i18n.js). Se il server non risponde si gioca lo stesso: il record resta sul dispositivo, distinto per gioco.
    ===================================================================== */
 import { pickLang, makeT } from './i18n.js?v=20261023a';
+import { mountInitials } from './initials.js?v=20261024a';
 
 const $ = (id) => document.getElementById(id);
 
@@ -16,6 +17,7 @@ export function createBoard(cfg) {
   const on = (el, ev, fn) => el.addEventListener(ev, fn, { signal: cfg.signal });
   let session = null, sessionP = null, committed = false, claim = null, run = 0;
   let flagsMod = null, lbTab = 'weekly', lbData = null, lbOpener = null, chosen = null;
+  const ini = mountInitials($('nameIn'), cfg.signal);
   const pOver = $('pOver'), pLb = $('pLb'), pCountry = $('pCountry'), status = $('rStatus');
 
   document.documentElement.lang = lang;
@@ -77,8 +79,8 @@ export function createBoard(cfg) {
       claim = r.claim; pOver.classList.add('is-record');
       const rk = $('rRank'); rk.hidden = false; rk.textContent = t('top10') + '\n' + lines.join('\n'); rk.style.whiteSpace = 'pre-line';
       setStatus('');
-      $('nameForm').hidden = false; $('nameErr').hidden = true; $('nameIn').value = ''; setCountry(null);
-      setTimeout(() => { try { $('nameIn').focus({ preventScroll: true }); } catch (e) {} }, 50);
+      $('nameForm').hidden = false; $('nameErr').hidden = true; ini.reset(); setCountry(null);
+      setTimeout(() => ini.focus(), 50);
     } else setStatus('');
   }
 
@@ -162,7 +164,6 @@ export function createBoard(cfg) {
     $('coList').querySelectorAll('li').forEach((li) => { li.hidden = q && li.firstChild.dataset.name.indexOf(q) < 0; });
   });
   on($('coList'), 'click', (e) => { const b = e.target.closest('button'); if (!b) return; setCountry(b.dataset.code); closeCountry(); });
-  on($('nameIn'), 'input', (e) => { e.target.value = e.target.value.replace(/[^a-z]/gi, '').toUpperCase().slice(0, 3); });
   on($('nameForm'), 'submit', async (e) => {
     e.preventDefault();
     const ini = $('nameIn').value.toUpperCase(), err = $('nameErr');
