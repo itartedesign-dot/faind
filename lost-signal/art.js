@@ -8,9 +8,9 @@
    Quando il percorso è spento si vedono solo la palazzina con la zolla davanti al portone, i giornali e Faindo: niente
    ombre, contorni o particelle sotto le zolle nascoste.
    ===================================================================== */
-import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261024b';
-import { COLS, ROWS } from './levels.js?v=20261024b';
-import { CFG } from './sim.js?v=20261024b';
+import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261024c';
+import { COLS, ROWS } from './levels.js?v=20261024c';
+import { CFG } from './sim.js?v=20261024c';
 
 export const TS = 32, CW = COLS * TS, HUD = 54, BAR = 48, MIN_H = 632, MAX_H = 780;
 const SOIL = 8, BLDG_ABOVE = 88;                 // altezza della palazzina sopra la riga 0 (la sua zolla d'ingresso è la zolla del portone)
@@ -22,7 +22,7 @@ export class Scene {
     this.cv = cv; this.H = MIN_H; cv.width = CW; cv.height = this.H;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
     this.atlas = new Image(); this.clock = 0; this.vis = 1; this.hint = null; this.L = null; this.variant = []; this.floaters = [];
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261024b'; });
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261024c'; });
     this.setSize(MIN_H);
   }
 

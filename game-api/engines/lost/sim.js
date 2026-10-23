@@ -79,7 +79,7 @@ export class Sim {
     this.pos = { c: this.L.start.c, r: this.L.start.r }; this.facing = 0;
     this.got = new Set(); this.gotFlash = new Set(); this.gotLife = false; this.scored = false;
     this.phase = 'memorize'; this.memMs = CFG.MEMORIZE_MS; this.flashMs = 0;
-    this.warnMs = 0; this.warnDir = -1; this.tested = new Map(); this.reviveMs = 0; this.safe = { c: this.pos.c, r: this.pos.r }; this.anchors = anchorSet(this.L, anchorCount(n));
+    this.warnMs = 0; this.warnDir = -1; this.tested = new Map(); this.deaths = 0; this.reviveMs = 0; this.safe = { c: this.pos.c, r: this.pos.r }; this.anchors = anchorSet(this.L, anchorCount(n));
     this.mv = null; this.fallT = 0; this.arriveT = 0; this.betweenT = 0; this.stepFoot = 0; this.over = false;
     this.liftClock = 0; this.rockClock = 0; this.riding = -1; this.cause = ''; this.hitAt = null; this.rocks = rockDefs(this.L); this.rockSeen = this.rocks.map(() => -1);
     this.events.push({ type: 'level', level: n });
@@ -146,9 +146,9 @@ export class Sim {
       if (toLift < 0 && this.liftBusyAt(tc, tr)) return false;                                  // l'ascensore sta arrivando o partendo: si aspetta
     }
     this.log.push([this.clock, d]);
-    if (toLift < 0 && !this.tilesVisible && !this.isTile(tc, tr)) {
+    if (toLift < 0 && this.flashMs <= 0 && !this.isTile(tc, tr)) {      // vale anche nei 2,5 s di luce dopo una caduta: ritentare non deve far cadere subito
       const key = (this.pos.r * COLS + this.pos.c) * 4 + d, used = this.tested.get(key) || 0;
-      if (used < (this.isTile(this.pos.c + dx * 2, this.pos.r + dy * 2) ? 2 : 1)) {   // bordo del salto: 2 prove, ogni altro bordo: 1
+      if (used < (this.isTile(this.pos.c + dx * 2, this.pos.r + dy * 2) ? 2 : 1) + (this.deaths > 0 ? 1 : 0)) {   // bordo del salto: 2 prove, ogni altro bordo: 1; una in più dopo la prima caduta del livello
         this.tested.set(key, used + 1);
         this.facing = d; this.warnDir = d; this.warnMs = CFG.WARN_MS; this.events.push({ type: 'warn', dir: d });
         return true;
@@ -258,14 +258,14 @@ export class Sim {
   _lose() {
     this.lives--; this.stats.falls++; this.events.push({ type: 'life', lives: this.lives, cause: this.cause });
     if (this.lives <= 0) { this.phase = 'over'; this.over = true; this.events.push({ type: 'over' }); return; }
-    this.pos = { c: this.safe.c, r: this.safe.r }; this.reviveMs = CFG.REVIVE_MS; this.warnMs = 0; this.tested.clear(); this.phase = 'play'; this.cause = ''; this.hitAt = null; this.riding = -1; this.events.push({ type: 'respawn' });
+    this.pos = { c: this.safe.c, r: this.safe.r }; this.reviveMs = CFG.REVIVE_MS; this.warnMs = 0; this.tested.clear(); this.deaths++; this.phase = 'play'; this.cause = ''; this.hitAt = null; this.riding = -1; this.events.push({ type: 'respawn' });
   }
 
   /** Continue dopo l'ultima vita: stesso livello, tre vite nuove, Faindo sull'ultima zolla sicura con il percorso acceso. Flash residui e giornali raccolti restano. */
   revive() {
     if (this.phase !== 'over') return false;
     this.continues++; this.lives = CFG.LIVES; this.over = false;
-    this.pos = { c: this.safe.c, r: this.safe.r }; this.reviveMs = CFG.REVIVE_MS; this.warnMs = 0; this.tested.clear(); this.phase = 'play'; this.cause = ''; this.hitAt = null; this.riding = -1;
+    this.pos = { c: this.safe.c, r: this.safe.r }; this.reviveMs = CFG.REVIVE_MS; this.warnMs = 0; this.tested.clear(); this.deaths++; this.phase = 'play'; this.cause = ''; this.hitAt = null; this.riding = -1;
     this.events.push({ type: 'respawn' });
     return true;
   }

@@ -50,7 +50,7 @@ function plan(L, targets) {
 function run(sim, ms) { for (let t = 0; t < ms; t += 16) sim.update(16); }
 function settle(sim) { for (let i = 0; i < 400 && !(sim.phase === 'play' || sim.phase === 'arrive' || sim.phase === 'over' || sim.phase === 'won'); i++) sim.update(16); }
 // verso il vuoto a percorso spento: il primo comando avvisa, il secondo (o il primo a percorso acceso) fa cadere
-function stepOff(sim, d) { sim.step(d); if (sim.phase === 'play') sim.step(d); }
+function stepOff(sim, d) { for (let i = 0; i < 4 && sim.phase === 'play'; i++) sim.step(d); }
 function play(sim, moves) {
   for (const m of moves) {
     ok(sim.phase === 'play', 'pronto a muoversi'); if (sim.phase !== 'play') return;
@@ -92,12 +92,20 @@ for (let n = 1; n <= N; n++) {
   run(s, CFG.WARN_MS + 20); ok(s.warnMs === 0, 'avviso scaduto');
   { const [ex, ey] = DIRV[d], jedge = s.isTile(here.c + ex * 2, here.r + ey * 2), n0 = s.lives; s.step(d); if (jedge) { ok(s.phase === 'play', 'bordo del salto: seconda prova ancora senza caduta'); s.step(d); } ok(s.phase === 'step', 'bordo già avvisato: il comando successivo fa cadere'); run(s, CFG.STEP_MS + CFG.FALL_MS + 20); ok(s.lives === n0 - 1, 'vita persa'); run(s, CFG.REVIVE_MS + 50); s.lives = 3; }
   run(s, 600); ok(s.jump() && s.phase === 'jump', 'il salto non è toccato dall\'avviso'); run(s, CFG.JUMP_MS + CFG.FALL_MS + 20); ok(s.lives === 2, 'il salto nel vuoto fa cadere'); run(s, CFG.REVIVE_MS);
-  ok(s.pos.c === here.c && s.pos.r === here.r, 'dopo la caduta ripartenza dove si era'); s.lives = 3; s.warnMs = 0; s.facing = (d + 1) % 4; s.step(d); s.step(d); run(s, CFG.STEP_MS + 20); ok(s.phase === 'fall', 'caduta nel vuoto con comando ripetuto');
+  ok(s.pos.c === here.c && s.pos.r === here.r, 'dopo la caduta ripartenza dove si era'); s.lives = 3; s.warnMs = 0; s.facing = (d + 1) % 4;
+  s.reviveMs = 0; s.tested.clear(); s.deaths = 0; s.step(d); s.step(d); run(s, CFG.STEP_MS + 20); ok(s.phase === 'fall', 'caduta nel vuoto con comando ripetuto'); s.deaths = 1;
   ok(!s.step(0) && !s.jump() && !s.flash(), 'comandi bloccati durante la caduta'); run(s, CFG.FALL_MS + 20);
   ok(s.lives === 2 && s.phase === 'play' && s.pos.c === here.c && s.pos.r === here.r, 'una vita in meno, ripartenza dal punto della caduta');
   ok(s.tilesVisible && s.reviveMs > CFG.REVIVE_MS - 100 && !s.flash(), 'dopo la caduta tutto acceso per 2,5 s, senza consumare flash'); run(s, CFG.REVIVE_MS - 200); ok(s.tilesVisible, "ancora acceso"); run(s, 220); ok(!s.tilesVisible, 'spento dopo 2,5 s');
   ok(s.collected === got && s.flashes === fl0 - 1 && s.level === 1, 'giornali e flash conservati'); ok(s.memMs === 0, 'niente nuova memorizzazione');
 }
+
+// dopo una caduta: tentativi azzerati e una prova in più, anche nei 2,5 s di luce
+{ const s = new Sim(50); s.rocks = []; run(s, 7100); let d = -1; for (let k = 0; k < 4; k++) if (!s.isTile(s.pos.c + DIRV[k][0], s.pos.r + DIRV[k][1])) { d = k; break; }
+  const here = { c: s.pos.c, r: s.pos.r }; s.step(d); ok(s.warnMs > 0 && s.tested.size === 1, 'prima prova: avviso'); s.step(d); run(s, CFG.STEP_MS + CFG.FALL_MS + 60);
+  ok(s.lives === 2 && s.tested.size === 0 && s.pos.c === here.c && s.pos.r === here.r && s.reviveMs > 0, 'dopo la caduta: vita in meno, tentativi azzerati, ripartenza dalla stessa zolla');
+  s.step(d); ok(s.phase === 'play' && s.warnMs > 0, 'subito dopo la ripartenza (percorso acceso) il primo comando verso il vuoto avvisa e non fa cadere');
+  s.step(d); ok(s.phase === 'play', 'seconda prova ancora senza caduta'); s.step(d); ok(s.phase === 'step', 'terza volta: cade'); run(s, CFG.STEP_MS + CFG.FALL_MS + 60); ok(s.lives === 1 && s.tested.size === 0, 'di nuovo azzerati'); }
 
 // zolle sempre accese: 4, poi una in meno ogni 5 livelli, sul percorso, mai su partenza e portone
 for (const [n, k] of [[1, 4], [5, 4], [6, 3], [10, 3], [11, 2], [15, 2]]) {
