@@ -15,6 +15,7 @@ Gioco di memoria ed esplorazione in pixel art (terzo gioco di FAIND, pagina `/lo
 
 - Passo di una casella per ogni scorrimento o tasto; tocco breve accanto a Faindo (o Maiusc + direzione) orienta senza muovere; salto di due caselle esatte (Spazio o JUMP); flash (F o FLASH).
 - Percorso spento: il primo comando verso una casella senza zolla orienta soltanto Faindo e accende un bordo che pulsa piano (1,5 s); per cadere va ripetuto lo stesso comando in quella finestra. Il salto non cambia.
+- Dopo una caduta i tentativi verso il vuoto si azzerano e, da quel momento nel livello, ogni bordo concede una prova in più; l'avviso vale anche nei 2,5 s di luce dopo la caduta (non si cade subito ripetendo il comando).
 - Cadere nel vuoto toglie una vita e fa ripartire Faindo dalla zolla da cui è caduto, con tutto il percorso acceso per 2,5 secondi (si può muovere subito); giornali raccolti e flash restano. Con zero vite: GAME OVER.
 - Dal livello 10: **ascensori** (piattaforme sempre accese che fanno la spola fra due fermate: si sale e si scende solo a piattaforma ferma, sopra ci si può girare quante volte si vuole senza cadere) e una **roccia** che rotola lungo una riga o colonna intera, entrando da fuori schermo dopo un avviso di 1,3 s (velocità da 3 a 4,2 caselle al secondo). Ogni zolla sulla corsia ha una zolla di lato: un passo e si è in salvo. Una roccia che tocca Faindo toglie una vita (2,5 s di protezione dopo il colpo). Dal livello 20: due ascensori e due rocce.
 - Dal livello 20, uno ogni tre livelli (20, 23, 26…): +1 flash, aggiunto ai rimasti.
