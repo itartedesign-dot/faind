@@ -6,10 +6,10 @@
    animazione. Memorizzazione e flash vivono nel motore e scorrono solo quando il motore viene fatto avanzare: pausa,
    schede in background e schermate non li toccano e non regalano nuove accensioni.
    ===================================================================== */
-import { Sim, CFG, DIRV } from './sim.js?v=20261025b';
-import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261025b';
-import { Audio8 } from './audio.js?v=20261025b';
-import { ROWS } from './levels.js?v=20261025b';
+import { Sim, CFG, DIRV } from './sim.js?v=20261025c';
+import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261025c';
+import { Audio8 } from './audio.js?v=20261025c';
+import { ROWS } from './levels.js?v=20261025c';
 import { createBoard } from '../faind-game/board.js?v=20261024b';
 
 const $ = (id) => document.getElementById(id);

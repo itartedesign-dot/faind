@@ -5,7 +5,7 @@
    dispositivo, risorse rilasciate all'uscita). Tema chiptune originale e discreto: 100 bpm, re minore, basso a quarti,
    arpeggio morbido con eco, melodia a onde quadre e nessuna batteria invadente. Sedici battute (circa 38 s) in loop.
    ===================================================================== */
-import { Audio8 as Base } from '../faind-game/audio.js?v=20261025b';
+import { Audio8 as Base } from '../faind-game/audio.js?v=20261025c';
 
 const BPM = 100;
 const CHORDS_A = [[38, 0], [34, 1], [41, 1], [36, 1], [38, 0], [34, 1], [43, 0], [33, 1], [38, 0], [34, 1], [41, 1], [36, 1], [43, 0], [33, 1], [38, 0], [38, 0]];   // [radice, 1 = accordo maggiore]

@@ -8,9 +8,9 @@
    Quando il percorso è spento si vedono solo la palazzina con la zolla davanti al portone, i giornali e Faindo: niente
    ombre, contorni o particelle sotto le zolle nascoste.
    ===================================================================== */
-import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261025b';
-import { COLS, ROWS } from './levels.js?v=20261025b';
-import { CFG } from './sim.js?v=20261025b';
+import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261025c';
+import { COLS, ROWS } from './levels.js?v=20261025c';
+import { CFG } from './sim.js?v=20261025c';
 
 export const TS = 32, CW = COLS * TS, HUD = 54, BAR = 48, MIN_H = 632, MAX_H = 780;
 const SOIL = 8, BLDG_ABOVE = 88;                 // altezza della palazzina sopra la riga 0 (la sua zolla d'ingresso è la zolla del portone)
@@ -22,7 +22,7 @@ export class Scene {
     this.cv = cv; this.H = MIN_H; cv.width = CW; cv.height = this.H;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
     this.atlas = new Image(); this.clock = 0; this.vis = 1; this.hint = null; this.L = null; this.variant = []; this.floaters = [];
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261025b'; });
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261025c'; });
     this.setSize(MIN_H);
   }
 
@@ -35,7 +35,7 @@ export class Scene {
 
   /** punta dell'antenna in ogni fotogramma (per la luce del flash) */
   measure() {
-    this.tip = {};
+    this.tip = {}; this.buildLamp();
     const c = document.createElement('canvas'); c.width = this.atlas.width; c.height = this.atlas.height;
     const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(this.atlas, 0, 0);
     for (const k of Object.keys(ATLAS)) {
@@ -44,6 +44,47 @@ export class Scene {
       for (let j = 0; j < h && n < 3; j++) for (let i = 0; i < w; i++) { const o = (j * w + i) * 4; if (d[o + 3] > 200 && d[o + 2] > 200 && d[o + 1] > 150 && d[o] < 140) { sx += i; n++; top = Math.min(top, j); } }
       this.tip[k] = n ? [Math.round(sx / n), top + 1] : [w / 2, 2];
     }
+  }
+
+  /** luce del lampione: quattro stati di fiamma (macchia a gradini di pixel con contorno irregolare, tre tonalità, maschera per le zolle vere) e quattro vetri */
+  buildLamp() {
+    const R = 46, S = 2 * R + 1, DR = [0, 2, -1, 1], INT = [1, 0.84, 1.12, 0.92], N = 24;
+    const cvs = () => { const c = document.createElement('canvas'); c.width = S; c.height = S; return c; };
+    this.lamp = { R, S, ov: [], mask: [], glass: [], lit: cvs() };
+    for (let s = 0; s < 4; s++) {
+      const ov = cvs(), mk = cvs(), go = ov.getContext('2d'), gm = mk.getContext('2d'), io = go.createImageData(S, S), im = gm.createImageData(S, S), jit = [];
+      for (let k = 0; k < N; k++) jit.push(Math.floor(hash(s, k, 11) * 4) - 1);          // margine: da -1 a +2 pixel per settore
+      for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+        const dx = x - R, dy = y - R, d = Math.hypot(dx, dy), k = Math.floor((Math.atan2(dy, dx) + Math.PI) / (2 * Math.PI) * N) % N, f = d / (R - 6 + DR[s] + jit[k]);
+        if (f >= 1) continue;
+        const o = (y * S + x) * 4, tone = f < 0.28 ? [255, 228, 120, 0.5] : f < 0.6 ? [255, 168, 40, 0.32] : (x + y) % 2 ? [255, 112, 30, 0.32] : [0, 0, 0, 0];   // margine a scacchiera di pixel
+        io.data[o] = tone[0]; io.data[o + 1] = tone[1]; io.data[o + 2] = tone[2]; io.data[o + 3] = Math.round(255 * Math.min(1, tone[3] * INT[s]));
+        im.data[o + 3] = Math.round(255 * Math.min(1, (f < 0.35 ? 0.92 : f < 0.55 ? 0.68 : f < 0.78 ? 0.42 : 0.2) * INT[s]));
+      }
+      go.putImageData(io, 0, 0); gm.putImageData(im, 0, 0); this.lamp.ov.push(ov); this.lamp.mask.push(mk);
+      // vetro: giallo, avorio, giallo più vivo, avorio a metà
+      const a = ATLAS.lantern, gc = document.createElement('canvas'); gc.width = a[2]; gc.height = a[3];
+      const gg = gc.getContext('2d'); gg.drawImage(this.atlas, a[0], a[1], a[2], a[3], 0, 0, a[2], a[3]);
+      const gd = gg.getImageData(0, 0, a[2], a[3]), dd = gd.data, IV = [255, 246, 218], mix = [0, 0.85, 0, 0.45][s], br = [1, 1, 1.08, 1][s];
+      for (let o = 0; o < dd.length; o += 4) if (dd[o + 3] > 0 && dd[o] > 200 && dd[o + 1] > 140 && dd[o + 2] < 150) for (let q = 0; q < 3; q++) dd[o + q] = Math.min(255, (dd[o + q] * (1 - mix) + IV[q] * mix) * br);
+      gg.putImageData(gd, 0, 0); this.lamp.glass.push(gc);
+    }
+  }
+  /** stato di fiamma (0-3) del lampione dopo tempi irregolari di 100-200 ms; ogni lampione ha la sua fase */
+  lampState(lc) {
+    const D = [130, 170, 110, 190, 150, 120, 180, 140, 160, 200, 100, 175], Q = [0, 2, 1, 3, 2, 0, 3, 1, 2, 3, 0, 1], T = 1725;
+    let t = (this.clock * 1000 + lc * 313) % T, k = 0; while (t >= D[k]) { t -= D[k]; k++; }
+    return Q[k];
+  }
+  /** una zolla con il suo sprite (cascata, lampione, ponte, legno o terra) su un contesto qualsiasi */
+  drawTileOn(ctx, L, i, x, y, a, fall) {
+    const kind = L.deco.get(i);
+    if (kind === 'fall') this.spr(fall, x, y, a, ctx);
+    else if (kind === 'lantern') { const gl = this.lamp && this.lamp.glass[this.lampState(i % COLS)]; if (gl) { ctx.globalAlpha = a; ctx.drawImage(gl, Math.round(x), Math.round(y - 4)); ctx.globalAlpha = 1; } else this.spr('lantern', x, y - 4, a, ctx); }
+    else if (kind === 'bridge') {
+      const hz = L.deco.get(i - 1) === 'bridge' || L.deco.get(i + 1) === 'bridge' || (L.deco.get(i - COLS) !== 'bridge' && L.deco.get(i + COLS) !== 'bridge' && !L.tiles.has(i - COLS) && !L.tiles.has(i + COLS));
+      this.spr(hz ? 'bridge_h' : 'bridge_v', x, y, a, ctx);
+    } else this.spr(kind === 'wood' ? 'tile4' : 'tile' + this.variant[i], x, y, a, ctx);
   }
 
   setLevel(L) {
@@ -74,8 +115,8 @@ export class Scene {
 
   cellX(c) { return this.gx + c * TS; }
   cellY(r) { return this.gy + r * TS; }
-  spr(name, x, y, alpha) {
-    const a = ATLAS[name], g = this.g; if (!a) return;
+  spr(name, x, y, alpha, ctx) {
+    const a = ATLAS[name], g = ctx || this.g; if (!a) return;
     if (alpha !== undefined && alpha < 1) g.globalAlpha = Math.max(0, alpha);
     g.drawImage(this.atlas, a[0], a[1], a[2], a[3], Math.round(x), Math.round(y), a[2], a[3]);
     if (g.globalAlpha !== 1) g.globalAlpha = 1;
@@ -126,38 +167,28 @@ export class Scene {
     // zolle, dall'alto verso il basso: lo spessore di una zolla finisce sotto la faccia di quella di sotto.
     // Speciali: cascata (animata) e lampione sempre accesi, legno e ponte come le altre; l'alone del lampione lascia intravedere le zolle vicine
     const lamps = []; for (const [i, k] of L.deco) if (k === 'lantern') lamps.push([i % COLS, (i / COLS) | 0]);
-    // alone del lampione: fisso e piccolo, tre macchie dal bordo irregolare e sfumato, sfalsate di 2-3 pixel una sull'altra
-    const blob = (x, y, R, ph) => {
-      g.beginPath();
-      for (let k = 0; k <= 28; k++) { const t = (k / 28) * Math.PI * 2, rr = R * (1 + 0.1 * Math.sin(3 * t + ph) + 0.07 * Math.sin(5 * t + ph * 2.3) + 0.04 * Math.sin(8 * t + ph * 0.7)); g[k ? 'lineTo' : 'moveTo'](Math.round(x + Math.cos(t) * rr), Math.round(y + Math.sin(t) * rr)); }
-      g.closePath(); g.fill();
-    };
-    const LAYERS = [[0, 0, 42, 0.5, 0.08], [3, -2, 33, 1.9, 0.1], [-2, 3, 25, 3.4, 0.12], [1, 1, 15, 5.1, 0.14]];
-    const glow = (mul, op) => {
-      for (const [lc, lr] of lamps) {
-        const x = this.cellX(lc) + TS - 8, y = this.cellY(lr) + 4;
-        g.globalCompositeOperation = op; g.fillStyle = op === 'lighter' ? '#ff9a30' : '#ffb050';
-        for (const [ox, oy, R, ph, al] of LAYERS) { g.globalAlpha = al * mul; blob(x + ox, y + oy, R, ph + lc); }
-        g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
-      }
-    };
-    glow(1, 'source-over');
     const fall = 'fall' + (Math.floor(this.clock * 6) % 3);
     for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
       const i = r * COLS + c; if (!L.tiles.has(i)) continue;
       if (c === L.goal.c && r === L.goal.r) continue;                // la zolla del portone è quella d'ingresso della palazzina
-      const kind = L.deco.get(i); let a = sim.anchors.has(i) || kind === 'fall' || kind === 'lantern' ? 1 : this.vis;
-      for (const [lc, lr] of lamps) { const d = Math.hypot(c - lc, r - lr); if (d < 1.7) a = Math.max(a, 1.1 * (1 - d / 1.7)); }
-      if (a <= 0) continue;
-      const x = this.cellX(c), y = this.cellY(r);
-      if (kind === 'fall') this.spr(fall, x, y, a);
-      else if (kind === 'lantern') this.spr('lantern', x, y - 4, a);
-      else if (kind === 'bridge') {
-        const hz = L.deco.get(i - 1) === 'bridge' || L.deco.get(i + 1) === 'bridge' || (L.deco.get(i - COLS) !== 'bridge' && L.deco.get(i + COLS) !== 'bridge' && !L.tiles.has(i - COLS) && !L.tiles.has(i + COLS));
-        this.spr(hz ? 'bridge_h' : 'bridge_v', x, y, a);
-      } else this.spr(kind === 'wood' ? 'tile4' : 'tile' + this.variant[i], x, y, a);
+      const kind = L.deco.get(i), a = sim.anchors.has(i) || kind === 'fall' || kind === 'lantern' ? 1 : this.vis; if (a <= 0) continue;
+      this.drawTileOn(g, L, i, this.cellX(c), this.cellY(r), a, fall);
     }
-    glow(0.7, 'lighter');
+    // luce del lampione: a percorso spento rivela, con una maschera, gli sprite veri delle zolle entro circa 1,5 zolle; il FLASH la lascia sotto la luce piena
+    if (this.lamp) for (const [lc, lr] of lamps) {
+      const { R, S, ov, mask, lit } = this.lamp, st = this.lampState(lc), cx = Math.round(this.cellX(lc) + TS - 8), cy = Math.round(this.cellY(lr) + 8), ox = cx - R, oy = cy - R;
+      if (this.vis < 0.99) {
+        const q = lit.getContext('2d'); q.clearRect(0, 0, S, S); q.globalCompositeOperation = 'source-over';
+        for (let r = Math.max(0, lr - 2); r <= Math.min(ROWS - 1, lr + 2); r++) for (let c = Math.max(0, lc - 2); c <= Math.min(COLS - 1, lc + 2); c++) {
+          const i = r * COLS + c; if (!L.tiles.has(i) || i === lr * COLS + lc || (c === L.goal.c && r === L.goal.r)) continue;
+          const kd = L.deco.get(i); if (sim.anchors.has(i) || kd === 'fall') continue;
+          this.drawTileOn(q, L, i, this.cellX(c) - ox, this.cellY(r) - oy, 1, fall);
+        }
+        q.globalCompositeOperation = 'destination-in'; q.drawImage(mask[st], 0, 0); q.globalCompositeOperation = 'source-over';
+        g.globalAlpha = 1 - this.vis; g.drawImage(lit, ox, oy); g.globalAlpha = 1;
+      }
+      g.globalCompositeOperation = 'lighter'; g.drawImage(ov[st], ox, oy); g.globalCompositeOperation = 'source-over';
+    }
     this.drawLifts(sim);
     // giornali non ancora raccolti (restano visibili anche a percorso spento)
     L.news.forEach((n, k) => {
