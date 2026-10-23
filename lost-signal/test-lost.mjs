@@ -219,8 +219,8 @@ ok(rockSpeed(10) === 3 && rockSpeed(50) <= 4.5 && rockSpeed(30) > rockSpeed(10),
   const s3 = new Sim(50); s3.loadLevel(20); ok(s3.rocks.length === 2 && s3.L.lifts.length === 2, 'livello 20: due rocce e due ascensori');
 }
 
-// oggetti da raccogliere: flash dal 10 (4, +1 ogni 2 livelli fino al 13; dopo il 13 due, un livello sì e due no) e mini Faindo con il più ogni 5 livelli
-const wantFlashes = (n) => n < 10 ? 0 : n <= 13 ? 4 + Math.floor((n - 10) / 2) : (n - 14) % 3 === 0 ? 2 : 0;
+// oggetti da raccogliere: flash dal 10 (4 fino al 13; dopo il 13 due, un livello sì e due no) e mini Faindo con il più ogni 5 livelli
+const wantFlashes = (n) => n < 10 ? 0 : n <= 13 ? 4 : (n - 14) % 3 === 0 ? 2 : 0;
 for (let n = 1; n <= N; n++) {
   const L = getLevel(n), want = wantFlashes(n), seen = new Set([L.start, L.goal, ...L.news].map((p) => p.r * COLS + p.c));
   ok(L.flashes.length === want && (n % 5 === 0 ? !!L.life : L.life === null), `livello ${n}: ${want} flash e ${n % 5 === 0 ? 'una' : 'nessuna'} vita da raccogliere`);
