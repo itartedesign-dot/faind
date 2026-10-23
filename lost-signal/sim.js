@@ -15,8 +15,8 @@
    più all'inizio dei livelli 20, 23, 26… Tutto è funzione del tempo di gioco (nessun caso): il server rifà la stessa partita.
    Fasi: memorize | play | step | jump | fall | arrive | between | over | won
    ===================================================================== */
-import { getLevel, COLS, ROWS } from './levels.js?v=20261023d';
-import { LIFT_CELL_MS, LIFT_DWELL_MS } from './levelgen.js?v=20261023d';
+import { getLevel, COLS, ROWS } from './levels.js?v=20261023e';
+import { LIFT_CELL_MS, LIFT_DWELL_MS } from './levelgen.js?v=20261023e';
 
 export const CFG = {
   MEMORIZE_MS: 7000, FLASH_MS: 3000, FLASHES: 20, LIVES: 3, STEP_MS: 150, JUMP_MS: 400, FALL_MS: 900, WARN_MS: 1500, REVIVE_MS: 2500, ARRIVE_MS: 1700, BETWEEN_MS: 1500,
