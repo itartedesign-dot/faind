@@ -6,11 +6,11 @@
    animazione. Memorizzazione e flash vivono nel motore e scorrono solo quando il motore viene fatto avanzare: pausa,
    schede in background e schermate non li toccano e non regalano nuove accensioni.
    ===================================================================== */
-import { Sim, CFG, DIRV } from './sim.js?v=20261023f';
-import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261023f';
-import { Audio8 } from './audio.js?v=20261023f';
-import { ROWS } from './levels.js?v=20261023f';
-import { createBoard } from '../faind-game/board.js?v=20261023f';
+import { Sim, CFG, DIRV } from './sim.js?v=20261023g';
+import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261023g';
+import { Audio8 } from './audio.js?v=20261023g';
+import { ROWS } from './levels.js?v=20261023g';
+import { createBoard } from '../faind-game/board.js?v=20261023g';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_LOST_API || '').replace(/\/+$/, '');
@@ -85,6 +85,8 @@ function toggleSound() {
 }
 
 /* ------------------------------ Partita ------------------------------ */
+/** musica del livello: la prima fino al 9, la seconda dal 10 al 19, la prima dal 20 al 29 e così via ogni 10 livelli */
+const trackFor = (level) => Math.floor(level / 10) % 2;
 function readSave() {
   try { const o = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); if (o && o.level > 1 && o.level <= LEVELS && o.lives > 0) return o; } catch (e) {}
   return null;
@@ -98,7 +100,7 @@ function startGame(save) {
   board.startSession();                       // il gettone può arrivare anche a partita iniziata: qui non c'è un seme da aspettare
   sim = new Sim(LEVELS);
   if (save) { sim.loadLevel(save.level); sim.score = save.score; sim.lives = save.lives; sim.flashes = save.flashes; sim.stats.news = save.news || 0; sim.stats.falls = save.falls || 0; sim.continues = 1; }
-  sim.events.length = 0; scene.vis = 1; scene.L = null; last = performance.now(); acc = 0; lastSec = -1;
+  sim.events.length = 0; audio.setTrack(trackFor(sim.level)); scene.vis = 1; scene.L = null; last = performance.now(); acc = 0; lastSec = -1;
   el.live.textContent = ''; updateHud(true); setState('running'); audio.startMusic(); levelToast();
 }
 function levelToast() {
@@ -307,7 +309,7 @@ function handleEvents() {
       case 'arrive': audio.sfx('door'); break;
       case 'memorizeEnd': audio.sfx('ready'); el.live.textContent = 'The path is hidden. Go.'; if (sim.level === 1 && !tutorialDone) showHint(0); break;
       case 'levelDone': { audio.sfx('clear'); const pts = CFG.SCORE.ARRIVE + CFG.SCORE.NEWS * e.news; toast('LEVEL ' + e.level + ' CLEAR', '+' + pts + (e.news ? '  ·  ' + e.news + '/3 NEWSPAPERS' : ''), true); break; }
-      case 'level': if (e.level > 1 && state === 'running') { writeSave(); hideHint(); levelToast(); } else if (e.level > 1) hideHint(); break;
+      case 'level': if (e.level > 1 && state === 'running') { writeSave(); audio.setTrack(trackFor(e.level)); hideHint(); levelToast(); } else if (e.level > 1) hideHint(); break;
       case 'over': offerContinue(); break;
       case 'won': finish(true); break;
     }

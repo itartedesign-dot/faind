@@ -23,6 +23,8 @@ Gioco di memoria ed esplorazione in pixel art (terzo gioco di FAIND, pagina `/lo
 
 - Salvataggio: all'inizio di ogni livello il gioco salva livello, punteggio, vite e flash sul dispositivo (`faind-lost-save`). Dalla schermata iniziale: CONTINUE · LEVEL N oppure NEW GAME. Una partita ripresa non va in classifica né fa record (come il continue). Il salvataggio si cancella a game over o vittoria.
 
+- Musica: due temi sintetizzati (`audio.js`). Il primo fino al livello 9, il secondo dal 10 al 19, il primo dal 20 al 29 e così via, alternando ogni 10 livelli.
+
 ## Record
 
 Il record è separato dagli altri giochi (chiave `faind-lost-best` sul dispositivo). Finché `config.js` ha `FAIND_LOST_API = ''` il gioco lo dichiara e non mostra nessuna classifica globale.

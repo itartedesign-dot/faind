@@ -5,11 +5,11 @@
    dispositivo, risorse rilasciate all'uscita). Tema chiptune originale e discreto: 100 bpm, re minore, basso a quarti,
    arpeggio morbido con eco, melodia a onde quadre e nessuna batteria invadente. Sedici battute (circa 38 s) in loop.
    ===================================================================== */
-import { Audio8 as Base } from '../faind-game/audio.js?v=20261023f';
+import { Audio8 as Base } from '../faind-game/audio.js?v=20261023g';
 
 const BPM = 100;
-const CHORDS = [[38, 0], [34, 1], [41, 1], [36, 1], [38, 0], [34, 1], [43, 0], [33, 1], [38, 0], [34, 1], [41, 1], [36, 1], [43, 0], [33, 1], [38, 0], [38, 0]];   // [radice, 1 = accordo maggiore]
-const MELODY = [
+const CHORDS_A = [[38, 0], [34, 1], [41, 1], [36, 1], [38, 0], [34, 1], [43, 0], [33, 1], [38, 0], [34, 1], [41, 1], [36, 1], [43, 0], [33, 1], [38, 0], [38, 0]];   // [radice, 1 = accordo maggiore]
+const MELODY_A = [
   [['A4', 6], ['D5', 2], ['F5', 4], ['E5', 4]], [['D5', 6], ['F5', 2], ['E5', 4], ['D5', 4]],
   [['C5', 6], ['F5', 2], ['A5', 4], ['G5', 4]], [['E5', 8], ['G5', 4], [null, 4]],
   [['A4', 4], ['D5', 4], ['F5', 4], ['A5', 4]], [['G5', 6], ['F5', 2], ['D5', 4], ['Bb4', 4]],
@@ -22,8 +22,20 @@ const MELODY = [
 const PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 const midi = (n) => { const m = /^([A-G])([#b]?)(\d)$/.exec(n); return 12 * (+m[3] + 1) + PC[m[1]] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0); };
 const hz = (m) => 440 * Math.pow(2, (m - 69) / 12);
-const LEAD = [];   // passo → [nota midi, durata in semicrome]
-MELODY.forEach((bar, b) => { let p = b * 16; for (const [n, d] of bar) { if (n) LEAD[p] = [midi(n), d]; p += d; } });
+const leadOf = (melody) => { const lead = []; melody.forEach((bar, b) => { let p = b * 16; for (const [n, d] of bar) { if (n) lead[p] = [midi(n), d]; p += d; } }); return lead; };
+// seconda musica (dal livello 10, poi alternata ogni 10 livelli): 124 bpm, mi minore, basso a crome, più incalzante
+const CHORDS_B = [[40, 0], [36, 1], [43, 1], [38, 1], [40, 0], [36, 1], [38, 1], [35, 1], [33, 0], [40, 0], [36, 1], [38, 1], [33, 0], [36, 1], [35, 1], [40, 0]];
+const MELODY_B = [
+  [['B4', 4], ['E5', 4], ['G5', 4], ['F#5', 4]], [['E5', 8], ['G5', 4], ['E5', 4]],
+  [['D5', 4], ['G5', 4], ['B5', 4], ['A5', 4]], [['F#5', 8], ['A5', 4], ['D5', 4]],
+  [['G5', 4], ['B5', 4], ['E6', 4], ['D6', 4]], [['C6', 4], ['G5', 4], ['E5', 4], ['G5', 4]],
+  [['A5', 6], ['F#5', 2], ['D5', 4], ['F#5', 4]], [['D#5', 4], ['F#5', 4], ['B5', 8]],
+  [['A4', 4], ['C5', 4], ['E5', 4], ['A5', 4]], [['G5', 8], ['E5', 4], ['B4', 4]],
+  [['E5', 4], ['G5', 4], ['C6', 4], ['B5', 4]], [['A5', 4], ['F#5', 4], ['D5', 4], ['F#5', 4]],
+  [['C5', 4], ['E5', 4], ['A5', 4], ['G5', 4]], [['E5', 4], ['G5', 4], ['C6', 8]],
+  [['D#5', 4], ['F#5', 4], ['A5', 4], ['B5', 4]], [['E5', 12], [null, 4]]
+];
+const THEMES = [{ bpm: BPM, chords: CHORDS_A, lead: leadOf(MELODY_A), eighths: false }, { bpm: 124, chords: CHORDS_B, lead: leadOf(MELODY_B), eighths: true }];
 
 export class Audio8 extends Base {
   sfx(name, n) {
@@ -53,6 +65,13 @@ export class Audio8 extends Base {
     }
   }
 
+  /** musica del livello: 0 la prima, 1 la seconda; il cambio riparte dalla prima battuta */
+  setTrack(n) {
+    n = n ? 1 : 0; if (n === (this.track || 0)) return;
+    this.track = n; this.step = 0;
+    if (this.dly) this.dly.delayTime.value = 60 / THEMES[n].bpm * 0.75;
+  }
+
   startMusic() {
     if (!this.ctx || this.musicOn) return;
     const c = this.ctx;
@@ -60,7 +79,7 @@ export class Audio8 extends Base {
       this.mus = c.createGain(); this.mus.gain.value = 0.85; this.mus.connect(this.master);
       this.echo = c.createGain(); this.echo.gain.value = 1;
       const dly = c.createDelay(1), fb = c.createGain(), lp = c.createBiquadFilter(), wet = c.createGain();
-      dly.delayTime.value = 60 / BPM * 0.75; fb.gain.value = 0.34; lp.type = 'lowpass'; lp.frequency.value = 2200; wet.gain.value = 0.3;
+      this.dly = dly; dly.delayTime.value = 60 / THEMES[this.track || 0].bpm * 0.75; fb.gain.value = 0.34; lp.type = 'lowpass'; lp.frequency.value = 2200; wet.gain.value = 0.3;
       this.echo.connect(dly); dly.connect(lp); lp.connect(fb); fb.connect(dly); lp.connect(wet); wet.connect(this.mus);
     }
     this.musicOn = true; this.step = 0; this.nextT = c.currentTime + 0.08;
@@ -69,19 +88,20 @@ export class Audio8 extends Base {
 
   _schedule() {
     const c = this.ctx; if (!c || !this.musicOn) return;
-    const sp = 60 / BPM / 4;
+    const T = THEMES[this.track || 0], sp = 60 / T.bpm / 4;
     while (this.nextT < c.currentTime + 0.35) {
       const i = this.step % 256, bar = i >> 4, s = i & 15, t = this.nextT;
       if (!this.muted) {
-        const [root, maj] = CHORDS[bar], third = maj ? 4 : 3;
+        const [root, maj] = T.chords[bar], third = maj ? 4 : 3;
         // basso: quarti, con la quinta sul terzo quarto
         if (s % 4 === 0) this._soft('triangle', hz(root + (s === 8 ? 7 : 0)), t, sp * 3.4, s === 0 ? 0.19 : 0.14, this.mus, 0.01);
+        if (T.eighths && s % 4 === 2) this._soft('triangle', hz(root + 12), t, sp * 1.6, 0.07, this.mus, 0.008);
         // arpeggio lento sulle crome, con eco
         if (s % 2 === 0) { const arp = [0, third, 7, 12][(s >> 1) % 4]; this._soft('square', hz(root + 24 + arp), t, sp * 1.7, 0.016, this.echo, 0.004); }
         // pad lungo
         if (s === 0) for (const iv of [0, third, 7]) this._soft('triangle', hz(root + 12 + iv), t, sp * 16.5, 0.024, this.mus, 0.3);
         // melodia a onde quadre, leggermente scordata a coppie
-        const L = LEAD[i];
+        const L = T.lead[i];
         if (L) { const d = sp * L[1] * 0.94; this._soft('square', hz(L[0]), t, d, 0.04, this.mus, 0.012, -5); this._soft('square', hz(L[0]), t, d, 0.03, this.echo, 0.012, 6); }
         // battito appena accennato
         if (s === 0 || s === 8) this._tone('sine', 120, 48, t, 0.12, 0.16);
