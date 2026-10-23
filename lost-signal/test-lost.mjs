@@ -1,16 +1,16 @@
 // Prove automatiche di Lost Signal: node test-lost.mjs
 import { getLevel, COLS, ROWS } from './levels.js';
 import { LEVEL_DATA } from './levels-data.js';
-import { analyze, params } from './levelgen.js';
-import { Sim, CFG, DIRV, anchorCount } from './sim.js';
+import { analyze, params, liftCells, extrasFor } from './levelgen.js';
+import { Sim, CFG, DIRV, anchorCount, rockSpeed } from './sim.js';
 
 let fails = 0, checks = 0;
 const ok = (c, msg) => { checks++; if (!c) { fails++; console.error('FALLITO:', msg); } };
 
 // ---------- mappe ----------
 const N = LEVEL_DATA.length;
-ok(N === 15, '15 mappe salvate');
-for (let n = 1; n <= N + 3; n++) {
+ok(N === 50, '50 mappe salvate');
+for (let n = 1; n <= N; n++) {
   const L = getLevel(n), a = analyze(L.rows);
   ok(a.ok, `livello ${n} risolvibile (${a.errors})`);
   ok(L.news.length === 3 && new Set(L.news.map((p) => p.c + ',' + p.r)).size === 3, `livello ${n}: tre giornali su zolle diverse`);
@@ -60,7 +60,7 @@ function play(sim, moves) {
 }
 
 for (let n = 1; n <= N; n++) {
-  const sim = new Sim(15); sim.loadLevel(n); sim.score = 0;
+  const sim = new Sim(50); sim.loadLevel(n); sim.score = 0; sim.rocks = [];     // il giocatore automatico ignora le rocce: qui si prova il percorso
   ok(sim.phase === 'memorize' && sim.tilesVisible, 'memorizzazione iniziale visibile');
   ok(!sim.step(0) && !sim.jump() && !sim.flash(), 'comandi bloccati durante la memorizzazione');
   run(sim, 6900); ok(sim.phase === 'memorize' && sim.tilesVisible, 'ancora 7 s di memorizzazione'); run(sim, 200);
@@ -70,17 +70,17 @@ for (let n = 1; n <= N; n++) {
   ok(sim.phase === 'arrive', `livello ${n}: arrivo al portone`);
   run(sim, CFG.ARRIVE_MS + 20);
   ok(sim.score === 1000 + 500 * 3 && sim.score <= 2500, `livello ${n}: punteggio ${sim.score}`);
-  ok(sim.lives === 3 && sim.flashes === 20, 'nessuna vita o flash persi');
+  ok(sim.lives === 3 && sim.flashes === 20 + (n >= 20 && (n - 20) % 3 === 0 ? 1 : 0), 'nessuna vita o flash persi (solo il bonus dal 20)');
 }
 
 // arrivo con zero giornali: solo 1000, una volta sola
-{ const s = new Sim(15); run(s, 7100); const L = s.L;
+{ const s = new Sim(50); run(s, 7100); const L = s.L;
   // percorso diretto verso il portone evitando i giornali se possibile: calcolo con solo la meta
   play(s, plan(L, [L.goal])); run(s, CFG.ARRIVE_MS + 20);
   ok(s.score === 1000 + 500 * s.stats.news, 'punteggio = 1000 + 500 per giornale raccolto'); const sc = s.score; run(s, 200); ok(s.score === sc || s.phase === 'between', 'punteggio una sola volta'); }
 
 // caduta: vita persa, ripartenza dalla partenza, giornali e flash conservati, nessuna nuova memorizzazione
-{ const s = new Sim(15); run(s, 7100); const L = s.L;
+{ const s = new Sim(50); run(s, 7100); const L = s.L;
   play(s, plan(L, [L.news[0]])); const got = s.collected, fl0 = s.flashes;
   ok(got >= 1, 'giornale raccolto');
   s.flash(); ok(s.flashes === fl0 - 1 && s.flashMs === 3000, 'flash: 20 → 19, 3 secondi'); ok(!s.flash(), 'niente secondo flash mentre è acceso'); run(s, 3100); ok(!s.tilesVisible, 'flash spento dopo 3 secondi');
@@ -101,25 +101,25 @@ for (let n = 1; n <= N; n++) {
 
 // zolle sempre accese: 4, poi una in meno ogni 5 livelli, sul percorso, mai su partenza e portone
 for (const [n, k] of [[1, 4], [5, 4], [6, 3], [10, 3], [11, 2], [15, 2]]) {
-  const s = new Sim(15); s.loadLevel(n); const L = s.L, a = [...s.anchors];
+  const s = new Sim(50); s.loadLevel(n); const L = s.L, a = [...s.anchors];
   ok(anchorCount(n) === k && a.length === k, `livello ${n}: ${k} zolle sempre accese (${a.length})`);
   ok(a.every((i) => L.tiles.has(i) && i !== L.start.r * COLS + L.start.c && i !== L.goal.r * COLS + L.goal.c), `livello ${n}: zolle accese valide`);
   run(s, 7100); ok(!s.tilesVisible, `livello ${n}: dopo la memorizzazione il resto è spento`);
 }
 
 // salto: esattamente due caselle, nessun ritiro dei giornali sorvolati
-{ const s = new Sim(15); run(s, 7100); const L = s.L; s.pos = { c: 5, r: 6 }; s.L = { ...L, tiles: new Set([6 * COLS + 5, 6 * COLS + 7]), news: [{ c: 5, r: 6 }, { c: 6, r: 6 }, { c: 7, r: 6 }], goal: { c: 0, r: 0 } };
+{ const s = new Sim(50); run(s, 7100); const L = s.L; s.pos = { c: 5, r: 6 }; s.L = { ...L, tiles: new Set([6 * COLS + 5, 6 * COLS + 7]), news: [{ c: 5, r: 6 }, { c: 6, r: 6 }, { c: 7, r: 6 }], goal: { c: 0, r: 0 } };
   s.got = new Set([0]); s.turn(1); s.jump(); run(s, CFG.JUMP_MS + 20);
   ok(s.pos.c === 7 && s.pos.r === 6 && s.phase === 'play', 'salto di due caselle sulla zolla'); ok(s.collected === 2 && !s.got.has(1), 'raccolto solo il giornale su cui atterra'); s.turn(1); s.jump(); run(s, CFG.JUMP_MS + 20);
   ok(s.phase === 'fall', 'salto su una casella vuota: cade'); }
 
 // tre cadute: fine partita
-{ const s = new Sim(15); run(s, 7100);
+{ const s = new Sim(50); run(s, 7100);
   for (let i = 0; i < 3; i++) { let d = 0; for (let k = 0; k < 4; k++) { const [dx, dy] = DIRV[k]; if (!s.isTile(s.pos.c + dx, s.pos.r + dy)) { d = k; break; } } stepOff(s, d); run(s, CFG.STEP_MS + CFG.FALL_MS + 60); }
   ok(s.phase === 'over' && s.lives === 0, 'game over a zero vite'); }
 
 // flash: 20 in tutto, poi si gioca a memoria
-{ const s = new Sim(15); run(s, 7100); let used = 0;
+{ const s = new Sim(50); run(s, 7100); let used = 0;
   for (let i = 0; i < 25; i++) { if (s.flash()) used++; run(s, 3100); }
   ok(used === 20 && s.flashes === 0 && !s.flash(), 'venti flash complessivi'); }
 
@@ -128,8 +128,95 @@ for (const [n, k] of [[1, 4], [5, 4], [6, 3], [10, 3], [11, 2], [15, 2]]) {
   ok(s.phase === 'won', 'vittoria dopo l\'ultimo livello configurato'); ok(s.flashes === 20 && s.lives === 3, 'flash e vite condivisi'); }
 
 // flash e vite si portano da un livello all'altro
-{ const s = new Sim(15); run(s, 7100); s.flash(); run(s, 3100); play(s, plan(s.L, [s.L.goal])); run(s, CFG.ARRIVE_MS + CFG.BETWEEN_MS + 40);
+{ const s = new Sim(50); run(s, 7100); s.flash(); run(s, 3100); play(s, plan(s.L, [s.L.goal])); run(s, CFG.ARRIVE_MS + CFG.BETWEEN_MS + 40);
   ok(s.level === 2 && s.flashes === 19 && s.phase === 'memorize' && s.memMs > 6800, 'livello 2: flash 19, memorizzazione di nuovo 7 s'); }
+
+// ---------- livelli 10-50: ascensori, rocce, flash bonus ----------
+ok(extrasFor(9) === 0 && extrasFor(10) === 1 && extrasFor(19) === 1 && extrasFor(20) === 2 && extrasFor(50) === 2, 'ascensori e rocce: 0 fino al 9, 1 dal 10, 2 dal 20');
+for (let n = 1; n <= N; n++) {
+  const L = getLevel(n), want = extrasFor(n), cells = new Set();
+  ok(L.lifts.length === want && L.rocks.length === want, `livello ${n}: ${want} ascensori e ${want} rocce`);
+  for (const lf of L.lifts) for (const [c, r] of liftCells({ a: [lf.a.c, lf.a.r], b: [lf.b.c, lf.b.r] })) { cells.add(r * COLS + c); ok(!L.tiles.has(r * COLS + c) && r >= 2, `livello ${n}: ascensore su caselle vuote`); }
+  for (const lf of L.lifts) for (const e of [lf.a, lf.b]) ok([0, 1, 2, 3].some((d) => L.tiles.has((e.r + DIRV[d][1]) * COLS + e.c + DIRV[d][0])), `livello ${n}: le fermate sono accanto a una zolla`);
+  for (const k of L.rocks) {
+    const h = k.axis === 'h', tiles = [];
+    for (let i = 0; i < (h ? COLS : ROWS); i++) { const c = h ? i : k.lane, r = h ? k.lane : i; ok(!cells.has(r * COLS + c), `livello ${n}: corsia lontana dagli ascensori`); if (L.tiles.has(r * COLS + c)) tiles.push([c, r]); }
+    ok(tiles.length >= 3, `livello ${n}: la corsia attraversa almeno 3 zolle`);
+    ok(tiles.every(([c, r]) => (h ? [[c, r - 1], [c, r + 1]] : [[c - 1, r], [c + 1, r]]).some(([x, y]) => L.tiles.has(y * COLS + x))), `livello ${n}: ogni zolla della corsia ha una zolla di lato per mettersi in salvo`);
+  }
+  if (want === 2) ok(L.rocks[0].axis !== L.rocks[1].axis || Math.abs(L.rocks[0].lane - L.rocks[1].lane) >= 3, `livello ${n}: corsie distanti`);
+}
+ok(rockSpeed(10) === 3 && rockSpeed(50) <= 4.5 && rockSpeed(30) > rockSpeed(10), 'rocce a velocità moderata, crescente');
+
+// ascensore: salire, girarsi senza cadere, non scendere in viaggio, scendere alla fermata
+{
+  const s = new Sim(50); s.loadLevel(10); s.rocks = []; run(s, 7100);
+  const lf = s.L.lifts[0], adj = (p) => [0, 1, 2, 3].map((d) => ({ d, c: p.c + DIRV[d][0], r: p.r + DIRV[d][1] })).filter((x) => s.isTile(x.c, x.r));
+  const ta = adj(lf.a)[0], tb = adj(lf.b)[0];
+  const wait = (end, min, max = 1e9) => { for (let k = 0; k < 40000; k++) { const st = s.liftState(0); if (st.rest === end && st.left >= min && st.left <= max) return true; s.update(5); } return false; };
+  s.pos = { c: ta.c, r: ta.r }; s.safe = { c: ta.c, r: ta.r }; s.phase = 'play';
+  ok(wait(0, 20, 150), 'ascensore alla fermata A, sta per partire');
+  const n0 = s.log.length; ok(!s.step((ta.d + 2) % 4) && s.log.length === n0, 'l\'ascensore sta per partire: il comando si ignora, nessuna caduta, nessun comando registrato');
+  ok(wait(1, 600) && wait(0, 600), 'ascensore di nuovo fermo in A con la sosta davanti');
+  ok(s.step((ta.d + 2) % 4), 'salita sull\'ascensore'); run(s, CFG.STEP_MS + 20);
+  ok(s.riding === 0 && s.phase === 'play' && s.pos.c === lf.a.c && s.pos.r === lf.a.r, 'Faindo è sulla piattaforma');
+  for (const d of [0, 1, 2, 3, 0, 2, 1, 3]) ok(s.turn(d) && s.riding === 0 && s.phase === 'play', 'sulla piattaforma ci si gira quante volte si vuole senza cadere');
+  for (let k = 0; k < 4000 && s.liftState(0).rest >= 0; k++) s.update(5);
+  ok(s.liftState(0).rest === -1 && s.riding === 0 && s.phase === 'play', 'la piattaforma parte con Faindo sopra');
+  const n1 = s.log.length; ok(!s.step(0) && !s.jump() && s.log.length === n1, 'in viaggio non si scende né si salta');
+  ok(s.turn(1) && s.phase === 'play', 'in viaggio ci si gira ancora');
+  run(s, 400); const mid = s.fpos(); ok(Math.abs(mid.x - lf.a.c) + Math.abs(mid.y - lf.a.r) > 0, 'Faindo viaggia con la piattaforma');
+  ok(wait(1, 300), 'arrivo alla fermata B'); ok(s.pos.c === lf.b.c && s.pos.r === lf.b.r, 'posizione logica = fermata B');
+  ok(s.step(tb.d) && (run(s, CFG.STEP_MS + 20), true) && s.riding === -1 && s.isTile(s.pos.c, s.pos.r) && s.pos.c === tb.c && s.pos.r === tb.r && s.lives === 3, 'sceso sulla zolla di arrivo');
+  // dopo una caduta partendo da una zolla raggiunta con l'ascensore si riparte da una zolla vera
+  ok(s.safe && s.isTile(s.safe.c, s.safe.r), 'zolla sicura sempre su una zolla vera');
+}
+// scendere nel vuoto dalla piattaforma: si riparte dall'ultima zolla vera, non dall'ascensore
+{
+  const s = new Sim(50); s.loadLevel(10); s.rocks = []; run(s, 7100); const lf = s.L.lifts[0];
+  const ta = [0, 1, 2, 3].map((d) => ({ d, c: lf.a.c + DIRV[d][0], r: lf.a.r + DIRV[d][1] })).find((x) => s.isTile(x.c, x.r));
+  s.pos = { c: ta.c, r: ta.r }; s.safe = { c: ta.c, r: ta.r };
+  for (let k = 0; k < 40000 && !(s.liftState(0).rest === 0 && s.liftState(0).left >= 600); k++) s.update(5);
+  s.step((ta.d + 2) % 4); run(s, CFG.STEP_MS + 20); ok(s.riding === 0, 'a bordo');
+  // un verso senza zolle e senza ascensore: ci si orienta, poi si cade
+  const dv = [0, 1, 2, 3].find((d) => !s.isTile(s.pos.c + DIRV[d][0], s.pos.r + DIRV[d][1]) && d !== (ta.d)); const alive = s.lives;
+  s.step(dv); if (s.phase === 'play') s.step(dv); run(s, 40);
+  if (s.phase === 'step') { run(s, CFG.STEP_MS + CFG.FALL_MS + 60); ok(s.lives === alive - 1 && s.isTile(s.pos.c, s.pos.r) && s.riding === -1, 'dopo la caduta dall\'ascensore Faindo riparte da una zolla vera'); }
+}
+
+// rocce: avviso, urto, salvezza con un passo di lato, protezione dopo il colpo
+{
+  const mk = () => { const s = new Sim(50); s.loadLevel(10); run(s, 7100); return s; };
+  const lane = (s) => { const k = s.L.rocks[0], h = k.axis === 'h', ts = []; for (let i = 0; i < (h ? COLS : ROWS); i++) { const c = h ? i : k.lane, r = h ? k.lane : i; if (s.L.tiles.has(r * COLS + c)) ts.push({ c, r }); } return { k, h, ts }; };
+  const esc = (s, t, h) => (h ? [0, 2] : [3, 1]).find((d) => s.isTile(t.c + DIRV[d][0], t.r + DIRV[d][1]));
+  const s1 = mk(), a = lane(s1); let t = a.ts[0];
+  ok(s1.rockState(0) === null, 'all\'inizio le rocce non si vedono');
+  let warned = 0; s1.pos = { c: t.c, r: t.r }; s1.safe = { c: t.c, r: t.r };
+  for (let k = 0; k < 3000 && !s1.rockState(0); k++) s1.update(5);
+  const w = s1.rockState(0); ok(w && w.warn, 'prima l\'avviso'); ok(w.x < 0 || w.x > COLS - 1 || w.y < 0 || w.y > ROWS - 1, 'la roccia compare fuori dalla griglia');
+  for (const e of s1.events) if (e.type === 'rockWarn') warned++; ok(warned === 1, 'evento di avviso una sola volta');
+  // metto in salvo Faindo con un passo di lato
+  s1.events.length = 0; ok(s1.step(esc(s1, t, a.h)), 'passo di lato'); run(s1, 12000);
+  ok(s1.lives === 3 && s1.phase === 'play', 'in salvo: la roccia passa senza colpirlo');
+  // fermo sulla corsia: colpito
+  const s2 = mk(), b = lane(s2); t = b.ts[Math.floor(b.ts.length / 2)]; s2.pos = { c: t.c, r: t.r }; s2.safe = { c: t.c, r: t.r };
+  let hit = false; for (let k = 0; k < 4000 && !hit; k++) { s2.update(5); hit = s2.phase === 'fall'; }
+  ok(hit && s2.cause === 'rock' && s2.events.some((e) => e.type === 'hit'), 'colpito da una roccia'); ok(!s2.step(0) && !s2.jump(), 'nessun comando mentre è a terra');
+  run(s2, CFG.FALL_MS + 20); ok(s2.lives === 2 && s2.phase === 'play' && s2.reviveMs > 0, 'una vita in meno e protezione dopo il colpo');
+  run(s2, CFG.REVIVE_MS - 100); ok(s2.lives === 2, 'durante la protezione la roccia non fa male');
+  // due rocce dal 20
+  const s3 = new Sim(50); s3.loadLevel(20); ok(s3.rocks.length === 2 && s3.L.lifts.length === 2, 'livello 20: due rocce e due ascensori');
+}
+
+// punteggio svolazzante: l'evento giornale porta posizione e punti
+{ const s = new Sim(50); s.rocks = []; run(s, 7100); const L = s.L; play(s, plan(L, [L.news[0]]));
+  const e = s.events.filter((x) => x.type === 'news').pop(); ok(e && e.pts === 500 && e.c === L.news[0].c && e.r === L.news[0].r, 'evento giornale con posizione e +500'); }
+
+// flash bonus: uno ogni tre livelli dal 20 (20, 23, 26…), aggiunto a quelli rimasti
+{ const s = new Sim(50); let bonus = [], prev = s.flashes;
+  for (let n = 2; n <= 50; n++) { s.loadLevel(n); const got = s.events.some((e) => e.type === 'bonusFlash'); if (got) bonus.push(n); ok(s.flashes === prev + (got ? 1 : 0), `livello ${n}: flash ${prev} → ${s.flashes}`); prev = s.flashes; s.events.length = 0; }
+  ok(bonus.join() === [20, 23, 26, 29, 32, 35, 38, 41, 44, 47, 50].join(), 'flash bonus ai livelli 20, 23, …, 50: ' + bonus.join());
+  const t = new Sim(50); t.loadLevel(19); t.flashes = 7; t.loadLevel(20); ok(t.flashes === 8, 'si somma ai flash rimasti'); t.loadLevel(21); t.loadLevel(22); ok(t.flashes === 8, 'due livelli senza bonus'); }
 
 console.log(`${checks} controlli, ${fails} falliti`);
 process.exit(fails ? 1 : 0);

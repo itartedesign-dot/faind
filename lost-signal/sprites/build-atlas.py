@@ -1,4 +1,4 @@
-"""Ritaglia sheet-source.png (tavola di Lost Signal: palazzina, Faindo, zolle, giornali, icone) in sprite a risoluzione
+"""Ritaglia sheet-source.png (tavola di Lost Signal: Faindo, zolle, giornali, icone; palazzina e rocce dalla tavola sheet-newsroom.png) in sprite a risoluzione
 nativa di gioco e scrive atlas.png + atlas.js (coordinate esplicite). Uso: py build-atlas.py"""
 from PIL import Image, ImageEnhance
 import numpy as np, json
@@ -43,21 +43,26 @@ def clean(im):
 
 items = {}        # nome -> immagine nativa
 
-# ---------- palazzina (senza la zolla davanti al portone: la disegna il gioco, uguale a tutte le altre) ----------
-def building(x0, x1):
-    im = clean(src.crop((x0, 9, x1, 383)))
-    a = np.array(im)
-    row = a[355 - 9:366 - 9, :, 3].max(axis=0) > 60            # sotto il bordo del terreno resta solo la zolla d'ingresso
-    xs = np.where(row)[0]; g0, g1 = xs.min() - 2, xs.max() + 3
-    a[286 - 9:, g0:g1, :] = 0
-    return Image.fromarray(a, 'RGBA'), (g0 + g1) / 2.0
-SC_B = TILE / 110.0
-GAPC = {}
-for name, (bx0, bx1) in (('bldg_closed', (180, 618)), ('bldg_open', (626, 1062))):
-    b, gc = building(bx0, bx1)
+# ---------- palazzina FAIND Newsroom (tavola sheet-newsroom.png): chiusa e con le porte aperte, con la zolla d'ingresso che fa da zolla del portone ----------
+news = Image.open('sheet-newsroom.png').convert('RGBA')
+SC_B = 0.19
+FACE_Y = 472                    # bordo alto della zolla d'ingresso nella tavola
+GAPC, FACEY = {}, {}
+for name, (bx0, bx1) in (('bldg_closed', (100, 890)), ('bldg_open', (890, 1680))):
+    b = clean(news.crop((bx0, 10, bx1, 648)))
+    a = np.array(b)[:, :, 3]
+    row = np.where(a[600 - 10] > 60)[0]                  # larghezza della zolla d'ingresso a metà della sua altezza
+    cx = (row.min() + row.max()) / 2.0
+    bb = bbox(b); b = b.crop((bb[0], 0, bb[2], b.height)); cx -= bb[0]
     w, h = round(b.width * SC_B), round(b.height * SC_B)
-    items[name] = shrink(b, (w, h), 1.12, 1.15)
-    GAPC[name] = round(gc * SC_B, 1)
+    items[name] = shrink(b, (w, h), 1.1, 1.12)
+    GAPC[name] = round(cx * SC_B, 1)
+    FACEY[name] = round((FACE_Y - 10) * SC_B, 1)
+
+# ---------- rocce (quattro varianti, fotogrammi del rotolamento) ----------
+for i, (rx0, rx1) in enumerate(((302, 515), (616, 829), (928, 1140), (1240, 1455))):
+    r = clean(news.crop((rx0 - 4, 646, rx1 + 4, 866))); r = r.crop(bbox(r))
+    items['rock%d' % i] = shrink(r, (28, 28), 1.1, 1.12)
 
 # ---------- zolle ----------
 TILE_BOXES = [(69, 1013, 211, 1164), (227, 1013, 363, 1164), (385, 1013, 520, 1164), (540, 1013, 676, 1164)]
@@ -165,5 +170,6 @@ for n in ('ico_flash', 'ico_jump', 'life', 'scroll_s'): items[n].save(n.replace(
 open('atlas.js', 'w', encoding='utf-8').write(
     '/* Generato da sprites/build-atlas.py: coordinate [x, y, larghezza, altezza] degli sprite in atlas.png. */\n'
     'export const ATLAS = ' + json.dumps(pos, separators=(',', ':')) + ';\n'
-    'export const TILE_W = %d, TILE_H = %d;\n' % (TW, TH) + 'export const BLDG_GAP = ' + json.dumps(GAPC) + ';   // centro orizzontale del vano d\'ingresso\n')
+    'export const TILE_W = %d, TILE_H = %d;\n' % (TW, TH) + 'export const BLDG_GAP = ' + json.dumps(GAPC) + ';   // centro orizzontale della zolla d\'ingresso\n'
+    'export const BLDG_FACE = ' + json.dumps(FACEY) + ';   // altezza del bordo alto della zolla d\'ingresso\n')
 print(atlas.size, {k: v[2:] for k, v in pos.items()})
