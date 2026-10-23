@@ -6,16 +6,17 @@
    animazione. Memorizzazione e flash vivono nel motore e scorrono solo quando il motore viene fatto avanzare: pausa,
    schede in background e schermate non li toccano e non regalano nuove accensioni.
    ===================================================================== */
-import { Sim, CFG, DIRV } from './sim.js?v=20261023e';
-import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261023e';
-import { Audio8 } from './audio.js?v=20261023e';
-import { ROWS } from './levels.js?v=20261023e';
-import { createBoard } from '../faind-game/board.js?v=20261023e';
+import { Sim, CFG, DIRV } from './sim.js?v=20261023f';
+import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261023f';
+import { Audio8 } from './audio.js?v=20261023f';
+import { ROWS } from './levels.js?v=20261023f';
+import { createBoard } from '../faind-game/board.js?v=20261023f';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_LOST_API || '').replace(/\/+$/, '');
 const LEVELS = Math.max(1, parseInt(window.FAIND_LOST_LEVELS || '50', 10) || 50);
 const BEST_KEY = 'faind-lost-best';
+const SAVE_KEY = 'faind-lost-save';   // partita salvata all'inizio di ogni livello: si riprende dalla schermata iniziale (non va in classifica)
 const SWIPE_PX = 22, TAP_MS = 450;
 const QUANTUM = 5;              // il motore avanza a passi fissi di 5 ms: il server rifà la partita con gli stessi passi
 const RANKED_LEVELS = 50;       // la classifica vale solo per la partita da 50 livelli, quella che il server rifà
@@ -26,7 +27,7 @@ const el = {
   app: $('app'), fit: $('fit'), frame: $('frame'), stage: $('stage'), cv: $('cv'), brand: $('brand'),
   score: $('hScore'), level: $('hLevel'), lives: $('hLives'), news: $('hNews'), timer: $('hTimer'), timerL: $('hTimerL'), timerV: $('hTimerV'),
   pauseBtn: $('btnPause'), live: $('liveMsg'), toast: $('toast'), hint: $('hint'), flashN: $('flashN'), btnFlash: $('btnFlash'), btnJump: $('btnJump'), memBar: $('memBar'), barMsg: $('barMsg'),
-  pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pCont: $('pCont'), pLb: $('pLb'), pauseAuto: $('pauseAuto')
+  btnLoad: $('btnLoad'), pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pCont: $('pCont'), pLb: $('pLb'), pauseAuto: $('pauseAuto')
 };
 
 const board = createBoard({ api: LEVELS === RANKED_LEVELS ? API : '', game: 'lost', sessionTimeout: 8000, bestKey: BEST_KEY, signal: ac.signal, isOver: () => state === 'over' });
@@ -44,7 +45,7 @@ try { if (document.fonts && document.fonts.load) document.fonts.load('8px Silksc
 function setState(s) {
   state = s; el.app.setAttribute('data-state', s);
   el.pStart.hidden = s !== 'start'; el.pPause.hidden = s !== 'paused'; el.pOver.hidden = s !== 'over'; el.pCont.hidden = s !== 'continue';
-  el.pauseBtn.hidden = s !== 'running';
+  el.pauseBtn.hidden = s !== 'running'; if (s === 'start' && el.btnLoad) updateLoadBtn();
   if (document.activeElement && document.activeElement !== document.body) { try { document.activeElement.blur(); } catch (e) {} }
 }
 
@@ -84,11 +85,20 @@ function toggleSound() {
 }
 
 /* ------------------------------ Partita ------------------------------ */
-function startGame() {
+function readSave() {
+  try { const o = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); if (o && o.level > 1 && o.level <= LEVELS && o.lives > 0) return o; } catch (e) {}
+  return null;
+}
+function writeSave() { try { localStorage.setItem(SAVE_KEY, JSON.stringify({ level: sim.level, score: sim.score, lives: sim.lives, flashes: sim.flashes, news: sim.stats.news, falls: sim.stats.falls })); } catch (e) {} }
+function clearSave() { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} }
+function updateLoadBtn() { const sv = readSave(); el.btnLoad.hidden = !sv; $('btnStart').textContent = sv ? 'NEW GAME' : 'START'; if (sv) el.btnLoad.textContent = 'CONTINUE · LEVEL ' + sv.level; }
+function startGame(save) {
   audio.unlock(); audio.resume(); askFullscreen(); hideHint();
-  continued = false;
+  continued = !!save;
   board.startSession();                       // il gettone può arrivare anche a partita iniziata: qui non c'è un seme da aspettare
-  sim = new Sim(LEVELS); sim.events.length = 0; scene.vis = 1; scene.L = null; last = performance.now(); acc = 0; lastSec = -1;
+  sim = new Sim(LEVELS);
+  if (save) { sim.loadLevel(save.level); sim.score = save.score; sim.lives = save.lives; sim.flashes = save.flashes; sim.stats.news = save.news || 0; sim.stats.falls = save.falls || 0; sim.continues = 1; }
+  sim.events.length = 0; scene.vis = 1; scene.L = null; last = performance.now(); acc = 0; lastSec = -1;
   el.live.textContent = ''; updateHud(true); setState('running'); audio.startMusic(); levelToast();
 }
 function levelToast() {
@@ -117,7 +127,7 @@ function takeContinue() {
   handleEvents(); toast('CONTINUE', 'NO RECORD', true); updateHud(true);
 }
 function finish(won) {
-  setState('over'); audio.stopMusic(); if (won) audio.sfx('win'); hideHint();
+  setState('over'); audio.stopMusic(); if (won) audio.sfx('win'); hideHint(); clearSave();
   const score = sim.score;
   $('overTitle').textContent = won ? 'YOU WIN' : 'GAME OVER';
   let best = localBest(); const isBest = !continued && score > best;
@@ -297,7 +307,7 @@ function handleEvents() {
       case 'arrive': audio.sfx('door'); break;
       case 'memorizeEnd': audio.sfx('ready'); el.live.textContent = 'The path is hidden. Go.'; if (sim.level === 1 && !tutorialDone) showHint(0); break;
       case 'levelDone': { audio.sfx('clear'); const pts = CFG.SCORE.ARRIVE + CFG.SCORE.NEWS * e.news; toast('LEVEL ' + e.level + ' CLEAR', '+' + pts + (e.news ? '  ·  ' + e.news + '/3 NEWSPAPERS' : ''), true); break; }
-      case 'level': if (e.level > 1 && state === 'running') { hideHint(); levelToast(); } else if (e.level > 1) hideHint(); break;
+      case 'level': if (e.level > 1 && state === 'running') { writeSave(); hideHint(); levelToast(); } else if (e.level > 1) hideHint(); break;
       case 'over': offerContinue(); break;
       case 'won': finish(true); break;
     }
@@ -335,7 +345,8 @@ async function shareScore() {
 
 /* ------------------------------ Collegamenti ------------------------------ */
 on(el.brand, 'click', goHome);
-on($('btnStart'), 'click', startGame);
+on($('btnStart'), 'click', () => startGame());
+on(el.btnLoad, 'click', () => { const sv = readSave(); if (sv) startGame(sv); });
 on($('btnSound'), 'click', toggleSound); on($('btnSound2'), 'click', toggleSound);
 on(el.pauseBtn, 'click', () => pause(false));
 on($('btnResume'), 'click', resume);
@@ -348,7 +359,7 @@ on($('btnShare'), 'click', shareScore);
 on($('btnNews'), 'click', () => { shutdown(); }); on($('btnMore'), 'click', () => { shutdown(); }); on($('btnGames'), 'click', () => { shutdown(); });
 
 el.brand.setAttribute('title', 'Back to FAIND home'); el.brand.setAttribute('aria-label', 'FAIND – back to the home page');
-updateSoundButtons(); layout(); updateHud(true);
+updateSoundButtons(); updateLoadBtn(); layout(); updateHud(true);
 requestAnimationFrame((n) => { last = n; raf = requestAnimationFrame(frame); });
 
 // per le prove automatiche e la diagnosi
