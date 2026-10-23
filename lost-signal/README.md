@@ -18,6 +18,7 @@ Gioco di memoria ed esplorazione in pixel art (terzo gioco di FAIND, pagina `/lo
 - Cadere nel vuoto toglie una vita e fa ripartire Faindo dalla zolla da cui è caduto, con tutto il percorso acceso per 2,5 secondi (si può muovere subito); giornali raccolti e flash restano. Con zero vite: GAME OVER.
 - Dal livello 10: **ascensori** (piattaforme sempre accese che fanno la spola fra due fermate: si sale e si scende solo a piattaforma ferma, sopra ci si può girare quante volte si vuole senza cadere) e una **roccia** che rotola lungo una riga o colonna intera, entrando da fuori schermo dopo un avviso di 1,3 s (velocità da 3 a 4,2 caselle al secondo). Ogni zolla sulla corsia ha una zolla di lato: un passo e si è in salvo. Una roccia che tocca Faindo toglie una vita (2,5 s di protezione dopo il colpo). Dal livello 20: due ascensori e due rocce.
 - Dal livello 20, uno ogni tre livelli (20, 23, 26…): +1 flash, aggiunto ai rimasti.
+- Dal livello 10, lungo il percorso: **flash da raccogliere** (4 per livello, uno in più ogni 2 livelli, al massimo 8; +1 flash ciascuno) e un **mini Faindo** che regala una vita (al massimo 5). Posizioni fisse per livello (seme del livello, `levels.js`), mai su partenza, portone o giornali.
 - Quattro zolle restano sempre accese lungo il percorso (tre dal livello 6, due dall'11, una dal 16).
 - Punteggio una sola volta per livello: 1.000 per l'arrivo, 500 per giornale (massimo 2.500; +500 svolazza sul giornale quando lo si prende).
 
