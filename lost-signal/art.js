@@ -8,9 +8,9 @@
    Quando il percorso è spento si vedono solo la palazzina con la zolla davanti al portone, i giornali e Faindo: niente
    ombre, contorni o particelle sotto le zolle nascoste.
    ===================================================================== */
-import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261023d';
-import { COLS, ROWS } from './levels.js?v=20261023d';
-import { CFG } from './sim.js?v=20261023d';
+import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261023e';
+import { COLS, ROWS } from './levels.js?v=20261023e';
+import { CFG } from './sim.js?v=20261023e';
 
 export const TS = 32, CW = COLS * TS, HUD = 54, BAR = 48, MIN_H = 632, MAX_H = 780;
 const SOIL = 8, BLDG_ABOVE = 88;                 // altezza della palazzina sopra la riga 0 (la sua zolla d'ingresso è la zolla del portone)
@@ -22,7 +22,7 @@ export class Scene {
     this.cv = cv; this.H = MIN_H; cv.width = CW; cv.height = this.H;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
     this.atlas = new Image(); this.clock = 0; this.vis = 1; this.hint = null; this.L = null; this.variant = []; this.floaters = [];
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261023d'; });
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261023e'; });
     this.setSize(MIN_H);
   }
 
@@ -176,22 +176,13 @@ export class Scene {
     });
   }
 
-  /** rocce: strisce di avviso sulla corsia, freccia all'ingresso, poi la roccia che rotola (quattro fotogrammi) con ombra */
+  /** rocce: la roccia che rotola (quattro fotogrammi) con ombra */
   drawRocks(sim) {
     const g = this.g;
     for (let j = 0; j < sim.rocks.length; j++) {
       const r = sim.rockState(j); if (!r) continue;
       const d = sim.rocks[j], h = r.axis === 'h';
-      if (r.warn) {
-        const pul = 0.5 + 0.5 * Math.sin(this.clock * 14), blink = Math.floor(this.clock * 8) % 2, dx = h ? (r.side ? -1 : 1) : 0, dy = h ? 0 : (r.side ? -1 : 1);
-        const cx = h ? (r.side ? CW - 12 : 12) : this.cellX(d.lane) + TS / 2, cy = h ? this.cellY(d.lane) + TS / 2 : (r.side ? this.cellY(ROWS) - 10 : this.cellY(0) - 14);
-        g.globalAlpha = blink ? 1 : 0.5;
-        for (const [col, off] of [['#05080f', 1], ['#ffd21f', 0]]) {      // freccia che indica il verso di arrivo, con contorno
-          g.fillStyle = col;
-          for (let i = 0; i < 7; i++) for (let w = -(6 - i) - off; w <= 6 - i + off; w++) g.fillRect(Math.round(cx + dx * (i - 3) + dy * w), Math.round(cy + dy * (i - 3) + dx * w), 1, 1);
-        }
-        g.globalAlpha = 1; continue;
-      }
+      if (r.warn) continue;                       // nessun segnale: la roccia compare dal bordo dello schermo
       const cells = r.prog * (d.N + 2), fade = Math.min(1, cells / 0.9, (d.N + 2 - cells) / 0.9);
       const frame = Math.floor(cells * 3.2) % 4, f = r.side ? 3 - frame : frame, x = this.cellX(r.x) + TS / 2, y = this.cellY(r.y) + TS / 2, bob = Math.round(Math.abs(Math.sin(cells * 5)) * 1.5);
       g.globalAlpha = 0.32 * fade; g.fillStyle = '#000'; g.fillRect(Math.round(x) - 11, Math.round(y) + 10, 22, 3); g.globalAlpha = 1;
