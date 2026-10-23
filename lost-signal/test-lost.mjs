@@ -89,7 +89,8 @@ for (let n = 1; n <= N; n++) {
   ok(d >= 0, 'esiste un vuoto accanto'); const here = { c: s.pos.c, r: s.pos.r };
   ok(!s.tilesVisible, 'percorso spento'); s.facing = (d + 1) % 4; s.step(d);
   ok(s.phase === 'play' && s.facing === d && s.pos.c === here.c && s.pos.r === here.r && s.warnMs > 0, 'primo comando verso il vuoto: solo orientamento e avviso');
-  run(s, CFG.WARN_MS + 20); ok(s.warnMs === 0, 'avviso scaduto'); s.step(d); ok(s.phase === 'play', 'dopo la finestra serve di nuovo l\'avviso');
+  run(s, CFG.WARN_MS + 20); ok(s.warnMs === 0, 'avviso scaduto');
+  { const [ex, ey] = DIRV[d], jedge = s.isTile(here.c + ex * 2, here.r + ey * 2), n0 = s.lives; s.step(d); if (jedge) { ok(s.phase === 'play', 'bordo del salto: seconda prova ancora senza caduta'); s.step(d); } ok(s.phase === 'step', 'bordo già avvisato: il comando successivo fa cadere'); run(s, CFG.STEP_MS + CFG.FALL_MS + 20); ok(s.lives === n0 - 1, 'vita persa'); run(s, CFG.REVIVE_MS + 50); s.lives = 3; }
   run(s, 600); ok(s.jump() && s.phase === 'jump', 'il salto non è toccato dall\'avviso'); run(s, CFG.JUMP_MS + CFG.FALL_MS + 20); ok(s.lives === 2, 'il salto nel vuoto fa cadere'); run(s, CFG.REVIVE_MS);
   ok(s.pos.c === here.c && s.pos.r === here.r, 'dopo la caduta ripartenza dove si era'); s.lives = 3; s.warnMs = 0; s.facing = (d + 1) % 4; s.step(d); s.step(d); run(s, CFG.STEP_MS + 20); ok(s.phase === 'fall', 'caduta nel vuoto con comando ripetuto');
   ok(!s.step(0) && !s.jump() && !s.flash(), 'comandi bloccati durante la caduta'); run(s, CFG.FALL_MS + 20);

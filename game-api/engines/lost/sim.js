@@ -7,8 +7,8 @@
    a pagina nascosta o durante le schermate, così lampi e memorizzazione non si consumano mai da soli.
    Comandi: il registro `log` contiene solo quelli accettati, come [clock, codice] con codice 0-3 passo, 4-7 orientamento, 8 salto, 9 flash;
    il gioco avanza a passi fissi di 5 ms (game-api/verify.js rifà la stessa partita sul server).
-   Percorso spento: il primo comando verso una casella senza zolla orienta soltanto Faindo e accende un avviso (WARN_MS); il passo nel
-   vuoto parte solo se lo stesso comando si ripete nella finestra. Dopo una caduta Faindo riparte dalla zolla da cui è caduto e per
+   Percorso spento: il primo comando verso una casella senza zolla orienta soltanto Faindo e accende un avviso (WARN_MS); se lo stesso
+   bordo viene provato di nuovo Faindo cade. Il bordo da cui parte il salto (zolla a due caselle) si può provare 2 volte, alla terza cade. Dopo una caduta Faindo riparte dalla zolla da cui è caduto e per
    REVIVE_MS tutto il percorso è acceso. Quattro zolle (tre dal livello 6, due dall'11…) restano sempre accese.
    Fasi: memorize | play | step | jump | fall | arrive | between | over | won
    ===================================================================== */
@@ -58,7 +58,7 @@ export class Sim {
     this.pos = { c: this.L.start.c, r: this.L.start.r }; this.facing = 0;
     this.got = new Set(); this.scored = false;
     this.phase = 'memorize'; this.memMs = CFG.MEMORIZE_MS; this.flashMs = 0;
-    this.warnMs = 0; this.warnDir = -1; this.reviveMs = 0; this.safe = { c: this.pos.c, r: this.pos.r }; this.anchors = anchorSet(this.L, anchorCount(n));
+    this.warnMs = 0; this.warnDir = -1; this.tested = new Map(); this.reviveMs = 0; this.safe = { c: this.pos.c, r: this.pos.r }; this.anchors = anchorSet(this.L, anchorCount(n));
     this.mv = null; this.fallT = 0; this.arriveT = 0; this.betweenT = 0; this.stepFoot = 0; this.over = false;
     this.events.push({ type: 'level', level: n });
   }
@@ -75,9 +75,13 @@ export class Sim {
     if (this.phase !== 'play') return false;
     this.log.push([this.clock, d]);
     const [dx, dy] = DIRV[d];
-    if (!this.tilesVisible && !this.isTile(this.pos.c + dx, this.pos.r + dy) && !(this.warnMs > 0 && this.warnDir === d)) {
-      this.facing = d; this.warnDir = d; this.warnMs = CFG.WARN_MS; this.events.push({ type: 'warn', dir: d });
-      return true;
+    if (!this.tilesVisible && !this.isTile(this.pos.c + dx, this.pos.r + dy)) {
+      const key = (this.pos.r * COLS + this.pos.c) * 4 + d, used = this.tested.get(key) || 0;
+      if (used < (this.isTile(this.pos.c + dx * 2, this.pos.r + dy * 2) ? 2 : 1)) {   // bordo del salto: 2 prove, ogni altro bordo: 1
+        this.tested.set(key, used + 1);
+        this.facing = d; this.warnDir = d; this.warnMs = CFG.WARN_MS; this.events.push({ type: 'warn', dir: d });
+        return true;
+      }
     }
     this.facing = d; this.warnMs = 0;
     this.mv = { kind: 'step', from: { c: this.pos.c, r: this.pos.r }, to: { c: this.pos.c + dx, r: this.pos.r + dy }, t: 0, dur: CFG.STEP_MS };
@@ -155,14 +159,14 @@ export class Sim {
   _lose() {
     this.lives--; this.stats.falls++; this.events.push({ type: 'life', lives: this.lives });
     if (this.lives <= 0) { this.phase = 'over'; this.over = true; this.events.push({ type: 'over' }); return; }
-    this.pos = { c: this.safe.c, r: this.safe.r }; this.reviveMs = CFG.REVIVE_MS; this.warnMs = 0; this.phase = 'play'; this.events.push({ type: 'respawn' });
+    this.pos = { c: this.safe.c, r: this.safe.r }; this.reviveMs = CFG.REVIVE_MS; this.warnMs = 0; this.tested.clear(); this.phase = 'play'; this.events.push({ type: 'respawn' });
   }
 
   /** Continue dopo l'ultima vita: stesso livello, tre vite nuove, Faindo sull'ultima zolla sicura con il percorso acceso. Flash residui e giornali raccolti restano. */
   revive() {
     if (this.phase !== 'over') return false;
     this.continues++; this.lives = CFG.LIVES; this.over = false;
-    this.pos = { c: this.safe.c, r: this.safe.r }; this.reviveMs = CFG.REVIVE_MS; this.warnMs = 0; this.phase = 'play';
+    this.pos = { c: this.safe.c, r: this.safe.r }; this.reviveMs = CFG.REVIVE_MS; this.warnMs = 0; this.tested.clear(); this.phase = 'play';
     this.events.push({ type: 'respawn' });
     return true;
   }

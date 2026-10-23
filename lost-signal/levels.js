@@ -1,6 +1,6 @@
 /* FAIND LOST SIGNAL — accesso alle mappe: quelle salvate (levels-data.js) e, oltre quelle, mappe generate e verificate. */
-import { LEVEL_DATA } from './levels-data.js?v=20261023a';
-import { generate, parse, analyze, COLS, ROWS } from './levelgen.js?v=20261023a';
+import { LEVEL_DATA } from './levels-data.js?v=20261023b';
+import { generate, parse, analyze, COLS, ROWS } from './levelgen.js?v=20261023b';
 
 export { COLS, ROWS };
 const cache = new Map();
