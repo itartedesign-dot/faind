@@ -8,9 +8,9 @@
    Quando il percorso è spento si vedono solo la palazzina con la zolla davanti al portone, i giornali e Faindo: niente
    ombre, contorni o particelle sotto le zolle nascoste.
    ===================================================================== */
-import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261023c';
-import { COLS, ROWS } from './levels.js?v=20261023c';
-import { CFG } from './sim.js?v=20261023c';
+import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261023d';
+import { COLS, ROWS } from './levels.js?v=20261023d';
+import { CFG } from './sim.js?v=20261023d';
 
 export const TS = 32, CW = COLS * TS, HUD = 54, BAR = 48, MIN_H = 632, MAX_H = 780;
 const SOIL = 8, BLDG_ABOVE = 88;                 // altezza della palazzina sopra la riga 0 (la sua zolla d'ingresso è la zolla del portone)
@@ -22,7 +22,7 @@ export class Scene {
     this.cv = cv; this.H = MIN_H; cv.width = CW; cv.height = this.H;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
     this.atlas = new Image(); this.clock = 0; this.vis = 1; this.hint = null; this.L = null; this.variant = []; this.floaters = [];
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261023c'; });
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261023d'; });
     this.setSize(MIN_H);
   }
 
@@ -162,18 +162,10 @@ export class Scene {
     if (this.hint && !paused) this.drawHint(sim, this.hint);
   }
 
-  /** ascensori: guida tratteggiata, fermate e piattaforma sempre accesa (alone azzurro che pulsa, uguale a percorso acceso o spento) */
+  /** ascensori: piattaforma sempre accesa (alone azzurro che pulsa, uguale a percorso acceso o spento) */
   drawLifts(sim) {
     const g = this.g, L = sim.L, pul = 0.5 + 0.5 * Math.sin(this.clock * 4);
     L.lifts.forEach((lf, i) => {
-      const n = lf.len, sx = Math.sign(lf.b.c - lf.a.c), sy = Math.sign(lf.b.r - lf.a.r);
-      g.fillStyle = '#29d6ff';
-      for (let k = 0; k <= n; k++) {
-        const cx = this.cellX(lf.a.c + sx * k) + TS / 2, cy = this.cellY(lf.a.r + sy * k) + TS / 2;
-        if (k === 0 || k === n) { g.globalAlpha = 0.5; g.fillRect(cx - 14, cy - 14, 28, 1); g.fillRect(cx - 14, cy + 13, 28, 1); g.fillRect(cx - 14, cy - 14, 1, 28); g.fillRect(cx + 13, cy - 14, 1, 28); }
-        g.globalAlpha = 0.45; if (k < n) for (let d = 4; d < TS; d += 8) g.fillRect(cx + sx * d - (sy ? 1 : 0), cy + sy * d - (sx ? 1 : 0), sx ? 2 : 2, sy ? 2 : 2);
-      }
-      g.globalAlpha = 1;
       const s = sim.liftState(i), x = this.cellX(s.x), y = this.cellY(s.y);
       g.globalAlpha = 0.16 + 0.1 * pul; g.fillStyle = '#6fe9ff'; g.fillRect(Math.round(x) - 3, Math.round(y) - 3, TS + 6, TS + 6);
       g.globalAlpha = 1; this.spr('tile2', x, y);
@@ -192,10 +184,6 @@ export class Scene {
       const d = sim.rocks[j], h = r.axis === 'h';
       if (r.warn) {
         const pul = 0.5 + 0.5 * Math.sin(this.clock * 14), blink = Math.floor(this.clock * 8) % 2, dx = h ? (r.side ? -1 : 1) : 0, dy = h ? 0 : (r.side ? -1 : 1);
-        g.fillStyle = '#ff5a3c'; g.globalAlpha = 0.1 + 0.2 * pul * r.prog;
-        if (h) g.fillRect(0, this.cellY(d.lane), CW, TS); else g.fillRect(this.cellX(d.lane), this.cellY(0), TS, ROWS * TS);
-        g.globalAlpha = 0.5 + 0.3 * pul; g.fillStyle = '#ffd21f';
-        if (h) { g.fillRect(0, this.cellY(d.lane), CW, 1); g.fillRect(0, this.cellY(d.lane) + TS - 1, CW, 1); } else { g.fillRect(this.cellX(d.lane), this.cellY(0), 1, ROWS * TS); g.fillRect(this.cellX(d.lane) + TS - 1, this.cellY(0), 1, ROWS * TS); }
         const cx = h ? (r.side ? CW - 12 : 12) : this.cellX(d.lane) + TS / 2, cy = h ? this.cellY(d.lane) + TS / 2 : (r.side ? this.cellY(ROWS) - 10 : this.cellY(0) - 14);
         g.globalAlpha = blink ? 1 : 0.5;
         for (const [col, off] of [['#05080f', 1], ['#ffd21f', 0]]) {      // freccia che indica il verso di arrivo, con contorno
