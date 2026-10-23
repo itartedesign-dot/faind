@@ -15,13 +15,13 @@
    più all'inizio dei livelli 20, 23, 26… Tutto è funzione del tempo di gioco (nessun caso): il server rifà la stessa partita.
    Fasi: memorize | play | step | jump | fall | arrive | between | over | won
    ===================================================================== */
-import { getLevel, COLS, ROWS } from './levels.js?v=20261023g';
-import { LIFT_CELL_MS, LIFT_DWELL_MS } from './levelgen.js?v=20261023g';
+import { getLevel, COLS, ROWS } from './levels.js?v=20261024b';
+import { LIFT_CELL_MS, LIFT_DWELL_MS } from './levelgen.js?v=20261024b';
 
 export const CFG = {
   MEMORIZE_MS: 7000, FLASH_MS: 3000, FLASHES: 20, LIVES: 3, STEP_MS: 150, JUMP_MS: 400, FALL_MS: 900, WARN_MS: 1500, REVIVE_MS: 2500, ARRIVE_MS: 1700, BETWEEN_MS: 1500,
   SCORE: { ARRIVE: 1000, NEWS: 500 },
-  ROCK_WARN_MS: 1300, ROCK_FIRST_MS: 3000, ROCK_HIT: 0.62, FLASH_BONUS_FROM: 20
+  MAX_LIVES: 5, ROCK_WARN_MS: 1300, ROCK_FIRST_MS: 3000, ROCK_HIT: 0.62, FLASH_BONUS_FROM: 20
 };
 export const DIRV = [[0, -1], [1, 0], [0, 1], [-1, 0]];     // su, destra, giù, sinistra
 
@@ -76,7 +76,7 @@ export class Sim {
   loadLevel(n) {
     this.level = n; this.L = getLevel(n);
     this.pos = { c: this.L.start.c, r: this.L.start.r }; this.facing = 0;
-    this.got = new Set(); this.scored = false;
+    this.got = new Set(); this.gotFlash = new Set(); this.gotLife = false; this.scored = false;
     this.phase = 'memorize'; this.memMs = CFG.MEMORIZE_MS; this.flashMs = 0;
     this.warnMs = 0; this.warnDir = -1; this.tested = new Map(); this.reviveMs = 0; this.safe = { c: this.pos.c, r: this.pos.r }; this.anchors = anchorSet(this.L, anchorCount(n));
     this.mv = null; this.fallT = 0; this.arriveT = 0; this.betweenT = 0; this.stepFoot = 0; this.over = false;
@@ -245,6 +245,10 @@ export class Sim {
     }
     this.events.push({ type: 'land', kind });
     const k = this.newsAt(to.c, to.r);
+    const fk = this.L.flashes.findIndex((f) => f.c === to.c && f.r === to.r);
+    if (fk >= 0 && !this.gotFlash.has(fk)) { this.gotFlash.add(fk); this.flashes++; this.events.push({ type: 'flashPick', c: to.c, r: to.r, left: this.flashes }); }
+    const lf = this.L.life;
+    if (lf && !this.gotLife && lf.c === to.c && lf.r === to.r) { this.gotLife = true; if (this.lives < CFG.MAX_LIVES) this.lives++; this.events.push({ type: 'lifePick', c: to.c, r: to.r, lives: this.lives }); }
     if (k >= 0 && !this.got.has(k)) { this.got.add(k); this.events.push({ type: 'news', n: this.got.size, c: to.c, r: to.r, pts: CFG.SCORE.NEWS }); }
     if (to.c === this.L.goal.c && to.r === this.L.goal.r) { this.phase = 'arrive'; this.arriveT = 0; this.events.push({ type: 'arrive' }); return; }
     this.phase = 'play';

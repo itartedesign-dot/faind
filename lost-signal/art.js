@@ -8,9 +8,9 @@
    Quando il percorso è spento si vedono solo la palazzina con la zolla davanti al portone, i giornali e Faindo: niente
    ombre, contorni o particelle sotto le zolle nascoste.
    ===================================================================== */
-import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261023g';
-import { COLS, ROWS } from './levels.js?v=20261023g';
-import { CFG } from './sim.js?v=20261023g';
+import { ATLAS, BLDG_GAP, BLDG_FACE } from './sprites/atlas.js?v=20261024b';
+import { COLS, ROWS } from './levels.js?v=20261024b';
+import { CFG } from './sim.js?v=20261024b';
 
 export const TS = 32, CW = COLS * TS, HUD = 54, BAR = 48, MIN_H = 632, MAX_H = 780;
 const SOIL = 8, BLDG_ABOVE = 88;                 // altezza della palazzina sopra la riga 0 (la sua zolla d'ingresso è la zolla del portone)
@@ -22,7 +22,7 @@ export class Scene {
     this.cv = cv; this.H = MIN_H; cv.width = CW; cv.height = this.H;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
     this.atlas = new Image(); this.clock = 0; this.vis = 1; this.hint = null; this.L = null; this.variant = []; this.floaters = [];
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261023g'; });
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261024b'; });
     this.setSize(MIN_H);
   }
 
@@ -137,6 +137,16 @@ export class Scene {
       const bob = Math.round(Math.sin(this.clock * 3 + k * 2) * 1.4);
       this.spr('scroll', this.cellX(n.c) + (TS - 24) / 2, this.cellY(n.r) + 6 + bob);
     });
+    // flash e mini Faindo da raccogliere (dal livello 10): sempre visibili, come i giornali
+    L.flashes.forEach((f, k) => {
+      if (sim.gotFlash.has(k)) return;
+      const bob = Math.round(Math.sin(this.clock * 3.4 + k * 1.7) * 1.4), a = ATLAS.ico_flash;
+      this.g.drawImage(this.atlas, a[0], a[1], a[2], a[3], Math.round(this.cellX(f.c) + (TS - 22) / 2), this.cellY(f.r) + 8 + bob, 22, 18);
+    });
+    if (L.life && !sim.gotLife) {
+      const bob = Math.round(Math.sin(this.clock * 3 + 1) * 1.6), a = ATLAS.f_front_0;
+      this.g.drawImage(this.atlas, a[0], a[1], a[2], a[3], Math.round(this.cellX(L.life.c) + (TS - 21) / 2), this.cellY(L.life.r) + 3 + bob, 21, 24);
+    }
     // Faindo
     const P = this.pose(sim);
     if (P.alpha > 0) {

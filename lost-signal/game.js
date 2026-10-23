@@ -6,10 +6,10 @@
    animazione. Memorizzazione e flash vivono nel motore e scorrono solo quando il motore viene fatto avanzare: pausa,
    schede in background e schermate non li toccano e non regalano nuove accensioni.
    ===================================================================== */
-import { Sim, CFG, DIRV } from './sim.js?v=20261023g';
-import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261023g';
-import { Audio8 } from './audio.js?v=20261023g';
-import { ROWS } from './levels.js?v=20261023g';
+import { Sim, CFG, DIRV } from './sim.js?v=20261024b';
+import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261024b';
+import { Audio8 } from './audio.js?v=20261024b';
+import { ROWS } from './levels.js?v=20261024b';
 import { createBoard } from '../faind-game/board.js?v=20261024a';
 
 const $ = (id) => document.getElementById(id);
@@ -265,7 +265,7 @@ function updateHud(force) {
   setText(el.news, 'news', s.collected + '/3');
   if (hc.lives !== s.lives || force) {
     hc.lives = s.lives; el.lives.textContent = '';
-    for (let i = 0; i < CFG.LIVES; i++) { const d = document.createElement('i'); d.className = 'l-life' + (i < s.lives ? '' : ' is-lost'); el.lives.appendChild(d); }
+    for (let i = 0; i < Math.max(CFG.LIVES, s.lives); i++) { const d = document.createElement('i'); d.className = 'l-life' + (i < s.lives ? '' : ' is-lost'); el.lives.appendChild(d); }
   }
   setText(el.flashN, 'fl', '×' + s.flashes);
   const flashOk = s.flashes > 0 && s.flashMs <= 0 && s.reviveMs <= 0 && (s.phase === 'play' || s.phase === 'step' || s.phase === 'jump');
@@ -300,6 +300,8 @@ function handleEvents() {
       case 'land': audio.sfx('land'); break;
       case 'news': audio.sfx('news'); el.live.textContent = 'Newspaper ' + e.n + ' of 3'; scene.float('+' + e.pts, scene.cellX(e.c) + TS / 2, scene.cellY(e.r) + 2, '#ffd21f'); break;
       case 'bonusFlash': audio.sfx('bonus'); el.live.textContent = 'Bonus flash. ' + e.left + ' flashes'; scene.float('+1 FLASH', CW / 2, scene.cellY(ROWS - 2), '#6fe9ff', true); break;
+      case 'flashPick': audio.sfx('bonus'); el.live.textContent = 'Flash collected. ' + e.left + ' flashes'; scene.float('+1 FLASH', scene.cellX(e.c) + TS / 2, scene.cellY(e.r) + 2, '#6fe9ff'); break;
+      case 'lifePick': audio.sfx('news'); el.live.textContent = 'Extra life. ' + e.lives + ' lives'; scene.float('+1 LIFE', scene.cellX(e.c) + TS / 2, scene.cellY(e.r) + 2, '#ff8fb0'); break;
       case 'rockWarn': audio.sfx('rockWarn'); break;
       case 'hit': audio.sfx('hit'); break;
       case 'flash': audio.sfx('flash'); el.live.textContent = 'Flash. ' + e.left + ' left'; break;
