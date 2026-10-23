@@ -10,7 +10,7 @@ import { Sim, CONFIG as C, levelParams } from './sim.js?v=20261023a';
 import { Scene } from './art.js?v=20261023a';
 import { Audio8 } from './audio.js?v=20261023a';
 import { pickLang, makeT } from './i18n.js?v=20261023a';
-import { mountInitials } from './initials.js?v=20261024a';
+import { mountInitials } from './initials.js?v=20261024b';
 
 const $ = (id) => document.getElementById(id);
 const lang = pickLang();

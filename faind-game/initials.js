@@ -1,44 +1,35 @@
 /* =====================================================================
-   FAIND GAME — scelta delle tre iniziali in stile arcade (condivisa da News Rush, Signal Maze e Lost Signal)
+   FAIND GAME — inserimento delle tre iniziali in stile arcade (condiviso da News Rush, Signal Maze e Lost Signal)
    ---------------------------------------------------------------------
-   Parte da AAA. La lettera attiva ha un trattino che lampeggia sotto: ▲ ▼ (o frecce su e giù) la cambiano, ◀ ▶ (o frecce, tocco sulla
-   lettera) cambiano posizione, e scrivendo una lettera si imposta e si passa alla successiva. L'<input> originale del modulo resta nella
-   pagina, nascosto, e porta sempre il valore (tre lettere A-Z): validazione e invio al server non cambiano.
+   Si scrive con la tastiera (su telefono tocca la zona delle lettere e compare la tastiera). Gli spazi ancora vuoti mostrano un trattino
+   "_" e una "A" che scorre da sinistra a destra sugli spazi vuoti (A _ _ → _ A _ → _ _ A, in loop) finché non si scrive; ogni lettera
+   scritta occupa lo spazio successivo. L'<input id="nameIn"> originale del modulo resta quello che porta il valore: è steso sopra le
+   lettere, trasparente, così riceve tocchi e tasti; validazione e invio al server non cambiano.
    ===================================================================== */
-const A = 65, Z = 90;
+const STEP_MS = 380;
 
 /** input: l'<input id="nameIn"> del modulo. Ritorna { reset, focus }. */
 export function mountInitials(input, signal) {
-  const box = document.createElement('div'); box.className = 'g-ini'; box.setAttribute('role', 'group'); box.setAttribute('tabindex', '0');
-  box.setAttribute('aria-label', 'Initials: use up and down to change the letter, left and right to move');
-  const letters = [A, A, A], slots = []; let at = 0;
-  const mk = (cls, txt, label, fn) => { const b = document.createElement('button'); b.type = 'button'; b.className = cls; b.textContent = txt; b.setAttribute('aria-label', label); b.tabIndex = -1; b.addEventListener('click', (e) => { e.preventDefault(); fn(); }, { signal }); return b; };
-  for (let i = 0; i < 3; i++) {
-    const col = document.createElement('div'); col.className = 'g-ini__col';
-    const ch = document.createElement('button'); ch.type = 'button'; ch.className = 'g-ini__ch'; ch.tabIndex = -1; ch.addEventListener('click', (e) => { e.preventDefault(); at = i; render(); box.focus({ preventScroll: true }); }, { signal });
-    const bar = document.createElement('span'); bar.className = 'g-ini__bar';
-    col.append(mk('g-ini__arr', '▲', 'Next letter', () => { at = i; bump(1); }), ch, bar, mk('g-ini__arr', '▼', 'Previous letter', () => { at = i; bump(-1); }));
-    box.appendChild(col); slots.push({ col, ch });
-  }
-  input.parentNode.insertBefore(box, input); input.style.display = 'none';
+  const box = document.createElement('div'); box.className = 'g-ini';
+  const slots = [0, 1, 2].map(() => { const s = document.createElement('span'); s.className = 'g-ini__ch'; s.setAttribute('aria-hidden', 'true'); box.appendChild(s); return s; });
+  input.parentNode.insertBefore(box, input); box.appendChild(input);
+  input.classList.add('g-ini__in'); input.removeAttribute('pattern'); input.removeAttribute('placeholder'); input.setAttribute('maxlength', '3');
+  input.setAttribute('aria-label', 'Initials, three letters');
+  const calm = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  let tick = 0;
   function render() {
-    slots.forEach((s, i) => { s.ch.textContent = String.fromCharCode(letters[i]); s.col.classList.toggle('is-on', i === at); s.ch.setAttribute('aria-label', 'Letter ' + (i + 1) + ': ' + String.fromCharCode(letters[i])); });
-    input.value = String.fromCharCode(...letters);
+    const v = input.value, n = v.length, empty = 3 - n, hot = empty ? tick % (empty === 1 ? 2 : empty) : -1;      // con un solo spazio vuoto la A lampeggia
+    slots.forEach((s, i) => {
+      s.textContent = i < n ? v[i] : (i - n === hot && !calm ? 'A' : '_');
+      s.classList.toggle('is-typed', i < n); s.classList.toggle('is-next', i === n);
+    });
   }
-  function bump(d) { letters[at] = letters[at] + d > Z ? A : letters[at] + d < A ? Z : letters[at] + d; render(); }
-  box.addEventListener('keydown', (e) => {
-    if (e.altKey || e.ctrlKey || e.metaKey) return;
-    const k = e.key;
-    if (k === 'ArrowUp') bump(1); else if (k === 'ArrowDown') bump(-1);
-    else if (k === 'ArrowLeft') { at = Math.max(0, at - 1); render(); } else if (k === 'ArrowRight') { at = Math.min(2, at + 1); render(); }
-    else if (k === 'Backspace') { at = Math.max(0, at - 1); render(); }
-    else if (/^[a-z]$/i.test(k)) { letters[at] = k.toUpperCase().charCodeAt(0); at = Math.min(2, at + 1); render(); }
-    else return;                       // Invio e Tab restano al modulo
-    e.preventDefault();
-  }, { signal });
+  input.addEventListener('input', () => { input.value = input.value.replace(/[^a-z]/gi, '').toUpperCase().slice(0, 3); tick = 0; render(); }, { signal });
+  const timer = setInterval(() => { if (box.offsetParent !== null && input.value.length < 3) { tick++; render(); } }, STEP_MS);
+  if (signal) signal.addEventListener('abort', () => clearInterval(timer), { once: true });
   render();
   return {
-    reset() { letters[0] = letters[1] = letters[2] = A; at = 0; render(); },
-    focus() { try { box.focus({ preventScroll: true }); } catch (e) {} }
+    reset() { input.value = ''; tick = 0; render(); },
+    focus() { try { input.focus({ preventScroll: true }); } catch (e) {} }
   };
 }
