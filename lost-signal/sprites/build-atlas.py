@@ -149,12 +149,44 @@ for row in ROWS:
 def icon(box, name, scale):
     im = clean(src.crop(box)); bb = bbox(im); im = im.crop(bb)
     items[name] = shrink(im, (round(im.width * scale), round(im.height * scale)), 1.1, 1.15)
-icon((436, 1314, 544, 1398), 'ico_flash', 0.30)
 icon((582, 1314, 694, 1398), 'ico_jump', 0.30)
 # testa per le vite: parte alta del fotogramma frontale fermo
 fr0 = frames('front')[0][0]
 head = fr0.crop((0, 0, fr0.width, int(fr0.height * 0.62)))
 items['life'] = shrink(head, (round(head.width * 0.13), round(head.height * 0.13)), 1.2, 1.25)
+
+# ---------- tavola extra (sheet-extras.png): boccetta, testa con il più, zolla di legno, lampione, cascata x3, ponte tibetano, corda ----------
+ex = Image.open('sheet-extras.png').convert('RGBA')
+def fit_bands(img, ybounds, hs, w):
+    res = Image.new('RGBA', (w, sum(hs)), (0, 0, 0, 0)); y = 0
+    for (y0, y1), h in zip(zip(ybounds[:-1], ybounds[1:]), hs):
+        band = shrink(img.crop((0, y0, img.width, y1)), (w, h), 1.1, 1.12)
+        res.alpha_composite(band, (0, y)); y += h
+    return res
+# boccetta azzurra al posto del flash: solo l'oggetto, senza l'alone
+vc = np.array(ex.crop((150, 90, 458, 396))); vc[vc[:, :, 3] < 250] = 0
+vial = Image.fromarray(vc, 'RGBA'); vial = vial.crop(bbox(vial))
+items['vial'] = shrink(vial, (22, 22), 1.1, 1.12)
+ico = Image.new('RGBA', (30, 25), (0, 0, 0, 0)); ico.alpha_composite(shrink(vial, (25, 25), 1.1, 1.12), (2, 0)); items['ico_flash'] = ico
+# testa di Faindo con il più verde: vita extra
+hp = clean(ex.crop((140, 515, 372, 752))); hp = hp.crop(bbox(hp))
+items['life_plus'] = shrink(hp, (round(hp.width * 0.115), round(hp.height * 0.115)), 1.15, 1.2)
+# zolla di legno e zolla con lampione (faccia 32 px + spessore 8; il lampione sporge in alto di 4 px)
+items['tile4'] = fit_bands(clean(ex.crop((536, 485, 840, 784))), [0, 255, 299], [32, 8], 32)
+items['lantern'] = fit_bands(clean(ex.crop((950, 452, 1285, 784))), [0, 33, 293, 332], [4, 32, 8], 32)
+# cascata: tre fotogrammi
+for i, (x0, x1) in enumerate(((92, 436), (526, 856), (951, 1283))):
+    cx = (x0 + x1) // 2
+    items['fall%d' % i] = shrink(clean(ex.crop((cx - 172, 806, cx + 172, 1132))), (32, 38), 1.1, 1.12)
+# ponte tibetano: tre assi, verticale e ruotato di 90 gradi
+br = clean(ex.crop((578, 36, 794, 36 + 180)))
+items['bridge_v'] = shrink(br, (32, 32), 1.1, 1.12)
+items['bridge_h'] = items['bridge_v'].rotate(90, expand=True)
+# corda singola: tassello 9 x 32 che si ripete senza stacchi (sei giri di torsione)
+rp = clean(ex.crop((1088, 100, 1146, 100 + 213)))
+bb = bbox(rp); rp = rp.crop((bb[0], 0, bb[2], rp.height))
+items['rope_v'] = shrink(rp, (9, 32), 1.1, 1.12)
+items['rope_h'] = items['rope_v'].rotate(90, expand=True)
 
 # ---------- impacchettamento a scaffali ----------
 order = list(items.keys())
@@ -166,7 +198,7 @@ for n in order:
 atlas = Image.new('RGBA', (sheetw, y + rowh + 1), (0, 0, 0, 0))
 for n in order: atlas.alpha_composite(items[n], tuple(pos[n][:2]))
 atlas.save('atlas.png', optimize=True)
-for n in ('ico_flash', 'ico_jump', 'life', 'scroll_s'): items[n].save(n.replace('_', '-') + '.png', optimize=True)   # icone sciolte per la barra HTML
+for n in ('ico_flash', 'ico_jump', 'life', 'life_plus', 'scroll_s'): items[n].save(n.replace('_', '-') + '.png', optimize=True)   # icone sciolte per la barra HTML
 open('atlas.js', 'w', encoding='utf-8').write(
     '/* Generato da sprites/build-atlas.py: coordinate [x, y, larghezza, altezza] degli sprite in atlas.png. */\n'
     'export const ATLAS = ' + json.dumps(pos, separators=(',', ':')) + ';\n'
