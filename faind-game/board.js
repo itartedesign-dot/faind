@@ -6,7 +6,7 @@
    lingue del sito (i18n.js). Se il server non risponde si gioca lo stesso: il record resta sul dispositivo, distinto per gioco.
    ===================================================================== */
 import { pickLang, makeT } from './i18n.js?v=20261023a';
-import { mountInitials } from './initials.js?v=20261024a';
+import { mountInitials } from './initials.js?v=20261024b';
 
 const $ = (id) => document.getElementById(id);
 
