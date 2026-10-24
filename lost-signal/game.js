@@ -10,7 +10,7 @@ import { Sim, CFG, DIRV } from './sim.js?v=20261025c';
 import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261025c';
 import { Audio8 } from './audio.js?v=20261025c';
 import { ROWS } from './levels.js?v=20261025c';
-import { createBoard } from '../faind-game/board.js?v=20261024b';
+import { createBoard } from '../faind-game/board.js?v=20261024c';
 
 const $ = (id) => document.getElementById(id);
 const API = String(window.FAIND_LOST_API || '').replace(/\/+$/, '');

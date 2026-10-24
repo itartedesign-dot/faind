@@ -9,8 +9,8 @@
 import { Sim, CONFIG as C, levelParams } from './sim.js?v=20261023a';
 import { Scene } from './art.js?v=20261023a';
 import { Audio8 } from './audio.js?v=20261023a';
-import { pickLang, makeT } from './i18n.js?v=20261023a';
-import { mountInitials } from './initials.js?v=20261024b';
+import { pickLang, makeT } from './i18n.js?v=20261024c';
+import { mountInitials } from './initials.js?v=20261024c';
 
 const $ = (id) => document.getElementById(id);
 const lang = pickLang();
@@ -127,7 +127,7 @@ async function api(path, body, timeout) {
   } finally { clearTimeout(to); }
 }
 
-function startGame() {
+function startGame() { dropContinue();
   audio.unlock(); audio.resume();
   askFullscreen();
   scene.reset();
@@ -186,7 +186,7 @@ async function submitScore() {
       $('rRank').hidden = false; $('rRank').textContent = t('top10') + '\n' + lines.join('\n'); $('rRank').style.whiteSpace = 'pre-line';
       note.hidden = true;
       $('nameForm').hidden = false; $('nameErr').hidden = true;
-      nameIni.reset(); setCountry(null);
+      nameIni.reset(); defaultCountry();
       setTimeout(() => nameIni.focus(), 50);
     } else note.hidden = true;
   } catch (e) {
@@ -445,6 +445,13 @@ function closeLb() { el.pLb.hidden = true; if (lbOpener && lbOpener.focus && doc
 
 /* ------------------------------ Nome e nazione ------------------------------ */
 let chosen = null;
+function defaultCountry() { setCountry('IT'); loadFlags().then(() => { if (chosen === 'IT') setCountry('IT'); }); }
+function showContinue() {
+  dropContinue(); const b = document.createElement('button'); b.type = 'button'; b.className = 'g-btn g-btn--main'; b.id = 'btnCont'; b.textContent = t('continue');
+  b.addEventListener('click', () => { dropContinue(); $('btnAgain').click(); });
+  $('nameForm').after(b); try { b.focus({ preventScroll: true }); } catch (e) {}
+}
+function dropContinue() { const b = $('btnCont'); if (b) b.remove(); }
 function setCountry(code) {
   chosen = code;
   const f = $('cFlag'), n = $('cName');
@@ -479,7 +486,7 @@ on($('nameForm'), 'submit', async (e) => {
   err.hidden = true; $('btnSave').disabled = true;
   try {
     await api('/name', { claim, initials: ini, country: chosen }, 8000);
-    $('nameForm').hidden = true; $('rNote').hidden = false; $('rNote').textContent = t('saved'); claim = null; $('pOver').classList.remove('is-record');
+    $('nameForm').hidden = true; $('rNote').hidden = false; $('rNote').textContent = t('saved'); showContinue(); claim = null; $('pOver').classList.remove('is-record');
     lbData = null; loadTop();
   } catch (e2) { err.hidden = false; err.textContent = e2 && e2.status === 400 ? t('nameBad') : t('netError'); }
   $('btnSave').disabled = false;
