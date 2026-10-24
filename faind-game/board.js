@@ -5,7 +5,7 @@
    lo ricalcola il server), tre lettere e nazione se si entra in una Top 10, classifica settimanale e assoluta. Testi nelle quattro
    lingue del sito (i18n.js). Se il server non risponde si gioca lo stesso: il record resta sul dispositivo, distinto per gioco.
    ===================================================================== */
-import { pickLang, makeT } from './i18n.js?v=20261023a';
+import { pickLang, makeT } from './i18n.js?v=20261024c';
 import { mountInitials } from './initials.js?v=20261024b';
 
 const $ = (id) => document.getElementById(id);
@@ -55,14 +55,14 @@ export function createBoard(cfg) {
   /** Da chiamare alla fine di una partita con i comandi registrati dal motore. */
   function finish(inputs) {
     const mine = ++run;
-    claim = null; pOver.classList.remove('is-record'); $('rRank').hidden = true; $('nameForm').hidden = true; $('shareNote').hidden = true;
+    dropContinue(); claim = null; pOver.classList.remove('is-record'); $('rRank').hidden = true; $('nameForm').hidden = true; $('shareNote').hidden = true;
     if (!API || !session) { setStatus(t('resultOffline')); return; }
     setStatus(t('verifying'));
     submit(inputs, session.token, mine);
   }
   /** Partita con continue: niente invio e niente record. Chiude ogni invio in corso e pulisce i riquadri del risultato. */
   function unranked() {
-    run++; claim = null; session = null; pOver.classList.remove('is-record'); $('rRank').hidden = true; $('nameForm').hidden = true; $('shareNote').hidden = true; setStatus('');
+    run++; dropContinue(); claim = null; session = null; pOver.classList.remove('is-record'); $('rRank').hidden = true; $('nameForm').hidden = true; $('shareNote').hidden = true; setStatus('');
   }
   async function submit(inputs, token, mine) {
     let r = null, err = null;
@@ -79,7 +79,7 @@ export function createBoard(cfg) {
       claim = r.claim; pOver.classList.add('is-record');
       const rk = $('rRank'); rk.hidden = false; rk.textContent = t('top10') + '\n' + lines.join('\n'); rk.style.whiteSpace = 'pre-line';
       setStatus('');
-      $('nameForm').hidden = false; $('nameErr').hidden = true; ini.reset(); setCountry(null);
+      $('nameForm').hidden = false; $('nameErr').hidden = true; ini.reset(); defaultCountry();
       setTimeout(() => ini.focus(), 50);
     } else setStatus('');
   }
@@ -92,6 +92,13 @@ export function createBoard(cfg) {
     if (flagsMod && flagsMod.FLAGS[code]) { s.style.backgroundImage = 'url("' + flagsMod.flagSrc(code) + '")'; s.title = code; s.setAttribute('role', 'img'); s.setAttribute('aria-label', countryName(code)); }
     return s;
   }
+  function defaultCountry() { setCountry('IT'); loadFlags().then(() => { if (chosen === 'IT') setCountry('IT'); }); }
+  function showContinue() {
+    dropContinue(); const b = document.createElement('button'); b.type = 'button'; b.className = 'g-btn g-btn--main'; b.id = 'btnCont'; b.textContent = t('continue');
+    b.addEventListener('click', () => { dropContinue(); $('btnAgain').click(); });
+    $('nameForm').after(b); try { b.focus({ preventScroll: true }); } catch (e) {}
+  }
+  function dropContinue() { const b = $('btnCont'); if (b) b.remove(); }
   function setCountry(code) {
     chosen = code;
     const f = $('cFlag'), n = $('cName');
@@ -171,7 +178,7 @@ export function createBoard(cfg) {
     err.hidden = true; $('btnSave').disabled = true;
     try {
       await api('/name', { claim, initials: ini, country: chosen }, 8000);
-      $('nameForm').hidden = true; setStatus(t('saved')); claim = null; pOver.classList.remove('is-record'); lbData = null;
+      $('nameForm').hidden = true; setStatus(t('saved')); showContinue(); claim = null; pOver.classList.remove('is-record'); lbData = null;
     } catch (e2) { err.hidden = false; err.textContent = e2 && e2.status === 400 ? t('nameBad') : t('netError'); }
     $('btnSave').disabled = false;
   });
