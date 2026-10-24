@@ -34,11 +34,13 @@
     .brand { font-family: var(--pix); font-weight: 700; font-size: 26px; color: var(--ivory); text-decoration: none; letter-spacing: .02em; text-shadow: 0 2px 0 #000; }
     .brand i, .brand b { font-style: normal; color: var(--cyan); }
     .top a.back { font-family: var(--pix); font-size: 12px; color: var(--cyanL); text-decoration: none; border: 2px solid #2a4170; border-radius: 6px; padding: 8px 12px; }
-    h1 { font-family: var(--pix); font-weight: 700; font-size: clamp(30px, 8vw, 46px); line-height: 1.15; margin: 26px 0 6px; text-shadow: 0 3px 0 #000, 0 0 18px rgba(30,155,215,.7); }
+    .hall { margin: 22px 0 0; text-align: center; font-family: var(--pix); font-weight: 700; font-size: clamp(24px, 7vw, 40px); line-height: 1.1; letter-spacing: .08em; text-transform: uppercase; color: var(--amber); text-shadow: 0 3px 0 #000, 0 0 18px rgba(255,180,58,.55); padding: 14px 8px; border-top: 6px double var(--cyan); border-bottom: 6px double var(--cyan); }
+    .hall small { display: block; margin-top: 6px; font-size: .6em; letter-spacing: .3em; color: var(--cyanL); text-shadow: 0 2px 0 #000; }
+    h1 { font-family: var(--pix); font-weight: 700; font-size: clamp(22px, 5.6vw, 32px); line-height: 1.2; margin: 22px 0 8px; text-shadow: 0 3px 0 #000, 0 0 18px rgba(30,155,215,.7); }
     h1 span { color: var(--cyanL); }
     .lead { margin: 0 0 24px; font-size: 16px; line-height: 1.5; color: #c7d3ea; }
     .games { display: grid; gap: 16px; }
-    .game { display: grid; grid-template-columns: minmax(120px, 38%) 1fr; gap: 16px; padding: 14px; background: rgba(21,33,58,.85); border: 2px solid var(--cyan); border-radius: 12px; box-shadow: 0 6px 0 #07101f; }
+    .game { display: grid; grid-template-columns: minmax(120px, 38%) 1fr; gap: 16px; padding: 14px; background: rgba(21,33,58,.85); border: 12px solid transparent; border-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' shape-rendering='crispEdges'><rect x='0' y='0' width='12' height='12' fill='%231E9BD7'/><rect x='24' y='0' width='12' height='12' fill='%231E9BD7'/><rect x='0' y='24' width='12' height='12' fill='%231E9BD7'/><rect x='24' y='24' width='12' height='12' fill='%231E9BD7'/><rect x='12' y='0' width='6' height='6' fill='%231E9BD7'/><rect x='18' y='6' width='6' height='6' fill='%231E9BD7'/><rect x='12' y='24' width='6' height='6' fill='%231E9BD7'/><rect x='18' y='30' width='6' height='6' fill='%231E9BD7'/><rect x='0' y='12' width='6' height='6' fill='%231E9BD7'/><rect x='6' y='18' width='6' height='6' fill='%231E9BD7'/><rect x='24' y='12' width='6' height='6' fill='%231E9BD7'/><rect x='30' y='18' width='6' height='6' fill='%231E9BD7'/></svg>") 12 round; box-shadow: 0 0 22px rgba(30,155,215,.35); }
     .game img { width: 100%; height: auto; display: block; border: 2px solid #2a4170; border-radius: 6px; image-rendering: pixelated; background: #0b1226; aspect-ratio: 480 / 640; object-fit: cover; }
     .game img.shot-tall { aspect-ratio: 480 / 709; }
     .game h2 { font-family: var(--pix); font-weight: 700; font-size: clamp(16px, 4.6vw, 22px); line-height: 1.25; margin: 0 0 10px; }
@@ -75,6 +77,7 @@
 <body>
 <div class="wrap">
   <div class="top"><a class="brand" href="../" aria-label="FAIND">F<i>A</i><b>I</b>ND</a><a class="back" href="../" id="back">FAIND HOME</a></div>
+  <p class="hall">Faind Arcade<small>Sala Giochi</small></p>
   <h1 id="title">Free original <span>arcade games</span> with online leaderboards</h1>
   <p class="lead" id="lead">Retro games in the spirit of 80s and 90s arcades, made with artificial intelligence. Play free in the browser, set a high score and see where you rank.</p>
   <div class="games">
