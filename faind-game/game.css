@@ -59,6 +59,7 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 .g-keys { margin: 0; font-size: max(10px, calc(var(--u) * 3.3)); color: #8fa2c6; display: none; }
 @media (hover: hover) and (pointer: fine) { .g-keys { display: block; } }
 .g-note { margin: 0; font-size: max(11px, calc(var(--u) * 3.6)); line-height: 1.4; color: #c7d3ea; max-width: 44ch; }
+.g-note--warn { font-size: max(15px, calc(var(--u) * 5.6)); font-weight: 800; color: #ffd36b; }
 .g-err { margin: 0; color: var(--red); font-size: max(11px, calc(var(--u) * 3.6)); }
 .g-row { display: flex; gap: calc(var(--u) * 2.5); flex-wrap: wrap; justify-content: center; align-items: center; }
 .g-grid { display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--u) * 2.5); width: 100%; max-width: calc(var(--u) * 140); }

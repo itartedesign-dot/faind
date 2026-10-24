@@ -136,7 +136,7 @@ function finish(won) {
   if (isBest) { best = score; try { localStorage.setItem(BEST_KEY, String(best)); } catch (e) {} }
   $('rScore').textContent = String(score); $('rLevel').textContent = sim.level + '/' + LEVELS; $('rNews').textContent = String(sim.stats.news);
   $('rBestV').textContent = String(best); $('rBest').hidden = !isBest;
-  $('rNote').textContent = (won ? 'You reached the newsroom on all ' + LEVELS + ' levels. ' : 'Level reached: ' + sim.level + '. ') + (continued ? 'Continued run: no record, not ranked.' : isBest ? 'New record saved on this device.' : '');
+  $('rNote').textContent = (won ? 'You reached the newsroom on all ' + LEVELS + ' levels. ' : 'Level reached: ' + sim.level + '. ') + (continued ? 'Continued run: no record saved.' : isBest ? 'New record saved on this device.' : '');
   if (continued) board.unranked(); else board.finish(sim.log);
   setTimeout(() => { if (state === 'over' && !board.nameOpen) { try { $('btnAgain').focus({ preventScroll: true }); } catch (e) {} } }, 400);
 }
