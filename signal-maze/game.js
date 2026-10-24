@@ -141,7 +141,7 @@ function finish() {
   if (isBest) { best = score; try { localStorage.setItem(BEST_KEY, String(best)); } catch (e) {} }
   $('rScore').textContent = String(score); $('rLevel').textContent = sim.level + '/' + LEVELS;
   $('rDel').textContent = String(sim.stats.delivered); $('rBestV').textContent = String(best); $('rBest').hidden = !isBest;
-  $('rNote').textContent = (won ? 'All 15 levels done, +' + sim.bonus + ' time bonus. ' : '') + (continued ? 'Continued run: no record, not ranked.' : isBest ? 'New record saved on this device.' : '');
+  $('rNote').textContent = (won ? 'All 15 levels done, +' + sim.bonus + ' time bonus. ' : '') + (continued ? 'Continued run: no record saved.' : isBest ? 'New record saved on this device.' : '');
   if (continued) board.unranked(); else board.finish(sim.inputs);
   setTimeout(() => { if (state === 'over' && !board.nameOpen) { try { $('btnAgain').focus({ preventScroll: true }); } catch (e) {} } }, 400);
 }
