@@ -8,13 +8,15 @@
    Il mondo è un toro: gli sprite vicini ai bordi vengono disegnati anche sul lato opposto, così un passaggio sul bordo
    è continuo, senza salti.
    ===================================================================== */
-import { W, H, T, COLORS, idx } from './maze.js?v=20261023a';
-import { CONFIG } from './sim.js?v=20261023a';
-import { ATLAS } from './sprites/atlas.js?v=20261023a';
+import { W, H, T, COLORS, idx, cur } from './maze.js?v=20261025a';
+import { CONFIG } from './sim.js?v=20261025a';
+import { ATLAS } from './sprites/atlas.js?v=20261025a';
 
-export const TS = 16, CW = 240, CH = 324, OY = 36, MW = W * TS, MH = H * TS;
+export const TS = 16, CW = 240, CH = 324, OY = 36, MH = H * TS;
 export const HEX = ['#ff8a1f', '#ffd21f', '#29d6ff'];
 const DARK = ['#8a3d00', '#8a6e00', '#0b6f8a'];
+const HEART = ['..KKK.KKK..', '.KRRRKRRRK.', 'KRRWWRRRRRK', 'KRWRRRRRRRK', 'KRRRRRRRRRK', 'KDRRRRRRRDK', '.KDRRRRRDK.', '..KDRRRDK..', '...KDRDK...', '....KKK....'];
+const HEART_COL = { K: '#16101a', R: '#e0332f', D: '#9c1f26', W: '#ffffff' };
 const hash = (x, y, k) => { let h = (x * 374761393 + y * 668265263 + (k || 0) * 2147483647) | 0; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 
 /* cifre 3 × 5 per i numeri dentro alla scena (restano nitide a qualsiasi ingrandimento) */
@@ -38,7 +40,7 @@ export class Scene {
     this.cv = cv; cv.width = CW; cv.height = CH;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
     this.atlas = new Image(); this.fx = []; this.lit = {}; this.clock = 0; this.flash = 0; this.L = null; this.walk = 0;
-    this.ready = new Promise((res) => { this.atlas.onload = () => { this.tint(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261023a'; });
+    this.ready = new Promise((res) => { this.atlas.onload = () => { this.tint(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261025a'; });
   }
 
   /** copia azzurrina dei robot per il potere di Faindo */
@@ -50,8 +52,8 @@ export class Scene {
   }
 
   setLevel(L) {
-    this.L = L; this.fx = []; this.lit = {};
-    const c = document.createElement('canvas'); c.width = MW; c.height = MH; this.stat = c;
+    cur.w = L.w; this.L = L; this.fx = []; this.lit = {}; this.MW = L.w * TS;
+    const c = document.createElement('canvas'); c.width = this.MW; c.height = MH; this.stat = c;
     this.renderStatic(c.getContext('2d'), L);
   }
 
@@ -63,7 +65,7 @@ export class Scene {
     for (const o of L.offices) for (const c of o.cells) officeOf.set(idx(c[0], c[1]), o);
     const isWallT = (t) => t === T.WALL || t === T.EXIT;
     const R = (x, y, w, h, col) => { g.fillStyle = col; g.fillRect(x, y, w, h); };
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    for (let y = 0; y < H; y++) for (let x = 0; x < L.w; x++) {
       const t = tile(x, y), px = x * TS, py = y * TS;
       if (isWallT(t)) {
         R(px, py, TS, TS, '#0a1c44'); R(px + 1, py + 1, TS - 2, TS - 2, '#1a3b7d');
@@ -85,12 +87,12 @@ export class Scene {
       }
     }
     // bordi luminosi dei muri verso i corridoi (azzurro) e verso gli uffici (colore dell'ufficio)
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    for (let y = 0; y < H; y++) for (let x = 0; x < L.w; x++) {
       if (!isWallT(tile(x, y))) continue;
       const px = x * TS, py = y * TS;
       for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
         const nx = x + dx, ny = y + dy;
-        if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+        if (nx < 0 || ny < 0 || nx >= L.w || ny >= H) continue;
         const nt = tile(nx, ny); if (isWallT(nt) || nt === T.DOOR) continue;
         const o = officeOf.get(idx(nx, ny)), col = o ? HEX[o.color] : '#2aa6ea', th = o ? 2 : 1;
         if (dx === 1) g.fillStyle = col, g.fillRect(px + TS - th, py, th, TS);
@@ -100,9 +102,9 @@ export class Scene {
       }
     }
     // borchie dorate agli spigoli dei blocchi
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    for (let y = 0; y < H; y++) for (let x = 0; x < L.w; x++) {
       if (tile(x, y) !== T.WALL) continue;
-      const nw = (dx, dy) => { const nx = x + dx, ny = y + dy; return nx < 0 || ny < 0 || nx >= W || ny >= H || isWallT(tile(nx, ny)); };
+      const nw = (dx, dy) => { const nx = x + dx, ny = y + dy; return nx < 0 || ny < 0 || nx >= L.w || ny >= H || isWallT(tile(nx, ny)); };
       const px = x * TS, py = y * TS;
       const rv = (ax, ay) => { g.fillStyle = '#d9a63b'; g.fillRect(px + ax, py + ay, 2, 2); g.fillStyle = '#fff0a8'; g.fillRect(px + ax, py + ay, 1, 1); };
       if (!nw(-1, 0) && !nw(0, -1)) rv(0, 0); if (!nw(1, 0) && !nw(0, -1)) rv(TS - 2, 0);
@@ -127,9 +129,9 @@ export class Scene {
     else g.drawImage(img, r[0], r[1], w, h, dx, dy, sw, sh);
     if (alpha !== undefined && alpha !== 1) g.globalAlpha = 1;
   }
-  /** disegna dove serve anche l'immagine sul lato opposto (passaggi sui bordi) */
+  /** disegna dove serve anche l'immagine sul lato opposto in alto o in basso (passaggi sui bordi) */
   wrapped(px, py, hw, hh, fn) {
-    for (const ox of [0, -MW, MW]) { if (px + ox + hw < 0 || px + ox - hw > CW) continue; for (const oy of [0, -MH, MH]) { if (py + oy + hh < OY || py + oy - hh > CH) continue; fn(ox, oy); } }
+    for (const oy of [0, -MH, MH]) { if (py + oy + hh < OY || py + oy - hh > CH) continue; fn(0, oy); }   // i lati sinistro e destro li copre draw() ridisegnando il mondo accanto a sé
   }
 
   /* ---------------- eventi → effetti ---------------- */
@@ -141,6 +143,7 @@ export class Scene {
     else if (e.type === 'kill') { this.fx.push({ k: 't', s: '+200', x: tx, y: ty - 8, t: 0, life: 1, c: '#ff8a1f' }); burst(14, ['#ff8a1f', '#ffd21f', '#ffffff'], 55); this.fx.push({ k: 'b', x: e.x * TS, y: OY + e.y * TS, face: e.face, t: 0, life: 0.9 }); }
     else if (e.type === 'key' || e.type === 'doc') burst(5, [HEX[e.color], '#ffffff'], 25);
     else if (e.type === 'unlock') { burst(10, [HEX[e.color], '#ffffff'], 35); const o = this.L.offices.find((q) => q.color === e.color); if (o) this.lit[o.id] = this.clock; }
+    else if (e.type === 'life') { this.fx.push({ k: 't', s: '+1', x: tx, y: ty - 8, t: 0, life: 1, c: '#ff5a6e' }); burst(12, ['#e0332f', '#ff8a96', '#ffffff'], 45); }
     else if (e.type === 'hit') { burst(16, ['#ff5a4e', '#ffffff'], 60); this.flash = -0.35; }
   }
 
@@ -155,6 +158,32 @@ export class Scene {
     const g = this.g, L = this.L; if (!L || !this.stat || !this.atlas.complete) return;
     const t = this.clock;
     g.fillStyle = '#04070f'; g.fillRect(0, 0, CW, CH);
+    // il mondo è un toro: lo si disegna accanto a sé quanto serve; nei livelli doppi la vista segue la metà in cui sta Faindo
+    const MW = this.MW, cam = this.camX(sim);
+    for (const k of [-1, 0, 1]) {
+      const ox = k * MW - cam; if (ox >= CW + 16 || ox + MW <= -16) continue;
+      g.save(); g.beginPath(); g.rect(0, OY, CW, CH - OY); g.clip(); g.translate(ox, 0); this.drawWorld(g, sim, t); g.restore();
+    }
+    // barra del potere sotto la barra superiore
+    if (sim.power > 0) {
+      const frac = sim.power / CONFIG.POWER_TIME, warn = sim.power <= 3 && Math.floor(t * 6) % 2 === 0;
+      g.fillStyle = '#082a40'; g.fillRect(0, OY - 3, CW, 3); g.fillStyle = warn ? '#ffffff' : '#29d6ff'; g.fillRect(0, OY - 3, Math.round(CW * frac), 3);
+    }
+    if (this.flash) { g.fillStyle = this.flash > 0 ? 'rgba(255,255,255,' + this.flash * 1.2 + ')' : 'rgba(255,60,50,' + (-this.flash) * 1.1 + ')'; g.fillRect(0, OY, CW, CH - OY); }
+    if (paused) { g.fillStyle = 'rgba(4,7,15,.35)'; g.fillRect(0, OY, CW, CH - OY); }
+  }
+
+  /** scorrimento orizzontale in pixel: fermo nei livelli singoli; nei doppi sta sulla metà di Faindo e scivola mentre lui passa dalle porte laterali */
+  camX(sim) {
+    const L = this.L; if (L.w === W) return 0;
+    let u = sim.f.x; if (u < 1.5) u += L.w;
+    const ss = (a) => a * a * (3 - 2 * a);
+    const c = u < 13.5 ? 0 : u < 16.5 ? W * ss((u - 13.5) / 3) : u < 28.5 ? W : W + W * ss((u - 28.5) / 3);
+    return Math.round(c * TS) % this.MW;
+  }
+
+  drawWorld(g, sim, t) {
+    const L = this.L;
     g.drawImage(this.stat, 0, OY);
     const P = (x, y) => [x * TS, OY + y * TS];
     // portali sui bordi
@@ -170,6 +199,8 @@ export class Scene {
     }
     // uscita
     this.drawExit(g, L, sim, t);
+    // cuore (una vita in più)
+    if (L.heart && !sim.heartTaken) this.drawHeart(g, L.heart, t);
     // chiavi e documenti
     const dim = sim.level > 3 && sim.active !== null;
     L.docs.forEach((d, i) => { if (sim.docTaken[i]) return; const bob = Math.round(Math.sin(t * 4 + i) * 1), [px, py] = P(d.x + 0.5, d.y + 0.5); this.spr(this.atlas, 'doc' + d.color, px, py + 7 + bob, false, dim && sim.active !== d.color ? 0.38 : 1); });
@@ -184,22 +215,15 @@ export class Scene {
       if (p.k === 'p') { g.fillStyle = p.c; g.globalAlpha = Math.max(0, 1 - p.t / p.life); g.fillRect(Math.round(p.x), Math.round(p.y), 2, 2); g.globalAlpha = 1; }
       else { const w = textW(p.s, 2); g.globalAlpha = Math.min(1, (p.life - p.t) * 2.5); text(g, p.s, Math.round(p.x - w / 2), Math.round(p.y), p.c, 2, '#000'); g.globalAlpha = 1; }
     }
-    // barra del potere sotto la barra superiore
-    if (sim.power > 0) {
-      const frac = sim.power / CONFIG.POWER_TIME, warn = sim.power <= 3 && Math.floor(t * 6) % 2 === 0;
-      g.fillStyle = '#082a40'; g.fillRect(0, OY - 3, CW, 3); g.fillStyle = warn ? '#ffffff' : '#29d6ff'; g.fillRect(0, OY - 3, Math.round(CW * frac), 3);
-    }
-    if (this.flash) { g.fillStyle = this.flash > 0 ? 'rgba(255,255,255,' + this.flash * 1.2 + ')' : 'rgba(255,60,50,' + (-this.flash) * 1.1 + ')'; g.fillRect(0, OY, CW, CH - OY); }
-    if (paused) { g.fillStyle = 'rgba(4,7,15,.35)'; g.fillRect(0, OY, CW, CH - OY); }
   }
 
   drawOpenings(g, L, t) {
     const ph = Math.floor(t * 4) % 3;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    for (let y = 0; y < H; y++) for (let x = 0; x < L.w; x++) {
       if (L.grid[idx(x, y)] !== T.OPEN) continue;
       const px = x * TS, py = OY + y * TS;
       // direzione verso il vuoto
-      const dx = x === 0 ? -1 : x === W - 1 ? 1 : 0, dy = y === 0 ? -1 : y === H - 1 ? 1 : 0;
+      const dx = x === 0 || x === W ? -1 : x === W - 1 || x === L.w - 1 ? 1 : 0, dy = y === 0 ? -1 : y === H - 1 ? 1 : 0;
       g.fillStyle = '#030611'; g.fillRect(px, py, TS, TS);
       for (let i = 0; i < 3; i++) {   // tre frecce che corrono verso il bordo
         const k = (i + ph) % 3, d = k * 5;
@@ -217,6 +241,15 @@ export class Scene {
   }
   chev(g, cx, cy, dx, dy) {   // freccia a punta di 4 px: la punta guarda verso il vuoto
     for (let j = -3; j <= 3; j++) { const a = 3 - Math.abs(j); if (dx) g.fillRect(cx + dx * a, cy + j, 1, 1); else g.fillRect(cx + j, cy + dy * a, 1, 1); }
+  }
+
+  /** cuore pixel-art: pulsa di un pixel (una riga e una colonna in più, ricavate raddoppiando il centro) */
+  drawHeart(g, h, t) {
+    const big = Math.floor(t * 3) % 2 === 1, rows = HEART.slice();
+    let map = rows.map((r) => r);
+    if (big) { map = map.flatMap((r, i) => { const rr = r.slice(0, 5) + r[5] + r.slice(5); return i === 4 ? [rr, rr] : [rr]; }); }
+    const w = map[0].length, hh = map.length, x0 = h[0] * TS + Math.round((TS - w) / 2), y0 = OY + h[1] * TS + Math.round((TS - hh) / 2);
+    for (let y = 0; y < hh; y++) for (let x = 0; x < w; x++) { const c = HEART_COL[map[y][x]]; if (c) { g.fillStyle = c; g.fillRect(x0 + x, y0 + y, 1, 1); } }
   }
 
   drawDoor(g, o, sim, t) {

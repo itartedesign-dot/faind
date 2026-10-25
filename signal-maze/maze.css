@@ -28,14 +28,14 @@
 
 /* ---- seconda riga: vite e inventario dei tre colori ---- */
 .m-lives { flex: 0 0 auto; display: flex; gap: calc(var(--px) * 1.5); align-items: center; padding: 0 calc(var(--px) * 1); }
-.m-life { width: calc(var(--px) * 14); height: calc(var(--px) * 12); background: url("sprites/atlas.png?v=20261023a") calc(var(--px) * -69) calc(var(--px) * -17) / calc(var(--px) * 256) auto no-repeat; image-rendering: pixelated; }
+.m-life { width: calc(var(--px) * 14); height: calc(var(--px) * 12); background: url("sprites/atlas.png?v=20261025a") calc(var(--px) * -69) calc(var(--px) * -17) / calc(var(--px) * 256) auto no-repeat; image-rendering: pixelated; }
 .m-life.is-lost { opacity: .18; filter: grayscale(1); }
 .m-chip { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: calc(var(--px) * 1); padding: 0 calc(var(--px) * 1.5); background: #0d1730; border: 1px solid #2a4170; border-radius: calc(var(--px) * 2); font-size: calc(var(--px) * 6); line-height: 1; position: relative; }
 .m-chip[data-c="0"] { --cc: #ff8a1f; } .m-chip[data-c="1"] { --cc: #ffd21f; } .m-chip[data-c="2"] { --cc: #29d6ff; }
 .m-chip b { font-weight: 700; color: var(--cc); }
 .m-chip .m-carry { color: #eef3ff; min-width: calc(var(--px) * 8); }
 .m-chip .m-del { margin-left: auto; }
-.m-ico { flex: none; display: block; image-rendering: pixelated; background-image: url("sprites/atlas.png?v=20261023a"); background-repeat: no-repeat; background-size: calc(var(--px) * 256) auto; position: relative; }
+.m-ico { flex: none; display: block; image-rendering: pixelated; background-image: url("sprites/atlas.png?v=20261025a"); background-repeat: no-repeat; background-size: calc(var(--px) * 256) auto; position: relative; }
 .m-chip[data-c="0"] .m-key { background-position: 0 0; } .m-chip[data-c="1"] .m-key { background-position: calc(var(--px) * -14) 0; } .m-chip[data-c="2"] .m-key { background-position: calc(var(--px) * -28) 0; }
 .m-chip[data-c="0"] .m-doc { background-position: calc(var(--px) * -42) 0; } .m-chip[data-c="1"] .m-doc { background-position: calc(var(--px) * -54) 0; } .m-chip[data-c="2"] .m-doc { background-position: calc(var(--px) * -66) 0; }
 .m-key { width: calc(var(--px) * 13); height: calc(var(--px) * 14); opacity: .25; filter: grayscale(.8); }

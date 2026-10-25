@@ -6,10 +6,10 @@
    ciclo di animazione. Il tempo di 9 minuti vive nel motore e scorre solo quando il motore viene fatto avanzare:
    pausa, cambio livello, scheda in background e conto alla rovescia non lo toccano.
    ===================================================================== */
-import { Sim, CONFIG as C } from './sim.js?v=20261023a';
-import { Scene, CW, CH } from './art.js?v=20261023a';
-import { Audio8 } from './audio.js?v=20261023a';
-import { LEVELS } from './maze.js?v=20261023a';
+import { Sim, CONFIG as C } from './sim.js?v=20261025a';
+import { Scene, CW, CH } from './art.js?v=20261025a';
+import { Audio8 } from './audio.js?v=20261025a';
+import { LEVELS } from './maze.js?v=20261025a';
 import { createBoard } from '../faind-game/board.js?v=20261024c';
 
 const $ = (id) => document.getElementById(id);
@@ -105,7 +105,7 @@ function beginPlay() {
 }
 
 function showLevelToast(n) {
-  const sub = n === 1 ? 'COLLECT FREELY' : n === C.FREE_LEVELS + 1 ? 'ONE COLOUR AT A TIME' : '';
+  const sub = n === 1 ? 'COLLECT FREELY' : n === C.FREE_LEVELS + 1 ? 'ONE COLOUR AT A TIME' : sim.L.double ? 'TWO MAZES: USE THE SIDE DOORS' : '';
   toast('LEVEL ' + n, sub, true);
 }
 
@@ -141,7 +141,7 @@ function finish() {
   if (isBest) { best = score; try { localStorage.setItem(BEST_KEY, String(best)); } catch (e) {} }
   $('rScore').textContent = String(score); $('rLevel').textContent = sim.level + '/' + LEVELS;
   $('rDel').textContent = String(sim.stats.delivered); $('rBestV').textContent = String(best); $('rBest').hidden = !isBest;
-  $('rNote').textContent = (won ? 'All 15 levels done, +' + sim.bonus + ' time bonus. ' : '') + (continued ? 'Continued run: no record saved.' : isBest ? 'New record saved on this device.' : '');
+  $('rNote').textContent = (won ? 'All 50 levels done, +' + sim.bonus + ' time bonus. ' : '') + (continued ? 'Continued run: no record saved.' : isBest ? 'New record saved on this device.' : '');
   if (continued) board.unranked(); else board.finish(sim.inputs);
   setTimeout(() => { if (state === 'over' && !board.nameOpen) { try { $('btnAgain').focus({ preventScroll: true }); } catch (e) {} } }, 400);
 }
@@ -271,6 +271,7 @@ function handleEvents() {
       case 'power': audio.sfx('power'); break;
       case 'powerEnd': audio.sfx('powerEnd'); break;
       case 'kill': audio.sfx('kill'); break;
+      case 'life': audio.sfx('life'); el.live.textContent = sim.lives + ' lives'; toast('+1 LIFE', '', false); break;
       case 'hit': audio.sfx('hit'); el.live.textContent = sim.lives + ' lives left'; break;
       case 'exitOn': audio.sfx('exitOn'); toast('EXIT OPEN', '', false); break;
       case 'active': toast(NAMES[e.color] + ' ACTIVE', 'FINISH IT TO CHANGE', false); break;

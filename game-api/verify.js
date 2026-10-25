@@ -9,7 +9,7 @@ import { Sim as MazeSim, CONFIG as MAZE } from '../signal-maze/sim.js';
 import { Sim as LostSim } from './engines/lost/sim.js';
 
 // tetti di sicurezza: il punteggio vero esce dal replay, questi bloccano solo valori impossibili
-export const MAX_SCORE = { maze: 150000, lost: 125000 };   // maze: 15 livelli da circa 4800 + bonus tempo, con ampio margine; lost: 50 × (1000 + 3 × 500)
+export const MAX_SCORE = { maze: 500000, lost: 125000 };   // maze: 50 livelli da circa 4800 + bonus tempo, con ampio margine; lost: 50 × (1000 + 3 × 500)
 const MAZE_MAX_TICKS = MAZE.TOTAL_TIME * MAZE.TPS + 2;
 const LOST_LEVELS = 50, LOST_QUANTUM = 5, LOST_MAX_MS = 120 * 60 * 1000, LOST_TAIL_MS = 30000;
 const MAX_ENTRIES = 40000;

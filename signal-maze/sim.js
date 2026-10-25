@@ -3,14 +3,14 @@
    ---------------------------------------------------------------------
    Passo fisso di 1/60 s. Le posizioni sono in tile (il centro della tile (c, r) è (c + .5, r + .5)) su un toro:
    uscendo da un lato si rientra dall'altro alla stessa altezza, quindi i passaggi sui bordi non hanno nessun
-   teletrasporto, solo l'aritmetica modulo W / H. Tutte le regole stanno qui: il tempo di 9 minuti è uno solo per
+   teletrasporto, solo l'aritmetica modulo W / H. Tutte le regole stanno qui: il tempo di 35 minuti è uno solo per
    tutta la partita e scorre soltanto mentre si chiama step() (pausa, cambio livello e sfondo non lo toccano).
    ===================================================================== */
-import { W, H, T, LEVELS, buildLevel, bfs, idx } from './maze.js';
+import { H, T, LEVELS, buildLevel, bfs, idx, cur } from './maze.js';
 
 export const CONFIG = {
-  // tempo unico: 9:06 = tempo medio di un percorso completo (circa 506 s, test-maze.mjs) + 40 s
-  TPS: 60, TOTAL_TIME: 538, LIVES: 3,
+  // tempo unico: 35:00 = tempo di un percorso completo di 50 livelli senza nemici (circa 1974 s, test-maze.mjs) + 126 s
+  TPS: 60, TOTAL_TIME: 2100, LIVES: 3,
   FAINDO_SPEED: 3.9,          // tile al secondo
   SPAWN_ANIM: 0.8, POWER_TIME: 10, POWER_WARN: 3, INVULN: 2.0,
   HIT_DIST: 0.62, PICK_DIST: 0.5,
@@ -21,9 +21,9 @@ export const CONFIG = {
 };
 const C = CONFIG, DT = 1 / C.TPS;
 const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-const wrapX = (x) => ((x % W) + W) % W, wrapY = (y) => ((y % H) + H) % H;
+const wrapX = (x) => ((x % cur.w) + cur.w) % cur.w, wrapY = (y) => ((y % H) + H) % H;
 /** differenza più corta sul toro */
-const dW = (a, b) => { let d = a - b; if (d > W / 2) d -= W; else if (d < -W / 2) d += W; return d; };
+const dW = (a, b) => { const w = cur.w; let d = a - b; if (d > w / 2) d -= w; else if (d < -w / 2) d += w; return d; };
 const dH = (a, b) => { let d = a - b; if (d > H / 2) d -= H; else if (d < -H / 2) d += H; return d; };
 function mulberry32(a) { return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 
@@ -35,7 +35,8 @@ export function robotDelays(level) {
   const step = level === 1 ? 6 : level === 2 ? 4 : level === 3 ? 2.5 : level <= 6 ? 1.2 : 0.5;
   return [0, 1, 2, 3].map((i) => i * step);
 }
-export function robotSpeed(level) { return C.FAINDO_SPEED * (0.58 + 0.026 * (level - 1)); }
+/** cresce fino al livello 15 come prima; poi molto più piano, fino a sfiorare la velocità di Faindo al livello 50 */
+export function robotSpeed(level) { return C.FAINDO_SPEED * (level <= 15 ? 0.58 + 0.026 * (level - 1) : 0.944 + 0.0015 * (level - 15)); }
 const ROBOT_FACTOR = [1.0, 0.97, 0.9, 0.95];   // inseguitore, anticipatore, pattugliatore, alternato
 
 function moveEntity(e, dist, choose) {
@@ -74,7 +75,9 @@ export class Sim {
 
   loadLevel(n) {
     const L = this.L = levelData(n);
+    cur.w = L.w;
     this.level = n;
+    this.heartTaken = false;
     this.f = { x: L.start[0] + 0.5, y: L.start[1] + 0.5, dx: 0, dy: 0, face: 0, inv: 0, spawn: 0 };
     this.keys = [false, false, false];           // chiave posseduta, per colore
     this.carried = [0, 0, 0];                    // documenti in mano, per colore
@@ -88,7 +91,7 @@ export class Sim {
     this.robots = L.robots.map((p, i) => ({ i, x: p[0] + 0.5, y: p[1] + 0.5, dx: 0, dy: 0, alive: true, delay: delays[i], mode: i === 3 ? 'patrol' : 'chase', modeT: 0, goal: null, face: 0 }));
     this.held = []; this.lastKilled = null;
     const rc = this.L.grid; let rb = null;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (rc[idx(x, y)] === T.FLOOR) { const d = Math.abs(x - 7) + Math.abs(y - 8.5); if (!rb || d < rb.d) rb = { d, x, y }; }
+    for (let y = 0; y < H; y++) for (let x = 0; x < L.w; x++) if (rc[idx(x, y)] === T.FLOOR) { const d = Math.abs(x - 7) + Math.abs(y - 8.5); if (!rb || d < rb.d) rb = { d, x, y }; }
     this.centerTile = [rb.x, rb.y];   // dove ricompare Faindo dopo un contatto: al centro della mappa
   }
 
@@ -191,6 +194,9 @@ export class Sim {
         this.docTaken[i] = true; this.carried[d.color]++; this.setActive(d.color); this.events.push({ type: 'doc', color: d.color });
       }
     }
+    // cuore: una vita in più, ma solo se Faindo non ne ha già il massimo (altrimenti ci passa sopra e resta lì)
+    const hr = this.L.heart;
+    if (hr && !this.heartTaken && hr[0] === tx && hr[1] === ty && this.lives < C.LIVES) { this.heartTaken = true; this.lives++; this.events.push({ type: 'life', x: tx + 0.5, y: ty + 0.5 }); }
     if (t === T.DOOR) {
       const o = this.officeAt(tx, ty);
       if (o && !this.unlocked[o.id] && this.keys[o.color]) { this.unlocked[o.id] = true; this.keys[o.color] = false; this.events.push({ type: 'unlock', color: o.color }); }
@@ -238,7 +244,7 @@ export class Sim {
     const tx = Math.floor(wrapX(px)), ty = Math.floor(wrapY(py));
     if (this.canR(tx, ty)) return [tx, ty];
     let best = null, bd = 1e9;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (this.canR(x, y)) {
+    for (let y = 0; y < H; y++) for (let x = 0; x < cur.w; x++) if (this.canR(x, y)) {
       const d = dW(x + 0.5, px) ** 2 + dH(y + 0.5, py) ** 2;
       if (d < bd) { bd = d; best = [x, y]; }
     }
@@ -252,7 +258,7 @@ export class Sim {
       if (r.goal && r.goal.doc !== undefined && !this.docTaken[r.goal.doc] && !(Math.floor(r.x) === r.goal.x && Math.floor(r.y) === r.goal.y)) return [r.goal.x, r.goal.y];
       const left = []; L.docs.forEach((d, i) => { if (!this.docTaken[i]) left.push(i); });
       if (left.length) { const i = left[Math.floor(this.rng() * left.length)]; r.goal = { doc: i, x: L.docs[i].x, y: L.docs[i].y }; return [r.goal.x, r.goal.y]; }
-      const fl = []; for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (this.canR(x, y)) fl.push([x, y]);
+      const fl = []; for (let y = 0; y < H; y++) for (let x = 0; x < cur.w; x++) if (this.canR(x, y)) fl.push([x, y]);
       const p = fl[Math.floor(this.rng() * fl.length)]; r.goal = { x: p[0], y: p[1] }; return p;
     }
     if (r.i === 1) {   // anticipa: quattro tile davanti a Faindo
