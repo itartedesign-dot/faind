@@ -5,7 +5,7 @@
    risorse rilasciate all'uscita), con effetti propri e un tema chiptune originale: 124 bpm, la minore, onde quadre
    e triangolari, basso a ottavi, arpeggio con eco e batteria appena accennata. Sedici battute (circa 31 s) in loop.
    ===================================================================== */
-import { Audio8 as Base } from '../faind-game/audio.js?v=20261023a';
+import { Audio8 as Base } from '../faind-game/audio.js?v=20261025a';
 
 const BPM = 124;
 const CHORDS = [[45, 0], [41, 0], [48, 0], [43, 0], [45, 0], [41, 0], [48, 0], [43, 0], [38, 0], [45, 0], [40, 1], [45, 0], [38, 0], [41, 0], [40, 1], [40, 1]];   // [radice, 1 = accordo maggiore]
@@ -38,6 +38,7 @@ export class Audio8 extends Base {
       case 'office': [523, 659, 784, 1047, 1319].forEach((f, i) => this._tone('square', f, f, t + i * 0.07, 0.12, 0.15)); this._tone('triangle', 262, 262, t, 0.5, 0.22); this._tone('square', 1319, 1760, t + 0.36, 0.34, 0.12); break;
       case 'power': this._tone('sawtooth', 160, 1400, t, 0.5, 0.12); this._tone('square', 1568, 1568, t + 0.5, 0.08, 0.12); this._tone('square', 2093, 2093, t + 0.58, 0.14, 0.1); break;
       case 'powerEnd': this._tone('square', 880, 880, t, 0.1, 0.12); this._tone('square', 587, 587, t + 0.12, 0.16, 0.12); break;
+      case 'life': [659, 784, 1047, 1319].forEach((f, i) => this._tone('square', f, f, t + i * 0.08, 0.12, 0.14)); this._tone('triangle', 330, 330, t, 0.4, 0.18); break;
       case 'tick': this._tone('square', 1320, 1320, t, 0.03, 0.08); break;
       case 'kill': this._noise(t, 0.2, 0.2, 2500, 300); this._tone('square', 900, 90, t, 0.2, 0.16); break;
       case 'hit': this._tone('sawtooth', 420, 55, t, 0.45, 0.22); this._noise(t, 0.3, 0.2, 1200, 120); break;

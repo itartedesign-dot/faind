@@ -1,8 +1,8 @@
 /* Verifica delle mappe e del motore: node signal-maze/test-maze.mjs
-   Controlla tutti i 15 livelli (tre chiavi e cinque documenti per colore, oggetti e uscita raggiungibili, otto aperture
+   Controlla tutti i 50 livelli (singoli e doppi dal 10, ogni tre) (tre chiavi e cinque documenti per colore, oggetti e uscita raggiungibili, otto aperture
    collegate a coppie, uffici a L o a T con una sola porta, nessun vicolo cieco) e fa giocare un robot automatico
    (senza nemici) per vedere che ogni livello si completa e quanto tempo richiede. */
-import { W, H, T, LEVELS, OPEN_ROWS, OPEN_COLS, buildLevel, bfs, idx } from './maze.js';
+import { W, H, T, LEVELS, OPEN_ROWS, OPEN_COLS, buildLevel, bfs, idx, isDoubleLevel } from './maze.js';
 import { Sim, CONFIG, levelData } from './sim.js';
 let bad = 0; const fail = (m) => { bad++; console.log('KO ', m); };
 const DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]];
@@ -17,10 +17,18 @@ for (let n = 1; n <= LEVELS; n++) {
   if (L.keys.length !== 3 || L.docs.length !== 15) fail(tag + 'totali');
   if (new Set(L.offices.map((o) => o.color)).size !== 3) fail(tag + 'colori uffici');
   // aperture: due per lato, collegate a coppie
-  const open = []; for (let i = 0; i < W * H; i++) if (g[i] === T.OPEN) open.push([i % W, (i / W) | 0]);
-  if (open.length !== 8) fail(tag + 'aperture ' + open.length);
-  for (const r of OPEN_ROWS) if (g[idx(0, r)] !== T.OPEN || g[idx(W - 1, r)] !== T.OPEN || g[idx(1, r)] !== T.FLOOR || g[idx(W - 2, r)] !== T.FLOOR) fail(tag + 'aperture laterali riga ' + r);
-  for (const c of OPEN_COLS) if (g[idx(c, 0)] !== T.OPEN || g[idx(c, H - 1)] !== T.OPEN || g[idx(c, 1)] !== T.FLOOR || g[idx(c, H - 2)] !== T.FLOOR) fail(tag + 'aperture alto/basso colonna ' + c);
+  const dbl = isDoubleLevel(n), w = L.w; if (w !== (dbl ? 2 * W : W)) fail(tag + 'larghezza ' + w);
+  const open = []; for (let i = 0; i < w * H; i++) if (g[i] === T.OPEN) open.push([i % w, (i / w) | 0]);
+  if (open.length !== (dbl ? 16 : 8)) fail(tag + 'aperture ' + open.length);
+  for (const o of dbl ? [0, W] : [0]) {
+    for (const r of OPEN_ROWS) if (g[idx(o, r)] !== T.OPEN || g[idx(o + W - 1, r)] !== T.OPEN || g[idx(o + 1, r)] !== T.FLOOR || g[idx(o + W - 2, r)] !== T.FLOOR) fail(tag + 'aperture laterali riga ' + r);
+    for (const c of OPEN_COLS) if (g[idx(o + c, 0)] !== T.OPEN || g[idx(o + c, H - 1)] !== T.OPEN || g[idx(o + c, 1)] !== T.FLOOR || g[idx(o + c, H - 2)] !== T.FLOOR) fail(tag + 'aperture alto/basso colonna ' + c);
+  }
+  // cuore: uno ogni 5 livelli, su un corridoio, mai su altri oggetti; solo un'uscita
+  const hasHeart = n % 5 === 0; if (!!L.heart !== hasHeart) fail(tag + 'cuore');
+  if (L.heart) { if (g[idx(L.heart[0], L.heart[1])] !== T.FLOOR) fail(tag + 'cuore fuori dal corridoio'); for (const o of [...L.keys, ...L.docs]) if (o.x === L.heart[0] && o.y === L.heart[1]) fail(tag + 'cuore su un oggetto'); }
+  let exits = 0; for (let i = 0; i < w * H; i++) if (g[i] === T.EXIT) exits++; if (exits !== 1) fail(tag + 'uscite ' + exits);
+  if (dbl) { const half = (x) => (x < W ? 0 : 1); if (new Set(L.offices.map((o) => half(o.door[0]))).size !== 2) fail(tag + 'uffici in una metà sola'); }
   // raggiungibilità
   const d = bfs(g, L.start[0], L.start[1]);
   for (const o of [...L.keys, ...L.docs]) if (d[idx(o.x, o.y)] < 0) fail(tag + 'oggetto non raggiungibile');
@@ -39,6 +47,7 @@ for (let n = 1; n <= LEVELS; n++) {
     if (xs.size !== 3 || ys.size !== 3) fail(tag + 'ufficio non 3x3');
   }
   if (g[idx(L.exit[0], L.exit[1])] !== T.EXIT) fail(tag + 'uscita');
+  if (L.exit[1] !== 0 || (L.exit[0] % W) !== 7) fail(tag + 'uscita non in alto al centro di una metà');
 }
 
 /* ---- robot automatico: nessun nemico, controlla le regole e misura i tempi ---- */
@@ -48,7 +57,7 @@ function plan(sim, tx, ty) {
   for (let h = 0; h < q.length; h++) {
     const [x, y] = q[h]; if (x === tx && y === ty) break;
     for (const [dx, dy] of DIRS) {
-      const nx = (x + dx + W) % W, ny = (y + dy + H) % H, j = idx(nx, ny);
+      const wd = sim.L.w, nx = (x + dx + wd) % wd, ny = (y + dy + H) % H, j = idx(nx, ny);
       if (prev.has(j)) continue;
       const t = sim.L.grid[j];
       const ok = sim.canF(nx, ny) || (t === T.DOOR && sim.keys[sim.officeAt(nx, ny).color]);
@@ -70,7 +79,7 @@ function goTo(sim, tx, ty, limit) {
 }
 let total = 0;
 for (let n = 1; n <= LEVELS; n++) {
-  const sim = new Sim(1); sim.loadLevel(n); sim.level = n;
+  const sim = new Sim(1); sim.loadLevel(n); sim.level = n; sim.lives = 1;
   sim.robots.forEach((r) => { r.delay = 1e9; });
   const L = sim.L, t0 = sim.timeLeft; let ok = true;
   // un colore alla volta (dal livello 4 è obbligatorio, prima è comunque una buona strategia): chiave, documenti più vicini, scrivania
@@ -127,7 +136,6 @@ console.log('tempo totale del percorso (senza nemici): ' + total.toFixed(0) + ' 
   if (s2.lives !== 2) fail('contatto: vite ' + s2.lives + ' (attese 2)');
 }
 /* ---- uscita fissa in alto al centro ---- */
-for (let n = 1; n <= LEVELS; n++) { const L = buildLevel(n); if (L.exit[0] !== 7 || L.exit[1] !== 0) fail('livello ' + n + ': uscita non in alto al centro'); }
 /* ---- prenotazione diagonale: si va dritto, ma alla prima svolta a destra si gira da soli ---- */
 {
   const s = new Sim(1); s.loadLevel(1); s.robots.forEach((r) => { r.delay = 1e9; });

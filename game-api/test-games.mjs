@@ -151,23 +151,23 @@ async function session(game, now, ip, seed) {
 // partite di Maze che danno punti (con il seme 1 il giocatore automatico consegna un ufficio)
 async function mazeGame(ip, now) { const se = await session('maze', now, ip, 1); return { token: se.token, sim: mazeBot(1, false) }; }
 const MZ = await mazeGame('10.0.0.1', T0);
-let res = await call('POST', '/maze/score', { token: MZ.token, inputs: MZ.sim.inputs, score: 999999 }, T0 + 700000);
+let res = await call('POST', '/maze/score', { token: MZ.token, inputs: MZ.sim.inputs, score: 999999 }, T0 + 2200000);
 assert.equal(res.s, 200); assert.equal(res.j.score, MZ.sim.score); assert.ok(res.j.claim); assert.equal(res.j.weekly.rank, 1); assert.equal(res.j.all.rank, 1); assert.equal(res.j.delivered, MZ.sim.stats.delivered);
 const mazeClaim = res.j.claim;
-res = await call('POST', '/maze/score', { token: MZ.token, inputs: MZ.sim.inputs }, T0 + 700500); assert.equal(res.s, 409);       // un solo invio
+res = await call('POST', '/maze/score', { token: MZ.token, inputs: MZ.sim.inputs }, T0 + 2200500); assert.equal(res.s, 409);       // un solo invio
 // troppo veloce, comandi non validi, gettone manomesso, gettone di un altro gioco
 const MZ2 = await mazeGame('11.0.0.1', T0);
 res = await call('POST', '/maze/score', { token: MZ2.token, inputs: MZ2.sim.inputs }, T0 + 20000); assert.equal(res.s, 422); assert.equal(res.j.error, 'too_fast');
-res = await call('POST', '/maze/score', { token: MZ2.token, inputs: [[9999999, [0]]] }, T0 + 700000); assert.equal(res.s, 422); assert.equal(res.j.error, 'bad_inputs');
-res = await call('POST', '/maze/score', { token: MZ2.token.slice(0, -2) + 'xx', inputs: [] }, T0 + 700000); assert.equal(res.s, 400);
-res = await call('POST', '/lost/score', { token: MZ2.token, inputs: [] }, T0 + 700000); assert.equal(res.s, 400);
-res = await call('POST', '/score', { token: MZ2.token, inputs: [] }, T0 + 700000); assert.equal(res.s, 400);
-res = await call('POST', '/maze/score', { token: MZ2.token, inputs: MZ2.sim.inputs, continued: true }, T0 + 700000); assert.equal(res.s, 422); assert.equal(res.j.error, 'bad_game');   // dichiara un continue: respinta, il gettone resta valido
-res = await call('POST', '/maze/score', { token: MZ2.token, inputs: MZ2.sim.inputs }, T0 + 700000); assert.equal(res.s, 200);   // dopo i rifiuti il gettone vale ancora (il tentativo respinto non lo consuma)
+res = await call('POST', '/maze/score', { token: MZ2.token, inputs: [[9999999, [0]]] }, T0 + 2200000); assert.equal(res.s, 422); assert.equal(res.j.error, 'bad_inputs');
+res = await call('POST', '/maze/score', { token: MZ2.token.slice(0, -2) + 'xx', inputs: [] }, T0 + 2200000); assert.equal(res.s, 400);
+res = await call('POST', '/lost/score', { token: MZ2.token, inputs: [] }, T0 + 2200000); assert.equal(res.s, 400);
+res = await call('POST', '/score', { token: MZ2.token, inputs: [] }, T0 + 2200000); assert.equal(res.s, 400);
+res = await call('POST', '/maze/score', { token: MZ2.token, inputs: MZ2.sim.inputs, continued: true }, T0 + 2200000); assert.equal(res.s, 422); assert.equal(res.j.error, 'bad_game');   // dichiara un continue: respinta, il gettone resta valido
+res = await call('POST', '/maze/score', { token: MZ2.token, inputs: MZ2.sim.inputs }, T0 + 2200000); assert.equal(res.s, 200);   // dopo i rifiuti il gettone vale ancora (il tentativo respinto non lo consuma)
 // partita ferma: finisce senza errori e senza punti, nessun claim
 const se0 = await session('maze', T0, '12.0.0.1');
 const idle = mazeBot(se0.seed, true);
-res = await call('POST', '/maze/score', { token: se0.token, inputs: idle.inputs }, T0 + 700000); assert.equal(res.s, 200); assert.equal(res.j.score, 0); assert.equal(res.j.claim, undefined);
+res = await call('POST', '/maze/score', { token: se0.token, inputs: idle.inputs }, T0 + 2200000); assert.equal(res.s, 200); assert.equal(res.j.score, 0); assert.equal(res.j.claim, undefined);
 
 // Lost
 const lostMs = lb.clock;
@@ -185,27 +185,27 @@ res = await call('POST', '/lost/score', { token: sl.token, inputs: [[7, 0]] }, T
 
 /* ---------- nome e classifiche separate ---------- */
 // il claim di un gioco non vale per un altro
-res = await call('POST', '/lost/name', { claim: mazeClaim, initials: 'ABC', country: 'IT' }, T0 + 800000); assert.equal(res.s, 400);
-res = await call('POST', '/name', { claim: mazeClaim, initials: 'ABC', country: 'IT' }, T0 + 800000); assert.equal(res.s, 400);
-res = await call('POST', '/maze/name', { claim: lostClaim, initials: 'ABC', country: 'IT' }, T0 + 800000); assert.equal(res.s, 400);
-res = await call('POST', '/maze/name', { claim: mazeClaim, initials: 'AB1', country: 'IT' }, T0 + 800000); assert.equal(res.s, 400);
-res = await call('POST', '/maze/name', { claim: mazeClaim, initials: 'abc', country: 'it' }, T0 + 800000); assert.equal(res.s, 200);
-res = await call('POST', '/maze/name', { claim: mazeClaim, initials: 'xyz', country: 'IT' }, T0 + 800000); assert.equal(res.s, 409);
-res = await call('POST', '/lost/name', { claim: lostClaim, initials: 'LOS', country: 'FR' }, T0 + 800000); assert.equal(res.s, 200);
-let m = await call('GET', '/maze/leaderboard', null, T0 + 810000), l = await call('GET', '/lost/leaderboard', null, T0 + 810000), n = await call('GET', '/leaderboard', null, T0 + 810000);
+res = await call('POST', '/lost/name', { claim: mazeClaim, initials: 'ABC', country: 'IT' }, T0 + 2300000); assert.equal(res.s, 400);
+res = await call('POST', '/name', { claim: mazeClaim, initials: 'ABC', country: 'IT' }, T0 + 2300000); assert.equal(res.s, 400);
+res = await call('POST', '/maze/name', { claim: lostClaim, initials: 'ABC', country: 'IT' }, T0 + 2300000); assert.equal(res.s, 400);
+res = await call('POST', '/maze/name', { claim: mazeClaim, initials: 'AB1', country: 'IT' }, T0 + 2300000); assert.equal(res.s, 400);
+res = await call('POST', '/maze/name', { claim: mazeClaim, initials: 'abc', country: 'it' }, T0 + 2300000); assert.equal(res.s, 200);
+res = await call('POST', '/maze/name', { claim: mazeClaim, initials: 'xyz', country: 'IT' }, T0 + 2300000); assert.equal(res.s, 409);
+res = await call('POST', '/lost/name', { claim: lostClaim, initials: 'LOS', country: 'FR' }, T0 + 2300000); assert.equal(res.s, 200);
+let m = await call('GET', '/maze/leaderboard', null, T0 + 2310000), l = await call('GET', '/lost/leaderboard', null, T0 + 2310000), n = await call('GET', '/leaderboard', null, T0 + 2310000);
 assert.deepEqual(m.j.weekly, [{ initials: 'ABC', country: 'IT', score: MZ.sim.score }]);
 assert.deepEqual(l.j.weekly, [{ initials: 'LOS', country: 'FR', score: lb.score }]); assert.deepEqual(l.j.all, l.j.weekly);
 assert.equal(n.j.weekly.length, 0); assert.equal(n.j.all.length, 0);       // News Rush non vede i punteggi degli altri giochi
 assert.equal(m.h.get('Access-Control-Allow-Origin'), 'https://faind.org');
 // pari punteggio, settimana precedente e posizioni: per gioco
-sqlite.exec(`INSERT INTO game_scores VALUES ('t1','maze',${MZ.sim.score},1,0,${T0 + 2000000},'2026-10-19','TIE','FR'),('t2','lost',${MZ.sim.score},1,0,${T0 + 2000000},'2026-10-19','OTH','DE'),('old','maze',900000,1,0,${T0 - 9 * 86400000},'2026-10-05','OLD','ES')`);
-m = await call('GET', '/maze/leaderboard', null, T0 + 820000);
+sqlite.exec(`INSERT INTO game_scores VALUES ('t1','maze',${MZ.sim.score},1,0,${T0 + 2400000},'2026-10-19','TIE','FR'),('t2','lost',${MZ.sim.score},1,0,${T0 + 2400000},'2026-10-19','OTH','DE'),('old','maze',900000,1,0,${T0 - 9 * 86400000},'2026-10-05','OLD','ES')`);
+m = await call('GET', '/maze/leaderboard', null, T0 + 2320000);
 assert.deepEqual(m.j.weekly.map((x) => x.initials), ['ABC', 'TIE']); assert.equal(m.j.all[0].initials, 'OLD');
-l = await call('GET', '/lost/leaderboard', null, T0 + 820000); assert.deepEqual(l.j.weekly.map((x) => x.initials).sort(), ['LOS', 'OTH']);
+l = await call('GET', '/lost/leaderboard', null, T0 + 2320000); assert.deepEqual(l.j.weekly.map((x) => x.initials).sort(), ['LOS', 'OTH']);
 m = await call('GET', '/maze/leaderboard', null, Date.UTC(2026, 9, 26, 10)); assert.equal(m.j.weekly.length, 0); assert.equal(m.j.all.length, 3);   // nuova settimana: settimanale vuota, assoluta no
 // la posizione in classifica tiene conto solo del proprio gioco: un punteggio di Lost non sposta Maze
 const se1 = await session('maze', T0 + 900000, '30.0.0.1'), g1 = mazeBot(se1.seed, true);
-res = await call('POST', '/maze/score', { token: se1.token, inputs: g1.inputs }, T0 + 1600000, '30.0.0.1'); assert.equal(res.s, 200); assert.equal(res.j.weekly.rank, null);
+res = await call('POST', '/maze/score', { token: se1.token, inputs: g1.inputs }, T0 + 3100000, '30.0.0.1'); assert.equal(res.s, 200); assert.equal(res.j.weekly.rank, null);
 
 /* ---------- limiti di richieste per gioco ---------- */
 let last; for (let i = 0; i < 8; i++) last = await call('POST', '/lost/session', {}, T0 + 500000, '9.9.9.9');

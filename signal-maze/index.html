@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <title>Signal Maze – free retro 80s maze arcade game | FAIND</title>
-  <meta name="description" content="Signal Maze is a free top-down maze game with an 80s arcade look. Collect keys and documents, deliver them to the right office, outrun the robots. 15 levels.">
+  <meta name="description" content="Signal Maze is a free top-down maze game with an 80s arcade look. Collect keys and documents, deliver them to the right office, outrun the robots. 50 levels.">
   <link rel="canonical" href="https://faind.org/signal-maze/">
   <meta name="theme-color" content="#0b1226">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,20 +12,20 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="FAIND">
   <meta property="og:title" content="Signal Maze – free retro 80s maze arcade game">
-  <meta property="og:description" content="Keys, documents, offices and robots. 15 levels in 9 minutes. A free retro maze arcade game by FAIND.">
+  <meta property="og:description" content="Keys, documents, offices and robots. 50 levels in 35 minutes. A free retro maze arcade game by FAIND.">
   <meta property="og:url" content="https://faind.org/signal-maze/">
   <meta property="og:image" content="https://faind.org/assets/giochi/signal-maze.webp">
   <meta property="og:image:alt" content="Signal Maze screenshot: Faindo in a top-down office maze with robots, keys and documents">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Signal Maze – free retro 80s maze arcade game">
-  <meta name="twitter:description" content="Keys, documents, offices and robots. 15 levels in 9 minutes. A free retro maze arcade game by FAIND.">
+  <meta name="twitter:description" content="Keys, documents, offices and robots. 50 levels in 35 minutes. A free retro maze arcade game by FAIND.">
   <meta name="twitter:image" content="https://faind.org/assets/giochi/signal-maze.webp">
   <meta name="twitter:image:alt" content="Signal Maze screenshot: Faindo in a top-down office maze with robots, keys and documents">
   <link rel="icon" href="../assets/favicon-32.png?v=3" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
   <link rel="stylesheet" href="../faind-game/game.css?v=20261024d">
-  <link rel="stylesheet" href="maze.css?v=20261023a">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"FAIND Signal Maze","url":"https://faind.org/signal-maze/","description":"Signal Maze is a free top-down maze game inspired by 80s arcade classics, with pixel-art graphics and a short, tense run: 15 levels in 9 minutes. Your score goes on an online leaderboard, so every run is a chance to beat the high score.","image":"https://faind.org/assets/giochi/signal-maze.webp","genre":["Arcade","Retro","Pixel art"],"gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","inLanguage":"en","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"FAIND","url":"https://faind.org/"},"keywords":"free browser game, retro arcade, 80s arcade, 90s arcade, pixel art, original game, game made with AI","playMode":"SinglePlayer","isPartOf":{"@type":"CollectionPage","name":"Faind Games","url":"https://faind.org/games/"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Organization","name":"FAIND","url":"https://faind.org/"}}</script>
+  <link rel="stylesheet" href="maze.css?v=20261025a">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"FAIND Signal Maze","url":"https://faind.org/signal-maze/","description":"Signal Maze is a free top-down maze game inspired by 80s arcade classics, with pixel-art graphics and a tense run: 50 levels in 35 minutes. Your score goes on an online leaderboard, so every run is a chance to beat the high score.","image":"https://faind.org/assets/giochi/signal-maze.webp","genre":["Arcade","Retro","Pixel art"],"gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","inLanguage":"en","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"FAIND","url":"https://faind.org/"},"keywords":"free browser game, retro arcade, 80s arcade, 90s arcade, pixel art, original game, game made with AI","playMode":"SinglePlayer","isPartOf":{"@type":"CollectionPage","name":"Faind Games","url":"https://faind.org/games/"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@type":"Organization","name":"FAIND","url":"https://faind.org/"}}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"FAIND","item":"https://faind.org/"},{"@type":"ListItem","position":2,"name":"Faind Games","item":"https://faind.org/games/"},{"@type":"ListItem","position":3,"name":"Signal Maze","item":"https://faind.org/signal-maze/"}]}</script>
 </head>
 <body>
@@ -39,7 +39,7 @@
           <div class="m-row m-row1">
             <a class="m-brand" id="brand" href="../" aria-label="FAIND"><span class="m-brand__main">F<i>A</i><b>I</b>ND</span><span class="m-brand__sub">SIGNAL MAZE</span></a>
             <div class="m-cell m-cell--score"><span class="m-lbl">SCORE</span><span class="m-val" id="hScore">00000</span></div>
-            <div class="m-cell m-cell--level"><span class="m-lbl">LEVEL</span><span class="m-val" id="hLevel">1/15</span></div>
+            <div class="m-cell m-cell--level"><span class="m-lbl">LEVEL</span><span class="m-val" id="hLevel">1/50</span></div>
             <div class="m-cell m-cell--time" id="hTimeCell"><span class="m-lbl">TIME</span><span class="m-val" id="hTime">5:00</span></div>
             <button type="button" class="m-btn" id="btnPause" aria-label="Pause" hidden><span class="m-pause"><i></i><i></i></span></button>
             <button type="button" class="m-btn" id="btnSound" aria-pressed="false"><span class="g-ico" id="icoSound"></span></button>
@@ -63,7 +63,7 @@
             <div class="g-rules">
               <p class="g-howto">Collect matching keys and documents.</p>
               <p class="g-howto">Cross the office desk to deliver.</p>
-              <p class="g-howto">Avoid the robots. Complete all 15 levels in 9 minutes.</p>
+              <p class="g-howto">Avoid the robots. Complete all 50 levels in 35 minutes.</p>
             </div>
             <p class="g-keys">Arrow keys or WASD to move · P or Esc to pause</p>
             <div class="g-row">
@@ -153,11 +153,11 @@
   <noscript><p class="g-noscript">FAIND Signal Maze needs JavaScript. <a href="../">Back to FAIND</a></p></noscript>
 </div>
 <script src="../stats.js?v=20261011a" defer></script>
-<script src="config.js?v=20261023a"></script>
+<script src="config.js?v=20261025a"></script>
 <script type="module" src="game.js?v=20261024d"></script>
   <section class="g-seo" aria-label="About this game">
     <h2>About Signal Maze</h2>
-    <p>Signal Maze is a free top-down maze game inspired by 80s arcade classics, with pixel-art graphics and a short, tense run: 15 levels in 9 minutes. Your score goes on an online leaderboard, so every run is a chance to beat the high score.</p>
+    <p>Signal Maze is a free top-down maze game inspired by 80s arcade classics, with pixel-art graphics and a tense run: 50 levels in 35 minutes. Your score goes on an online leaderboard, so every run is a chance to beat the high score.</p>
     <p>Each level has coloured keys, documents and offices. Pick up a key, collect the document of the same colour and deliver it to the matching office, while patrolling robots hunt you through the corridors. If you lose all your lives you can continue from the game over screen.</p>
     <p>Controls: arrow keys or WASD to move, P or Esc to pause. On a phone, swipe to move.</p>
     <p>The game was designed and built by FAIND with the help of artificial intelligence.</p>
