@@ -79,6 +79,11 @@ for (let n = 1; n <= N; n++) {
   play(s, plan(L, [L.goal])); run(s, CFG.ARRIVE_MS + 20);
   ok(s.score === 1000 + 500 * s.stats.news, 'punteggio = 1000 + 500 per giornale raccolto'); const sc = s.score; run(s, 200); ok(s.score === sc || s.phase === 'between', 'punteggio una sola volta'); }
 
+// lampo gratuito: 1 s di luce ogni 25 s di gioco attivo, riparte a ogni livello
+{ const s = new Sim(50); run(s, 7100); ok(s.phase === 'play' && !s.tilesVisible, 'lampo: prima del tempo spento');
+  run(s, 24800); ok(!s.tilesVisible, 'lampo: a 24,8 s ancora spento'); run(s, 400); ok(s.tilesVisible && s.pulseMs > 0, 'lampo: acceso dopo 25 s');
+  const fl = s.flashes; run(s, 1100); ok(!s.tilesVisible && s.flashes === fl, 'lampo: spento dopo 1 s, nessun flash consumato');
+  run(s, 24000); ok(!s.tilesVisible, 'lampo: il ciclo riparte da zero'); run(s, 1200); ok(s.tilesVisible, 'lampo: secondo lampo a 25 s'); }
 // caduta: vita persa, ripartenza dalla partenza, giornali e flash conservati, nessuna nuova memorizzazione
 { const s = new Sim(50); run(s, 7100); const L = s.L;
   play(s, plan(L, [L.news[0]])); const got = s.collected, fl0 = s.flashes;

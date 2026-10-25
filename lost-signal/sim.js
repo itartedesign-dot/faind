@@ -19,7 +19,7 @@ import { getLevel, COLS, ROWS } from './levels.js?v=20261025c';
 import { LIFT_CELL_MS, LIFT_DWELL_MS } from './levelgen.js?v=20261025c';
 
 export const CFG = {
-  MEMORIZE_MS: 7000, FLASH_MS: 3000, FLASHES: 20, LIVES: 3, STEP_MS: 150, JUMP_MS: 400, FALL_MS: 900, WARN_MS: 1500, REVIVE_MS: 2500, ARRIVE_MS: 1700, BETWEEN_MS: 1500,
+  MEMORIZE_MS: 7000, FLASH_MS: 3000, PULSE_EVERY_MS: 25000, PULSE_MS: 1000, FLASHES: 20, LIVES: 3, STEP_MS: 150, JUMP_MS: 400, FALL_MS: 900, WARN_MS: 1500, REVIVE_MS: 2500, ARRIVE_MS: 1700, BETWEEN_MS: 1500,
   SCORE: { ARRIVE: 1000, NEWS: 500 },
   MAX_LIVES: 3, ROCK_WARN_MS: 1300, ROCK_FIRST_MS: 3000, ROCK_HIT: 0.62, FLASH_BONUS_FROM: 20
 };
@@ -77,7 +77,7 @@ export class Sim {
     this.level = n; this.L = getLevel(n);
     this.pos = { c: this.L.start.c, r: this.L.start.r }; this.facing = 0;
     this.got = new Set(); this.gotFlash = new Set(); this.gotLife = false; this.scored = false;
-    this.phase = 'memorize'; this.memMs = CFG.MEMORIZE_MS; this.flashMs = 0;
+    this.phase = 'memorize'; this.memMs = CFG.MEMORIZE_MS; this.flashMs = 0; this.pulseClock = 0; this.pulseMs = 0;
     this.warnMs = 0; this.warnDir = -1; this.tested = new Map(); this.deaths = 0; this.reviveMs = 0; this.safe = { c: this.pos.c, r: this.pos.r }; this.anchors = anchorSet(this.L, anchorCount(n));
     this.mv = null; this.fallT = 0; this.arriveT = 0; this.betweenT = 0; this.stepFoot = 0; this.over = false;
     this.liftClock = 0; this.rockClock = 0; this.riding = -1; this.cause = ''; this.hitAt = null; this.rocks = rockDefs(this.L); this.rockSeen = this.rocks.map(() => -1);
@@ -88,7 +88,7 @@ export class Sim {
 
   get collected() { return this.got.size; }
   /** le zolle si vedono durante la memorizzazione e mentre un flash è acceso */
-  get tilesVisible() { return this.phase === 'memorize' || this.flashMs > 0 || this.reviveMs > 0; }
+  get tilesVisible() { return this.phase === 'memorize' || this.flashMs > 0 || this.reviveMs > 0 || this.pulseMs > 0; }
   get canAct() { return this.phase === 'play'; }
   isTile(c, r) { return c >= 0 && r >= 0 && c < COLS && r < ROWS && this.L.tiles.has(r * COLS + c); }
   newsAt(c, r) { return this.L.news.findIndex((n) => n.c === c && n.r === r); }
@@ -199,6 +199,12 @@ export class Sim {
     if (this.warnMs > 0) this.warnMs = Math.max(0, this.warnMs - dt);
     if (this.reviveMs > 0) this.reviveMs = Math.max(0, this.reviveMs - dt);
     if (this.flashMs > 0) { this.flashMs = Math.max(0, this.flashMs - dt); if (this.flashMs === 0) this.events.push({ type: 'flashEnd' }); }
+    // ogni 25 s di gioco attivo il livello si accende per 1 s, gratis; riparte a ogni livello e non corre in pausa
+    if (this.pulseMs > 0) this.pulseMs = Math.max(0, this.pulseMs - dt);
+    else if (this.phase === 'play' || this.phase === 'step' || this.phase === 'jump') {
+      this.pulseClock += dt;
+      if (this.pulseClock >= CFG.PULSE_EVERY_MS) { this.pulseClock = 0; this.pulseMs = CFG.PULSE_MS; this.events.push({ type: 'pulse' }); }
+    }
     switch (this.phase) {
       case 'memorize':
         this.memMs -= dt;
