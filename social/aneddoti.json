@@ -35,7 +35,7 @@
       "titolo": "Una voce dopo diciotto anni",
       "testo": "Ann aveva perso la capacità di parlare dopo un ictus. Diciotto anni dopo, in una sperimentazione, un impianto e un’AI hanno trasformato i segnali cerebrali legati al tentativo di parlare in una voce sintetica. Il sistema animava anche un volto digitale. Per lei, comunicare ha ritrovato una forma più naturale.",
       "fonte": "Università della California, San Francisco",
-      "verificato": false
+      "verificato": true
     },
     {
       "titolo": "Un ponte per tornare a camminare",
@@ -148,6 +148,10 @@
     {
       "n": 5,
       "day": "2026-10-22"
+    },
+    {
+      "n": 6,
+      "day": "2026-10-26"
     }
   ]
 }
