@@ -5,22 +5,22 @@
 .m-canvas { cursor: default; image-rendering: pixelated; image-rendering: crisp-edges; image-rendering: pixelated; }
 
 /* ---- barra superiore: due righe ---- */
-.m-hud { position: absolute; z-index: 30; left: 0; top: 0; right: 0; height: calc(var(--px) * 36); display: flex; flex-direction: column; gap: calc(var(--px) * 1);
+.m-hud { position: absolute; z-index: 30; left: 0; top: 0; right: 0; height: calc(var(--px) * 44); display: flex; flex-direction: column; gap: calc(var(--px) * 2);
   padding: calc(var(--px) * 2) calc(var(--px) * 2) calc(var(--px) * 1); background: linear-gradient(#0d1730, #0a1226); border-bottom: 2px solid #2a4170; font-family: var(--pix); }
 .m-row { display: flex; gap: calc(var(--px) * 2); align-items: stretch; min-height: 0; }
 .m-row1 { flex: 17 1 0; } .m-row2 { flex: 15 1 0; }
 .m-brand { flex: 1.9 1 0; min-width: 0; display: flex; flex-direction: column; justify-content: center; text-decoration: none; color: var(--ivory); line-height: 1; cursor: pointer; touch-action: manipulation; }
-.m-brand__main { font-weight: 700; font-size: calc(var(--px) * 11); letter-spacing: .01em; text-shadow: 0 calc(var(--px) * 1) 0 #000; }
+.m-brand__main { font-weight: 700; font-size: calc(var(--px) * 12.5); letter-spacing: .01em; text-shadow: 0 calc(var(--px) * 1) 0 #000; }
 .m-brand__main i, .m-brand__main b { font-style: normal; font-weight: 700; color: var(--cyan); }
-.m-brand__sub { font-size: calc(var(--px) * 5); color: var(--cyan); margin-top: calc(var(--px) * 1); white-space: nowrap; }
+.m-brand__sub { font-size: calc(var(--px) * 5.6); color: var(--cyan); margin-top: calc(var(--px) * 1); white-space: nowrap; }
 .m-brand:focus-visible, .m-btn:focus-visible, .m-cell { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--px) * 1); background: #101a31; border: 1px solid #2a4170; border-radius: calc(var(--px) * 2); }
 .m-cell--score { flex: 1.35 1 0; } .m-cell--level { flex: 1.05 1 0; } .m-cell--time { flex: 1.1 1 0; }
-.m-lbl { font-size: calc(var(--px) * 5); color: #aebbd6; line-height: 1; white-space: nowrap; }
-.m-val { font-size: calc(var(--px) * 8); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.m-lbl { font-size: calc(var(--px) * 5.8); color: #aebbd6; line-height: 1; white-space: nowrap; }
+.m-val { font-size: calc(var(--px) * 9.5); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .m-cell--time.is-low { animation: mblink .8s steps(1) infinite; } .m-cell--time.is-low .m-lbl, .m-cell--time.is-low .m-val { color: #fff; }
 @keyframes mblink { 0%, 49% { background: #d11f1f; border-color: #ff6b5e; box-shadow: 0 0 calc(var(--px) * 3) rgba(255,70,60,.9); } 50%, 100% { background: #101a31; border-color: #2a4170; box-shadow: none; } }
 @media (prefers-reduced-motion: reduce) { .m-cell--time.is-low { animation: none; background: #d11f1f; border-color: #ff6b5e; } }
-.m-btn { flex: 0 0 calc(var(--px) * 17); min-width: 28px; display: flex; align-items: center; justify-content: center; background: #101a31; border: 1px solid #2a4170; border-radius: calc(var(--px) * 2); cursor: pointer; padding: 0; color: var(--ivory); touch-action: manipulation; }
+.m-btn { flex: 0 0 calc(var(--px) * 20); min-width: 28px; display: flex; align-items: center; justify-content: center; background: #101a31; border: 1px solid #2a4170; border-radius: calc(var(--px) * 2); cursor: pointer; padding: 0; color: var(--ivory); touch-action: manipulation; }
 .m-btn[hidden] { display: none; }
 .m-btn .g-ico { width: calc(var(--px) * 9); height: calc(var(--px) * 9); min-width: 14px; min-height: 14px; }
 .m-btn[aria-pressed="true"] { color: #8fa2c6; }
@@ -52,7 +52,7 @@
 
 /* ---- pannelli: iniziano sotto la barra ---- */
 .m-app .g-panel { top: calc(var(--px) * 36 + 2px); }
-.m-app .g-toast { top: calc(var(--px) * 56); }
+.m-app .g-toast { top: calc(var(--px) * 64); }
 .m-app .g-toast.g-toast--lv { top: 30%; }
 .g-big--small { font-size: calc(var(--u) * 11); }
 .g-title { margin-bottom: calc(var(--u) * 1); }

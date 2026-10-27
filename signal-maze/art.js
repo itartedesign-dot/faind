@@ -12,7 +12,7 @@ import { W, H, T, COLORS, idx, cur } from './maze.js?v=20261025a';
 import { CONFIG } from './sim.js?v=20261025a';
 import { ATLAS } from './sprites/atlas.js?v=20261025a';
 
-export const TS = 16, CW = 240, CH = 324, OY = 36, MH = H * TS;
+export const TS = 16, CW = 240, CH = 332, OY = 44, MH = H * TS;
 export const HEX = ['#ff8a1f', '#ffd21f', '#29d6ff'];
 const DARK = ['#8a3d00', '#8a6e00', '#0b6f8a'];
 const HEART = ['..KKK.KKK..', '.KRRRKRRRK.', 'KRRWWRRRRRK', 'KRWRRRRRRRK', 'KRRRRRRRRRK', 'KDRRRRRRRDK', '.KDRRRRRDK.', '..KDRRRDK..', '...KDRDK...', '....KKK....'];
