@@ -225,3 +225,8 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 .g-ini:focus-within .g-ini__ch.is-next { box-shadow: 0 0 0 2px var(--cyanL, #8fe8ff); }
 .g-name__row { flex-wrap: wrap; justify-content: center; }
 .g-name__row .g-country { flex: 1 1 100%; }
+
+/* schermata iniziale: titolo giallo, avvio arancione */
+.g-panel--start .g-title { color: #ffd21f; text-shadow: 0 calc(var(--u) * 1) 0 #000, 0 0 calc(var(--u) * 6) rgba(255,210,31,.45); }
+.g-panel--start .g-btn--main { background: #ff8a1f; border-color: #ffb066; color: #1a0d00; }
+.g-panel--start .g-btn--main:hover { background: #ffa04a; }

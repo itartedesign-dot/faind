@@ -58,10 +58,10 @@ function layout() {
   const cs = getComputedStyle(el.fit);
   const aw = el.fit.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
   const ah = el.fit.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-  const ctrlMin = 56;
+  const ctrlMin = 0;
   const cw = Math.max(200, Math.floor(Math.min(aw, ((ah - ctrlMin) * CW) / CH)));
   const ch = Math.round((cw * CH) / CW);
-  const fh = Math.min(ah, ch + 220);
+  const fh = Math.min(ah, ch);
   const s = el.frame.style;
   s.setProperty('--cw', cw + 'px'); s.setProperty('--ch', ch + 'px'); s.setProperty('--fh', fh + 'px');
   document.documentElement.style.setProperty('--u', (cw / 180) + 'px');
@@ -105,7 +105,7 @@ function beginPlay() {
 }
 
 function showLevelToast(n) {
-  const sub = n === 1 ? 'COLLECT FREELY' : n === C.FREE_LEVELS + 1 ? 'ONE COLOUR AT A TIME' : sim.L.double ? 'TWO MAZES: USE THE SIDE DOORS' : '';
+  const sub = '';
   toast('LEVEL ' + n, sub, true);
 }
 
