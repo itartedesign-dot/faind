@@ -27,7 +27,7 @@
       notizie: 'Notizie', video: 'Video', impara: "Impara l'AI", curiosita: 'Curiosità', prezzi: 'Prezzi', lavoro: 'Lavoro', strumenti: 'Strumenti', telegram: 'Telegram', uomoai: 'Uomo e AI', gioca: 'Faind Games',
       contatti: 'Contatti', sostieni: 'Sostieni FAIND', feed: 'Feed RSS', change: 'Cambia sezione', smvAll: 'Tutte le curiosità', source: 'Fonte', more: 'Leggi tutto', less: 'Mostra meno', gloss: 'Glossario →',
       t_notizie: 'Tutte le notizie', t_video: "L'AI in video", t_impara: "Impara l'AI", t_curiosita: 'Curiosità', t_prezzi: 'Prezzi e offerte', t_lavoro: "Lavoro nell'AI", t_strumenti: 'Strumenti e guide', t_uomoai: 'Uomo e AI', t_telegram: 'FAIND su Telegram', t_contatti: 'Scrivici', t_sostieni: 'Sostieni FAIND', t_feed: 'Feed RSS' },
-    en: { intro: 'Artificial intelligence news, updated every hour from Italian and international sources. Plus videos, a glossary, in-depth articles and fun facts.',
+    en: { intro: 'Artificial Intelligence News, updated every hour from international sources. Plus videos, in-depth articles and fun facts.',
       nav: 'FAIND sections', close: 'Close', all: 'All news', empty: 'Nothing in this section right now.',
       notizie: 'News', video: 'Video', impara: 'Learn AI', curiosita: 'Fun facts', prezzi: 'Prices', lavoro: 'Jobs', strumenti: 'Tools', telegram: 'Telegram', uomoai: 'Humans and AI', gioca: 'Faind Games',
       contatti: 'Contact', sostieni: 'Support FAIND', feed: 'RSS feeds', change: 'Change section', smvAll: 'All the fun facts', source: 'Source', more: 'Read more', less: 'Show less', gloss: 'Glossary →',
