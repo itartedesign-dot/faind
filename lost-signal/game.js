@@ -270,8 +270,7 @@ function skipTutorial() { hideHint(); tutFinish(); }
 /** Primo livello: riquadro al centro con il conto alla rovescia della memorizzazione. */
 function memBox(x) {
   memTut = x; el.hint.textContent = '';
-  const a = document.createElement('b'); a.textContent = 'YOU HAVE ' + x + (x === 1 ? ' SECOND' : ' SECONDS'); el.hint.appendChild(a);
-  const t = document.createElement('small'); t.textContent = 'TO MEMORIZE THE PATH'; el.hint.appendChild(t);
+  for (const [tag, txt] of [['b', 'YOU HAVE'], ['i', String(x)], ['b', x === 1 ? 'SECOND TO MEMORIZE THE PATH' : 'SECONDS TO MEMORIZE THE PATH']]) { const n = document.createElement(tag); n.textContent = txt; el.hint.appendChild(n); }
   el.hint.className = 'l-hint l-hint--mem'; el.hint.hidden = false; el.skip.hidden = false;
 }
 function noteAction() { /* le dimostrazioni non bloccano nulla: restano finché non finiscono */ }
@@ -291,7 +290,7 @@ function updateHud(force) {
   setText(el.flashN, 'fl', '×' + s.flashes);
   const flashOk = s.flashes > 0 && s.flashMs <= 0 && s.reviveMs <= 0 && (s.phase === 'play' || s.phase === 'step' || s.phase === 'jump');
   if (hc.fo !== flashOk) { hc.fo = flashOk; el.btnFlash.classList.toggle('is-off', !flashOk); el.btnFlash.setAttribute('aria-disabled', String(!flashOk)); }
-  const jumpOk = s.phase === 'play';
+  const jumpOk = s.phase === 'play' || s.phase === 'step';
   if (hc.jo !== jumpOk) { hc.jo = jumpOk; el.btnJump.classList.toggle('is-off', !jumpOk); el.btnJump.setAttribute('aria-disabled', String(!jumpOk)); }
   // piccolo contatore: secondi di memorizzazione o di flash rimasti (non è un limite di tempo di partita)
   let tl = '', tv = '';

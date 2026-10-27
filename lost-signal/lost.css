@@ -88,7 +88,10 @@
 
 /* ---- tutorial: conto alla rovescia al centro, spiegazione dei comandi in alto, salto ---- */
 .l-hint--mem { bottom: auto; top: 50%; transform: translate(-50%, -50%); background: rgba(11,18,38,.86); }
-.l-hint--mem b { font-size: calc(var(--px) * 13); }
+.l-hint--mem b { font-size: calc(var(--px) * 10); }
+.l-hint--mem i { display: block; margin: calc(var(--px) * 3) 0; font-style: normal; font-size: calc(var(--px) * 40); line-height: 1; color: #fff; font-variant-numeric: tabular-nums; transform-origin: 50% 50%; animation: lmemnum 1s ease-in forwards; }
+@keyframes lmemnum { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .l-hint--mem i { animation: none; } }
 .l-hint--top { bottom: auto; top: calc(var(--px) * 60); }
 .l-skip { position: absolute; z-index: 29; left: 50%; transform: translateX(-50%); bottom: calc(var(--px) * 62); padding: calc(var(--px) * 3) calc(var(--px) * 7); font-family: var(--pix); font-size: calc(var(--px) * 7); letter-spacing: .06em; color: #aebbd6; background: rgba(11,18,38,.8); border: 1px solid #2a4170; border-radius: calc(var(--px) * 4); cursor: pointer; touch-action: manipulation; }
 .l-skip[hidden] { display: none; }
