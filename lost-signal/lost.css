@@ -101,3 +101,10 @@
 
 /* testi della barra in giallo arcade */
 .l-lbl, .l-val, .l-keytxt b, .l-keytxt small { color: #ffd21f; }
+
+/* schermata iniziale */
+.l-title { color: #ffd21f; text-shadow: 0 calc(var(--u) * 1) 0 #000, 0 0 calc(var(--u) * 6) rgba(255,210,31,.45); }
+.l-lead { margin: 0; text-align: center; font-family: var(--pix); font-weight: 700; font-size: max(13px, calc(var(--u) * 5.2)); line-height: 1.6; letter-spacing: .04em; color: #fff; }
+#pStart .g-btn--main { background: #ff8a1f; border-color: #ffb066; color: #1a0d00; }
+#pStart .g-btn--main:hover { background: #ffa04a; }
+.l-hint--num i { -webkit-text-stroke: calc(var(--px) * 5) #ffd21f; paint-order: stroke fill; }
