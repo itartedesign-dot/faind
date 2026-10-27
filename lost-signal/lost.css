@@ -98,3 +98,6 @@
 .l-skip { position: absolute; z-index: 29; left: 50%; transform: translateX(-50%); bottom: calc(var(--px) * 62); padding: calc(var(--px) * 3) calc(var(--px) * 7); font-family: var(--pix); font-size: calc(var(--px) * 7); letter-spacing: .06em; color: #aebbd6; background: rgba(11,18,38,.8); border: 1px solid #2a4170; border-radius: calc(var(--px) * 4); cursor: pointer; touch-action: manipulation; }
 .l-skip[hidden] { display: none; }
 .l-row .is-hint, .l-lives.is-hint { animation: lhint 0.9s steps(2) infinite; }
+
+/* testi della barra in giallo arcade */
+.l-lbl, .l-val, .l-keytxt b, .l-keytxt small { color: #ffd21f; }
