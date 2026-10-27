@@ -159,11 +159,11 @@ export class Scene {
     const target = sim.tilesVisible ? 1 : 0;
     const rate = target > this.vis ? 12 : 4.5;
     this.vis += (target - this.vis) * Math.min(1, Math.max(0, dt) * rate); if (Math.abs(this.vis - target) < 0.01) this.vis = target;
-    // neon che si fulmina: buio, luce, buio, luce, buio nei 2 secondi dopo lo spegnimento (solo se richiesto dal tutorial)
+    // luce che muore: 4 accensioni a intermittenza, ogni volta più deboli, fino allo spegnimento totale (2 s, solo nel tutorial)
     if (this.flicker != null) {
       const ft = this.clock - this.flicker;
       if (ft >= 2 || sim.tilesVisible) this.flicker = null;
-      else { this.vis = (ft > 0.35 && ft < 0.55) || (ft > 1.05 && ft < 1.3) ? 1 : 0; }
+      else { const k = Math.floor(ft / 0.5), p = (ft % 0.5) / 0.5; this.vis = p < 0.5 ? [1, 0.7, 0.45, 0.25][k] * (1 - p * 0.5) : 0; }
     }
     // palazzina: porta chiusa durante il livello, aperta quando Faindo ha raggiunto la zolla davanti al portone
     const open = sim.phase === 'arrive' && sim.arriveT > 180 || sim.phase === 'between' || sim.phase === 'won';
