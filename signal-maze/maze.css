@@ -64,3 +64,6 @@
 .m-swipe { margin: 0; position: relative; z-index: 1; font-family: var(--pix); font-size: max(12px, calc(var(--u) * 4)); color: #d9e4f7; letter-spacing: .06em; display: flex; gap: .8em; align-items: center; }
 .m-swipe::before, .m-swipe::after { content: ""; width: 1.6em; height: 2px; background: var(--cyan); }
 @media (hover: hover) and (pointer: fine) { .m-swipe span::after { content: " · ARROWS / WASD"; } }
+
+/* nessun riquadro swipe sotto il campo: il gioco usa tutto lo spazio, si scorre sul campo stesso */
+.m-controls { display: none; }
