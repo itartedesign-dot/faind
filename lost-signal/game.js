@@ -26,7 +26,7 @@ const on = (el, ev, fn, opt) => el.addEventListener(ev, fn, Object.assign({ sign
 const el = {
   app: $('app'), fit: $('fit'), frame: $('frame'), stage: $('stage'), cv: $('cv'), brand: $('brand'),
   score: $('hScore'), level: $('hLevel'), lives: $('hLives'), news: $('hNews'), timer: $('hTimer'), timerL: $('hTimerL'), timerV: $('hTimerV'),
-  pauseBtn: $('btnPause'), live: $('liveMsg'), toast: $('toast'), hint: $('hint'), flashN: $('flashN'), btnFlash: $('btnFlash'), btnJump: $('btnJump'), memBar: $('memBar'), barMsg: $('barMsg'),
+  pauseBtn: $('btnPause'), live: $('liveMsg'), toast: $('toast'), hint: $('hint'), skip: $('btnTutSkip'), flashN: $('flashN'), btnFlash: $('btnFlash'), btnJump: $('btnJump'), memBar: $('memBar'), barMsg: $('barMsg'),
   btnLoad: $('btnLoad'), pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pCont: $('pCont'), pLb: $('pLb'), pauseAuto: $('pauseAuto')
 };
 
@@ -36,7 +36,7 @@ const audio = new Audio8();
 let state = 'start';            // start | running | paused | continue | over
 let sim = new Sim(LEVELS);      // anteprima dietro alla schermata iniziale
 let continued = false, contMs = 0, contShown = -1;   // continue: dopo l'uso la partita non è più valida per record e classifica
-let acc = 0, last = 0, raf = 0, dead = false, tutorialDone = false, hintStep = -1, hintT = 0, lastSec = -1;
+let acc = 0, last = 0, raf = 0, dead = false, tutorialDone = tutSeen(), memTut = 0, hintStep = -1, hintT = 0, lastSec = -1;
 
 $('btnStart').disabled = true;
 Promise.race([scene.ready, new Promise((r) => setTimeout(r, 5000))]).then(() => { $('btnStart').disabled = false; });
@@ -235,26 +235,44 @@ if (window.visualViewport) on(window.visualViewport, 'resize', layout);
 on(document, 'fullscreenchange', () => setTimeout(layout, 60));
 
 /* ------------------------------ Dimostrazione nel primo livello ------------------------------ */
+const TUT_KEY = 'faind-lost-tutorial-v1';
+function tutSeen() { try { return localStorage.getItem(TUT_KEY) === '1'; } catch (e) { return false; } }
+function tutFinish() { tutorialDone = true; try { localStorage.setItem(TUT_KEY, '1'); } catch (e) {} }
 const HINTS = [
   { kind: 'swipe', dir: 0, text: 'SWIPE TO WALK', sub: 'ONE SWIPE = ONE STEP' },
   { kind: 'tap', dir: 1, text: 'TAP BESIDE FAINDO', sub: 'TO TURN WITHOUT MOVING' },
   { kind: 'jump', text: 'JUMP THE GAPS', sub: 'EXACTLY TWO TILES' },
-  { kind: 'flash', text: 'FLASH TO REVEAL', sub: '20 FOR THE WHOLE GAME' }
+  { kind: 'flash', text: 'FLASH TO REVEAL', sub: '20 FOR THE WHOLE GAME' },
+  { kind: 'hud', target: 'hLives', text: 'LIVES', sub: 'FALL OFF A TILE AND YOU LOSE ONE' },
+  { kind: 'hud', target: 'hNewsChip', text: 'NEWSPAPERS', sub: 'COLLECT 3 ON EACH LEVEL FOR BONUS POINTS' },
+  { kind: 'hud', target: 'btnPause', text: 'PAUSE', sub: 'OR PRESS P' },
+  { kind: 'hud', target: 'btnSound', text: 'SOUND', sub: 'MUSIC AND EFFECTS ON OR OFF' }
 ];
 const HINT_MS = 2600;
 function showHint(i) {
-  hintStep = i; hintT = 0; const h = HINTS[i];
+  hintStep = i; hintT = 0; memTut = 0; const h = HINTS[i]; clearHudHint();
   el.hint.textContent = ''; const a = document.createElement('b'); a.textContent = h.text; el.hint.appendChild(a);
   const s = document.createElement('small'); s.textContent = h.sub; el.hint.appendChild(s); el.hint.hidden = false;
-  el.hint.className = 'l-hint' + (h.kind === 'jump' || h.kind === 'flash' ? ' l-hint--key l-hint--' + h.kind : '');
+  el.hint.className = 'l-hint' + (h.kind === 'jump' || h.kind === 'flash' ? ' l-hint--key l-hint--' + h.kind : '') + (h.kind === 'hud' ? ' l-hint--top' : '');
+  if (h.kind === 'hud') $(h.target).classList.add('is-hint');
+  el.skip.hidden = false;
   el.btnJump.classList.toggle('is-hint', h.kind === 'jump'); el.btnFlash.classList.toggle('is-hint', h.kind === 'flash');
   scene.hint = h.kind === 'swipe' || h.kind === 'tap' ? { kind: h.kind, dir: h.dir, t0: scene.clock } : null;
 }
-function hideHint() { hintStep = -1; el.hint.hidden = true; el.btnJump.classList.remove('is-hint'); el.btnFlash.classList.remove('is-hint'); scene.hint = null; }
+function clearHudHint() { for (const id of ['hLives', 'hNewsChip', 'btnPause', 'btnSound']) $(id).classList.remove('is-hint'); }
+function hideHint() { hintStep = -1; memTut = 0; clearHudHint(); el.skip.hidden = true; el.hint.hidden = true; el.btnJump.classList.remove('is-hint'); el.btnFlash.classList.remove('is-hint'); scene.hint = null; }
 function tickHint(dt) {
   if (hintStep < 0) return;
   hintT += dt * 1000;
-  if (hintT >= HINT_MS) { if (hintStep + 1 < HINTS.length) showHint(hintStep + 1); else { hideHint(); tutorialDone = true; } }
+  if (hintT >= HINT_MS) { if (hintStep + 1 < HINTS.length) showHint(hintStep + 1); else { hideHint(); tutFinish(); } }
+}
+function skipTutorial() { hideHint(); tutFinish(); }
+/** Primo livello: riquadro al centro con il conto alla rovescia della memorizzazione. */
+function memBox(x) {
+  memTut = x; el.hint.textContent = '';
+  const a = document.createElement('b'); a.textContent = 'YOU HAVE ' + x + (x === 1 ? ' SECOND' : ' SECONDS'); el.hint.appendChild(a);
+  const t = document.createElement('small'); t.textContent = 'TO MEMORIZE THE PATH'; el.hint.appendChild(t);
+  el.hint.className = 'l-hint l-hint--mem'; el.hint.hidden = false; el.skip.hidden = false;
 }
 function noteAction() { /* le dimostrazioni non bloccano nulla: restano finché non finiscono */ }
 
@@ -281,6 +299,8 @@ function updateHud(force) {
   else if (s.flashMs > 0 || s.reviveMs > 0) { tl = 'LIT'; tv = String(Math.ceil(Math.max(s.flashMs, s.reviveMs) / 1000)); }
   if (hc.tl !== tl + tv) { hc.tl = tl + tv; el.timer.hidden = !tl; el.timerL.textContent = tl; el.timerV.textContent = tv; el.timer.classList.toggle('is-lit', tl === 'LIT'); }
   const mem = s.phase === 'memorize';
+  if (mem && s.level === 1 && !tutorialDone) { const x = Math.ceil(s.memMs / 1000); if (memTut !== x) memBox(x); }
+  else if (memTut) hideHint();
   if (hc.mem !== mem) { hc.mem = mem; el.barMsg.classList.toggle('is-mem', mem); }
   if (mem) el.memBar.style.setProperty('--w', (s.memMs / CFG.MEMORIZE_MS * 100).toFixed(1) + '%');
 }
@@ -354,7 +374,7 @@ async function shareScore() {
 on(el.brand, 'click', goHome);
 on($('btnStart'), 'click', () => startGame());
 on(el.btnLoad, 'click', () => { const sv = readSave(); if (sv) startGame(sv); });
-on($('btnSound'), 'click', toggleSound); on($('btnSound2'), 'click', toggleSound);
+on(el.skip, 'click', skipTutorial); on($('btnSound'), 'click', toggleSound); on($('btnSound2'), 'click', toggleSound);
 on(el.pauseBtn, 'click', () => pause(false));
 on($('btnResume'), 'click', resume);
 on($('btnRestart'), 'click', () => { audio.resume(); setState('start'); startGame(); });
