@@ -7,7 +7,7 @@
    pausa, cambio livello, scheda in background e conto alla rovescia non lo toccano.
    ===================================================================== */
 import { Sim, CONFIG as C } from './sim.js?v=20261025a';
-import { Scene, CW, CH } from './art.js?v=20261025a';
+import { Scene, CW, CH } from './art.js?v=20261027b';
 import { Audio8 } from './audio.js?v=20261025a';
 import { LEVELS } from './maze.js?v=20261025a';
 import { createBoard } from '../faind-game/board.js?v=20261024c';

@@ -28,7 +28,7 @@ if (brand && app) {
     setTimeout(() => { brand.dataset.call = 'click'; setTimeout(() => { delete brand.dataset.call; busy = false; next += EVERY_S; }, CLICK_MS); }, FACE_MS);
   };
   setInterval(() => {
-    if (document.hidden || app.getAttribute('data-state') !== 'running') return;   // conta solo il tempo di gioco vero
+    if (document.hidden || !['running', 'playing'].includes(app.getAttribute('data-state'))) return;   // conta solo il tempo di gioco vero
     played += 0.25;
     if (!busy && played >= next) show();
   }, 250);
