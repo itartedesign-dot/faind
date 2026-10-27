@@ -26,7 +26,7 @@ const on = (el, ev, fn, opt) => el.addEventListener(ev, fn, Object.assign({ sign
 const el = {
   app: $('app'), fit: $('fit'), frame: $('frame'), stage: $('stage'), cv: $('cv'), brand: $('brand'),
   score: $('hScore'), level: $('hLevel'), lives: $('hLives'), news: $('hNews'), timer: $('hTimer'), timerL: $('hTimerL'), timerV: $('hTimerV'),
-  pauseBtn: $('btnPause'), live: $('liveMsg'), toast: $('toast'), hint: $('hint'), skip: $('btnTutSkip'), flashN: $('flashN'), btnFlash: $('btnFlash'), btnJump: $('btnJump'), memBar: $('memBar'), barMsg: $('barMsg'),
+  pauseBtn: $('btnPause'), live: $('liveMsg'), toast: $('toast'), hint: $('hint'), flashN: $('flashN'), btnFlash: $('btnFlash'), btnJump: $('btnJump'), memBar: $('memBar'), barMsg: $('barMsg'),
   btnLoad: $('btnLoad'), pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pCont: $('pCont'), pLb: $('pLb'), pauseAuto: $('pauseAuto')
 };
 
@@ -36,7 +36,7 @@ const audio = new Audio8();
 let state = 'start';            // start | running | paused | continue | over
 let sim = new Sim(LEVELS);      // anteprima dietro alla schermata iniziale
 let continued = false, contMs = 0, contShown = -1;   // continue: dopo l'uso la partita non è più valida per record e classifica
-let acc = 0, last = 0, raf = 0, dead = false, tutorialDone = tutSeen(), memTut = '', introOver = true, hintStep = -1, hintT = 0, lastSec = -1;
+let acc = 0, last = 0, raf = 0, dead = false, tutorialDone = tutSeen(), memTut = '', hintStep = -1, hintT = 0, lastSec = -1;
 
 $('btnStart').disabled = true;
 Promise.race([scene.ready, new Promise((r) => setTimeout(r, 5000))]).then(() => { $('btnStart').disabled = false; });
@@ -102,8 +102,7 @@ function startGame(save) {
   if (save) { sim.loadLevel(save.level); sim.score = save.score; sim.lives = save.lives; sim.flashes = save.flashes; sim.stats.news = save.news || 0; sim.stats.falls = save.falls || 0; sim.continues = 1; }
   sim.events.length = 0; audio.setTrack(trackFor(sim.level)); scene.vis = 1; scene.L = null; last = performance.now(); acc = 0; lastSec = -1;
   el.live.textContent = ''; updateHud(true); setState('running'); audio.startMusic();
-  introOver = tutorialDone || sim.level !== 1;
-  if (introOver) levelToast(); else showHint(0);   // primo avvio: prima le spiegazioni dei comandi, poi la memorizzazione
+  if (tutorialDone || sim.level !== 1) levelToast();
 }
 function levelToast() {
   toast('LEVEL ' + sim.level, 'REMEMBER THE PATH', true);
@@ -241,40 +240,30 @@ const TUT_KEY = 'faind-lost-tutorial-v1';
 function tutSeen() { try { return localStorage.getItem(TUT_KEY) === '1'; } catch (e) { return false; } }
 function tutFinish() { tutorialDone = true; try { localStorage.setItem(TUT_KEY, '1'); } catch (e) {} }
 const HINTS = [
-  { kind: 'swipe', dir: 0, text: 'SWIPE TO WALK', sub: 'ONE SWIPE = ONE STEP' },
-  { kind: 'tap', dir: 1, text: 'TAP BESIDE FAINDO', sub: 'TO TURN WITHOUT MOVING' },
-  { kind: 'jump', text: 'JUMP THE GAPS', sub: 'EXACTLY TWO TILES' },
-  { kind: 'flash', text: 'FLASH TO REVEAL', sub: '20 FOR THE WHOLE GAME' },
-  { kind: 'hud', target: 'hLives', text: 'LIVES', sub: 'FALL OFF A TILE AND YOU LOSE ONE' },
-  { kind: 'hud', target: 'hNewsChip', text: 'NEWSPAPERS', sub: 'COLLECT 3 ON EACH LEVEL FOR BONUS POINTS' },
-  { kind: 'hud', target: 'btnPause', text: 'PAUSE', sub: 'OR PRESS P' },
-  { kind: 'hud', target: 'btnSound', text: 'SOUND', sub: 'MUSIC AND EFFECTS ON OR OFF' }
+  { kind: 'swipe', dir: 0, text: 'SWIPE TO WALK' },
+  { kind: 'tap', dir: 1, text: 'TAP TO TURN' },
+  { kind: 'jump', text: 'JUMP THE GAPS' },
+  { kind: 'flash', text: 'FLASH = PEEK' }
 ];
-const HINT_MS = 2000;
+const HINT_MS = 1700;
 function showHint(i) {
-  hintStep = i; hintT = 0; memTut = ''; const h = HINTS[i]; clearHudHint();
-  el.hint.textContent = ''; const a = document.createElement('b'); a.textContent = h.text; el.hint.appendChild(a);
-  const s = document.createElement('small'); s.textContent = h.sub; el.hint.appendChild(s); el.hint.hidden = false;
-  el.hint.className = 'l-hint l-hint--mid';
-  if (h.kind === 'hud') $(h.target).classList.add('is-hint');
-  el.skip.hidden = false;
+  hintStep = i; hintT = 0; memTut = ''; const h = HINTS[i];
+  el.hint.textContent = ''; const a = document.createElement('b'); a.textContent = h.text; el.hint.appendChild(a); el.hint.hidden = false;
+  el.hint.className = 'l-hint' + (h.kind === 'jump' || h.kind === 'flash' ? ' l-hint--key l-hint--' + h.kind : '');
   el.btnJump.classList.toggle('is-hint', h.kind === 'jump'); el.btnFlash.classList.toggle('is-hint', h.kind === 'flash');
   scene.hint = h.kind === 'swipe' || h.kind === 'tap' ? { kind: h.kind, dir: h.dir, t0: scene.clock } : null;
 }
-function clearHudHint() { for (const id of ['hLives', 'hNewsChip', 'btnPause', 'btnSound']) $(id).classList.remove('is-hint'); }
-function hideHint() { hintStep = -1; memTut = 0; clearHudHint(); el.skip.hidden = true; el.hint.hidden = true; el.btnJump.classList.remove('is-hint'); el.btnFlash.classList.remove('is-hint'); scene.hint = null; }
+function hideHint() { hintStep = -1; memTut = ''; el.hint.hidden = true; el.btnJump.classList.remove('is-hint'); el.btnFlash.classList.remove('is-hint'); scene.hint = null; }
 function tickHint(dt) {
   if (hintStep < 0) return;
   hintT += dt * 1000;
-  if (hintT >= HINT_MS) { if (hintStep + 1 < HINTS.length) showHint(hintStep + 1); else { hideHint(); introOver = true; } }
+  if (hintT >= HINT_MS) { if (hintStep + 1 < HINTS.length) showHint(hintStep + 1); else { hideHint(); tutFinish(); } }
 }
-function skipTutorial() { hideHint(); introOver = true; tutFinish(); }
-/** Primo livello: riquadro al centro con il conto alla rovescia della memorizzazione. */
-function memBox(key, x, boxed) {
-  memTut = key; el.hint.textContent = '';
-  const add = (tag, txt) => { const n = document.createElement(tag); n.textContent = txt; el.hint.appendChild(n); };
-  if (boxed) { add('b', 'YOU HAVE ' + x + (x === 1 ? ' SECOND' : ' SECONDS')); add('b', 'MEMORIZE THE PATH'); } else add('i', String(x));
-  el.hint.className = 'l-hint ' + (boxed ? 'l-hint--mem' : 'l-hint--num'); el.hint.hidden = false; el.skip.hidden = false;
+/** Primo livello, durante la memorizzazione: solo il numero grande al centro. */
+function memNum(x) {
+  memTut = 'n' + x; el.hint.textContent = '';
+  const n = document.createElement('i'); n.textContent = String(x); el.hint.appendChild(n);
+  el.hint.className = 'l-hint l-hint--num'; el.hint.hidden = false;
 }
 function noteAction() { /* le dimostrazioni non bloccano nulla: restano finché non finiscono */ }
 
@@ -301,7 +290,7 @@ function updateHud(force) {
   else if (s.flashMs > 0 || s.reviveMs > 0) { tl = 'LIT'; tv = String(Math.ceil(Math.max(s.flashMs, s.reviveMs) / 1000)); }
   if (hc.tl !== tl + tv) { hc.tl = tl + tv; el.timer.hidden = !tl; el.timerL.textContent = tl; el.timerV.textContent = tv; el.timer.classList.toggle('is-lit', tl === 'LIT'); }
   const mem = s.phase === 'memorize';
-  if (mem && s.level === 1 && !tutorialDone && introOver) { const x = Math.ceil(s.memMs / 1000), boxed = CFG.MEMORIZE_MS - s.memMs < 4000, key = (boxed ? 'b' : 'n') + x; if (memTut !== key) memBox(key, x, boxed); }
+  if (mem && s.level === 1 && !tutorialDone) { const x = Math.ceil(s.memMs / 1000); if (memTut !== 'n' + x) memNum(x); }
   else if (memTut) hideHint();
   if (hc.mem !== mem) { hc.mem = mem; el.barMsg.classList.toggle('is-mem', mem); }
   if (mem) el.memBar.style.setProperty('--w', (s.memMs / CFG.MEMORIZE_MS * 100).toFixed(1) + '%');
@@ -334,7 +323,7 @@ function handleEvents() {
       case 'fall': audio.sfx('fall'); break;
       case 'life': audio.sfx('life'); el.live.textContent = e.lives > 0 ? (e.cause === 'rock' ? 'A rock hit you. ' : 'You fell. ') + e.lives + (e.lives === 1 ? ' life left' : ' lives left') : (e.cause === 'rock' ? 'A rock hit you. ' : 'You fell. ') + 'No lives left'; break;
       case 'arrive': audio.sfx('door'); break;
-      case 'memorizeEnd': audio.sfx('ready'); el.live.textContent = 'The path is hidden. Go.'; if (sim.level === 1 && !tutorialDone) { hideHint(); tutFinish(); } break;
+      case 'memorizeEnd': audio.sfx('ready'); el.live.textContent = 'The path is hidden. Go.'; if (sim.level === 1 && !tutorialDone) { hideHint(); showHint(0); } break;
       case 'levelDone': { audio.sfx('clear'); const pts = CFG.SCORE.ARRIVE + CFG.SCORE.NEWS * e.news; toast('LEVEL ' + e.level + ' CLEAR', '+' + pts + (e.news ? '  ·  ' + e.news + '/3 NEWSPAPERS' : ''), true); break; }
       case 'level': if (e.level > 1 && state === 'running') { writeSave(); audio.setTrack(trackFor(e.level)); hideHint(); levelToast(); } else if (e.level > 1) hideHint(); break;
       case 'over': offerContinue(); break;
@@ -349,7 +338,6 @@ function frame(now) {
   const dt = Math.min(100, now - (last || now)); last = now;
   if (state === 'running') {
     acc += dt; let n = 0;
-    if (!introOver) acc = 0;                       // la memorizzazione parte solo dopo la spiegazione dei comandi
     while (acc >= QUANTUM && n < 30) { sim.update(QUANTUM); acc -= QUANTUM; n++; if (pend) { if (sim.phase !== 'play' || sim.clock > pend.until || pend.fn()) pend = null; } }
     if (n >= 30) acc = 0;
     handleEvents();
@@ -377,7 +365,7 @@ async function shareScore() {
 on(el.brand, 'click', goHome);
 on($('btnStart'), 'click', () => startGame());
 on(el.btnLoad, 'click', () => { const sv = readSave(); if (sv) startGame(sv); });
-on(el.skip, 'click', skipTutorial); on($('btnSound'), 'click', toggleSound); on($('btnSound2'), 'click', toggleSound);
+on($('btnSound'), 'click', toggleSound); on($('btnSound2'), 'click', toggleSound);
 on(el.pauseBtn, 'click', () => pause(false));
 on($('btnResume'), 'click', resume);
 on($('btnRestart'), 'click', () => { audio.resume(); setState('start'); startGame(); });
