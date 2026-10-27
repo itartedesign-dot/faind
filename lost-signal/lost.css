@@ -85,3 +85,11 @@
 /* istruzioni dei bottoni: sopra il bottone che lampeggia, senza riquadro */
 .l-hint--key { left: auto; transform: none; bottom: calc(var(--px) * 54); padding: 0; background: none; border: 0; border-radius: 0; text-shadow: 0 1px 0 #000, 0 0 calc(var(--px) * 4) #000; }
 .l-hint--flash { left: calc(var(--px) * 8); text-align: left; } .l-hint--jump { right: calc(var(--px) * 8); text-align: right; }
+
+/* ---- tutorial: conto alla rovescia al centro, spiegazione dei comandi in alto, salto ---- */
+.l-hint--mem { bottom: auto; top: 50%; transform: translate(-50%, -50%); background: rgba(11,18,38,.86); }
+.l-hint--mem b { font-size: calc(var(--px) * 13); }
+.l-hint--top { bottom: auto; top: calc(var(--px) * 60); }
+.l-skip { position: absolute; z-index: 29; left: 50%; transform: translateX(-50%); bottom: calc(var(--px) * 62); padding: calc(var(--px) * 3) calc(var(--px) * 7); font-family: var(--pix); font-size: calc(var(--px) * 7); letter-spacing: .06em; color: #aebbd6; background: rgba(11,18,38,.8); border: 1px solid #2a4170; border-radius: calc(var(--px) * 4); cursor: pointer; touch-action: manipulation; }
+.l-skip[hidden] { display: none; }
+.l-row .is-hint, .l-lives.is-hint { animation: lhint 0.9s steps(2) infinite; }
