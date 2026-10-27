@@ -21,7 +21,7 @@ export class Scene {
   constructor(cv) {
     this.cv = cv; this.H = MIN_H; cv.width = CW; cv.height = this.H;
     this.g = cv.getContext('2d'); this.g.imageSmoothingEnabled = false;
-    this.atlas = new Image(); this.clock = 0; this.vis = 1; this.hint = null; this.L = null; this.variant = []; this.floaters = [];
+    this.atlas = new Image(); this.clock = 0; this.vis = 1; this.flicker = null; this.hint = null; this.L = null; this.variant = []; this.floaters = [];
     this.ready = new Promise((res) => { this.atlas.onload = () => { this.measure(); res(true); }; this.atlas.onerror = () => res(false); this.atlas.src = 'sprites/atlas.png?v=20261025c'; });
     this.setSize(MIN_H);
   }
@@ -159,6 +159,12 @@ export class Scene {
     const target = sim.tilesVisible ? 1 : 0;
     const rate = target > this.vis ? 12 : 4.5;
     this.vis += (target - this.vis) * Math.min(1, Math.max(0, dt) * rate); if (Math.abs(this.vis - target) < 0.01) this.vis = target;
+    // neon che si fulmina: buio, luce, buio, luce, buio nei 2 secondi dopo lo spegnimento (solo se richiesto dal tutorial)
+    if (this.flicker != null) {
+      const ft = this.clock - this.flicker;
+      if (ft >= 2 || sim.tilesVisible) this.flicker = null;
+      else { this.vis = (ft > 0.35 && ft < 0.55) || (ft > 1.05 && ft < 1.3) ? 1 : 0; }
+    }
     // palazzina: porta chiusa durante il livello, aperta quando Faindo ha raggiunto la zolla davanti al portone
     const open = sim.phase === 'arrive' && sim.arriveT > 180 || sim.phase === 'between' || sim.phase === 'won';
     const name = open ? 'bldg_open' : 'bldg_closed';
