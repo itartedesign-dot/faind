@@ -7,7 +7,7 @@
    schede in background e schermate non li toccano e non regalano nuove accensioni.
    ===================================================================== */
 import { Sim, CFG, DIRV } from './sim.js?v=20261025c';
-import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261025c';
+import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261027i';
 import { Audio8 } from './audio.js?v=20261025c';
 import { ROWS } from './levels.js?v=20261025c';
 import { createBoard } from '../faind-game/board.js?v=20261024c';
@@ -323,7 +323,7 @@ function handleEvents() {
       case 'fall': audio.sfx('fall'); break;
       case 'life': audio.sfx('life'); el.live.textContent = e.lives > 0 ? (e.cause === 'rock' ? 'A rock hit you. ' : 'You fell. ') + e.lives + (e.lives === 1 ? ' life left' : ' lives left') : (e.cause === 'rock' ? 'A rock hit you. ' : 'You fell. ') + 'No lives left'; break;
       case 'arrive': audio.sfx('door'); break;
-      case 'memorizeEnd': audio.sfx('ready'); el.live.textContent = 'The path is hidden. Go.'; if (sim.level === 1 && !tutorialDone) { hideHint(); showHint(0); } break;
+      case 'memorizeEnd': audio.sfx('ready'); el.live.textContent = 'The path is hidden. Go.'; if (sim.level === 1 && !tutorialDone) { hideHint(); showHint(0); scene.flicker = scene.clock; } break;
       case 'levelDone': { audio.sfx('clear'); const pts = CFG.SCORE.ARRIVE + CFG.SCORE.NEWS * e.news; toast('LEVEL ' + e.level + ' CLEAR', '+' + pts + (e.news ? '  ·  ' + e.news + '/3 NEWSPAPERS' : ''), true); break; }
       case 'level': if (e.level > 1 && state === 'running') { writeSave(); audio.setTrack(trackFor(e.level)); hideHint(); levelToast(); } else if (e.level > 1) hideHint(); break;
       case 'over': offerContinue(); break;
