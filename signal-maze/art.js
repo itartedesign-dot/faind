@@ -12,7 +12,7 @@ import { W, H, T, COLORS, idx, cur } from './maze.js?v=20261025a';
 import { CONFIG } from './sim.js?v=20261025a';
 import { ATLAS } from './sprites/atlas.js?v=20261025a';
 
-export const TS = 16, CW = 240, CH = 332, OY = 44, MH = H * TS;
+export const TS = 16, CW = 240, CH = 364, OY = 62, MH = H * TS;
 export const HEX = ['#ff8a1f', '#ffd21f', '#29d6ff'];
 const DARK = ['#8a3d00', '#8a6e00', '#0b6f8a'];
 const HEART = ['..KKK.KKK..', '.KRRRKRRRK.', 'KRRWWRRRRRK', 'KRWRRRRRRRK', 'KRRRRRRRRRK', 'KDRRRRRRRDK', '.KDRRRRRDK.', '..KDRRRDK..', '...KDRDK...', '....KKK....'];
@@ -162,15 +162,19 @@ export class Scene {
     const MW = this.MW, cam = this.camX(sim);
     for (const k of [-1, 0, 1]) {
       const ox = k * MW - cam; if (ox >= CW + 16 || ox + MW <= -16) continue;
-      g.save(); g.beginPath(); g.rect(0, OY, CW, CH - OY); g.clip(); g.translate(ox, 0); this.drawWorld(g, sim, t); g.restore();
+      g.save(); g.beginPath(); g.rect(0, OY, CW, MH); g.clip(); g.translate(ox, 0); this.drawWorld(g, sim, t); g.restore();
     }
     // barra del potere sotto la barra superiore
     if (sim.power > 0) {
       const frac = sim.power / CONFIG.POWER_TIME, warn = sim.power <= 3 && Math.floor(t * 6) % 2 === 0;
       g.fillStyle = '#082a40'; g.fillRect(0, OY - 3, CW, 3); g.fillStyle = warn ? '#ffffff' : '#29d6ff'; g.fillRect(0, OY - 3, Math.round(CW * frac), 3);
     }
-    if (this.flash) { g.fillStyle = this.flash > 0 ? 'rgba(255,255,255,' + this.flash * 1.2 + ')' : 'rgba(255,60,50,' + (-this.flash) * 1.1 + ')'; g.fillRect(0, OY, CW, CH - OY); }
-    if (paused) { g.fillStyle = 'rgba(4,7,15,.35)'; g.fillRect(0, OY, CW, CH - OY); }
+    // striscia decorativa sotto il campo: guide con lucine che scorrono piano
+    { const y0 = OY + MH, sh = CH - y0; g.fillStyle = '#0a1226'; g.fillRect(0, y0, CW, sh); g.fillStyle = '#2a4170'; g.fillRect(0, y0, CW, 2);
+      const ph = Math.floor(t * 6) % 4;
+      for (let x = 0; x < CW; x += 12) { g.fillStyle = '#12335a'; g.fillRect(x + 2, y0 + 5, 8, 5); g.fillStyle = ((x / 12) + ph) % 4 === 0 ? '#29d6ff' : '#1e4f80'; g.fillRect(x + 4, y0 + 7, 4, 1); } }
+    if (this.flash) { g.fillStyle = this.flash > 0 ? 'rgba(255,255,255,' + this.flash * 1.2 + ')' : 'rgba(255,60,50,' + (-this.flash) * 1.1 + ')'; g.fillRect(0, OY, CW, MH); }
+    if (paused) { g.fillStyle = 'rgba(4,7,15,.35)'; g.fillRect(0, OY, CW, MH); }
   }
 
   /** scorrimento orizzontale in pixel: fermo nei livelli singoli; nei doppi sta sulla metà di Faindo e scivola mentre lui passa dalle porte laterali */

@@ -7,7 +7,7 @@
    pausa, cambio livello, scheda in background e conto alla rovescia non lo toccano.
    ===================================================================== */
 import { Sim, CONFIG as C } from './sim.js?v=20261025a';
-import { Scene, CW, CH } from './art.js?v=20261027b';
+import { Scene, CW, CH } from './art.js?v=20261027c';
 import { Audio8 } from './audio.js?v=20261025a';
 import { LEVELS } from './maze.js?v=20261025a';
 import { createBoard } from '../faind-game/board.js?v=20261024c';
@@ -22,7 +22,7 @@ const NAMES = ['ORANGE', 'YELLOW', 'CYAN'];
 const ac = new AbortController();
 const on = (el, ev, fn, opt) => el.addEventListener(ev, fn, Object.assign({ signal: ac.signal }, opt || {}));
 const el = {
-  app: $('app'), fit: $('fit'), frame: $('frame'), stage: $('stage'), cv: $('cv'), brand: $('brand'), controls: $('controls'),
+  app: $('app'), strip: $('mStrip'), fit: $('fit'), frame: $('frame'), stage: $('stage'), cv: $('cv'), brand: $('brand'), controls: $('controls'),
   score: $('hScore'), level: $('hLevel'), time: $('hTime'), timeCell: $('hTimeCell'), lives: $('hLives'),
   pauseBtn: $('btnPause'), live: $('liveMsg'), toast: $('toast'), count: $('count'),
   pStart: $('pStart'), pPause: $('pPause'), pOver: $('pOver'), pCont: $('pCont'), pLb: $('pLb'), pauseAuto: $('pauseAuto'), controls: $('controls')
@@ -230,6 +230,7 @@ function setText(n, key, v) { if (hc[key] !== v) { hc[key] = v; n.textContent = 
 const fmtTime = (s) => { const t = Math.max(0, Math.ceil(s)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
 function updateHud(force) {
   const s = sim;
+  updateStrip();
   setText(el.score, 'score', String(s.score).padStart(5, '0'));
   setText(el.level, 'lv', s.level + '/' + LEVELS);
   setText(el.time, 'time', fmtTime(s.timeLeft));
@@ -250,7 +251,14 @@ function updateHud(force) {
     ch.setAttribute('aria-label', NAMES[c] + ': key ' + (o && s.unlocked[o.id] ? 'used, office open' : s.keys[c] ? 'held' : 'not found') + ', ' + s.carried[c] + ' documents carried, ' + (o ? s.delivered[o.id] : 0) + ' of 5 delivered');
   });
 }
+let stripMsg = '', stripT = 0, stripText = '';
+function setStrip(txt, cls) { if (stripText !== txt + cls) { stripText = txt + cls; el.strip.textContent = txt; el.strip.className = 'm-strip' + (cls ? ' ' + cls : ''); } }
+function updateStrip() {
+  if (performance.now() < stripT) return setStrip(stripMsg, 'is-msg');
+  if (sim.phase === 'play' || sim.phase === 'between') setStrip(sim.exitActive ? 'EXIT OPEN' : 'EXIT LOCKED', sim.exitActive ? 'is-open' : '');
+}
 function toast(title, sub, big) {
+  if (!big) { stripMsg = title + (sub ? ' · ' + sub : ''); stripT = performance.now() + 2400; return; }   // i messaggi piccoli vanno nella striscia sotto la barra
   el.toast.hidden = true; el.toast.classList.toggle('g-toast--lv', !!big); el.toast.textContent = '';
   const b = document.createElement('div'); b.textContent = title; el.toast.appendChild(b);
   if (sub) { const s = document.createElement('small'); s.textContent = sub; el.toast.appendChild(s); }
