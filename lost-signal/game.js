@@ -7,7 +7,7 @@
    schede in background e schermate non li toccano e non regalano nuove accensioni.
    ===================================================================== */
 import { Sim, CFG, DIRV } from './sim.js?v=20261025c';
-import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261027i';
+import { Scene, CW, HUD, BAR, MIN_H, MAX_H, TS } from './art.js?v=20261027j';
 import { Audio8 } from './audio.js?v=20261025c';
 import { ROWS } from './levels.js?v=20261025c';
 import { createBoard } from '../faind-game/board.js?v=20261024c';
