@@ -1,5 +1,5 @@
 /* Logo in alto a sinistra: dopo il primo minuto di gioco e poi ogni 4 minuti il logo lascia il posto alla faccina di Faindo e alla scritta CLICK HERE, per far capire che il logo porta alla home. */
-const FIRST_S = 60, EVERY_S = 240, FACE_MS = 2700, CLICK_MS = 4000;
+const FIRST_S = 60, EVERY_S = 240, FACE_MS = 3600, CLICK_MS = 5400;
 const brand = document.getElementById('brand'), app = document.getElementById('app');
 if (brand && app) {
   const st = document.createElement('style');
@@ -11,11 +11,11 @@ if (brand && app) {
     + '#brand .fc-face{left:50%;top:50%;height:78%;width:auto;transform:translate(-50%,-50%);image-rendering:pixelated}'
     + '#brand .fc-click{left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:inherit;font-weight:700;font-size:13px;line-height:1.25;color:#ffd21f;text-shadow:0 1px 0 #000}'
     + '#brand[data-call] > :not(.fc-box):not(.fc-face):not(.fc-click){opacity:0}'
-    + '#brand[data-call] .fc-box,#brand[data-call="face"] .fc-face,#brand[data-call="click"] .fc-click{opacity:1}'
-    + '#brand[data-call="face"] .fc-face{animation:fcfade .9s ease-in-out 3 forwards}'
-    + '#brand[data-call="click"] .fc-click{animation:fcfade 1.333s ease-in-out 3 forwards}'
-    + '@keyframes fcfade{0%{opacity:0}35%{opacity:1}65%{opacity:1}100%{opacity:0}}@keyframes fcrun{0%{left:0;top:0}25%{left:100%;top:0}50%{left:100%;top:100%}75%{left:0;top:100%}100%{left:0;top:0}}'
-    + '@media (prefers-reduced-motion:reduce){#brand .fc-dot,#brand .fc-face,#brand .fc-click{animation:none!important}}';
+    + '#brand[data-call] .fc-box{animation:fcglow .6s ease-in-out infinite alternate}#brand[data-call] .fc-box,#brand[data-call="face"] .fc-face,#brand[data-call="click"] .fc-click{opacity:1}'
+    + '#brand[data-call="face"] .fc-face{animation:fcfade 1.2s ease-in-out 3 forwards}'
+    + '#brand[data-call="click"] .fc-click{animation:fcfade 1.8s ease-in-out 3 forwards}'
+    + '@keyframes fcfade{0%{opacity:0}12%{opacity:1}60%{opacity:1}74%{opacity:0}100%{opacity:0}}@keyframes fcglow{from{box-shadow:0 0 6px #29d6ff,inset 0 0 5px rgba(41,214,255,.35)}to{box-shadow:0 0 16px 2px #29d6ff,inset 0 0 9px rgba(41,214,255,.6)}}@keyframes fcrun{0%{left:0;top:0}25%{left:100%;top:0}50%{left:100%;top:100%}75%{left:0;top:100%}100%{left:0;top:0}}'
+    + '@media (prefers-reduced-motion:reduce){#brand .fc-dot,#brand .fc-face,#brand .fc-click,#brand .fc-box{animation:none!important}}';
   document.head.appendChild(st);
   const face = new Image(); face.className = 'fc-face'; face.alt = ''; face.setAttribute('aria-hidden', 'true');
   face.src = new URL('./sprites/faindo-face.png?v=20261027a', import.meta.url).href;
