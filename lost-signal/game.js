@@ -290,7 +290,7 @@ function updateHud(force) {
   else if (s.flashMs > 0 || s.reviveMs > 0) { tl = 'LIT'; tv = String(Math.ceil(Math.max(s.flashMs, s.reviveMs) / 1000)); }
   if (hc.tl !== tl + tv) { hc.tl = tl + tv; el.timer.hidden = !tl; el.timerL.textContent = tl; el.timerV.textContent = tv; el.timer.classList.toggle('is-lit', tl === 'LIT'); }
   const mem = s.phase === 'memorize';
-  if (mem && s.level === 1 && !tutorialDone) { const x = Math.ceil(s.memMs / 1000); if (memTut !== 'n' + x) memNum(x); }
+  if (mem && s.level === 1 && !tutorialDone && state === 'running') { const x = Math.ceil(s.memMs / 1000); if (memTut !== 'n' + x) memNum(x); }
   else if (memTut) hideHint();
   if (hc.mem !== mem) { hc.mem = mem; el.barMsg.classList.toggle('is-mem', mem); }
   if (mem) el.memBar.style.setProperty('--w', (s.memMs / CFG.MEMORIZE_MS * 100).toFixed(1) + '%');
