@@ -41,7 +41,7 @@
       "titolo": "Un ponte per tornare a camminare",
       "testo": "Un uomo con una lesione al midollo spinale è tornato a stare in piedi e camminare con un sistema sperimentale. Un ponte digitale interpretava i segnali del cervello e regolava la stimolazione del midollo. Non una cura universale: un risultato concreto ottenuto collegando intenzione, tecnologia e riabilitazione.",
       "fonte": "studio pubblicato su Nature",
-      "verificato": false
+      "verificato": true
     },
     {
       "titolo": "Aiutare a capire chi ha più urgenza",
@@ -152,6 +152,10 @@
     {
       "n": 6,
       "day": "2026-10-26"
+    },
+    {
+      "n": 7,
+      "day": "2026-10-29"
     }
   ]
 }
