@@ -135,6 +135,54 @@
   <footer>
     <a href="../">FAIND – Flash AI News Daily</a>·<a href="../games/">Faind Games</a>·<a href="../privacy.html">Privacy</a>
   </footer>
+  <script>
+  /* Lingua scelta in home (faind-lang): il testo visibile segue quella, l'HTML in inglese resta per Google e per chi non ha scelto */
+  (function () {
+    var LANGS = ['it', 'en', 'fr', 'de'], lang = null;
+    try { lang = localStorage.getItem('faind-lang'); } catch (e) {}
+    if (LANGS.indexOf(lang) < 0) lang = (navigator.language || 'en').slice(0, 2).toLowerCase();
+    if (LANGS.indexOf(lang) < 0 || lang === 'en') return;
+    // ordine: skip, indietro, tag, eyebrow, h1, p1, p2, p3, cta, YouTube, TikTok, h2, sub, 7 didascalie
+    var T = {
+      it: { title: 'FAINDORG – Teaser della serie animata steampunk | FAIND', desc: 'Guarda il teaser di FAINDORG, la serie animata steampunk originale di FAIND: una nuova era glaciale, un mondo di uomini, robot e creature, e qualcosa che si muove nella neve.',
+        s: ['Vai al contenuto', '← Torna alle notizie', 'Una serie animata originale', 'Teaser', 'FAINDORG – Teaser della serie animata steampunk di FAIND',
+          'Una nuova era glaciale ha travolto un mondo abitato da uomini, robot e creature. Tra città in rovina, foreste innevate e rifugi costruiti con i resti della civiltà industriale, la vita continua. Ma fuori, nella neve, qualcosa si muove.',
+          'Questo teaser introduce <strong>FAINDORG</strong>, la serie animata originale firmata FAIND. Al centro della storia ci sono Faindo, Kita e gli abitanti di un mondo in cui tecnologia e sopravvivenza si intrecciano, mentre il confine tra ciò che è umano e ciò che è artificiale diventa sempre meno netto.',
+          'Un’avventura di fantascienza post-apocalittica dall’estetica steampunk, tra mistero, incontri inattesi e legami che resistono al gelo.',
+          'Il viaggio comincia qui.', 'Guarda su YouTube', 'Guarda su TikTok', 'Dentro il mondo di FAINDORG', 'Scene, luoghi e personaggi della serie.',
+          'I tunnel', 'La creatura', 'Una fotografia', 'Kita', 'Il padre di Kita', 'Faindo', 'Il design della creatura'] },
+      fr: { title: 'FAINDORG – Teaser de la série animée steampunk | FAIND', desc: 'Regardez le teaser de FAINDORG, la série animée steampunk originale de FAIND : une nouvelle ère glaciaire, un monde d’humains, de robots et de créatures, et quelque chose qui bouge dans la neige.',
+        s: ['Aller au contenu', '← Retour aux actus', 'Une série animée originale', 'Teaser', 'FAINDORG – Teaser de la série animée steampunk de FAIND',
+          'Une nouvelle ère glaciaire a balayé un monde peuplé d’humains, de robots et de créatures. Entre villes en ruine, forêts enneigées et abris bâtis avec les restes de la civilisation industrielle, la vie continue. Mais dehors, dans la neige, quelque chose bouge.',
+          'Ce teaser présente <strong>FAINDORG</strong>, la série animée originale signée FAIND. Au centre de l’histoire, Faindo, Kita et les habitants d’un monde où technologie et survie s’entremêlent, tandis que la frontière entre l’humain et l’artificiel devient de plus en plus floue.',
+          'Une aventure de science-fiction post-apocalyptique à l’esthétique steampunk : mystère, rencontres inattendues et liens qui résistent au gel.',
+          'Le voyage commence ici.', 'Regarder sur YouTube', 'Regarder sur TikTok', 'Dans le monde de FAINDORG', 'Scènes, lieux et personnages de la série.',
+          'Les tunnels', 'La créature', 'Une photographie', 'Kita', 'Le père de Kita', 'Faindo', 'Le design de la créature'] },
+      de: { title: 'FAINDORG – Teaser der Steampunk-Animationsserie | FAIND', desc: 'Sieh dir den Teaser von FAINDORG an, der originalen Steampunk-Animationsserie von FAIND: eine neue Eiszeit, eine Welt aus Menschen, Robotern und Kreaturen, und etwas, das sich im Schnee bewegt.',
+        s: ['Zum Inhalt springen', '← Zurück zu den Nachrichten', 'Eine originale Animationsserie', 'Teaser', 'FAINDORG – Teaser der Steampunk-Animationsserie von FAIND',
+          'Eine neue Eiszeit hat eine Welt überrollt, in der Menschen, Roboter und Kreaturen leben. Zwischen zerstörten Städten, verschneiten Wäldern und Zufluchten aus den Resten der Industriegesellschaft geht das Leben weiter. Doch draußen im Schnee bewegt sich etwas.',
+          'Dieser Teaser stellt <strong>FAINDORG</strong> vor, die originale Animationsserie von FAIND. Im Mittelpunkt stehen Faindo, Kita und die Bewohner einer Welt, in der Technik und Überleben untrennbar verbunden sind, während die Grenze zwischen Menschlichem und Künstlichem immer mehr verschwimmt.',
+          'Ein postapokalyptisches Science-Fiction-Abenteuer in Steampunk-Optik: Geheimnisse, unerwartete Begegnungen und Bindungen, die der Kälte standhalten.',
+          'Die Reise beginnt hier.', 'Auf YouTube ansehen', 'Auf TikTok ansehen', 'In der Welt von FAINDORG', 'Szenen, Orte und Figuren der Serie.',
+          'Die Tunnel', 'Die Kreatur', 'Ein Foto', 'Kita', 'Kitas Vater', 'Faindo', 'Das Design der Kreatur'] }
+    };
+    var D = T[lang], q = function (x) { return document.querySelector(x); }, S = D.s;
+    document.documentElement.lang = lang;
+    document.title = D.title;
+    var md = q('meta[name=description]'); if (md) md.setAttribute('content', D.desc);
+    var sel = ['.skip', '.bar a:last-child', '.tag', '.eyebrow', '#t', '.intro p:nth-of-type(2)', '.intro p:nth-of-type(3)', '.intro p:nth-of-type(4)', '.cta'];
+    sel.forEach(function (x, i) { var e = q(x); if (e) e.innerHTML = S[i]; });
+    var ys = document.querySelectorAll('.watch span');
+    [9, 10].forEach(function (n, i) { if (ys[i]) ys[i].firstChild.nodeValue = S[n]; });
+    var h2 = q('#s'); if (h2) h2.textContent = S[11];
+    var sub = q('.sub'); if (sub) sub.textContent = S[12];
+    var caps = document.querySelectorAll('.card figcaption');
+    for (var i = 0; i < caps.length; i++) caps[i].textContent = S[13 + i];
+    var fr = q('.player iframe'); if (fr) fr.title = S[4];
+    var im = document.querySelectorAll('.card img');
+    for (var j = 0; j < im.length; j++) im[j].alt = S[13 + j];
+  })();
+  </script>
   <script src="../stats.js?v=20261011a" defer></script>
 </body>
 </html>
