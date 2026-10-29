@@ -230,3 +230,8 @@ body { position: fixed; inset: 0; width: 100%; touch-action: none; -webkit-user-
 .g-panel--start .g-title { color: #ffd21f; text-shadow: 0 calc(var(--u) * 1) 0 #000, 0 0 calc(var(--u) * 6) rgba(255,210,31,.45); }
 .g-panel--start .g-btn--main { background: #ff8a1f; border-color: #ffb066; color: #1a0d00; }
 .g-panel--start .g-btn--main:hover { background: #ffa04a; }
+.g-newsbox { width: 100%; max-width: calc(var(--u) * 140); text-align: left; }
+.g-newslist { list-style: none; margin: calc(var(--u) * 1) 0 0; padding: 0; display: flex; flex-direction: column; gap: calc(var(--u) * 1); }
+.g-newslist a { display: block; font-size: max(11px, calc(var(--u) * 3.6)); line-height: 1.3; color: var(--ivory); text-decoration: none; border-left: 3px solid var(--cyan); padding: 2px 0 2px calc(var(--u) * 2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.g-newslist a:hover, .g-newslist a:focus-visible { color: var(--cyanL); }
+.g-panel--over.is-record .g-newsbox { display: none; }
