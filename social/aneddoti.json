@@ -47,7 +47,7 @@
       "titolo": "Aiutare a capire chi ha più urgenza",
       "testo": "In oculistica, riconoscere un problema è importante. Capire quanto sia urgente lo è altrettanto. Con il Moorfields Eye Hospital, i ricercatori hanno sviluppato un’AI capace di analizzare scansioni della retina e suggerire la priorità del rinvio allo specialista. Un progetto per aiutare a far arrivare prima le persone che ne hanno bisogno.",
       "fonte": "Google DeepMind e Moorfields",
-      "verificato": false
+      "verificato": true
     },
     {
       "titolo": "Cercare i segnali prima del peggioramento",
@@ -156,6 +156,10 @@
     {
       "n": 7,
       "day": "2026-10-29"
+    },
+    {
+      "n": 8,
+      "day": "2026-11-02"
     }
   ]
 }

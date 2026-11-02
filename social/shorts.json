@@ -70,6 +70,16 @@
       "titolo": "Paralizzato, torna a camminare: il ponte digitale tra cervello e midollo #Shorts",
       "testo": "Un uomo con una lesione al midollo spinale è tornato a stare in piedi e a camminare. Un impianto nel cervello e uno sul midollo, collegati senza fili da un'intelligenza artificiale che decodifica l'intenzione di muovere le gambe, hanno creato un \"ponte digitale\". Lo studio, pubblicato su Nature nel 2023, riguarda un solo paziente: è una sperimentazione, non una cura per tutti.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Lorach, Bloch, Courtine et al., \"Walking naturally after spinal cord injury using a brain–spine interface\", Nature, 2023 (EPFL, CHUV, UNIL e CEA/Clinatec)\nhttps://www.univ-grenoble-alpes.fr/news/headlines/brain-computer-interface-bci-enables-thought-controlled-walking-after-spinal-cord-injury-1249779.kjsp\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Neuroscienze #LesioneMidollare #Scienza #EPFL #DalCassetto #FAIND",
       "telegram": "Un uomo con una lesione al midollo spinale è tornato a camminare grazie a un ponte digitale tra cervello e midollo, guidato dall'AI."
+    },
+    {
+      "id": "dal-cassetto-08",
+      "aneddoto": 8,
+      "dalle": "2026-11-02T10:42:00Z",
+      "scade": "2026-11-02T12:02:55Z",
+      "video": "https://export-download.canva.com/9nqL8/DAHZws9nqL8/-1/0-296632580283463587.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH4R7NKVBA%2F20261101%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261101T104323Z&X-Amz-Expires=91172&X-Amz-Signature=d6296640b68b7a05a318222b94fed4fbb1d7190dff095520eed2e1a7aeac6823&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Mon%2C%2002%20Nov%202026%2012%3A02%3A55%20GMT",
+      "titolo": "L'AI che legge la retina e dice quale visita non può aspettare #Shorts",
+      "testo": "Un'intelligenza artificiale sviluppata da DeepMind insieme al Moorfields Eye Hospital di Londra ha imparato a leggere le scansioni 3D della retina e a suggerire quanto sia urgente mandare il paziente dallo specialista: urgente, semi-urgente, di routine o solo osservazione. Nello studio i suoi errori di rinvio sono stati paragonabili a quelli dei migliori specialisti della retina. È una ricerca, non un sistema già in uso per tutti.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: De Fauw, Ledsam, Romera-Paredes, Keane, Ronneberger et al., \"Clinically applicable deep learning for diagnosis and referral in retinal disease\", Nature Medicine, 2018 (DeepMind e Moorfields Eye Hospital)\nhttps://www.nature.com/articles/s41591-018-0107-6\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Oculistica #Retina #Salute #Scienza #DeepMind #DalCassetto #FAIND",
+      "telegram": "Un'AI ha imparato a leggere le scansioni della retina e a dire quali pazienti devono vedere lo specialista per primi."
     }
   ]
 }
