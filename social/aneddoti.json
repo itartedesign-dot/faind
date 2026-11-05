@@ -53,7 +53,7 @@
       "titolo": "Cercare i segnali prima del peggioramento",
       "testo": "Una scansione dell’occhio può contenere indizi sul suo futuro. In uno studio con il Moorfields Eye Hospital, un’AI ha cercato di prevedere l’evoluzione verso una forma grave di degenerazione maculare. Non legge il destino: stima un rischio. E studiare quel rischio può aiutare a organizzare controlli più mirati.",
       "fonte": "Google DeepMind",
-      "verificato": false
+      "verificato": true
     },
     {
       "titolo": "Rileggere una TAC con un altro obiettivo",
@@ -160,6 +160,10 @@
     {
       "n": 8,
       "day": "2026-11-02"
+    },
+    {
+      "n": 9,
+      "day": "2026-11-05"
     }
   ]
 }

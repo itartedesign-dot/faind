@@ -80,6 +80,16 @@
       "titolo": "L'AI che legge la retina e dice quale visita non può aspettare #Shorts",
       "testo": "Un'intelligenza artificiale sviluppata da DeepMind insieme al Moorfields Eye Hospital di Londra ha imparato a leggere le scansioni 3D della retina e a suggerire quanto sia urgente mandare il paziente dallo specialista: urgente, semi-urgente, di routine o solo osservazione. Nello studio i suoi errori di rinvio sono stati paragonabili a quelli dei migliori specialisti della retina. È una ricerca, non un sistema già in uso per tutti.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: De Fauw, Ledsam, Romera-Paredes, Keane, Ronneberger et al., \"Clinically applicable deep learning for diagnosis and referral in retinal disease\", Nature Medicine, 2018 (DeepMind e Moorfields Eye Hospital)\nhttps://www.nature.com/articles/s41591-018-0107-6\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Oculistica #Retina #Salute #Scienza #DeepMind #DalCassetto #FAIND",
       "telegram": "Un'AI ha imparato a leggere le scansioni della retina e a dire quali pazienti devono vedere lo specialista per primi."
+    },
+    {
+      "id": "dal-cassetto-09",
+      "aneddoto": 9,
+      "dalle": "2026-11-05T10:42:00Z",
+      "scade": "2026-11-05T11:57:15Z",
+      "video": "https://export-download.canva.com/WvC_U/DAHaCrWvC_U/-1/0-8125014943014391416.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH4R7NKVBA%2F20261105%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261105T013614Z&X-Amz-Expires=37261&X-Amz-Signature=28c8cbe1a2e67fae1306f9c9db6fd8f00b55b0b450e4db5c8441b85ce7e91480&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Thu%2C%2005%20Nov%202026%2011%3A57%3A15%20GMT",
+      "titolo": "L'AI che prova a prevedere la degenerazione maculare dall'esame dell'occhio #Shorts",
+      "testo": "Una scansione dell'occhio può contenere indizi su cosa succederà dopo. In uno studio di DeepMind e del Moorfields Eye Hospital di Londra, un'intelligenza artificiale ha analizzato le scansioni OCT di persone con la forma \"umida\" di degenerazione maculare in un occhio e ha stimato il rischio che comparisse anche nell'altro, entro sei mesi. Non legge il destino: stima un rischio, e in alcuni casi lo ha sovrastimato. È una ricerca, non un test già in uso.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Yim, Chopra, Spitz et al., \"Predicting conversion to wet age-related macular degeneration using deep learning\", Nature Medicine, 2020 (DeepMind, Google Health e Moorfields Eye Hospital)\nhttps://research.google/pubs/predicting-conversion-to-wet-age-related-macular-degeneration-using-deep-learning/\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Oculistica #Retina #Maculopatia #Scienza #DeepMind #DalCassetto #FAIND",
+      "telegram": "Un'AI ha provato a leggere in una scansione dell'occhio il rischio di una grave malattia della vista, prima che compaia."
     }
   ]
 }
