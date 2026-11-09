@@ -29,6 +29,7 @@ How to use and cite FAIND:
 ## About and data
 - [What FAIND is](https://faind.org/about.html)
 - [Who is behind FAIND: method and rules](https://faind.org/redazione.html)
+- [Press kit: facts, logos, how to cite](https://faind.org/press.html)
 - [RSS feed](https://faind.org/feed.xml)
 - [Sitemap](https://faind.org/sitemap.xml)
 
