@@ -518,7 +518,9 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
       `<url><loc>${SITE}${n.page}</loc><lastmod>${toDate(n.date).toISOString().slice(0, 10)}</lastmod></url>`));
   await writeFile(path.join(root, 'sitemap.xml'),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join('\n')}\n</urlset>\n`);
-  await writeFile(path.join(root, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}sitemap.xml\n`);
+  // Crawler dei motori AI ammessi per nome (ricerca, risposte in tempo reale, addestramento): FAIND vuole essere citato nelle risposte delle AI.
+  const AI_BOTS = ['OAI-SearchBot', 'ChatGPT-User', 'GPTBot', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended', 'Bingbot', 'DuckAssistBot', 'MistralAI-User', 'Amazonbot'];
+  await writeFile(path.join(root, 'robots.txt'), `User-agent: *\nAllow: /\n\n# AI search and answer crawlers: welcome, FAIND wants to be cited with its source link.\n${AI_BOTS.map(b => `User-agent: ${b}\nAllow: /\n`).join('\n')}\nSitemap: ${SITE}sitemap.xml\n`);
   await writeFile(path.join(root, `${INDEXNOW_KEY}.txt`), INDEXNOW_KEY);
 
   // Archivio per mese, e indirizzi nuovi nella sitemap
