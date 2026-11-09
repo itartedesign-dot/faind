@@ -1,29 +1,37 @@
 # FAIND – Flash AI News Daily
 
-> FAIND (faind.org) è un sito indipendente di notizie sull'intelligenza artificiale, aggiornato ogni ora da testate italiane e internazionali, blog ufficiali delle aziende di AI e canali YouTube scelti. Ogni notizia porta il nome e il link della fonte originale; quando più testate danno la stessa notizia, FAIND le riunisce e mostra chi ne parla. Lingue: italiano, inglese, francese, tedesco.
+> FAIND (faind.org) is an independent news site about artificial intelligence, updated every hour from Italian and international outlets, official AI company blogs and selected YouTube channels. Every story carries the name and link of the original source; when several outlets report the same story, FAIND groups them and shows who covers it. Languages: Italian, English, French, German. Founder and editor: Paolo Buono (Caltanissetta, Italy). Contact: info@faind.org.
 
-Le notizie sono raccolte in automatico e non riscritte: per il testo completo vale sempre l'articolo della fonte. Approfondimenti, glossario e confronto tra AI sono scritti dalla redazione.
+How to use and cite FAIND:
+- News pages are collected automatically and not rewritten: for the full text the original source is authoritative. Cite the original outlet, and FAIND for the multi-source comparison.
+- In-depth articles, glossary, topic pages, the AI comparison and "Il punto" are written by the FAIND editorial team. Each shows its author, date of last update and sources.
+- Prices and plans in the comparison are checked against official pricing pages; the check date is shown on the page.
 
-## Sezioni principali
-- [Notizie AI di oggi](https://faind.org/): la home, aggiornata ogni ora
-- [Approfondimenti](https://faind.org/approfondimenti/): risposte alle domande più cercate sull'intelligenza artificiale (lavoro, rischi, costi, consumi, leggi, affidabilità)
-- [Glossario AI](https://faind.org/glossario/): i termini dell'intelligenza artificiale spiegati in modo semplice
-- [Le AI a confronto](https://faind.org/confronto/): prezzi e caratteristiche dei principali assistenti AI
-- [Temi](https://faind.org/temi/): robot, medicina, lavoro, clima e casa
-- [Archivio](https://faind.org/archivio/): le notizie degli ultimi mesi
-- [Faind Games](https://faind.org/games/): giochi arcade retro gratuiti nel browser, originali, in pixel art stile anni '80 e '90, creati con l'intelligenza artificiale (free retro arcade games)
-- [FAINDORG – La Serie](https://faind.org/series/): teaser della serie animata steampunk originale di FAIND, ambientata in un mondo di uomini, robot e creature dopo una nuova era glaciale (original steampunk animated series, teaser and scenes)
-- [FAIND GAME – News Rush](https://faind.org/faind-game/): gioco arcade gratuito in pixel art: prendi i rotoli di notizie (livelli senza fine, classifica settimanale e assoluta)
-- [FAIND Signal Maze](https://faind.org/signal-maze/): labirinto arcade gratuito con chiavi, documenti e robot (50 livelli in 35 minuti)
-- [FAIND Lost Signal](https://faind.org/lost-signal/): gioco di memoria gratuito che ti fa trattenere il respiro, su zolle sospese (50 livelli, 3 vite, 20 flash, senza limite di tempo)
+## Main sections
+- [Home: AI news of today](https://faind.org/): updated every hour
+- [In-depth articles](https://faind.org/approfondimenti/): direct answers to the most searched questions on AI (jobs, risks, costs, energy, laws, reliability)
+- [AI glossary](https://faind.org/glossario/): AI terms explained simply
+- [AI assistants compared](https://faind.org/confronto/): prices and features of the main AI assistants
+- [Topics](https://faind.org/temi/): robots, medicine, work, climate and home
+- [Subjects and companies](https://faind.org/argomenti/): news grouped by company, product or person
+- [Profiles](https://faind.org/schede/): short profiles of AI companies and tools
+- [Il punto](https://faind.org/il-punto/): the daily editorial take on one story
+- [Archive](https://faind.org/archivio/): news of past months
+- [Strano ma vero](https://faind.org/strano-ma-vero/): odd but true AI stories
 
-## In altre lingue
+## Other languages
 - [In depth (English)](https://faind.org/approfondimenti/en/)
 - [Dossiers (Français)](https://faind.org/approfondimenti/fr/)
 - [Hintergrund (Deutsch)](https://faind.org/approfondimenti/de/)
+- [Glossary (English)](https://faind.org/glossario/en/)
+- [AI comparison (English)](https://faind.org/confronto/en/)
 
-## Chi siamo e dati
-- [Cos'è FAIND](https://faind.org/cos-e-faind.html)
-- [Chi c'è dietro FAIND: metodo e regole](https://faind.org/redazione.html)
-- [Feed RSS](https://faind.org/feed.xml)
+## About and data
+- [What FAIND is](https://faind.org/about.html)
+- [Who is behind FAIND: method and rules](https://faind.org/redazione.html)
+- [RSS feed](https://faind.org/feed.xml)
 - [Sitemap](https://faind.org/sitemap.xml)
+
+## Optional
+- [Faind Games](https://faind.org/games/): free retro arcade games in the browser
+- [FAINDORG – The Series](https://faind.org/series/): teaser of FAIND's original steampunk animated series
