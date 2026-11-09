@@ -90,6 +90,16 @@
       "titolo": "L'AI che prova a prevedere la degenerazione maculare dall'esame dell'occhio #Shorts",
       "testo": "Una scansione dell'occhio può contenere indizi su cosa succederà dopo. In uno studio di DeepMind e del Moorfields Eye Hospital di Londra, un'intelligenza artificiale ha analizzato le scansioni OCT di persone con la forma \"umida\" di degenerazione maculare in un occhio e ha stimato il rischio che comparisse anche nell'altro, entro sei mesi. Non legge il destino: stima un rischio, e in alcuni casi lo ha sovrastimato. È una ricerca, non un test già in uso.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Yim, Chopra, Spitz et al., \"Predicting conversion to wet age-related macular degeneration using deep learning\", Nature Medicine, 2020 (DeepMind, Google Health e Moorfields Eye Hospital)\nhttps://research.google/pubs/predicting-conversion-to-wet-age-related-macular-degeneration-using-deep-learning/\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Oculistica #Retina #Maculopatia #Scienza #DeepMind #DalCassetto #FAIND",
       "telegram": "Un'AI ha provato a leggere in una scansione dell'occhio il rischio di una grave malattia della vista, prima che compaia."
+    },
+    {
+      "id": "dal-cassetto-10",
+      "aneddoto": 10,
+      "dalle": "2026-11-09T10:42:00Z",
+      "scade": "2026-11-09T12:17:21Z",
+      "video": "https://export-download.canva.com/WJ4a8/DAHaanWJ4a8/-1/0-3779041711257125127.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH4R7NKVBA%2F20261108%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261108T213430Z&X-Amz-Expires=52971&X-Amz-Signature=211a415e2d74d7ca7b6d20110494fd00f95f7469c09d12bb743bef9ba537fd18&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Mon%2C%2009%20Nov%202026%2012%3A17%3A21%20GMT",
+      "titolo": "L'AI che rilegge le TAC per trovare segnali di malattie croniche #Shorts",
+      "testo": "Una TAC si fa per rispondere a una domanda precisa, ma nelle immagini possono esserci altri indizi. All'Università di Stanford, in una ricerca sostenuta dai NIH, hanno creato Merlin, un'intelligenza artificiale che analizza le TAC dell'addome e prova a stimare il rischio di malattie croniche come diabete, osteoporosi e malattie del cuore nei cinque anni successivi. È ancora ricerca: servono altri studi prima di usarla negli ospedali.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Blankemeier, Kumar, Chaudhari et al., studio su Merlin, Nature, 2026 (Stanford University, finanziato dai NIH)\nhttps://www.nih.gov/news-events/news-releases/automated-ct-scan-analysis-could-fast-track-clinical-assessments\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #TAC #Radiologia #Salute #Scienza #Stanford #DalCassetto #FAIND",
+      "telegram": "Un'AI rilegge le TAC di routine e cerca indizi di malattie croniche che nessuno stava cercando."
     }
   ]
 }

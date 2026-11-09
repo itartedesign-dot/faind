@@ -59,7 +59,7 @@
       "titolo": "Rileggere una TAC con un altro obiettivo",
       "testo": "Una TAC viene fatta per rispondere a una domanda precisa. Ma nelle immagini potrebbero esserci altri indizi utili. Una ricerca finanziata dai NIH ha sviluppato un’AI per analizzare le scansioni e cercare anche segnali di malattie croniche. L’obiettivo è ricavare più informazioni dagli esami già disponibili.",
       "fonte": "NIH",
-      "verificato": false
+      "verificato": true
     },
     {
       "titolo": "Più tumori individuati, ma anche più richiami",
@@ -164,6 +164,10 @@
     {
       "n": 9,
       "day": "2026-11-05"
+    },
+    {
+      "n": 10,
+      "day": "2026-11-09"
     }
   ]
 }
