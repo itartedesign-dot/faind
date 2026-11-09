@@ -122,13 +122,15 @@ function page(list, lang) {
     : `<a href="${up}${FAINDO_DIR[k]}" hreflang="${k}" lang="${k}">${LANG_LABEL[k]}</a>`).join(' ');
   const alts = LANGS.map(k => `  <link rel="alternate" hreflang="${k}" href="${SITE}${FAINDO_DIR[k]}">`).join('\n')
     + `\n  <link rel="alternate" hreflang="x-default" href="${SITE}${FAINDO_DIR.it}">`;
+  // ISO 8601 completo con fuso (Google lo richiede): "2026-11-07" o "2026-11-07T10:00:00" diventano UTC con la Z
+  const isoUpload = (d) => { const t = /(Z|[+-]\d\d:?\d\d)$/.test(String(d)) ? new Date(d) : new Date(/^\d{4}-\d\d-\d\d$/.test(d) ? `${d}T12:00:00+01:00` : `${d}Z`); return isNaN(t) ? undefined : t.toISOString(); };
   const textLang = (s, f) => (lang !== 'it' && s[`${f}_${lang}`]) ? lang : 'it';
   const jsonld = { '@context': 'https://schema.org', '@graph': [
     { '@type': 'CollectionPage', '@id': url + '#page', url, name: u.seo, description: u.desc, inLanguage: u.locale, image,
       isPartOf: { '@id': SITE + '#website' }, publisher: { '@id': SITE + '#org' },
       mainEntity: { '@type': 'ItemList', numberOfItems: list.length, itemListElement: list.map((s, i) => ({ '@type': 'ListItem', position: i + 1,
         item: { '@type': 'VideoObject', name: pick(s, 'titolo', lang), description: pick(s, 'telegram', lang) || pick(s, 'titolo', lang),
-          thumbnailUrl: thumb(s.videoId), uploadDate: s.date, contentUrl: s.url, embedUrl: `https://www.youtube.com/embed/${s.videoId}`, inLanguage: textLang(s, 'telegram') } })) } },
+          thumbnailUrl: thumb(s.videoId), uploadDate: isoUpload(s.date), contentUrl: s.url, embedUrl: `https://www.youtube.com/embed/${s.videoId}`, inLanguage: textLang(s, 'telegram') } })) } },
     { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'FAIND', item: SITE }, { '@type': 'ListItem', position: 2, name: u.name, item: url }] }
   ] };
   const items = list.length ? list.map(s => `      <li class="fdo__item">
