@@ -26,6 +26,7 @@ import vm from 'node:vm';
 import path from 'node:path';
 import { buildCards } from './cards.mjs';
 import { buildCompare } from './compare.mjs';
+import { buildVersus } from './versus.mjs';
 import { buildArticles, ARTICLES, articleFor } from './articles.mjs';
 import { buildStrano } from './strano.mjs';
 import { buildPunto, loadPunti, PUNTO_DIR } from './punto.mjs';
@@ -534,6 +535,8 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
   // Le AI a confronto, in quattro lingue (cartella confronto/)
   try { await buildCompare(root); }
   catch (e) { console.warn('Pagina di confronto non generata:', e.message); }
+  try { await buildVersus(root); }
+  catch (e) { console.warn('Approfondimenti del confronto non generati:', e.message); }
 
   // Approfondimenti: gli articoli di fondo (cartella approfondimenti/)
   try { console.log(`🏠 home: ${await prefillHome(root, news)} notizie scritte nell'HTML`); }
