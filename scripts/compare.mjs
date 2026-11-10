@@ -19,11 +19,11 @@ import path from 'node:path';
 
 const SITE = 'https://faind.org/';
 export const COMPARE_DIR = { it: 'confronto/', en: 'confronto/en/', fr: 'confronto/fr/', de: 'confronto/de/' };
-const CHECKED = '2026-10-03';
+export const CHECKED = '2026-11-10';
 const PRICE_SOURCE = { name: 'AI Price Compare', url: 'https://aipricecompare.org/' };
 
 // Prezzi mensili in dollari (listini USA). [nome del piano, prezzo, nota facoltativa]
-const SERVICES = [
+export const SERVICES = [
   { id: 'chatgpt', name: 'ChatGPT', by: 'OpenAI', url: 'https://chatgpt.com/', color: '#10A37F', free: true,
     plans: [['ChatGPT Go', 8], ['ChatGPT Plus', 20], ['ChatGPT Pro', 100], ['ChatGPT Pro (max)', 200]] },
   { id: 'claude', name: 'Claude', by: 'Anthropic', url: 'https://claude.ai/', color: '#D97757', free: true,
@@ -127,7 +127,7 @@ const UI = {
 };
 
 // Per ogni AI e lingua: what, best, pros[3], cons[3], verdict, pick ("se…")
-const TEXT = {
+export const TEXT = {
   chatgpt: {
     it: { what: 'L\'assistente AI più usato al mondo, sviluppato da OpenAI: risponde, scrive, crea immagini, parla a voce e svolge compiti in più passaggi.', best: 'uso generale, scrittura di tutti i giorni, immagini, chi vuole una sola app per tutto', pick: 'vuoi una sola AI per fare un po\' di tutto',
       pros: ['La più completa: testo, immagini, voce e strumenti nella stessa app', 'Piano d\'ingresso economico (Go) oltre al classico Plus', 'Enorme quantità di guide, esempi e integrazioni'],
@@ -250,7 +250,7 @@ const TEXT = {
 };
 
 const LANG_LABEL = { it: 'Italiano', en: 'English', fr: 'Français', de: 'Deutsch' };
-const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+export const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const money = (n, lang) => new Intl.NumberFormat(UI[lang].locale, { minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2 }).format(n) + ' $';
 
 // Tutti i piani a pagamento, dal più caro al più economico
@@ -327,6 +327,89 @@ function chooserSection() {
 `;
 }
 
+// Stile e guscio condivisi con le pagine di approfondimento (versus.mjs)
+export const STYLE = `    .lsw { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 13.5px; margin-bottom: 14px; }
+    .lsw__lab { color: var(--muted); } .lsw a { color: var(--ink); font-weight: 600; } .lsw__on { font-weight: 800; color: #4293B9; }
+    .legal.cmp { max-width: 900px; }
+    .cmp__scroll { overflow-x: auto; margin-top: 10px; }
+    table.cmp__t { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+    .cmp__t th { text-align: left; font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding: 8px 10px; border-bottom: 2px solid var(--ink); }
+    .cmp__t td { padding: 10px; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--ink); }
+    .cmp__t td span { font-size: 13px; color: var(--muted); } .cmp__t a { color: var(--ink); }
+    .cmp__n { width: 34px; font-weight: 800; color: #4293B9 !important; } .cmp__p { white-space: nowrap; font-variant-numeric: tabular-nums; font-weight: 700; }
+    .cmp__card { border: 1px solid var(--rule); border-top: 5px solid var(--tp); border-radius: 14px; background: var(--surface); padding: 20px 22px; margin-top: 18px; scroll-margin-top: 90px; }
+    .legal .cmp__card h3 { font-size: 24px; font-weight: 800; font-stretch: 84%; color: var(--ink); margin: 0 0 8px; }
+    .cmp__card h3 span { font-size: 14px; font-weight: 600; color: var(--muted); font-stretch: 100%; }
+    .legal .cmp__card h4 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 14px 0 6px; }
+    .cmp__pc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 26px; }
+    .legal .cmp__card ul { gap: 5px; font-size: 15.5px; }
+    .legal ul.cmp__plans { list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+    .cmp__plans li { padding: 6px 12px; border: 1px solid var(--rule); border-radius: 999px; font-size: 14px; }
+    .cmp__card blockquote { margin: 16px 0 12px; padding: 14px 16px; border-left: 4px solid var(--tp); background: rgba(66,147,185,.08); border-radius: 0 10px 10px 0; }
+    .cmp__card blockquote strong { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink); }
+    .legal .cmp__card blockquote p { color: var(--ink); margin: 6px 0 0; font-size: 16.5px; }
+    .legal ul.cmp__pick { list-style: none; padding-left: 0; }
+    .chs fieldset { border: 0; padding: 0; margin: 14px 0 0; } .chs legend { font-weight: 760; color: var(--ink); margin-bottom: 8px; }
+    .chs__grid { display: flex; flex-wrap: wrap; gap: 8px; } .chs__opt input { position: absolute; opacity: 0; pointer-events: none; }
+    .chs__opt span { display: inline-block; padding: 8px 14px; border: 1px solid var(--rule); border-radius: 999px; font-size: 14.5px; cursor: pointer; background: var(--surface); color: var(--ink); }
+    .chs__opt input:checked + span { background: #4293B9; border-color: #4293B9; color: #fff; font-weight: 700; } .chs__opt input:focus-visible + span { outline: 2px solid #4293B9; outline-offset: 2px; }
+    .chs__out { display: grid; gap: 12px; margin-top: 18px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+    .chs__card { border: 1px solid var(--rule); border-radius: 14px; background: var(--surface); padding: 16px 18px; } .chs__card--top { border: 2px solid #4293B9; }
+    .chs__role { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #4293B9; font-weight: 800; }
+    .legal .chs__card h3 { font-size: 21px; margin: 4px 0 6px; color: var(--ink); } .chs__card h3 a { color: var(--ink); } .chs__card small { font-size: 13px; color: var(--muted); font-weight: 500; }
+    .chs__card p { margin: 4px 0; font-size: 15px; } .legal .chs__card p.chs__plan { font-weight: 700; color: var(--ink); }
+    @media (max-width: 640px) { .cmp__pc { grid-template-columns: 1fr; } }
+`;
+
+export function shellEn({ title, desc, url, jsonld, body }) {
+  const up = '../../';
+  return `<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>${esc(title)} | FAIND</title>
+  <meta name="description" content="${esc(desc)}">
+  <link rel="canonical" href="${url}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FAIND">
+  <meta property="og:url" content="${url}">
+  <meta property="og:title" content="${esc(title)}">
+  <meta property="og:description" content="${esc(desc)}">
+  <meta property="og:image" content="${SITE}assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="FAIND – Flash AI News Daily">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="${up}assets/favicon.png?v=3" type="image/png">
+  <link rel="apple-touch-icon" href="${up}assets/icon-180.png?v=3">
+  <link rel="manifest" href="${up}manifest.webmanifest">
+  <script>(function(){var t=null;try{t=localStorage.getItem('faind-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
+  <link rel="stylesheet" href="${up}assets/fonts/archivo.css">
+  <link rel="stylesheet" href="${up}style.css">
+  <style>
+${STYLE}  </style>
+  <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>
+  <script src="${up}stats.js" defer></script>
+  <script src="${up}nav.js" defer></script>
+</head>
+<body class="np-page">
+  <header class="masthead">
+    <div class="masthead__bar wrap">
+      <a class="brand" href="${up}" aria-label="FAIND — Home"><img class="brand__img brand__img--light" src="${up}assets/logo-payoff-light.webp" width="451" height="180" alt="FAIND – Flash AI News Daily"><img class="brand__img brand__img--dark" src="${up}assets/logo-payoff-dark.webp" width="451" height="180" alt="FAIND – Flash AI News Daily"></a>
+      <a class="np__back" href="${up}">← All news</a>
+    </div>
+  </header>
+  <main class="wrap legal cmp">
+${body}
+  </main>
+  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="${up}#chi-siamo">About us</a> · <a href="${up}temi/en/">Topics</a> · <a href="${up}glossario/en/">Glossary</a> · <a href="${up}feed.xml">RSS feed</a> · <a href="${up}privacy.html">Privacy and legal notes</a></p></div></footer>
+</body>
+</html>
+`;
+}
+
 function page(lang) {
   const u = UI[lang], up = lang === 'it' ? '../' : '../../', url = SITE + COMPARE_DIR[lang];
   const date = new Intl.DateTimeFormat(u.locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(CHECKED + 'T12:00:00Z'));
@@ -383,38 +466,7 @@ ${alts}
   <link rel="stylesheet" href="${up}assets/fonts/archivo.css">
   <link rel="stylesheet" href="${up}style.css">
   <style>
-    .lsw { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 13.5px; margin-bottom: 14px; }
-    .lsw__lab { color: var(--muted); } .lsw a { color: var(--ink); font-weight: 600; } .lsw__on { font-weight: 800; color: #4293B9; }
-    .legal.cmp { max-width: 900px; }
-    .cmp__scroll { overflow-x: auto; margin-top: 10px; }
-    table.cmp__t { width: 100%; border-collapse: collapse; font-size: 15.5px; }
-    .cmp__t th { text-align: left; font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding: 8px 10px; border-bottom: 2px solid var(--ink); }
-    .cmp__t td { padding: 10px; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--ink); }
-    .cmp__t td span { font-size: 13px; color: var(--muted); } .cmp__t a { color: var(--ink); }
-    .cmp__n { width: 34px; font-weight: 800; color: #4293B9 !important; } .cmp__p { white-space: nowrap; font-variant-numeric: tabular-nums; font-weight: 700; }
-    .cmp__card { border: 1px solid var(--rule); border-top: 5px solid var(--tp); border-radius: 14px; background: var(--surface); padding: 20px 22px; margin-top: 18px; scroll-margin-top: 90px; }
-    .legal .cmp__card h3 { font-size: 24px; font-weight: 800; font-stretch: 84%; color: var(--ink); margin: 0 0 8px; }
-    .cmp__card h3 span { font-size: 14px; font-weight: 600; color: var(--muted); font-stretch: 100%; }
-    .legal .cmp__card h4 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 14px 0 6px; }
-    .cmp__pc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 26px; }
-    .legal .cmp__card ul { gap: 5px; font-size: 15.5px; }
-    .legal ul.cmp__plans { list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-    .cmp__plans li { padding: 6px 12px; border: 1px solid var(--rule); border-radius: 999px; font-size: 14px; }
-    .cmp__card blockquote { margin: 16px 0 12px; padding: 14px 16px; border-left: 4px solid var(--tp); background: rgba(66,147,185,.08); border-radius: 0 10px 10px 0; }
-    .cmp__card blockquote strong { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink); }
-    .legal .cmp__card blockquote p { color: var(--ink); margin: 6px 0 0; font-size: 16.5px; }
-    .legal ul.cmp__pick { list-style: none; padding-left: 0; }
-    .chs fieldset { border: 0; padding: 0; margin: 14px 0 0; } .chs legend { font-weight: 760; color: var(--ink); margin-bottom: 8px; }
-    .chs__grid { display: flex; flex-wrap: wrap; gap: 8px; } .chs__opt input { position: absolute; opacity: 0; pointer-events: none; }
-    .chs__opt span { display: inline-block; padding: 8px 14px; border: 1px solid var(--rule); border-radius: 999px; font-size: 14.5px; cursor: pointer; background: var(--surface); color: var(--ink); }
-    .chs__opt input:checked + span { background: #4293B9; border-color: #4293B9; color: #fff; font-weight: 700; } .chs__opt input:focus-visible + span { outline: 2px solid #4293B9; outline-offset: 2px; }
-    .chs__out { display: grid; gap: 12px; margin-top: 18px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-    .chs__card { border: 1px solid var(--rule); border-radius: 14px; background: var(--surface); padding: 16px 18px; } .chs__card--top { border: 2px solid #4293B9; }
-    .chs__role { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #4293B9; font-weight: 800; }
-    .legal .chs__card h3 { font-size: 21px; margin: 4px 0 6px; color: var(--ink); } .chs__card h3 a { color: var(--ink); } .chs__card small { font-size: 13px; color: var(--muted); font-weight: 500; }
-    .chs__card p { margin: 4px 0; font-size: 15px; } .legal .chs__card p.chs__plan { font-weight: 700; color: var(--ink); }
-    @media (max-width: 640px) { .cmp__pc { grid-template-columns: 1fr; } }
-  </style>
+${STYLE}  </style>
   <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>
   <script src="${up}stats.js" defer></script>
   <script src="${up}nav.js" defer></script>
@@ -457,6 +509,17 @@ ${cards}
 ${pick}
       </ul>
     </section>
+
+    ${lang === 'en' ? `<section id="guides">
+      <h2>Head-to-head guides</h2>
+      <p>Three direct matches and one guide on high-end plans, each answering a single question.</p>
+      <ul>
+        <li><a href="chatgpt-vs-claude.html">ChatGPT or Claude: which one should you pay for</a></li>
+        <li><a href="chatgpt-vs-gemini.html">ChatGPT or Gemini: which one fits you</a></li>
+        <li><a href="claude-vs-gemini.html">Claude or Gemini: depth or integration</a></li>
+        <li><a href="is-a-200-dollar-ai-plan-worth-it.html">Is a $100 or $200 AI plan worth it?</a></li>
+      </ul>
+    </section>` : ''}
 
     <section id="domande">
       <h2>${u.faqT}</h2>
