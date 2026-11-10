@@ -259,6 +259,74 @@ export function ranking() {
     .sort((a, b) => b.monthly - a.monthly || a.name.localeCompare(b.name));
 }
 
+// Selettore interattivo "Which AI should I use?" (solo inglese per ora). Senza JavaScript restano la classifica prezzi e l'elenco "Quale scegliere": il selettore è un in più.
+// Le scelte per esigenza riprendono i giudizi già scritti nelle schede (best / pick) e vanno riviste quando cambiano.
+const NEEDS = [
+  ['everything', 'One AI for a bit of everything', ['chatgpt', 'gemini', 'claude']],
+  ['writing', 'Writing and long documents', ['claude', 'chatgpt', 'gemini']],
+  ['coding', 'Programming', ['claude', 'chatgpt', 'deepseek']],
+  ['images', 'Images and video', ['chatgpt', 'gemini']],
+  ['research', 'Research with sources', ['perplexity', 'gemini', 'chatgpt']],
+  ['google', 'Gmail, Docs and Drive', ['gemini', 'chatgpt']],
+  ['office', 'Word, Excel and PowerPoint', ['copilot', 'chatgpt']],
+  ['x', 'Following what happens on X', ['grok', 'perplexity']],
+  ['free', 'Trying a capable AI for free', ['deepseek', 'gemini', 'chatgpt']]
+];
+const BUDGETS = [['0', 'Free only'], ['10', 'Up to $10 a month'], ['20', 'Up to $20 a month'], ['1000', 'Heavy daily use ($100 and up)']];
+
+function chooserSection() {
+  const data = {
+    needs: NEEDS.map(([id, label, ids]) => ({ id, label, ids })),
+    budgets: BUDGETS.map(([v, label]) => ({ v: Number(v), label })),
+    services: Object.fromEntries(SERVICES.map(s => [s.id, { name: s.name, by: s.by, plans: s.plans.map(([n, m]) => [n, m]), pick: TEXT[s.id].en.pick, best: TEXT[s.id].en.best }]))
+  };
+  const needBtns = NEEDS.map(([id, label], i) => `<label class="chs__opt"><input type="radio" name="need" value="${id}"${i === 0 ? ' checked' : ''}><span>${esc(label)}</span></label>`).join('');
+  const budgetBtns = BUDGETS.map(([v, label], i) => `<label class="chs__opt"><input type="radio" name="budget" value="${v}"${i === 2 ? ' checked' : ''}><span>${esc(label)}</span></label>`).join('');
+  return `
+    <section id="chooser" class="chs">
+      <h2>Which AI assistant should I use?</h2>
+      <p>Two questions. The picks follow the reviews below, which are Paolo Buono's personal opinions, and the official US list prices.</p>
+      <form id="chsForm" onsubmit="return false">
+        <fieldset><legend>What do you need it for?</legend><div class="chs__grid">${needBtns}</div></fieldset>
+        <fieldset><legend>What is your budget?</legend><div class="chs__grid">${budgetBtns}</div></fieldset>
+      </form>
+      <div id="chsOut" class="chs__out" aria-live="polite"></div>
+      <script type="application/json" id="chsData">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>
+      <script>
+(function () {
+  var d = JSON.parse(document.getElementById('chsData').textContent), out = document.getElementById('chsOut'), form = document.getElementById('chsForm');
+  function plan(sv, max) {
+    if (max === 0) return { t: 'Free plan', ok: true };
+    var best = null;
+    if (max >= 1000) { sv.plans.forEach(function (p) { if (p[1] >= 99 && (!best || p[1] < best[1])) best = p; }); if (!best) return { t: 'Heavy-use tiers: none, the standard plans are enough', ok: false }; }
+    else sv.plans.forEach(function (p) { if (p[1] <= max && (!best || p[1] > best[1])) best = p; });
+    if (best) return { t: best[0] + ': $' + best[1] + '/month', ok: true };
+    return { t: 'No paid plan fits this budget: start with the free plan', ok: false };
+  }
+  function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function render(need, budget) {
+    var n = d.needs.filter(function (x) { return x.id === need; })[0] || d.needs[0], html = '', i = 0;
+    n.ids.forEach(function (id) {
+      var sv = d.services[id], pl = plan(sv, budget), role = i === 0 ? 'Best fit' : 'Also good';
+      html += '<article class="chs__card' + (i === 0 ? ' chs__card--top' : '') + '"><span class="chs__role">' + role + '</span><h3><a href="#' + id + '">' + esc(sv.name) + '</a> <small>by ' + esc(sv.by) + '</small></h3><p>Choose it if ' + esc(sv.pick) + '.</p><p class="chs__plan">' + esc(pl.t) + '</p></article>';
+      i++;
+    });
+    out.innerHTML = html;
+  }
+  function read() { var f = new FormData(form); return [f.get('need'), Number(f.get('budget'))]; }
+  function setFromHash() {
+    var m = location.hash.match(/need=([a-z]+)&budget=(\\d+)/); if (!m) return;
+    var a = form.querySelector('input[name=need][value=' + m[1] + ']'), b = form.querySelector('input[name=budget][value="' + m[2] + '"]');
+    if (a) a.checked = true; if (b) b.checked = true;
+  }
+  form.addEventListener('change', function () { var r = read(); render(r[0], r[1]); try { history.replaceState(null, '', '#need=' + r[0] + '&budget=' + r[1]); } catch (e) {} });
+  setFromHash(); var r = read(); render(r[0], r[1]);
+})();
+      </script>
+    </section>
+`;
+}
+
 function page(lang) {
   const u = UI[lang], up = lang === 'it' ? '../' : '../../', url = SITE + COMPARE_DIR[lang];
   const date = new Intl.DateTimeFormat(u.locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(CHECKED + 'T12:00:00Z'));
@@ -336,6 +404,15 @@ ${alts}
     .cmp__card blockquote strong { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink); }
     .legal .cmp__card blockquote p { color: var(--ink); margin: 6px 0 0; font-size: 16.5px; }
     .legal ul.cmp__pick { list-style: none; padding-left: 0; }
+    .chs fieldset { border: 0; padding: 0; margin: 14px 0 0; } .chs legend { font-weight: 760; color: var(--ink); margin-bottom: 8px; }
+    .chs__grid { display: flex; flex-wrap: wrap; gap: 8px; } .chs__opt input { position: absolute; opacity: 0; pointer-events: none; }
+    .chs__opt span { display: inline-block; padding: 8px 14px; border: 1px solid var(--rule); border-radius: 999px; font-size: 14.5px; cursor: pointer; background: var(--surface); color: var(--ink); }
+    .chs__opt input:checked + span { background: #4293B9; border-color: #4293B9; color: #fff; font-weight: 700; } .chs__opt input:focus-visible + span { outline: 2px solid #4293B9; outline-offset: 2px; }
+    .chs__out { display: grid; gap: 12px; margin-top: 18px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+    .chs__card { border: 1px solid var(--rule); border-radius: 14px; background: var(--surface); padding: 16px 18px; } .chs__card--top { border: 2px solid #4293B9; }
+    .chs__role { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #4293B9; font-weight: 800; }
+    .legal .chs__card h3 { font-size: 21px; margin: 4px 0 6px; color: var(--ink); } .chs__card h3 a { color: var(--ink); } .chs__card small { font-size: 13px; color: var(--muted); font-weight: 500; }
+    .chs__card p { margin: 4px 0; font-size: 15px; } .legal .chs__card p.chs__plan { font-weight: 700; color: var(--ink); }
     @media (max-width: 640px) { .cmp__pc { grid-template-columns: 1fr; } }
   </style>
   <script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, '\\u003c')}</script>
@@ -354,8 +431,8 @@ ${alts}
     <h1 class="legal__title">${esc(u.h1)}</h1>
     <p class="legal__updated">${esc(u.updated(date))}</p>
     <p class="legal__lede">${esc(u.lede)}</p>
-    <nav class="legal__toc"><a href="#prezzi">${u.toc[0]}</a><a href="#schede">${u.toc[1]}</a><a href="#scegliere">${u.toc[2]}</a><a href="#domande">${u.toc[3]}</a></nav>
-
+    <nav class="legal__toc">${lang === 'en' ? '<a href="#chooser">Quick chooser</a>' : ''}<a href="#prezzi">${u.toc[0]}</a><a href="#schede">${u.toc[1]}</a><a href="#scegliere">${u.toc[2]}</a><a href="#domande">${u.toc[3]}</a></nav>
+${lang === 'en' ? chooserSection() : ''}
     <section id="prezzi">
       <h2>${esc(u.rankT)}</h2>
       <p>${esc(u.rankI)}</p>
