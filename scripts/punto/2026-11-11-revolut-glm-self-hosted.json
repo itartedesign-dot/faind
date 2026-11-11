@@ -1,0 +1,173 @@
+{
+ "slug": "revolut-glm-self-hosted",
+ "date": "2026-11-11",
+ "title": "Revolut e GLM: cosa è successo davvero e cosa hanno sbagliato i titoli",
+ "desc": "Revolut dice che circa 2.000 ingegneri usano di default un modello GLM ospitato in casa. I fatti, cinque affermazioni che girano e perché non reggono, e cosa significa.",
+ "lede": "Revolut ha detto che circa 2.000 suoi ingegneri usano ora di default un modello open-weight GLM di Z.ai, ospitato su infrastruttura propria, al posto degli abbonamenti ad Anthropic e OpenAI. È vero in parte: i numeri sono dichiarati dall'azienda stessa e molti titoli li hanno spinti oltre quello che è stato detto.",
+ "brief": [
+  "David Abitbol, responsabile di operations e infrastruttura AI di Revolut, ha presentato i dati alla conferenza AI Engineer di New York.",
+  "Circa 2.000 ingegneri usano GLM (oggi GLM-5.3), ospitato su circa 56 GPU Nvidia B200. Costo dichiarato: circa 0,30 dollari per milione di token, un decimo di quanto spendeva con Anthropic e OpenAI.",
+  "Claude Code e Codex non sono stati abbandonati: restano disponibili come eccezione per i lavori più difficili.",
+  "Tutte le cifre sono di Revolut, senza verifica indipendente e senza costi di cloud, personale e monitoraggio."
+ ],
+ "sections": [
+  [
+   "Cosa è stato detto",
+   "Secondo le cronache di The Register e Trending Topics, uscite il 3 novembre, Revolut è passata da Gemini (inizio 2025) a Claude Code (inizio 2026) e poi, per via dei costi, a limiti di token sempre più stretti. Da lì ha scelto di ospitare in proprio un modello open-weight: prima GLM-5.1, poi GLM-5.3, su circa 56 GPU Nvidia B200 in infrastruttura statunitense, non sul servizio di Z.ai.\n\nI numeri dichiarati: circa 0,30 dollari per milione di token, circa un decimo della spesa precedente; tempi di scrittura del codice giù di circa il 60% e tempi dall'assegnazione del compito alla consegna giù di circa il 70%; tempo al primo token sceso da oltre 10 secondi a circa 1,6. Il modello lavora solo sul testo: le immagini passano ad altri modelli, come Gemini."
+  ],
+  [
+   "Cinque affermazioni che girano e perché non reggono",
+   "<strong>«Revolut ha abbandonato Claude Code e Codex».</strong> No. Hanno smesso di essere lo strumento di default e restano disponibili come eccezione per i lavori più difficili. È un cambio di instradamento, non una rottura.\n\n<strong>«Programmare con l'AI costa il 90% in meno».</strong> È un confronto per token e lo fa Revolut. Non include cloud, personale e monitoraggio. Cinquantasei B200 e la squadra che le ottimizza hanno un costo reale, e nessuno ha pubblicato un costo totale. Un decimo della fattura delle API non è un decimo della spesa.\n\n<strong>«Un modello cinese ha battuto quelli americani».</strong> Nel racconto non c'è nessun confronto di qualità. Revolut ha scelto un modello abbastanza buono per il lavoro quotidiano e economico da servire, e tiene i modelli di frontiera per i casi difficili.\n\n<strong>«Il nuovo modello ha reso gli ingegneri più veloci del 60%».</strong> I dati non separano l'effetto del modello da quello degli altri cambiamenti, in particolare dall'eliminazione dei limiti di token. Secondo il resoconto, i maggiori vantaggi sono arrivati da debug e ticket, non dalla scrittura di codice. La lezione più probabile, a nostro avviso, è che si lavora meglio quando nessuno deve razionare lo strumento.\n\n<strong>«Può farlo chiunque».</strong> Revolut ha migliaia di ingegneri e una squadra di infrastruttura. Prima delle ottimizzazioni la velocità di risposta era, parole dell'interessato, «terribile». Una piccola azienda che noleggia GPU rischia di spendere più di un abbonamento."
+  ],
+  [
+   "Cosa significa",
+   "<strong>Conta il default.</strong> Quando uno strumento costa abbastanza poco da non far contare i token, la gente lo usa tutto il giorno. È lì che nascono i vantaggi dichiarati.\n\n<strong>I modelli di frontiera diventano il livello di escalation.</strong> Un modello economico per il lavoro di routine, uno costoso per i casi difficili. Aspettiamoci altre grandi aziende con la stessa impostazione, non per forza con GLM.\n\n<strong>Per le aziende regolamentate conta dove gira il modello, più di dove è nato.</strong> Ospitarlo in un ambiente controllato è ciò che rende accettabile un modello di origine cinese per una banca. Revolut ha ammesso apertamente lo stigma.\n\n<strong>Per i piccoli team la lezione è il metodo, non l'hardware.</strong> Instradare per tipo di compito, mettere un tetto di spesa per strumento, misurare prima e dopo."
+  ],
+  [
+   "Cosa non sappiamo",
+   "Non c'è una misura indipendente della qualità del codice o dei bug prima e dopo il passaggio, né un costo totale comprensivo di hardware e personale. Le stime sul prezzo delle GPU circolate nei resoconti sono dei giornalisti, non di Revolut. Non risultano commenti dei regolatori."
+  ]
+ ],
+ "faq": [
+  [
+   "Revolut ha smesso di usare Claude Code e Codex?",
+   "No. Non sono più il default ma restano disponibili come eccezione per i lavori più difficili."
+  ],
+  [
+   "Il risparmio del 90% è confermato?",
+   "È dichiarato da Revolut e riguarda il costo per token. Non include cloud, personale e monitoraggio, e non è stato verificato da terzi."
+  ]
+ ],
+ "sources": [
+  {
+   "name": "The Register",
+   "title": "British fintech Revolut slashes AI coding costs 10x by cutting out Claude and going self-hosted (3 novembre 2026)",
+   "url": "https://www.theregister.com/a/5307345"
+  },
+  {
+   "name": "Trending Topics",
+   "title": "Revolut GLM open-weight coding costs (3 novembre 2026)",
+   "url": "https://www.trendingtopics.eu/revolut-glm-open-weight-coding-costs/"
+  }
+ ],
+ "i18n": {
+  "en": {
+   "title": "Revolut and GLM: what actually happened, and what the headlines got wrong",
+   "desc": "Revolut says about 2,000 engineers now default to a self-hosted GLM model. The facts, five claims going around that don't hold up, and what it means.",
+   "lede": "Revolut has said that about 2,000 of its engineers now default to an open-weight GLM model from Z.ai, hosted on its own infrastructure, instead of paid subscriptions to Anthropic and OpenAI. That is partly true: the numbers come from the company itself, and many headlines pushed them past what was said.",
+   "brief": [
+    "David Abitbol, who runs AI operations and infrastructure at Revolut, presented the figures at the AI Engineer conference in New York.",
+    "About 2,000 engineers use GLM (now GLM-5.3), hosted on about 56 Nvidia B200 GPUs. Stated cost: about $0.30 per million tokens, a tenth of what it spent with Anthropic and OpenAI.",
+    "Claude Code and Codex were not dropped: they remain available as the exception for the hardest work.",
+    "Every figure is Revolut's own, unaudited, and excludes cloud, staff and monitoring costs."
+   ],
+   "sections": [
+    [
+     "What was said",
+     "According to reports from The Register and Trending Topics, published on 3 November, Revolut moved from Gemini (early 2025) to Claude Code (early 2026) and then, because of cost, to tighter and tighter token budgets. It then chose to host an open-weight model itself: first GLM-5.1, then GLM-5.3, on about 56 Nvidia B200 GPUs in US infrastructure, not on Z.ai's own service.\n\nThe stated numbers: about $0.30 per million tokens, around a tenth of the previous spend; coding time down about 60% and time from picking up a task to merging it down about 70%; time to first token down from over 10 seconds to about 1.6. The model handles text only, so image tasks go to other models such as Gemini."
+    ],
+    [
+     "Five claims going around, and why they fail",
+     "<strong>\"Revolut dropped Claude Code and Codex.\"</strong> It didn't. They stopped being the default and remain available as the exception for the hardest work. This is routing, not a breakup.\n\n<strong>\"AI coding is now 90% cheaper.\"</strong> The comparison is per token, and Revolut makes it. It excludes cloud, staff and monitoring. Fifty-six B200s and the team that tunes them are a real cost, and no total has been published. A tenth of the API bill is not a tenth of the cost.\n\n<strong>\"A Chinese model beat the American ones.\"</strong> Nothing in the account compares quality. Revolut picked a model that is good enough for daily work and cheap to serve, and it keeps frontier models for the hard cases.\n\n<strong>\"The new model made engineers 60% faster.\"</strong> The data does not separate the model's effect from other changes, in particular the removal of token limits. According to the account, the biggest gains came from debugging and tickets, not from writing code. Our reading is that the likelier lesson is that people work better when nobody has to ration the tool.\n\n<strong>\"Anyone can do this.\"</strong> Revolut has thousands of engineers and an infrastructure team. Before tuning, response speed was, in the speaker's own word, \"terrible\". A small company renting GPUs risks paying more than a subscription."
+    ],
+    [
+     "What it means",
+     "<strong>The default is what counts.</strong> When a tool is cheap enough that nobody counts tokens, people use it all day. That is where the stated gains come from.\n\n<strong>Frontier models become the escalation tier.</strong> A cheap model for routine work, an expensive one for the hard cases. Expect more large companies to set things up this way, not necessarily with GLM.\n\n<strong>For regulated companies, where the model runs matters more than where it was built.</strong> Hosting it in a controlled environment is what makes a Chinese-origin model acceptable to a bank. Revolut openly acknowledged the stigma.\n\n<strong>For small teams, the lesson is method, not hardware.</strong> Route by task, cap spend per tool, measure before and after."
+    ],
+    [
+     "What we don't know",
+     "There is no independent measure of code quality or bug rates before and after the switch, and no total cost including hardware and staff. The GPU price estimates in the coverage are the journalists', not Revolut's. No regulator comments have been reported."
+    ]
+   ],
+   "faq": [
+    [
+     "Did Revolut stop using Claude Code and Codex?",
+     "No. They are no longer the default but remain available as the exception for the hardest work."
+    ],
+    [
+     "Is the 90% saving confirmed?",
+     "It is Revolut's own claim and refers to cost per token. It excludes cloud, staff and monitoring, and nobody outside the company has verified it."
+    ]
+   ]
+  },
+  "fr": {
+   "title": "Revolut et GLM : ce qui s'est vraiment passé, et ce que les titres ont déformé",
+   "desc": "Revolut affirme qu'environ 2 000 ingénieurs utilisent par défaut un modèle GLM hébergé en interne. Les faits, cinq affirmations qui circulent et pourquoi elles ne tiennent pas, et ce que cela signifie.",
+   "lede": "Revolut a indiqué qu'environ 2 000 de ses ingénieurs utilisent désormais par défaut un modèle open-weight GLM de Z.ai, hébergé sur sa propre infrastructure, à la place des abonnements à Anthropic et OpenAI. C'est en partie vrai : les chiffres viennent de l'entreprise elle-même, et de nombreux titres les ont poussés au-delà de ce qui a été dit.",
+   "brief": [
+    "David Abitbol, responsable des opérations et de l'infrastructure IA chez Revolut, a présenté les chiffres à la conférence AI Engineer de New York.",
+    "Environ 2 000 ingénieurs utilisent GLM (aujourd'hui GLM-5.3), hébergé sur environ 56 GPU Nvidia B200. Coût annoncé : environ 0,30 dollar par million de tokens, un dixième de ce qui était dépensé chez Anthropic et OpenAI.",
+    "Claude Code et Codex n'ont pas été abandonnés : ils restent disponibles comme exception pour les tâches les plus difficiles.",
+    "Tous les chiffres viennent de Revolut, sans vérification indépendante, et excluent le cloud, le personnel et la supervision."
+   ],
+   "sections": [
+    [
+     "Ce qui a été dit",
+     "Selon The Register et Trending Topics, le 3 novembre, Revolut est passée de Gemini (début 2025) à Claude Code (début 2026), puis, à cause des coûts, à des budgets de tokens de plus en plus serrés. Elle a ensuite choisi d'héberger elle-même un modèle open-weight : d'abord GLM-5.1, puis GLM-5.3, sur environ 56 GPU Nvidia B200 dans une infrastructure américaine, et non sur le service de Z.ai.\n\nLes chiffres annoncés : environ 0,30 dollar par million de tokens, soit près d'un dixième de la dépense précédente ; temps de codage en baisse d'environ 60 % et délai entre la prise en charge d'une tâche et sa livraison en baisse d'environ 70 % ; temps jusqu'au premier token passé de plus de 10 secondes à environ 1,6. Le modèle ne traite que le texte : les images passent par d'autres modèles, comme Gemini."
+    ],
+    [
+     "Cinq affirmations qui circulent, et pourquoi elles ne tiennent pas",
+     "<strong>« Revolut a abandonné Claude Code et Codex. »</strong> Non. Ils ne sont plus l'outil par défaut et restent disponibles comme exception pour les tâches les plus difficiles. C'est un changement d'aiguillage, pas une rupture.\n\n<strong>« Coder avec l'IA coûte 90 % de moins. »</strong> La comparaison se fait au token, et c'est Revolut qui la fait. Elle exclut le cloud, le personnel et la supervision. Cinquante-six B200 et l'équipe qui les optimise ont un coût réel, et aucun total n'a été publié. Un dixième de la facture d'API n'est pas un dixième du coût.\n\n<strong>« Un modèle chinois a battu les modèles américains. »</strong> Rien dans le récit ne compare la qualité. Revolut a choisi un modèle assez bon pour le travail quotidien et peu coûteux à servir, et garde les modèles de pointe pour les cas difficiles.\n\n<strong>« Le nouveau modèle a rendu les ingénieurs 60 % plus rapides. »</strong> Les données ne séparent pas l'effet du modèle de celui des autres changements, notamment la suppression des limites de tokens. D'après le récit, les plus gros gains viennent du débogage et des tickets, pas de l'écriture de code. À notre avis, la leçon la plus probable est qu'on travaille mieux quand personne n'a à rationner l'outil.\n\n<strong>« N'importe qui peut le faire. »</strong> Revolut compte des milliers d'ingénieurs et une équipe d'infrastructure. Avant les optimisations, la vitesse de réponse était, selon l'intéressé, « terrible ». Une petite entreprise qui loue des GPU risque de payer plus qu'un abonnement."
+    ],
+    [
+     "Ce que cela signifie",
+     "<strong>Le défaut fait tout.</strong> Quand un outil coûte assez peu pour que personne ne compte les tokens, on l'utilise toute la journée. C'est de là que viennent les gains annoncés.\n\n<strong>Les modèles de pointe deviennent le niveau d'escalade.</strong> Un modèle économique pour la routine, un modèle coûteux pour les cas difficiles. D'autres grandes entreprises feront probablement de même, pas forcément avec GLM.\n\n<strong>Pour les entreprises régulées, l'endroit où tourne le modèle compte plus que son origine.</strong> L'héberger dans un environnement contrôlé est ce qui rend acceptable un modèle d'origine chinoise pour une banque. Revolut a reconnu ouvertement le stigmate.\n\n<strong>Pour les petites équipes, la leçon est la méthode, pas le matériel.</strong> Aiguiller par type de tâche, plafonner la dépense par outil, mesurer avant et après."
+    ],
+    [
+     "Ce que l'on ne sait pas",
+     "Il n'existe aucune mesure indépendante de la qualité du code ou du nombre de bugs avant et après le changement, ni de coût total incluant matériel et personnel. Les estimations du prix des GPU qui circulent sont celles des journalistes, pas de Revolut. Aucune réaction de régulateur n'a été rapportée."
+    ]
+   ],
+   "faq": [
+    [
+     "Revolut a-t-elle cessé d'utiliser Claude Code et Codex ?",
+     "Non. Ils ne sont plus l'outil par défaut mais restent disponibles comme exception pour les tâches les plus difficiles."
+    ],
+    [
+     "L'économie de 90 % est-elle confirmée ?",
+     "C'est l'affirmation de Revolut et elle porte sur le coût par token. Elle exclut le cloud, le personnel et la supervision, et personne en dehors de l'entreprise ne l'a vérifiée."
+    ]
+   ]
+  },
+  "de": {
+   "title": "Revolut und GLM: Was wirklich passiert ist und was die Schlagzeilen falsch machen",
+   "desc": "Revolut sagt, rund 2.000 Entwickler nutzen standardmäßig ein selbst gehostetes GLM-Modell. Die Fakten, fünf verbreitete Behauptungen und warum sie nicht halten, und was es bedeutet.",
+   "lede": "Revolut hat erklärt, dass rund 2.000 seiner Entwickler jetzt standardmäßig ein Open-Weight-Modell GLM von Z.ai nutzen, gehostet auf eigener Infrastruktur, statt bezahlter Abos bei Anthropic und OpenAI. Das stimmt nur teilweise: Die Zahlen stammen vom Unternehmen selbst, und viele Schlagzeilen haben sie über das Gesagte hinaus zugespitzt.",
+   "brief": [
+    "David Abitbol, der bei Revolut für KI-Betrieb und Infrastruktur zuständig ist, präsentierte die Zahlen auf der Konferenz AI Engineer in New York.",
+    "Rund 2.000 Entwickler nutzen GLM (inzwischen GLM-5.3), gehostet auf etwa 56 Nvidia-B200-GPUs. Angegebene Kosten: etwa 0,30 Dollar pro Million Tokens, ein Zehntel dessen, was bei Anthropic und OpenAI anfiel.",
+    "Claude Code und Codex wurden nicht abgeschafft: Sie bleiben als Ausnahme für die schwierigsten Aufgaben verfügbar.",
+    "Alle Zahlen stammen von Revolut selbst, sind nicht unabhängig geprüft und enthalten weder Cloud-, Personal- noch Überwachungskosten."
+   ],
+   "sections": [
+    [
+     "Was gesagt wurde",
+     "Laut Berichten von The Register und Trending Topics vom 3. November wechselte Revolut von Gemini (Anfang 2025) zu Claude Code (Anfang 2026) und dann, wegen der Kosten, zu immer engeren Token-Budgets. Danach entschied sich das Unternehmen, ein Open-Weight-Modell selbst zu hosten: zuerst GLM-5.1, dann GLM-5.3, auf etwa 56 Nvidia-B200-GPUs in US-Infrastruktur, nicht beim Dienst von Z.ai.\n\nDie angegebenen Zahlen: etwa 0,30 Dollar pro Million Tokens, rund ein Zehntel der früheren Ausgaben; die Zeit zum Schreiben von Code um etwa 60 % kürzer und die Zeit von der Übernahme einer Aufgabe bis zur Auslieferung um etwa 70 % kürzer; die Zeit bis zum ersten Token von über 10 Sekunden auf etwa 1,6. Das Modell verarbeitet nur Text, Bildaufgaben gehen an andere Modelle wie Gemini."
+    ],
+    [
+     "Fünf verbreitete Behauptungen und warum sie nicht halten",
+     "<strong>„Revolut hat Claude Code und Codex abgeschafft.“</strong> Nein. Sie sind nicht mehr der Standard und bleiben als Ausnahme für die schwierigsten Aufgaben verfügbar. Das ist eine andere Weichenstellung, kein Bruch.\n\n<strong>„KI-Programmierung ist jetzt 90 % billiger.“</strong> Der Vergleich gilt pro Token, und Revolut stellt ihn selbst an. Er schließt Cloud, Personal und Überwachung aus. Sechsundfünfzig B200 und das Team, das sie optimiert, kosten echtes Geld, und eine Gesamtrechnung wurde nicht veröffentlicht. Ein Zehntel der API-Rechnung ist nicht ein Zehntel der Kosten.\n\n<strong>„Ein chinesisches Modell hat die amerikanischen geschlagen.“</strong> Im Bericht gibt es keinen Qualitätsvergleich. Revolut hat ein Modell gewählt, das für den Alltag gut genug und günstig zu betreiben ist, und behält Spitzenmodelle für die schwierigen Fälle.\n\n<strong>„Das neue Modell hat die Entwickler um 60 % schneller gemacht.“</strong> Die Daten trennen den Effekt des Modells nicht von anderen Änderungen, insbesondere vom Wegfall der Token-Limits. Laut Bericht kamen die größten Gewinne aus Debugging und Tickets, nicht aus dem Schreiben von Code. Unsere Einschätzung: Die wahrscheinlichere Lehre ist, dass man arbeitet besser, wenn niemand das Werkzeug rationieren muss.\n\n<strong>„Das kann jeder.“</strong> Revolut hat Tausende Entwickler und ein Infrastrukturteam. Vor der Optimierung war die Antwortgeschwindigkeit, in den Worten des Vortragenden, „schrecklich“. Ein kleines Unternehmen, das GPUs mietet, zahlt womöglich mehr als für ein Abo."
+    ],
+    [
+     "Was es bedeutet",
+     "<strong>Der Standard entscheidet.</strong> Wenn ein Werkzeug so günstig ist, dass niemand Tokens zählt, wird es den ganzen Tag genutzt. Daher kommen die angegebenen Gewinne.\n\n<strong>Spitzenmodelle werden zur Eskalationsstufe.</strong> Ein günstiges Modell für die Routine, ein teures für die schwierigen Fälle. Weitere große Unternehmen dürften es so aufsetzen, nicht unbedingt mit GLM.\n\n<strong>Für regulierte Unternehmen zählt, wo das Modell läuft, mehr als woher es kommt.</strong> Das Hosting in kontrollierter Umgebung macht ein Modell chinesischer Herkunft für eine Bank akzeptabel. Revolut räumte das Stigma offen ein.\n\n<strong>Für kleine Teams liegt die Lehre in der Methode, nicht in der Hardware.</strong> Nach Aufgabe weiterleiten, Ausgaben je Werkzeug deckeln, vorher und nachher messen."
+    ],
+    [
+     "Was wir nicht wissen",
+     "Es gibt keine unabhängige Messung von Codequalität oder Fehlerraten vor und nach dem Wechsel und keine Gesamtkosten samt Hardware und Personal. Die in der Berichterstattung kursierenden GPU-Preisschätzungen stammen von den Journalisten, nicht von Revolut. Stellungnahmen von Aufsichtsbehörden sind nicht bekannt."
+    ]
+   ],
+   "faq": [
+    [
+     "Hat Revolut Claude Code und Codex abgeschafft?",
+     "Nein. Sie sind nicht mehr der Standard, bleiben aber als Ausnahme für die schwierigsten Aufgaben verfügbar."
+    ],
+    [
+     "Ist die Ersparnis von 90 % bestätigt?",
+     "Es ist Revoluts eigene Angabe und bezieht sich auf die Kosten pro Token. Sie schließt Cloud, Personal und Überwachung aus und wurde von Dritten nicht geprüft."
+    ]
+   ]
+  }
+ },
+ "deep": []
+}
