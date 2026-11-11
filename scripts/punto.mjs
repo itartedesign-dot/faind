@@ -21,15 +21,39 @@ import { shell, tableHtml, articleBySlug } from './articles.mjs';
 
 const SITE = 'https://faind.org/';
 export const PUNTO_DIR = 'il-punto/';
+const DIRS = { it: PUNTO_DIR, en: PUNTO_DIR + 'en/', fr: PUNTO_DIR + 'fr/', de: PUNTO_DIR + 'de/' };
+const LOCALE = { it: 'it-IT', en: 'en-GB', fr: 'fr-FR', de: 'de-DE' };
+const T = {
+  it: { name: 'Il punto', brief: 'In breve', faq: 'Domande frequenti', src: 'Fonti', prev: 'I punti dei giorni precedenti', all: 'Tutti i punti →', deep: 'Per capire di più', by: 'A cura della <a href="{u}redazione.html">redazione di FAIND</a>' },
+  en: { name: 'The point', brief: 'In brief', faq: 'Frequently asked questions', src: 'Sources', prev: 'Previous editions', all: 'All editions →', deep: 'Go deeper', by: 'By the <a href="{u}about.html">FAIND newsroom</a>' },
+  fr: { name: 'Le point', brief: 'En bref', faq: 'Questions fréquentes', src: 'Sources', prev: 'Les points précédents', all: 'Tous les points →', deep: 'Pour aller plus loin', by: 'Par la <a href="{u}a-propos.html">rédaction de FAIND</a>' },
+  de: { name: 'Der Überblick', brief: 'Kurz gefasst', faq: 'Häufige Fragen', src: 'Quellen', prev: 'Frühere Ausgaben', all: 'Alle Ausgaben →', deep: 'Mehr dazu', by: 'Von der <a href="{u}ueber-uns.html">FAIND-Redaktion</a>' }
+};
 const DATA = path.join(path.dirname(fileURLToPath(import.meta.url)), 'punto');
-const up = '../';
 const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const day = (d, year = true) => new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', ...(year ? { year: 'numeric' } : {}), timeZone: 'Europe/Rome' }).format(new Date(d + 'T12:00:00Z'));
+const day = (d, lang = 'it', year = true) => new Intl.DateTimeFormat(LOCALE[lang], { day: 'numeric', month: 'long', ...(year ? { year: 'numeric' } : {}), timeZone: 'Europe/Rome' }).format(new Date(d + 'T12:00:00Z'));
+const upOf = (lang) => lang === 'it' ? '../' : '../../';
 const IDX = {
-  h1: 'Il punto: le notizie AI del giorno spiegate',
-  title: 'Il punto: le notizie sull\'intelligenza artificiale spiegate',
-  lede: 'Ogni giorno la notizia sull\'intelligenza artificiale di cui parlano più testate, messa in fila: cosa è successo, cosa dicono le fonti, perché conta. Con tutte le fonti.',
-  desc: 'La notizia sull\'intelligenza artificiale più ripresa del giorno, spiegata con ordine: i fatti, le fonti a confronto e perché conta.'
+  it: {
+    h1: 'Il punto: le notizie AI del giorno spiegate',
+    title: 'Il punto: le notizie sull\'intelligenza artificiale spiegate',
+    lede: 'Ogni giorno la notizia sull\'intelligenza artificiale di cui parlano più testate, messa in fila: cosa è successo, cosa dicono le fonti, perché conta. Con tutte le fonti.',
+    desc: 'La notizia sull\'intelligenza artificiale più ripresa del giorno, spiegata con ordine: i fatti, le fonti a confronto e perché conta.' },
+  en: {
+    h1: 'The point: the AI story of the day, explained',
+    title: 'The point: AI news explained',
+    lede: 'The AI story getting the most coverage, laid out in order: what happened, what the sources say, why it matters. With every source.',
+    desc: 'The most covered AI story of the day, explained clearly: the facts, the sources compared and why it matters.' },
+  fr: {
+    h1: 'Le point : l\'actualité de l\'IA du jour, expliquée',
+    title: 'Le point : l\'actualité de l\'intelligence artificielle expliquée',
+    lede: 'Le sujet d\'intelligence artificielle le plus repris du moment, mis en ordre : ce qui s\'est passé, ce que disent les sources, pourquoi cela compte. Avec toutes les sources.',
+    desc: 'L\'actualité de l\'intelligence artificielle la plus reprise du jour, expliquée clairement : les faits, les sources comparées et pourquoi cela compte.' },
+  de: {
+    h1: 'Der Überblick: die KI-Meldung des Tages, erklärt',
+    title: 'Der Überblick: KI-Nachrichten erklärt',
+    lede: 'Die KI-Meldung, über die die meisten Medien berichten, in Ordnung gebracht: was passiert ist, was die Quellen sagen, warum es zählt. Mit allen Quellen.',
+    desc: 'Die meistbeachtete KI-Meldung des Tages, klar erklärt: die Fakten, die Quellen im Vergleich und warum es wichtig ist.' }
 };
 
 export async function loadPunti() {
@@ -39,81 +63,97 @@ export async function loadPunti() {
   return list.filter(p => p.slug && p.date && p.title).sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
 }
 
-const itemHtml = (p) => `<li><a href="${up}${PUNTO_DIR}${p.slug}.html">${esc(p.title)}</a> <span>${day(p.date)}</span></li>`;
+// Il punto nella lingua richiesta (null se la traduzione manca: la pagina non viene creata). Le fonti restano quelle italiane se non ridefinite.
+const view = (p, lang) => lang === 'it' ? p : (p.i18n && p.i18n[lang] ? { ...p, ...p.i18n[lang] } : null);
+const langsOf = (p) => ['it', ...['en', 'fr', 'de'].filter(l => p.i18n && p.i18n[l])];
+const itemHtml = (p, lang) => `<li><a href="${p.slug}.html">${esc(p.title)}</a> <span>${day(p.date, lang)}</span></li>`;
 
-export function puntoPage(p, all = [], linker = null) {
+export function puntoPage(p0, all = [], linker = null, lang = 'it') {
+  const p = view(p0, lang), t = T[lang], up = upOf(lang), langs = langsOf(p0);
   const used = new Set(), link = linker ? (h) => linker(h, used) : (h) => h;   // nomi e parole del glossario → loro pagine
-  const file = `${p.slug}.html`, url = `${SITE}${PUNTO_DIR}${file}`, image = `${SITE}assets/og-image.png`;
-  const deep = (p.deep || []).map(s => articleBySlug(s, 'it')).filter(Boolean);
+  const file = `${p.slug}.html`, url = `${SITE}${DIRS[lang]}${file}`, image = `${SITE}assets/og-image.png`;
+  const deep = (p.deep || []).map(s => articleBySlug(s, lang)).filter(Boolean);
   const PREV_MAX = 10;
-  const others = all.filter(x => x.slug !== p.slug && x.date <= p.date);   // i punti usciti prima, dal più recente
+  const others = all.map(x => view(x, lang)).filter(x => x && x.slug !== p.slug && x.date <= p.date);   // i punti usciti prima, dal più recente
   const jsonld = { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'NewsArticle', '@id': url + '#article', headline: p.title, description: p.desc, image, inLanguage: 'it-IT',
+    { '@type': 'NewsArticle', '@id': url + '#article', headline: p.title, description: p.desc, image, inLanguage: LOCALE[lang],
       datePublished: p.date, dateModified: p.updated || p.date, mainEntityOfPage: url,
-      author: { '@type': 'Organization', name: 'Redazione FAIND', url: SITE + 'redazione.html' }, publisher: { '@id': SITE + '#org' },
+      author: { '@type': 'Organization', name: lang === 'it' ? 'Redazione FAIND' : 'FAIND', url: SITE + (lang === 'it' ? 'redazione.html' : lang === 'en' ? 'about.html' : lang === 'fr' ? 'a-propos.html' : 'ueber-uns.html') }, publisher: { '@id': SITE + '#org' },
       citation: (p.sources || []).map(s => ({ '@type': 'CreativeWork', name: s.title || s.name, url: s.url, publisher: { '@type': 'Organization', name: s.name } })) },
-    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'FAIND', item: SITE }, { '@type': 'ListItem', position: 2, name: 'Il punto', item: SITE + PUNTO_DIR }, { '@type': 'ListItem', position: 3, name: p.title, item: url }] },
+    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'FAIND', item: SITE }, { '@type': 'ListItem', position: 2, name: t.name, item: SITE + DIRS[lang] }, { '@type': 'ListItem', position: 3, name: p.title, item: url }] },
     ...(p.faq && p.faq.length ? [{ '@type': 'FAQPage', mainEntity: p.faq.map(([q, r]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: r } })) }] : [])
   ] };
-  const main = `    <p class="np__crumb"><a href="${up}">FAIND</a> › <a href="./">Il punto</a></p>
-    <a class="art__kick" href="./">Il punto</a>
+  const main = `<!--lsw-->
+    <p class="np__crumb"><a href="${up}">FAIND</a> › <a href="./">${t.name}</a></p>
+    <a class="art__kick" href="./">${t.name}</a>
     <h1 class="legal__title">${esc(p.title)}</h1>
-    <p class="legal__updated">A cura della <a href="${up}redazione.html">redazione di FAIND</a> · <time datetime="${p.date}">${day(p.date)}</time></p>
+    <p class="legal__updated">${t.by.replace('{u}', up)} · <time datetime="${p.date}">${day(p.date, lang)}</time></p>
     <p class="legal__lede">${link(p.lede)}</p>
 
     <div class="art__brief">
-      <h2>In breve</h2>
+      <h2>${t.brief}</h2>
       <ul>${p.brief.map(b => `<li>${esc(b)}</li>`).join('')}</ul>
     </div>
 
 ${p.sections.map(([h, body, table]) => `    <section>\n      <h2>${esc(h)}</h2>\n      ${body.split(/\n\n+/).map(x => `<p>${link(x)}</p>`).join('\n      ')}${table ? `\n      ${tableHtml(table)}` : ''}\n    </section>`).join('\n')}
 ${p.faq && p.faq.length ? `
     <section>
-      <h2>Domande frequenti</h2>
+      <h2>${t.faq}</h2>
 ${p.faq.map(([q, r]) => `      <h3>${esc(q)}</h3>\n      <p>${esc(r)}</p>`).join('\n')}
     </section>
 ` : ''}
     <section>
-      <h2>Fonti</h2>
+      <h2>${t.src}</h2>
       <ul class="art__src">${(p.sources || []).map(s => `<li>${esc(s.name)}: <a href="${esc(s.url)}" rel="noopener">${esc(s.title || s.url)}</a></li>`).join('')}</ul>
     </section>
 ${others.length ? `
     <section>
-      <h2>I punti dei giorni precedenti</h2>
-      <ul class="art__news">${others.slice(0, PREV_MAX).map(x => itemHtml(x).replace('</span></li>', `</span><span>${esc(x.desc)}</span></li>`)).join('')}</ul>${others.length > PREV_MAX ? `
-      <p><a href="./">Tutti i punti →</a></p>` : ''}
+      <h2>${t.prev}</h2>
+      <ul class="art__news">${others.slice(0, PREV_MAX).map(x => itemHtml(x, lang).replace('</span></li>', `</span><span>${esc(x.desc)}</span></li>`)).join('')}</ul>${others.length > PREV_MAX ? `
+      <p><a href="./">${t.all}</a></p>` : ''}
     </section>
 ` : ''}${deep.length ? `
     <section>
-      <h2>Per capire di più</h2>
+      <h2>${t.deep}</h2>
       <ul class="art__news">${deep.map(d => `<li><a href="${up}${d.path}">${esc(d.title)}</a></li>`).join('')}</ul>
     </section>
 ` : ''}`;
-  return shell({ lang: 'it', file, langs: ['it'], title: p.title, desc: p.desc, image, jsonld, main, dir: PUNTO_DIR });
+  return shell({ lang, file, langs, title: p.title, desc: p.desc, image, jsonld, main, dir: DIRS[lang], altDirs: DIRS });
 }
 
-function indexPage(all) {
-  const url = SITE + PUNTO_DIR;
-  const jsonld = { '@context': 'https://schema.org', '@type': 'CollectionPage', '@id': url, url, name: IDX.h1, inLanguage: 'it-IT', isPartOf: { '@id': SITE + '#website' },
-    hasPart: all.map(p => ({ '@type': 'NewsArticle', headline: p.title, url: `${url}${p.slug}.html`, datePublished: p.date })) };
-  const main = `    <p class="np__crumb"><a href="${up}">FAIND</a> › Il punto</p>
-    <h1 class="legal__title">${esc(IDX.h1)}</h1>
-    <p class="legal__lede">${esc(IDX.lede)}</p>
-    <ul class="art__news">${all.map(p => itemHtml(p).replace('</span></li>', `</span><span>${esc(p.desc)}</span></li>`)).join('')}</ul>
+function indexPage(all, lang = 'it') {
+  const list = all.map(x => view(x, lang)).filter(Boolean), I = IDX[lang], t = T[lang], up = upOf(lang);
+  const url = SITE + DIRS[lang];
+  const langs = ['it', 'en', 'fr', 'de'].filter(l => all.some(x => view(x, l)));
+  const jsonld = { '@context': 'https://schema.org', '@type': 'CollectionPage', '@id': url, url, name: I.h1, inLanguage: LOCALE[lang], isPartOf: { '@id': SITE + '#website' },
+    hasPart: list.map(p => ({ '@type': 'NewsArticle', headline: p.title, url: `${url}${p.slug}.html`, datePublished: p.date })) };
+  const main = `<!--lsw-->
+    <p class="np__crumb"><a href="${up}">FAIND</a> › ${t.name}</p>
+    <h1 class="legal__title">${esc(I.h1)}</h1>
+    <p class="legal__lede">${esc(I.lede)}</p>
+    <ul class="art__news">${list.map(p => itemHtml(p, lang).replace('</span></li>', `</span><span>${esc(p.desc)}</span></li>`)).join('')}</ul>
 `;
-  return shell({ lang: 'it', file: '', langs: ['it'], title: IDX.title, desc: IDX.desc, image: SITE + 'assets/og-image.png', jsonld, main, type: 'website', dir: PUNTO_DIR });
+  return shell({ lang, file: '', langs, title: I.title, desc: I.desc, image: SITE + 'assets/og-image.png', jsonld, main, type: 'website', dir: DIRS[lang], altDirs: DIRS });
 }
 
-// Pagine del Punto e indirizzi per la sitemap ([] se non c'è ancora nessun articolo)
+// Pagine del Punto e indirizzi per la sitemap ([] se non c'è ancora nessun articolo).
+// linker: (lingua, prefisso) → funzione che collega nomi e parole del glossario
 export async function buildPunto(root, linker = null) {
   const all = await loadPunti();
   if (!all.length) return [];
-  const dir = path.join(root, PUNTO_DIR);
-  await mkdir(dir, { recursive: true });
-  for (const p of all) await writeFile(path.join(dir, `${p.slug}.html`), puntoPage(p, all, linker));
-  await writeFile(path.join(dir, 'index.html'), indexPage(all));
+  const urls = [];
+  for (const lang of ['it', 'en', 'fr', 'de']) {
+    const list = all.filter(p => view(p, lang));
+    if (!list.length) continue;
+    const dir = path.join(root, DIRS[lang]);
+    await mkdir(dir, { recursive: true });
+    const lk = linker ? linker(lang, upOf(lang)) : null;
+    for (const p of list) await writeFile(path.join(dir, `${p.slug}.html`), puntoPage(p, all, lk, lang));
+    await writeFile(path.join(dir, 'index.html'), indexPage(all, lang));
+    urls.push({ url: SITE + DIRS[lang], lastmod: list[0].date }, ...list.map(p => ({ url: `${SITE}${DIRS[lang]}${p.slug}.html`, lastmod: p.updated || p.date })));
+  }
   console.log(`📰 il punto: ${all.length} articoli`);
-  return [{ url: SITE + PUNTO_DIR, lastmod: all[0].date }, ...all.map(p => ({ url: `${SITE}${PUNTO_DIR}${p.slug}.html`, lastmod: p.updated || p.date }))];
+  return urls;
 }
 
 // Anteprima: la pagina con style.css incluso e i link al sito resi assoluti
