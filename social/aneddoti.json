@@ -65,7 +65,7 @@
       "titolo": "Più tumori individuati, ma anche più richiami",
       "testo": "In uno studio spagnolo su oltre trentamila donne, un percorso di screening assistito dall’AI ha individuato più tumori al seno e ridotto le letture dei radiologi. Però ha anche aumentato i richiami per ulteriori esami. È un risultato promettente con un compromesso da valutare. Le storie utili hanno anche queste righe.",
       "fonte": "studio pubblicato su Nature Medicine, 2026",
-      "verificato": false
+      "verificato": true
     },
     {
       "titolo": "Un fiume, sette giorni prima",
@@ -168,6 +168,10 @@
     {
       "n": 10,
       "day": "2026-11-09"
+    },
+    {
+      "n": 11,
+      "day": "2026-11-12"
     }
   ]
 }

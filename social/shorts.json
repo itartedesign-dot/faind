@@ -100,6 +100,16 @@
       "titolo": "L'AI che rilegge le TAC per trovare segnali di malattie croniche #Shorts",
       "testo": "Una TAC si fa per rispondere a una domanda precisa, ma nelle immagini possono esserci altri indizi. All'Università di Stanford, in una ricerca sostenuta dai NIH, hanno creato Merlin, un'intelligenza artificiale che analizza le TAC dell'addome e prova a stimare il rischio di malattie croniche come diabete, osteoporosi e malattie del cuore nei cinque anni successivi. È ancora ricerca: servono altri studi prima di usarla negli ospedali.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Blankemeier, Kumar, Chaudhari et al., studio su Merlin, Nature, 2026 (Stanford University, finanziato dai NIH)\nhttps://www.nih.gov/news-events/news-releases/automated-ct-scan-analysis-could-fast-track-clinical-assessments\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #TAC #Radiologia #Salute #Scienza #Stanford #DalCassetto #FAIND",
       "telegram": "Un'AI rilegge le TAC di routine e cerca indizi di malattie croniche che nessuno stava cercando."
+    },
+    {
+      "id": "dal-cassetto-11",
+      "aneddoto": 11,
+      "dalle": "2026-11-12T10:42:00Z",
+      "scade": "2026-11-12T12:06:29Z",
+      "video": "https://export-download.canva.com/QiKZE/DAHasjQiKZE/-1/0-8934537695010561928.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH4R7NKVBA%2F20261112%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261112T045821Z&X-Amz-Expires=25688&X-Amz-Signature=86d4aa223215c2d2d482522c019c2dbfcb4f47fd5ef04a8dd47fd11b59985fc9&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Thu%2C%2012%20Nov%202026%2012%3A06%3A29%20GMT",
+      "titolo": "Screening del seno con l'AI: più tumori trovati, ma anche più richiami #Shorts",
+      "testo": "In Spagna, in un programma di screening del seno, l'intelligenza artificiale ha letto per prima le mammografie di 31.301 donne: i casi a basso rischio non sono stati riletti da un radiologo e il lavoro di lettura è calato di oltre il 60%. Con l'AI sono stati trovati più tumori (7,3 ogni 1.000 donne contro 6,3), ma sono aumentati anche i richiami per ulteriori esami. Un risultato promettente, con un compromesso da valutare.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: \"AI-based triage and decision support in mammography and digital tomosynthesis for breast cancer screening: a paired, noninferiority trial\", Nature Medicine, 2026\nhttps://www.nature.com/articles/s41591-026-04277-x\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Mammografia #TumoreAlSeno #Prevenzione #Salute #Scienza #DalCassetto #FAIND",
+      "telegram": "In uno studio spagnolo l'AI ha aiutato a trovare più tumori al seno, ma ha anche portato più richiami: le storie utili hanno anche queste righe."
     }
   ]
 }
