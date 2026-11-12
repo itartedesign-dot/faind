@@ -1,0 +1,237 @@
+{
+ "slug": "ai-e-hacking-casa-connessa-frigoriferi",
+ "date": "2026-11-12",
+ "title": "AI e hacking: perché la casa connessa è il bersaglio più facile, e come renderla difficile da attaccare",
+ "desc": "Dopo gli attacchi ai frigoriferi dei supermercati europei, la domanda è cosa cambia con l'AI nell'hacking. I rischi per la casa connessa nei prossimi mesi e le soluzioni che funzionano, senza demonizzare la domotica.",
+ "lede": "Nelle ultime settimane qualcuno ha scaldato i banchi frigo di supermercati europei. Non serviva un genio: password di fabbrica e falle note. Il fatto interessante è un altro. Quello che oggi richiede tempo e competenze, con l'intelligenza artificiale richiederà molto meno, e la casa connessa è piena di apparecchi con le stesse debolezze. La domotica non è il problema. Lo è la domotica lasciata com'è uscita dalla scatola.",
+ "brief": [
+  "Gli attacchi ai frigoriferi dei supermercati sono stati un test involontario: apparecchi industriali collegati a Internet, mai aggiornati, con password di fabbrica.",
+  "Con l'AI trovare e sfruttare queste debolezze costa meno: scansioni più rapide, truffe più credibili, attacchi su più dispositivi in parallelo.",
+  "Le falle più facili restano le più comuni: password di fabbrica, apparecchi non aggiornati, accesso da remoto lasciato aperto.",
+  "Le difese che funzionano sono poche e a basso costo: password diverse, rete ospiti, aggiornamenti automatici, accesso remoto spento se non serve.",
+  "La domotica resta utile e sicura se si tratta come un impianto: si configura una volta, bene, e si controlla ogni tanto."
+ ],
+ "sections": [
+  [
+   "Cosa è successo ai frigoriferi, in due righe",
+   "Da metà ottobre, e di nuovo nella notte tra l'1 e il 2 novembre, i sistemi di controllo del freddo di supermercati in vari paesi europei sono stati manomessi da remoto. In un caso analizzato dai ricercatori di Ransom-ISAC, due accessi da amministratore hanno cambiato 743 impostazioni su 31 apparecchi: temperature a 110 e 150 gradi, allarmi silenziati, tastiere bloccate. L'accesso è stato possibile con le credenziali di fabbrica mai cambiate. Altri controllori dello stesso tipo avevano una falla nota da mesi. Chi ci sia dietro non è accertato."
+  ],
+  [
+   "Perché con l'AI la faccenda cambia",
+   "Un attacco di questo tipo ha sempre avuto tre costi: trovare gli apparecchi esposti, capire come si entra, ripetere l'operazione su larga scala. L'AI abbassa tutti e tre.<br><br><strong>Trovare.</strong> I modelli sanno leggere manuali, annunci di sicurezza e codice, e collegare un modello di apparecchio a una falla già pubblicata. <strong>Entrare.</strong> Scrivere il codice che sfrutta una falla nota, un tempo lavoro per specialisti, è un compito in cui gli assistenti di programmazione sono sempre più bravi. <strong>Ripetere.</strong> Un programma che prova a entrare in migliaia di apparecchi lavora tutta la notte senza stancarsi.<br><br>C'è poi la parte che riguarda le persone, non le macchine: e-mail e messaggi di truffa scritti in italiano perfetto, voci clonate da pochi secondi di audio, falsi supporti tecnici credibili. Un attacco alla casa può cominciare dal telefono di chi ci abita."
+  ],
+  [
+   "Perché la casa connessa è esposta",
+   "Non perché la domotica sia fragile, ma per come viene usata. Un impianto di casa ha spesso decine di apparecchi di marche diverse: lampadine, prese, telecamere, termostati, frigoriferi, TV, assistenti vocali. Ognuno ha il suo software e la sua password. Molti vengono installati una volta e dimenticati. Qualcuno è un modello economico, con aggiornamenti che finiscono dopo un paio d'anni.<br><br>Il rischio concreto non è che qualcuno sciolga il gelato. È che l'apparecchio dimenticato diventi la porta d'ingresso verso computer e telefoni nella stessa rete, o un pezzo di una rete di apparecchi usati da altri. Succede da tempo: nel 2016 la rete Mirai prese il controllo di centinaia di migliaia di apparecchi deboli, telecamere e router compresi."
+  ],
+  [
+   "Le soluzioni che funzionano, in ordine di efficacia",
+   "<strong>1. Una password diversa per ogni apparecchio.</strong> Lunga, unica, mai quella di fabbrica. Un gestore di password la ricorda al posto vostro.<br><strong>2. Una rete ospiti per la domotica.</strong> Quasi ogni router la offre. Lampadine, frigo e telecamere stanno lì, separati da computer e telefoni: se uno cede, il danno resta fuori dalla parte importante della casa.<br><strong>3. Aggiornamenti automatici accesi.</strong> Le falle note vengono corrette dal produttore: l'apparecchio non aggiornato è quello che l'AI trova per primo.<br><strong>4. Accesso da remoto spento se non serve.</strong> Se non controllate il frigo da fuori casa, spegnetelo, e lo stesso vale per UPnP sul router. Ciò che non è raggiungibile da Internet non si attacca da Internet.<br><strong>5. Guardare la durata del supporto prima di comprare.</strong> Chiedetevi per quanti anni il produttore garantisce gli aggiornamenti di sicurezza, e preferite marche note a prodotti anonimi. In Europa il Cyber Resilience Act, in vigore dall'11 settembre 2026 per le segnalazioni, obbliga i produttori a comunicare entro 24 ore le falle sfruttate.<br><strong>6. Un controllo due volte l'anno.</strong> Quali apparecchi sono ancora collegati? Quali non si usano più? Quelli si staccano."
+  ],
+  [
+   "La domotica resta una buona idea",
+   "Controllare luci e riscaldamento, accorgersi di una perdita d'acqua, sapere che il frigo ha la porta aperta: sono vantaggi concreti. La regola è quella di ogni impianto: si progetta una volta, si mettono in sicurezza le parti critiche e si sa cosa c'è dentro. Chi lo fa è già molto più difficile da attaccare della media, e per un attaccante, AI o no, conviene sempre il bersaglio più facile."
+  ]
+ ],
+ "faq": [
+  [
+   "L'intelligenza artificiale rende gli hacker più pericolosi?",
+   "Rende più economico ciò che già facevano: cercare apparecchi esposti, scrivere codice per sfruttare falle note, creare messaggi di truffa credibili. Le difese di base, password uniche e aggiornamenti, restano efficaci."
+  ],
+  [
+   "Il mio frigorifero smart può essere hackerato?",
+   "In linea di principio sì, come ogni apparecchio connesso con password di fabbrica o senza aggiornamenti. Gli attacchi di ottobre e novembre hanno riguardato controllori industriali dei supermercati, non i frigoriferi di casa."
+  ],
+  [
+   "Come proteggo la domotica di casa?",
+   "Cambiando le password di fabbrica, mettendo gli apparecchi su una rete ospiti del router, attivando gli aggiornamenti automatici e spegnendo l'accesso da remoto se non serve."
+  ],
+  [
+   "Conviene rinunciare agli elettrodomestici connessi?",
+   "No: basta configurarli bene. Il rischio dipende soprattutto da come vengono impostati e mantenuti, non dal fatto di essere connessi."
+  ]
+ ],
+ "sources": [
+  {
+   "name": "Help Net Security",
+   "title": "Hackers abuse refrigeration controllers to send spam and route proxy traffic",
+   "url": "https://www.helpnetsecurity.com/2026/11/09/copeland-xweb-refrigeration-controllers-spam-botnet/"
+  },
+  {
+   "name": "Adnkronos",
+   "title": "Attacchi hacker ai frigoriferi, a rischio anche quelli di casa: 5 cose da fare per evitare intrusioni",
+   "url": "https://www.adnkronos.com/cronaca/frigoriferi-casa-rischio-hacker-come-evitare-attacchi_3yVHeFKXNpPfDfFURwmlTU"
+  },
+  {
+   "name": "The Irish Times",
+   "title": "After the SuperValu cyberattack, might your smart fridge be the next target?",
+   "url": "https://www.irishtimes.com/technology/2026/11/04/after-the-supervalu-cyberattack-might-your-smart-fridge-be-the-next-target/"
+  },
+  {
+   "name": "Euronews",
+   "title": "UK likely to face AI-powered cyberattacks on critical infrastructure by 2028, cyber chief warns",
+   "url": "https://euronews.com/2026/11/03/uk-likely-to-face-ai-powered-cyberattacks-on-critical-infrastructure-by-2028-cyber-chief-w"
+  }
+ ],
+ "deep": [
+  "intelligenza-artificiale-e-pericolosa"
+ ],
+ "i18n": {
+  "en": {
+   "title": "AI and hacking: why the connected home is the easiest target, and how to make it hard to attack",
+   "desc": "After the attacks on supermarket fridges across Europe, what does AI change for hackers? The risks for the connected home in the coming months and the fixes that work, without demonising home automation.",
+   "lede": "In recent weeks someone has heated the refrigerated cabinets of supermarkets across Europe. It took no genius: factory passwords and known flaws. The interesting part is something else. What takes time and skill today will take far less with artificial intelligence, and the connected home is full of devices with the same weaknesses. Home automation is not the problem. Home automation left as it came out of the box is.",
+   "brief": [
+    "The attacks on supermarket fridges were an accidental test: industrial devices connected to the internet, never updated, with factory passwords.",
+    "With AI, finding and exploiting these weaknesses gets cheaper: faster scans, more convincing scams, attacks on many devices in parallel.",
+    "The easiest flaws are still the most common ones: factory passwords, devices not updated, remote access left open.",
+    "The defences that work are few and cheap: different passwords, a guest network, automatic updates, remote access off when you don't need it.",
+    "Home automation stays useful and safe if you treat it like a home installation: set it up once, properly, and check it now and then."
+   ],
+   "sections": [
+    [
+     "What happened to the fridges, in two lines",
+     "From mid-October, and again overnight between 1 and 2 November, the cold-chain control systems of supermarkets in several European countries were tampered with remotely. In one case analysed by Ransom-ISAC researchers, two administrator logins changed 743 settings on 31 devices: temperatures set to 110 and 150 degrees, alarms muted, keypads locked. Access was possible with factory credentials that had never been changed. Other controllers of the same type had a flaw that had been known for months. Who is behind it has not been established."
+    ],
+    [
+     "Why AI changes the picture",
+     "An attack like this has always had three costs: finding exposed devices, working out how to get in, repeating the operation at scale. AI lowers all three.<br><br><strong>Finding.</strong> Models can read manuals, security advisories and code, and match a device model to an already published flaw. <strong>Getting in.</strong> Writing the code that exploits a known flaw, once specialist work, is a task coding assistants keep getting better at. <strong>Repeating.</strong> A program that tries thousands of devices works all night without tiring.<br><br>Then there is the part that concerns people, not machines: scam emails and messages in flawless English, voices cloned from a few seconds of audio, convincing fake tech support. An attack on a home can start from the phone of someone who lives there."
+    ],
+    [
+     "Why the connected home is exposed",
+     "Not because home automation is fragile, but because of how it is used. A home setup often has dozens of devices from different brands: bulbs, plugs, cameras, thermostats, fridges, TVs, voice assistants. Each has its own software and its own password. Many are installed once and forgotten. Some are cheap models whose updates stop after a couple of years.<br><br>The real risk is not someone melting your ice cream. It is the forgotten device becoming the way in to the computers and phones on the same network, or one piece of a network of devices used by others. It has been happening for a while: in 2016 the Mirai network took control of hundreds of thousands of weak devices, cameras and routers included."
+    ],
+    [
+     "The fixes that work, in order of effectiveness",
+     "<strong>1. A different password for every device.</strong> Long, unique, never the factory one. A password manager remembers them for you.<br><strong>2. A guest network for home automation.</strong> Almost every router offers one. Bulbs, fridge and cameras live there, apart from computers and phones: if one gives way, the damage stays outside the important part of the home.<br><strong>3. Automatic updates on.</strong> Known flaws get fixed by the manufacturer: the device that isn't updated is the one AI finds first.<br><strong>4. Remote access off if you don't need it.</strong> If you don't control the fridge from outside the house, switch it off, and the same goes for UPnP on the router. What can't be reached from the internet can't be attacked from the internet.<br><strong>5. Check the support period before buying.</strong> Ask for how many years the maker guarantees security updates, and prefer known brands to anonymous products. In Europe the Cyber Resilience Act, in force since 11 September 2026 for reporting, requires manufacturers to report exploited flaws within 24 hours.<br><strong>6. A check twice a year.</strong> Which devices are still connected? Which are no longer used? Unplug those."
+    ],
+    [
+     "Home automation is still a good idea",
+     "Controlling lights and heating, noticing a water leak, knowing the fridge door is open: these are real benefits. The rule is the same as for any installation: you design it once, secure the critical parts and know what is in it. Anyone who does is already far harder to attack than average, and for an attacker, AI or not, the easiest target always wins."
+    ]
+   ],
+   "faq": [
+    [
+     "Does artificial intelligence make hackers more dangerous?",
+     "It makes cheaper what they already did: searching for exposed devices, writing code to exploit known flaws, creating credible scam messages. The basic defences, unique passwords and updates, stay effective."
+    ],
+    [
+     "Can my smart fridge be hacked?",
+     "In principle yes, like any connected device with a factory password or no updates. The attacks of October and November hit industrial controllers in supermarkets, not home fridges."
+    ],
+    [
+     "How do I protect my home automation?",
+     "Change factory passwords, put devices on a guest network on the router, turn on automatic updates and switch off remote access if you don't need it."
+    ],
+    [
+     "Should I give up connected appliances?",
+     "No: just set them up properly. The risk depends mostly on how they are configured and maintained, not on being connected."
+    ]
+   ]
+  },
+  "fr": {
+   "title": "IA et piratage : pourquoi la maison connectée est la cible la plus facile, et comment la rendre difficile à attaquer",
+   "desc": "Après les attaques contre les frigos des supermarchés européens, que change l'IA pour les pirates ? Les risques pour la maison connectée dans les prochains mois et les solutions qui marchent, sans diaboliser la domotique.",
+   "lede": "Ces dernières semaines, quelqu'un a fait chauffer les meubles frigorifiques de supermarchés européens. Pas besoin d'un génie : des mots de passe d'usine et des failles connues. Le point intéressant est ailleurs. Ce qui demande aujourd'hui du temps et des compétences en demandera bien moins avec l'intelligence artificielle, et la maison connectée est pleine d'appareils aux mêmes faiblesses. La domotique n'est pas le problème. La domotique laissée telle qu'elle sort de la boîte, si.",
+   "brief": [
+    "Les attaques contre les frigos des supermarchés ont été un test involontaire : des appareils industriels reliés à Internet, jamais mis à jour, avec des mots de passe d'usine.",
+    "Avec l'IA, trouver et exploiter ces faiblesses coûte moins cher : analyses plus rapides, arnaques plus crédibles, attaques sur de nombreux appareils en parallèle.",
+    "Les failles les plus faciles restent les plus courantes : mots de passe d'usine, appareils non mis à jour, accès à distance laissé ouvert.",
+    "Les défenses qui marchent sont peu nombreuses et bon marché : mots de passe différents, réseau invité, mises à jour automatiques, accès à distance coupé si inutile.",
+    "La domotique reste utile et sûre si on la traite comme une installation : on la configure une fois, bien, et on la vérifie de temps en temps."
+   ],
+   "sections": [
+    [
+     "Ce qui est arrivé aux frigos, en deux lignes",
+     "Depuis la mi-octobre, et de nouveau dans la nuit du 1er au 2 novembre, les systèmes de contrôle du froid de supermarchés de plusieurs pays européens ont été manipulés à distance. Dans un cas analysé par les chercheurs de Ransom-ISAC, deux connexions administrateur ont modifié 743 réglages sur 31 appareils : températures fixées à 110 et 150 degrés, alarmes coupées, claviers verrouillés. L'accès était possible avec des identifiants d'usine jamais changés. D'autres contrôleurs du même type présentaient une faille connue depuis des mois. L'auteur n'est pas établi."
+    ],
+    [
+     "Pourquoi l'IA change la donne",
+     "Une attaque de ce type a toujours eu trois coûts : trouver les appareils exposés, comprendre comment entrer, répéter l'opération à grande échelle. L'IA abaisse les trois.<br><br><strong>Trouver.</strong> Les modèles savent lire des manuels, des bulletins de sécurité et du code, et relier un modèle d'appareil à une faille déjà publiée. <strong>Entrer.</strong> Écrire le code qui exploite une faille connue, autrefois travail de spécialiste, est une tâche où les assistants de programmation progressent sans cesse. <strong>Répéter.</strong> Un programme qui essaie des milliers d'appareils travaille toute la nuit sans se fatiguer.<br><br>Reste la partie qui concerne les personnes, pas les machines : e-mails et messages d'arnaque dans un français parfait, voix clonées à partir de quelques secondes d'audio, faux support technique crédible. Une attaque contre un foyer peut commencer par le téléphone de quelqu'un qui y vit."
+    ],
+    [
+     "Pourquoi la maison connectée est exposée",
+     "Pas parce que la domotique est fragile, mais à cause de la façon dont on l'utilise. Une installation domestique compte souvent des dizaines d'appareils de marques différentes : ampoules, prises, caméras, thermostats, réfrigérateurs, téléviseurs, assistants vocaux. Chacun a son logiciel et son mot de passe. Beaucoup sont installés une fois puis oubliés. Certains sont des modèles bon marché dont les mises à jour s'arrêtent au bout de deux ans.<br><br>Le risque concret n'est pas que quelqu'un fasse fondre votre glace. C'est que l'appareil oublié devienne la porte d'entrée vers les ordinateurs et les téléphones du même réseau, ou un maillon d'un réseau d'appareils utilisé par d'autres. Cela arrive depuis longtemps : en 2016, le réseau Mirai a pris le contrôle de centaines de milliers d'appareils faibles, caméras et routeurs compris."
+    ],
+    [
+     "Les solutions qui marchent, par ordre d'efficacité",
+     "<strong>1. Un mot de passe différent pour chaque appareil.</strong> Long, unique, jamais celui d'usine. Un gestionnaire de mots de passe s'en souvient à votre place.<br><strong>2. Un réseau invité pour la domotique.</strong> Presque tous les routeurs en proposent un. Ampoules, frigo et caméras y vivent, séparés des ordinateurs et des téléphones : si l'un cède, les dégâts restent hors de la partie importante de la maison.<br><strong>3. Mises à jour automatiques activées.</strong> Les failles connues sont corrigées par le fabricant : l'appareil non mis à jour est celui que l'IA trouve en premier.<br><strong>4. Accès à distance coupé si inutile.</strong> Si vous ne pilotez pas le frigo depuis l'extérieur, désactivez-le, et de même pour l'UPnP du routeur. Ce qui n'est pas joignable depuis Internet ne s'attaque pas depuis Internet.<br><strong>5. Vérifier la durée du support avant d'acheter.</strong> Demandez pendant combien d'années le fabricant garantit les mises à jour de sécurité, et préférez les marques connues aux produits anonymes. En Europe, le Cyber Resilience Act, applicable depuis le 11 septembre 2026 pour les signalements, oblige les fabricants à déclarer sous 24 heures les failles exploitées.<br><strong>6. Un contrôle deux fois par an.</strong> Quels appareils sont encore connectés ? Lesquels ne servent plus ? Débranchez-les."
+    ],
+    [
+     "La domotique reste une bonne idée",
+     "Piloter l'éclairage et le chauffage, repérer une fuite d'eau, savoir que la porte du frigo est restée ouverte : ce sont de vrais avantages. La règle est celle de toute installation : on la conçoit une fois, on sécurise les parties critiques et on sait ce qu'elle contient. Qui le fait est déjà bien plus difficile à attaquer que la moyenne, et pour un attaquant, IA ou pas, la cible la plus facile gagne toujours."
+    ]
+   ],
+   "faq": [
+    [
+     "L'intelligence artificielle rend-elle les pirates plus dangereux ?",
+     "Elle rend moins coûteux ce qu'ils faisaient déjà : chercher des appareils exposés, écrire du code pour exploiter des failles connues, créer des messages d'arnaque crédibles. Les défenses de base, mots de passe uniques et mises à jour, restent efficaces."
+    ],
+    [
+     "Mon frigo connecté peut-il être piraté ?",
+     "En principe oui, comme tout appareil connecté avec un mot de passe d'usine ou sans mises à jour. Les attaques d'octobre et novembre ont touché des contrôleurs industriels de supermarchés, pas des frigos domestiques."
+    ],
+    [
+     "Comment protéger ma domotique ?",
+     "En changeant les mots de passe d'usine, en plaçant les appareils sur un réseau invité du routeur, en activant les mises à jour automatiques et en coupant l'accès à distance s'il est inutile."
+    ],
+    [
+     "Faut-il renoncer aux appareils connectés ?",
+     "Non : il suffit de bien les configurer. Le risque dépend surtout de la façon dont ils sont réglés et entretenus, pas du fait d'être connectés."
+    ]
+   ]
+  },
+  "de": {
+   "title": "KI und Hacking: warum das vernetzte Zuhause das leichteste Ziel ist und wie man es schwer angreifbar macht",
+   "desc": "Nach den Angriffen auf Kühlanlagen europäischer Supermärkte: Was ändert KI für Hacker? Die Risiken für das vernetzte Zuhause in den kommenden Monaten und die Maßnahmen, die wirken, ohne Smart Home zu verteufeln.",
+   "lede": "In den letzten Wochen hat jemand die Kühltheken von Supermärkten in ganz Europa aufgeheizt. Dafür brauchte es kein Genie: Werkspasswörter und bekannte Lücken. Interessant ist etwas anderes. Was heute Zeit und Know-how kostet, kostet mit künstlicher Intelligenz deutlich weniger, und das vernetzte Zuhause ist voller Geräte mit denselben Schwächen. Smart Home ist nicht das Problem. Smart Home, so wie es aus dem Karton kommt, schon.",
+   "brief": [
+    "Die Angriffe auf Supermarkt-Kühlanlagen waren ein unfreiwilliger Test: Industriegeräte am Internet, nie aktualisiert, mit Werkspasswörtern.",
+    "Mit KI wird es billiger, solche Schwächen zu finden und auszunutzen: schnellere Scans, glaubwürdigere Betrugsversuche, Angriffe auf viele Geräte gleichzeitig.",
+    "Die leichtesten Lücken sind weiter die häufigsten: Werkspasswörter, nicht aktualisierte Geräte, offen gelassener Fernzugriff.",
+    "Die Schutzmaßnahmen, die wirken, sind wenige und günstig: verschiedene Passwörter, Gastnetz, automatische Updates, Fernzugriff aus, wenn er nicht gebraucht wird.",
+    "Smart Home bleibt nützlich und sicher, wenn man es wie eine Installation behandelt: einmal gut einrichten und ab und zu prüfen."
+   ],
+   "sections": [
+    [
+     "Was mit den Kühlanlagen passiert ist, in zwei Zeilen",
+     "Seit Mitte Oktober und erneut in der Nacht vom 1. auf den 2. November wurden die Kühlsteuerungen von Supermärkten in mehreren europäischen Ländern aus der Ferne manipuliert. In einem von den Forschern von Ransom-ISAC untersuchten Fall änderten zwei Administrator-Zugriffe 743 Einstellungen an 31 Geräten: Temperaturen von 110 und 150 Grad, stummgeschaltete Alarme, gesperrte Tastenfelder. Der Zugang war mit nie geänderten Werkszugangsdaten möglich. Andere Steuerungen desselben Typs hatten eine seit Monaten bekannte Lücke. Wer dahintersteckt, ist nicht geklärt."
+    ],
+    [
+     "Warum KI das Bild verändert",
+     "Ein solcher Angriff hatte immer drei Kostenpunkte: ungeschützte Geräte finden, herausfinden, wie man hineinkommt, den Vorgang in großem Maßstab wiederholen. KI senkt alle drei.<br><br><strong>Finden.</strong> Modelle können Handbücher, Sicherheitsmeldungen und Code lesen und ein Gerätemodell mit einer bereits veröffentlichten Lücke verknüpfen. <strong>Eindringen.</strong> Den Code zu schreiben, der eine bekannte Lücke ausnutzt, war früher Spezialistenarbeit; Programmierassistenten werden darin immer besser. <strong>Wiederholen.</strong> Ein Programm, das Tausende Geräte ausprobiert, arbeitet die ganze Nacht ohne zu ermüden.<br><br>Dazu kommt der Teil, der Menschen betrifft, nicht Maschinen: Betrugs-Mails und -Nachrichten in perfektem Deutsch, aus wenigen Sekunden Audio geklonte Stimmen, glaubwürdiger falscher technischer Support. Ein Angriff auf ein Zuhause kann beim Telefon eines Bewohners beginnen."
+    ],
+    [
+     "Warum das vernetzte Zuhause gefährdet ist",
+     "Nicht weil Smart Home zerbrechlich wäre, sondern wegen der Art, wie es genutzt wird. Ein Zuhause hat oft Dutzende Geräte verschiedener Marken: Lampen, Steckdosen, Kameras, Thermostate, Kühlschränke, Fernseher, Sprachassistenten. Jedes hat eigene Software und ein eigenes Passwort. Viele werden einmal installiert und vergessen. Manche sind günstige Modelle, deren Updates nach ein paar Jahren enden.<br><br>Das konkrete Risiko ist nicht, dass jemand Ihr Eis schmelzen lässt. Es ist, dass das vergessene Gerät zum Einstieg zu den Computern und Telefonen im selben Netz wird oder zu einem Baustein eines Netzes, das andere nutzen. Das gibt es seit Längerem: 2016 übernahm das Mirai-Netz die Kontrolle über Hunderttausende schwach geschützte Geräte, Kameras und Router eingeschlossen."
+    ],
+    [
+     "Die Maßnahmen, die wirken, nach Wirksamkeit geordnet",
+     "<strong>1. Für jedes Gerät ein eigenes Passwort.</strong> Lang, einzigartig, nie das ab Werk. Ein Passwortmanager merkt sie sich für Sie.<br><strong>2. Ein Gastnetz für das Smart Home.</strong> Fast jeder Router bietet eines. Lampen, Kühlschrank und Kameras laufen dort, getrennt von Computern und Telefonen: Gibt eines nach, bleibt der Schaden außerhalb des wichtigen Teils des Hauses.<br><strong>3. Automatische Updates an.</strong> Bekannte Lücken schließt der Hersteller: Das nicht aktualisierte Gerät findet die KI zuerst.<br><strong>4. Fernzugriff aus, wenn er nicht gebraucht wird.</strong> Wenn Sie den Kühlschrank nicht von außerhalb steuern, schalten Sie ihn ab, ebenso UPnP am Router. Was aus dem Internet nicht erreichbar ist, lässt sich nicht aus dem Internet angreifen.<br><strong>5. Vor dem Kauf die Supportdauer prüfen.</strong> Fragen Sie, wie viele Jahre der Hersteller Sicherheitsupdates garantiert, und bevorzugen Sie bekannte Marken statt anonymer Produkte. In Europa verpflichtet der Cyber Resilience Act, für die Meldepflichten seit dem 11. September 2026 in Kraft, Hersteller, ausgenutzte Lücken binnen 24 Stunden zu melden.<br><strong>6. Zweimal im Jahr kontrollieren.</strong> Welche Geräte sind noch verbunden? Welche werden nicht mehr genutzt? Die vom Netz nehmen."
+    ],
+    [
+     "Smart Home bleibt eine gute Idee",
+     "Licht und Heizung steuern, einen Wasserschaden bemerken, wissen, dass die Kühlschranktür offen ist: Das sind echte Vorteile. Die Regel ist die jeder Installation: einmal planen, die kritischen Teile absichern und wissen, was drin ist. Wer das tut, ist schon deutlich schwerer angreifbar als der Durchschnitt, und für Angreifer, mit KI oder ohne, gewinnt immer das leichteste Ziel."
+    ]
+   ],
+   "faq": [
+    [
+     "Macht künstliche Intelligenz Hacker gefährlicher?",
+     "Sie macht billiger, was sie schon taten: ungeschützte Geräte suchen, Code für bekannte Lücken schreiben, glaubwürdige Betrugsnachrichten erstellen. Die Grundschutzmaßnahmen, einzigartige Passwörter und Updates, bleiben wirksam."
+    ],
+    [
+     "Kann mein smarter Kühlschrank gehackt werden?",
+     "Im Prinzip ja, wie jedes vernetzte Gerät mit Werkspasswort oder ohne Updates. Die Angriffe im Oktober und November trafen industrielle Steuerungen in Supermärkten, nicht Haushaltskühlschränke."
+    ],
+    [
+     "Wie schütze ich mein Smart Home?",
+     "Werkspasswörter ändern, Geräte in ein Gastnetz des Routers legen, automatische Updates aktivieren und den Fernzugriff ausschalten, wenn er nicht gebraucht wird."
+    ],
+    [
+     "Sollte ich auf vernetzte Geräte verzichten?",
+     "Nein: Man muss sie nur richtig einrichten. Das Risiko hängt vor allem davon ab, wie sie konfiguriert und gepflegt werden, nicht davon, dass sie vernetzt sind."
+    ]
+   ]
+  }
+ }
+}
