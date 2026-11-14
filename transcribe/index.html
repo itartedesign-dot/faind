@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Free Audio and Video Transcription in Your Browser, No Upload | FAIND</title>
+  <meta name="description" content="Turn audio or video into text and SRT/VTT subtitles with Whisper running on your own device. Free, no sign-up, no watermark. Your file never leaves your computer.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://faind.org/transcribe/">
+  <meta name="theme-color" content="#0E1222">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FAIND">
+  <meta property="og:title" content="Free audio and video transcription, no upload | FAIND">
+  <meta property="og:description" content="Whisper runs in your browser: text and SRT/VTT subtitles, free, no sign-up. Your file never leaves your device.">
+  <meta property="og:url" content="https://faind.org/transcribe/">
+  <meta property="og:image" content="https://faind.org/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../assets/favicon.png?v=3" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
+  <script>(function(){var t=null;try{t=localStorage.getItem('faind-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
+  <link rel="stylesheet" href="../assets/fonts/archivo.css">
+  <link rel="stylesheet" href="../style.css">
+  <script src="../stats.js" defer></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","@id":"https://faind.org/transcribe/#app","name":"FAIND Transcribe","url":"https://faind.org/transcribe/","description":"Free in-browser transcription of audio and video into text and SRT/VTT subtitles, using the Whisper speech recognition model on the user's own device.","applicationCategory":"MultimediaApplication","operatingSystem":"Any (modern web browser)","inLanguage":"en","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"publisher":{"@id":"https://faind.org/#org"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is my audio uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The speech model is downloaded to your browser and the transcription runs on your own device. The file is never sent to FAIND or to any other server."}},{"@type":"Question","name":"Is it really free?","acceptedAnswer":{"@type":"Answer","text":"Yes: no account, no watermark, no minutes limit. The work is done by your own computer or phone, so it costs FAIND nothing to run."}},{"@type":"Question","name":"Which languages does it support?","acceptedAnswer":{"@type":"Answer","text":"Whisper handles about a hundred languages. You can pick the language or leave it on automatic detection. Accuracy is best for widely spoken languages and drops with background noise, heavy accents and overlapping speakers."}},{"@type":"Question","name":"Does it tell speakers apart?","acceptedAnswer":{"@type":"Answer","text":"No. The output is one continuous transcript with timestamps. It does not label who is speaking."}},{"@type":"Question","name":"Why is the first run slow?","acceptedAnswer":{"@type":"Answer","text":"The first time, your browser downloads the speech model. It is then stored by your browser, so later runs start straight away."}},{"@type":"Question","name":"How long can the file be?","acceptedAnswer":{"@type":"Answer","text":"Up to 60 minutes and 400 MB per file. Long files take longer on slower devices; a computer with a recent browser is the best choice."}}]}]}</script>
+  <style>
+    .tx { max-width: 880px; }
+    .tx__eyebrow { margin: 0 0 8px; font-size: 12.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--link); }
+    .tx__card { margin-top: 24px; padding: 22px; border: 1px solid var(--rule); border-radius: var(--radius-l); background: var(--surface); box-shadow: var(--shadow); }
+    .tx__drop { display: grid; place-items: center; gap: 6px; min-height: 168px; padding: 24px; text-align: center; border: 2px dashed var(--rule); border-radius: var(--radius-m); background: var(--surface-2); cursor: pointer; transition: border-color .15s, background .15s; }
+    .tx__drop:hover, .tx__drop.is-over, .tx__drop:focus-visible { border-color: var(--link); outline: none; }
+    .tx__drop strong { font-size: 18px; color: var(--ink); }
+    .tx__drop span { font-size: 14.5px; color: var(--muted); }
+    .tx__drop[hidden] { display: none; }
+    .tx__row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; align-items: end; }
+    .tx__field { display: grid; gap: 6px; font-size: 13.5px; font-weight: 650; color: var(--muted); }
+    .tx__field select { min-height: 42px; padding: 0 12px; border: 1px solid var(--rule); border-radius: var(--radius-s); background: var(--surface); color: var(--ink); font: inherit; font-weight: 500; }
+    .tx__file { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; font-size: 15px; color: var(--ink); }
+    .tx__file b { overflow-wrap: anywhere; }
+    .tx__file small { color: var(--muted); }
+    .tx__file[hidden], .tx__row[hidden], .tx__bar[hidden], .tx__out[hidden], .tx__msg[hidden] { display: none; }
+    .tx__bar { margin-top: 18px; }
+    .tx__bar p { margin: 0 0 8px; font-size: 14.5px; color: var(--muted); }
+    .tx__track { height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; border: 1px solid var(--rule); }
+    .tx__fill { height: 100%; width: 0; background: var(--brand-blue); transition: width .25s ease; }
+    .tx__msg { margin-top: 16px; padding: 12px 14px; border-radius: var(--radius-s); background: var(--t-news-bg); color: var(--t-news); font-size: 14.5px; font-weight: 600; }
+    .tx__out { margin-top: 22px; }
+    .tx__tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .tx__tab { padding: 7px 14px; border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; }
+    .tx__tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .tx__text { width: 100%; min-height: 280px; padding: 14px; border: 1px solid var(--rule); border-radius: var(--radius-m); background: var(--surface); color: var(--ink); font: 15px/1.6 var(--font); resize: vertical; }
+    .tx__text:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    .tx__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+    .tx__note { margin-top: 14px; font-size: 13.5px; color: var(--muted); }
+    .tx__support { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
+    .tx__support[hidden] { display: none; }
+    .btn[disabled] { opacity: .5; cursor: not-allowed; }
+    .tx-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 15px; }
+    .tx-table th, .tx-table td { padding: 9px 10px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; color: var(--muted); }
+    .tx-table th { color: var(--ink); font-weight: 700; }
+    details.tx__faq { border-top: 1px solid var(--rule); padding: 12px 0; }
+    details.tx__faq summary { cursor: pointer; font-weight: 700; color: var(--ink); font-size: 16px; }
+    details.tx__faq p { margin-top: 8px; }
+    @media (max-width: 560px) { .tx__card { padding: 16px; } .tx__field, .tx__field select { width: 100%; } }
+  </style>
+</head>
+<body class="np-page">
+  <header class="masthead">
+    <div class="masthead__bar wrap">
+      <a class="brand" href="../" aria-label="FAIND — Home"><img class="brand__img brand__img--light" src="../assets/logo-payoff-light.webp" width="451" height="180" alt="FAIND – Flash AI News Daily"><img class="brand__img brand__img--dark" src="../assets/logo-payoff-dark.webp" width="451" height="180" alt="FAIND – Flash AI News Daily"></a>
+      <a class="np__back" href="../">← Back to the news</a>
+    </div>
+  </header>
+
+  <main class="wrap legal tx">
+    <p class="tx__eyebrow">Free tool</p>
+    <h1 class="legal__title">Audio and video to text, on your own device</h1>
+    <p class="legal__lede">Drop in a recording and get a transcript and subtitle files (SRT, VTT). The speech model runs in your browser, so your file is never uploaded. No account, no watermark, no minute limits.</p>
+
+    <div class="tx__card" id="app">
+      <div class="tx__drop" id="drop" role="button" tabindex="0" aria-label="Choose an audio or video file">
+        <strong>Drop a file here, or tap to choose</strong>
+        <span>MP3, WAV, M4A, MP4, MOV, WebM and more · up to 60 min and 400 MB</span>
+      </div>
+      <input type="file" id="pick" accept="audio/*,video/*" hidden>
+
+      <div class="tx__file" id="fileInfo" hidden>
+        <span><b id="fileName"></b> <small id="fileMeta"></small></span>
+        <button type="button" class="btn btn--ghost btn--sm" id="change">Change file</button>
+      </div>
+
+      <div class="tx__row" id="opts" hidden>
+        <label class="tx__field">Language
+          <select id="lang">
+            <option value="auto">Detect automatically</option>
+            <option value="english">English</option><option value="italian">Italian</option><option value="french">French</option>
+            <option value="german">German</option><option value="spanish">Spanish</option><option value="portuguese">Portuguese</option>
+            <option value="dutch">Dutch</option><option value="polish">Polish</option><option value="russian">Russian</option>
+            <option value="turkish">Turkish</option><option value="arabic">Arabic</option><option value="hindi">Hindi</option>
+            <option value="japanese">Japanese</option><option value="korean">Korean</option><option value="chinese">Chinese</option>
+          </select>
+        </label>
+        <label class="tx__field">Quality
+          <select id="quality">
+            <option value="fast">Fast (smaller download)</option>
+            <option value="better">Better (larger download, slower)</option>
+          </select>
+        </label>
+        <button type="button" class="btn btn--primary" id="go">Transcribe</button>
+      </div>
+
+      <div class="tx__bar" id="bar" hidden>
+        <p id="barText" aria-live="polite">Preparing…</p>
+        <div class="tx__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="track"><div class="tx__fill" id="fill"></div></div>
+        <div class="tx__actions"><button type="button" class="btn btn--ghost btn--sm" id="cancel">Cancel</button></div>
+      </div>
+
+      <p class="tx__msg" id="msg" role="alert" hidden></p>
+
+      <div class="tx__out" id="out" hidden>
+        <div class="tx__tabs" role="tablist" aria-label="Output format">
+          <button type="button" class="tx__tab" role="tab" aria-selected="true" data-f="txt">Text</button>
+          <button type="button" class="tx__tab" role="tab" aria-selected="false" data-f="srt">SRT</button>
+          <button type="button" class="tx__tab" role="tab" aria-selected="false" data-f="vtt">VTT</button>
+        </div>
+        <textarea class="tx__text" id="result" aria-label="Transcript" spellcheck="false"></textarea>
+        <div class="tx__actions">
+          <button type="button" class="btn btn--primary btn--sm" id="copy">Copy</button>
+          <button type="button" class="btn btn--ghost btn--sm" id="download">Download</button>
+        </div>
+        <p class="tx__note">Check the result before you publish it. Automatic transcripts can miss names, numbers and technical terms.</p>
+      </div>
+      <p class="tx__support" id="support" hidden></p>
+    </div>
+
+    <section>
+      <h2>How it works</h2>
+      <p>The page loads Whisper, an open speech recognition model from OpenAI, into your browser. On computers and phones that support WebGPU it uses the graphics chip; otherwise it falls back to the processor, which is slower. Nothing is sent to FAIND for processing.</p>
+      <p>The first run downloads the model, which your browser then keeps. The download comes from Hugging Face and the code from jsDelivr, two public hosting services; they see a normal file request, never your recording. See the <a href="../privacy.html">privacy notes</a>.</p>
+    </section>
+
+    <section>
+      <h2>What to expect</h2>
+      <table class="tx-table">
+        <tbody>
+          <tr><th scope="row">Output</th><td>Plain text with punctuation, plus SRT and VTT subtitles with timestamps.</td></tr>
+          <tr><th scope="row">Speakers</th><td>Not separated. You get one continuous transcript.</td></tr>
+          <tr><th scope="row">Speed</th><td>Depends on your device. A recent laptop with WebGPU is quick; an older phone can be several times slower than the recording.</td></tr>
+          <tr><th scope="row">Limits</th><td>60 minutes and 400 MB per file. Keep the tab open while it works.</td></tr>
+          <tr><th scope="row">Accuracy</th><td>Best on clear speech in widely spoken languages. Noise, accents and overlapping voices reduce it.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Questions</h2>
+      <details class="tx__faq"><summary>Is my audio uploaded anywhere?</summary><p>No. The model is downloaded to your browser and the transcription runs on your device. The file is never sent to FAIND or to any other server.</p></details>
+      <details class="tx__faq"><summary>Is it really free?</summary><p>Yes: no account, no watermark, no minutes limit. Your own device does the work, so it costs FAIND nothing to run.</p></details>
+      <details class="tx__faq"><summary>Which languages does it support?</summary><p>Whisper handles about a hundred languages. Pick one from the list or leave it on automatic detection. Setting the language yourself usually helps with short or noisy clips.</p></details>
+      <details class="tx__faq"><summary>Does it tell speakers apart?</summary><p>No. The output is one continuous transcript with timestamps, without speaker labels.</p></details>
+      <details class="tx__faq"><summary>Why is the first run slow?</summary><p>The first time, your browser downloads the speech model. It is then stored by the browser, so later runs start straight away.</p></details>
+      <details class="tx__faq"><summary>How long can the file be?</summary><p>Up to 60 minutes and 400 MB per file. For longer recordings, split the file first.</p></details>
+    </section>
+
+    <p class="legal__back"><a class="btn btn--primary" href="../">Read today's AI news</a></p>
+  </main>
+
+  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="../cos-e-faind.html">About</a> · <a href="../glossario/en/">Glossary</a> · <a href="../approfondimenti/en/">In depth</a> · <a href="../redazione.html">Who is behind FAIND</a> · <a href="../feed.xml">RSS feed</a> · <a href="../privacy.html">Privacy and legal notes</a></p></div></footer>
+
+  <script>
+  (function () {
+    'use strict';
+    var MAX_BYTES = 400 * 1024 * 1024, MAX_SECONDS = 60 * 60;
+    var $ = function (id) { return document.getElementById(id); };
+    var drop = $('drop'), pick = $('pick'), fileInfo = $('fileInfo'), opts = $('opts'), bar = $('bar'), msg = $('msg'), out = $('out');
+    var file = null, worker = null, results = null, fmt = 'txt', busy = false;
+
+    var gpu = !!navigator.gpu;
+    var sup = $('support');
+    sup.hidden = false;
+    sup.textContent = gpu ? 'Your browser supports WebGPU: transcription will use your graphics chip.' : 'WebGPU is not available here, so transcription will run on the processor and take longer. A recent version of Chrome or Edge on a computer is the fastest option.';
+
+    function show(el, on) { el.hidden = !on; }
+    function error(t) { msg.textContent = t; show(msg, !!t); }
+    function size(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
+    function mmss(s) { s = Math.round(s); var m = Math.floor(s / 60); return m + ':' + ('0' + (s % 60)).slice(-2); }
+
+    function setFile(f) {
+      error('');
+      show(out, false);
+      if (!f) return;
+      if (f.size > MAX_BYTES) { error('This file is larger than 400 MB. Split or compress it first.'); return; }
+      file = f;
+      $('fileName').textContent = f.name;
+      $('fileMeta').textContent = '· ' + size(f.size);
+      show(drop, false); show(fileInfo, true); show(opts, true);
+    }
+    drop.addEventListener('click', function () { pick.click(); });
+    drop.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick.click(); } });
+    ['dragenter', 'dragover'].forEach(function (n) { drop.addEventListener(n, function (e) { e.preventDefault(); drop.classList.add('is-over'); }); });
+    ['dragleave', 'drop'].forEach(function (n) { drop.addEventListener(n, function (e) { e.preventDefault(); drop.classList.remove('is-over'); }); });
+    drop.addEventListener('drop', function (e) { if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); });
+    pick.addEventListener('change', function () { setFile(pick.files[0]); pick.value = ''; });
+    $('change').addEventListener('click', function () { if (busy) return; show(fileInfo, false); show(opts, false); show(out, false); show(drop, true); file = null; error(''); });
+
+    function progress(p, text) {
+      $('fill').style.width = Math.round(p * 100) + '%';
+      $('track').setAttribute('aria-valuenow', Math.round(p * 100));
+      if (text) $('barText').textContent = text;
+    }
+    function finish() { busy = false; show(bar, false); show(opts, true); $('go').disabled = false; }
+
+    function decode(f) {
+      return f.arrayBuffer().then(function (buf) {
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        var ctx = new Ctx({ sampleRate: 16000 });
+        return new Promise(function (res, rej) { ctx.decodeAudioData(buf, res, rej); }).then(function (ab) {
+          ctx.close();
+          var n = ab.length, ch = ab.numberOfChannels, mono = new Float32Array(n), c, i, d;
+          for (c = 0; c < ch; c++) { d = ab.getChannelData(c); for (i = 0; i < n; i++) mono[i] += d[i] / ch; }
+          return { data: mono, seconds: ab.duration };
+        });
+      });
+    }
+
+    $('go').addEventListener('click', function () {
+      if (!file || busy) return;
+      busy = true; error(''); show(out, false); show(opts, false); show(bar, true);
+      $('go').disabled = true;
+      progress(0, 'Reading the file…');
+      decode(file).then(function (a) {
+        if (!busy) return;
+        if (a.seconds > MAX_SECONDS) { error('This recording is longer than 60 minutes. Split it first.'); finish(); return; }
+        start(a);
+      }).catch(function () {
+        error('This browser could not read the audio in this file. Try converting it to MP3, WAV or M4A.');
+        finish();
+      });
+    });
+
+    var files = {};
+    function start(a) {
+      files = {};
+      worker = new Worker('worker.js', { type: 'module' });
+      worker.onmessage = function (ev) {
+        var m = ev.data;
+        if (m.type === 'download') {
+          files[m.file] = { l: m.loaded || 0, t: m.total || 0 };
+          var l = 0, t = 0, k; for (k in files) { l += files[k].l; t += files[k].t; }
+          progress(t ? l / t : 0, 'Downloading the speech model (first run only): ' + (t ? Math.round(100 * l / t) : 0) + '%');
+        } else if (m.type === 'status') {
+          if (m.text === 'transcribing') progress(0, 'Transcribing… keep this tab open.');
+        } else if (m.type === 'progress') {
+          progress(m.value, 'Transcribing… about ' + Math.round(m.value * 100) + '%');
+        } else if (m.type === 'done') {
+          results = build(m); finish(); render();
+          worker.terminate(); worker = null;
+        } else if (m.type === 'error') {
+          error('Transcription failed: ' + m.message + '. Try the Fast quality, a shorter file, or another browser.');
+          finish(); worker.terminate(); worker = null;
+        }
+      };
+      worker.onerror = function () {
+        error('The speech engine could not start in this browser. Try a recent version of Chrome, Edge or Safari.');
+        finish(); if (worker) { worker.terminate(); worker = null; }
+      };
+      worker.postMessage({ type: 'run', audio: a.data, language: $('lang').value, quality: $('quality').value }, [a.data.buffer]);
+    }
+    $('cancel').addEventListener('click', function () {
+      if (worker) { worker.terminate(); worker = null; }
+      finish(); error('Cancelled. The speech model stays in your browser, so the next run starts faster.');
+    });
+
+    function ts(s, comma) {
+      s = Math.max(0, s || 0);
+      var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), sec = Math.floor(s % 60), ms = Math.round((s - Math.floor(s)) * 1000);
+      if (ms === 1000) { ms = 0; sec++; }
+      var p = function (n, w) { return ('00' + n).slice(-w); };
+      return p(h, 2) + ':' + p(m, 2) + ':' + p(sec, 2) + (comma ? ',' : '.') + p(ms, 3);
+    }
+    function build(m) {
+      var segs = m.chunks.map(function (c, i, arr) {
+        var s = c.start == null ? (i ? arr[i - 1].end : 0) : c.start;
+        var e = c.end == null ? (arr[i + 1] && arr[i + 1].start != null ? arr[i + 1].start : m.duration) : c.end;
+        return { s: s || 0, e: e, t: c.text.trim() };
+      }).filter(function (c) { return c.t; });
+      var srt = segs.map(function (c, i) { return (i + 1) + '\n' + ts(c.s, true) + ' --> ' + ts(c.e, true) + '\n' + c.t + '\n'; }).join('\n');
+      var vtt = 'WEBVTT\n\n' + segs.map(function (c) { return ts(c.s) + ' --> ' + ts(c.e) + '\n' + c.t + '\n'; }).join('\n');
+      return { txt: m.text, srt: srt, vtt: vtt, empty: !segs.length && !m.text };
+    }
+    function render() {
+      show(out, true);
+      $('result').value = results.empty ? '' : results[fmt];
+      if (results.empty) error('No speech was found in this file.');
+    }
+    document.querySelectorAll('.tx__tab').forEach(function (b) {
+      b.addEventListener('click', function () {
+        fmt = b.getAttribute('data-f');
+        document.querySelectorAll('.tx__tab').forEach(function (x) { x.setAttribute('aria-selected', x === b ? 'true' : 'false'); });
+        if (results) render();
+      });
+    });
+    $('copy').addEventListener('click', function () {
+      var t = $('result').value, b = $('copy');
+      var ok = function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1600); };
+      if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, function () { $('result').select(); });
+      else { $('result').select(); document.execCommand('copy'); ok(); }
+    });
+    $('download').addEventListener('click', function () {
+      if (!results) return;
+      var base = (file ? file.name.replace(/\.[^.]+$/, '') : 'transcript') || 'transcript';
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([results[fmt]], { type: 'text/plain;charset=utf-8' }));
+      a.download = base + '.' + fmt;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    });
+  })();
+  </script>
+</body>
+</html>
