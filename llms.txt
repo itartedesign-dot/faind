@@ -34,5 +34,6 @@ How to use and cite FAIND:
 - [Sitemap](https://faind.org/sitemap.xml)
 
 ## Optional
+- [Free audio and video transcription](https://faind.org/transcribe/): Whisper speech recognition running in the browser, text and SRT/VTT subtitles, no upload
 - [Faind Games](https://faind.org/games/): free retro arcade games in the browser
 - [FAINDORG – The Series](https://faind.org/series/): teaser of FAIND's original steampunk animated series
