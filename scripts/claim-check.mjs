@@ -125,6 +125,23 @@ export async function buildClaims(root) {
   return [{ url: SITE + CLAIM_DIR, lastmod: all[0].date }, ...all.map(p => ({ url: `${SITE}${CLAIM_DIR}${p.slug}.html`, lastmod: p.updated || p.date }))];
 }
 
+// Il riquadro del Claim check in home: l'ultima puntata, subito dopo Il punto (resta nascosto finché non ce n'è una)
+export async function prefillClaim(root) {
+  const [p] = await loadClaims();
+  if (!p) return;
+  const file = path.join(root, 'index.html');
+  const html = await readFile(file, 'utf8');
+  const box = /<section class="punto" id="claim"[^>]*>[\s\S]*?<\/section>/;
+  if (!box.test(html)) throw new Error('segnaposto del Claim check non trovato');
+  const href = `${CLAIM_DIR}${p.slug}.html`;
+  await writeFile(file, html.replace(box, `<section class="punto" id="claim" aria-labelledby="claimTitle" lang="en">
+          <p class="punto__kick"><b>Claim check</b> <time datetime="${p.date}">${day(p.date)}</time> ${badge(p.verdict)}</p>
+          <h2 class="punto__title" id="claimTitle"><a href="${href}">${esc(p.question)}</a></h2>
+          <p class="punto__desc">${esc(p.desc)}</p>
+          <p class="punto__links"><a href="${href}">Read the check →</a> <a href="${CLAIM_DIR}">All checks</a></p>
+        </section>`));
+}
+
 // Anteprima: la pagina con style.css incluso e i link al sito resi assoluti
 if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv[2]) {
   const p = JSON.parse(await readFile(process.argv[2], 'utf8'));
