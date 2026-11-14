@@ -30,7 +30,7 @@ import { buildVersus } from './versus.mjs';
 import { buildArticles, ARTICLES, articleFor } from './articles.mjs';
 import { buildStrano } from './strano.mjs';
 import { buildPunto, loadPunti, PUNTO_DIR } from './punto.mjs';
-import { buildClaims } from './claim-check.mjs';
+import { buildClaims, prefillClaim } from './claim-check.mjs';
 import { linkTargets, linkNames } from './collegamenti.mjs';
 import { buildGlossary, termsIn, linkify, termPath, TERMS } from './glossary.mjs';
 import { topicText, TOPIC_DIR } from './topics.mjs';
@@ -562,6 +562,8 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
   // Claim check: la verifica settimanale di una affermazione su o fatta con l'AI (cartella claim-check/, solo inglese)
   try { await addToSitemap(root, await buildClaims(root)); }
   catch (e) { console.warn('Claim check non generato:', e.message); }
+  try { await prefillClaim(root); }
+  catch (e) { console.warn('Claim check non scritto nella home:', e.message); }
 
   // Le notizie più riprese delle ultime 36 ore (oggi.json): da qui si sceglie il tema del Punto
   const since = Date.now() - 36 * 3600e3;
