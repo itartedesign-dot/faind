@@ -187,6 +187,21 @@ window.FAIND_DATA = {
       link: { type: "try", url: "bpm-key-finder/" }
     },
     {
+      id: "faind-image-to-text",
+      category: "chatbot",
+      tag: "tool",
+      title: {
+        it: "FAIND Immagine in testo: copia il testo da foto, screenshot e PDF",
+        en: "FAIND Image to Text: copy the text from a photo, screenshot or PDF"
+      },
+      summary: {
+        it: "Carichi un'immagine o un PDF scansionato e ottieni il testo in 19 lingue, nel tuo browser: il file non viene caricato da nessuna parte. Gratis.",
+        en: "Drop in an image or a scanned PDF and get the text in 19 languages, in your browser. The file is never uploaded. Free."
+      },
+      source: { name: "FAIND", url: "image-to-text/" },
+      link: { type: "try", url: "image-to-text/" }
+    },
+    {
       id: "ollama",
       category: "chatbot",
       tag: "download",

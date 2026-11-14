@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Image to Text: Copy the Text from a Photo or PDF, Free | FAIND</title>
+  <meta name="description" content="Extract text from an image, screenshot or scanned PDF. Free OCR in 19 languages, no sign-up. It runs on your own device: the file is never uploaded.">
+  <link rel="canonical" href="https://faind.org/image-to-text/">
+  <meta name="theme-color" content="#0E1222">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FAIND">
+  <meta property="og:title" content="Image to text: copy the text from a photo or PDF, free | FAIND">
+  <meta property="og:description" content="OCR for images, screenshots and scanned PDFs. Free, no sign-up, your file never leaves your device.">
+  <meta property="og:url" content="https://faind.org/image-to-text/">
+  <meta property="og:image" content="https://faind.org/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../assets/favicon.png?v=3" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
+  <script>(function(){var t=null;try{t=localStorage.getItem('faind-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
+  <link rel="stylesheet" href="../assets/fonts/archivo.css">
+  <link rel="stylesheet" href="../style.css">
+  <script src="../stats.js" defer></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","@id":"https://faind.org/image-to-text/#app","name":"FAIND Image to Text","url":"https://faind.org/image-to-text/","description":"Free in-browser OCR tool that extracts text from images, screenshots and PDFs. The file stays on the user's device.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (modern web browser)","inLanguage":"en","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"publisher":{"@id":"https://faind.org/#org"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I copy text from an image?","acceptedAnswer":{"@type":"Answer","text":"Drop the photo or screenshot into the box at the top of this page, pick the language of the text, and press Read the text. After a few seconds the text appears in a box you can edit, copy or save as a .txt file. You can also paste a screenshot straight from the clipboard. Nothing is uploaded: your own device does the reading."}},{"@type":"Question","name":"Can I get the text out of a scanned PDF?","acceptedAnswer":{"@type":"Answer","text":"Yes. Each page is turned into an image and read the same way as a photo. If a PDF already contains real text (most PDFs made from Word or a website do), the page uses that text directly, which is faster and exact. Scanned PDFs are read at up to 50 pages per file; a long scan takes a few minutes."}},{"@type":"Question","name":"Is my image or PDF uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The file is read by code running in your browser and is never sent to FAIND or to any other server. The page does download the recognition engine from FAIND and, the first time you use a language, a language file (about 2 to 5 MB) from the jsDelivr CDN. Your browser keeps it, so the next time it is much quicker."}},{"@type":"Question","name":"Is it really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. No account, no watermark, no limit on how many images you read. Your own device does the work, so it costs FAIND nothing to run."}},{"@type":"Question","name":"How accurate is it?","acceptedAnswer":{"@type":"Answer","text":"On a clear, straight, high-contrast image of printed text, it is usually right on nearly every word. Accuracy drops on blurry photos, low light, curved pages, small text, busy backgrounds and unusual fonts. The page shows a confidence score so you know when to double-check. Always proofread before you rely on the text, especially numbers."}},{"@type":"Question","name":"Can it read handwriting?","acceptedAnswer":{"@type":"Answer","text":"Not reliably. The engine is built for printed text. Neat block capitals sometimes come out well, but joined-up handwriting usually does not. If handwriting is what you need, test with a sample first and expect to retype a lot."}},{"@type":"Question","name":"Which languages does it read?","acceptedAnswer":{"@type":"Answer","text":"English, Italian, French, German, Spanish, Portuguese, Dutch, Polish, Romanian, Turkish, Russian, Ukrainian, Greek, Arabic, Hindi, Japanese, Korean and Chinese (simplified and traditional). Pick the language of the text, because it is not detected for you. A page in a mix of two languages comes out better if you select the main one."}},{"@type":"Question","name":"Why is the text full of strange characters?","acceptedAnswer":{"@type":"Answer","text":"Usually one of three things: the wrong language is selected, the image is too small or blurry, or the text is rotated or on a curved page. Choose the correct language, use a larger or sharper image, rotate it upright first, and crop out anything that is not text. A scan at 200 to 300 DPI works best."}},{"@type":"Question","name":"Does it keep the layout, columns and tables?","acceptedAnswer":{"@type":"Answer","text":"No. You get the text in reading order, line by line. Two-column pages can be read across the columns, and tables come out as plain lines rather than cells. For a table, crop one column or one block at a time."}},{"@type":"Question","name":"What file types and sizes work?","acceptedAnswer":{"@type":"Answer","text":"JPG, PNG, WebP, BMP, GIF and PDF, up to 25 MB per image and 50 MB per PDF. iPhone HEIC photos only open in browsers that can display them (Safari does); otherwise export them as JPG first, or take a screenshot of the photo."}},{"@type":"Question","name":"Does it work on a phone?","acceptedAnswer":{"@type":"Answer","text":"Yes, in any recent browser on iPhone or Android. Reading is slower than on a computer, and a long PDF can be heavy for an older phone, so keep the tab open and the screen on while it works."}},{"@type":"Question","name":"Can I read text from a photo of a screen, a sign or a menu?","acceptedAnswer":{"@type":"Answer","text":"You can try. It works best when the camera is square on to the text and the light is even. Glare, angles and decorative lettering are where it fails most. A screenshot is always cleaner than a photo of a screen."}}]}]}</script>
+  <style>
+    .tx { max-width: 880px; }
+    .tx__logo { display: block; width: 96px; height: 96px; margin: 0 0 14px; border-radius: 22px; }
+    .tx__eyebrow { margin: 0 0 8px; font-size: 12.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--link); }
+    .tx__card { margin-top: 24px; padding: 22px; border: 1px solid var(--rule); border-radius: var(--radius-l); background: var(--surface); box-shadow: var(--shadow); }
+    .tx__drop { display: grid; place-items: center; gap: 6px; min-height: 168px; padding: 24px; text-align: center; border: 2px dashed var(--rule); border-radius: var(--radius-m); background: var(--surface-2); cursor: pointer; transition: border-color .15s, background .15s; }
+    .tx__drop:hover, .tx__drop.is-over, .tx__drop:focus-visible { border-color: var(--link); outline: none; }
+    .tx__drop strong { font-size: 18px; color: var(--ink); }
+    .tx__drop span { font-size: 14.5px; color: var(--muted); }
+    .tx__drop[hidden] { display: none; }
+    .tx__row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; align-items: end; }
+    .tx__field { display: grid; gap: 6px; font-size: 13.5px; font-weight: 650; color: var(--muted); }
+    .tx__field select { min-height: 42px; padding: 0 12px; border: 1px solid var(--rule); border-radius: var(--radius-s); background: var(--surface); color: var(--ink); font: inherit; font-weight: 500; }
+    .tx__file { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; font-size: 15px; color: var(--ink); }
+    .tx__file b { overflow-wrap: anywhere; }
+    .tx__file small { color: var(--muted); }
+    .tx__file[hidden], .tx__row[hidden], .tx__bar[hidden], .tx__out[hidden], .tx__msg[hidden] { display: none; }
+    .tx__bar { margin-top: 18px; }
+    .tx__bar p { margin: 0 0 8px; font-size: 14.5px; color: var(--muted); }
+    .tx__track { height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; border: 1px solid var(--rule); }
+    .tx__fill { height: 100%; width: 0; background: var(--brand-blue); transition: width .25s ease; }
+    .tx__msg { margin-top: 16px; padding: 12px 14px; border-radius: var(--radius-s); background: var(--t-news-bg); color: var(--t-news); font-size: 14.5px; font-weight: 600; }
+    .tx__out { margin-top: 22px; }
+    .tx__tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .tx__tab { padding: 7px 14px; border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; }
+    .tx__tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .tx__text { width: 100%; min-height: 280px; padding: 14px; border: 1px solid var(--rule); border-radius: var(--radius-m); background: var(--surface); color: var(--ink); font: 15px/1.6 var(--font); resize: vertical; }
+    .tx__text:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    .tx__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+    .tx__tr { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--rule); }
+    .tx__tr .tx__row { margin-top: 0; }
+    .tx__tr[hidden], .tx__trfrom[hidden], .tx__trnote[hidden] { display: none; }
+    .tx__trnote { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+    .tx__trnote .btn { margin-top: 10px; }
+    .tx h3 { margin: 18px 0 4px; font-size: 18px; font-weight: 750; }
+    .tx__note { margin-top: 14px; font-size: 13.5px; color: var(--muted); }
+    .tx__support { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
+    .tx__support[hidden] { display: none; }
+    .btn[disabled] { opacity: .5; cursor: not-allowed; }
+    .tx-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 15px; }
+    .tx-table th, .tx-table td { padding: 9px 10px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; color: var(--muted); }
+    .tx-table th { color: var(--ink); font-weight: 700; }
+    details.tx__faq { border-top: 1px solid var(--rule); padding: 12px 0; }
+    details.tx__faq summary { cursor: pointer; font-weight: 700; color: var(--ink); font-size: 16px; }
+    details.tx__faq p { margin-top: 8px; }
+    @media (max-width: 560px) { .tx__card { padding: 16px; } .tx__field, .tx__field select { width: 100%; } }
+    .it__prev { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .it__prev img { height: 64px; width: auto; max-width: 120px; object-fit: cover; border-radius: 8px; border: 1px solid var(--rule); }
+    .it__stat { margin: 10px 0 0; font-size: 14px; color: var(--muted); }
+    .tx__field--wide { flex: 1 1 220px; }
+</style>
+</head>
+<body class="np-page">
+  <header class="masthead">
+    <div class="masthead__bar wrap">
+      <a class="brand" href="../" aria-label="FAIND — Home"><img class="brand__img brand__img--light" src="../assets/logo-payoff-light.webp" width="451" height="180" alt="FAIND – Flash AI News Daily"><img class="brand__img brand__img--dark" src="../assets/logo-payoff-dark.webp" width="451" height="180" alt="FAIND – Flash AI News Daily"></a>
+      <a class="np__back" href="../">← Back to the news</a>
+    </div>
+  </header>
+
+  <main class="wrap legal tx">
+    <img class="tx__logo" src="../assets/image-to-text-icon.webp" width="96" height="96" alt="FAIND Image to Text app icon: a photo turning into a card of text" decoding="async">
+    <p class="tx__eyebrow">FAIND app · free tool</p>
+    <h1 class="legal__title">Image to text: copy the text from a photo or PDF</h1>
+    <p class="legal__lede">Drop in a photo, a screenshot or a scanned PDF and get the text back, ready to copy or save. It runs in your browser, so the file is never uploaded. No account, no watermark, no limits. It reads printed text well and handwriting badly.</p>
+
+    <div class="tx__card" id="app">
+      <div class="tx__drop" id="drop" role="button" tabindex="0" aria-label="Choose images or a PDF">
+        <strong>Drop images or a PDF here, tap to choose, or paste a screenshot</strong>
+        <span>JPG, PNG, WebP, BMP, GIF, PDF · images up to 25 MB, PDF up to 50 MB and 50 pages</span>
+      </div>
+      <input type="file" id="pick" accept="image/*,application/pdf,.pdf" multiple hidden>
+
+      <div class="tx__file" id="fileInfo" hidden>
+        <span><b id="fileName"></b> <small id="fileMeta"></small></span>
+        <button type="button" class="btn btn--ghost btn--sm" id="change">Change files</button>
+      </div>
+      <div class="it__prev" id="prev" hidden></div>
+
+      <div class="tx__row" id="opts" hidden>
+        <label class="tx__field tx__field--wide">Language of the text
+          <select id="lang">
+            <option value="eng">English</option>
+            <option value="ita">Italiano (Italian)</option>
+            <option value="fra">Français (French)</option>
+            <option value="deu">Deutsch (German)</option>
+            <option value="spa">Español (Spanish)</option>
+            <option value="por">Português (Portuguese)</option>
+            <option value="nld">Nederlands (Dutch)</option>
+            <option value="pol">Polski (Polish)</option>
+            <option value="ron">Română (Romanian)</option>
+            <option value="tur">Türkçe (Turkish)</option>
+            <option value="rus">Русский (Russian)</option>
+            <option value="ukr">Українська (Ukrainian)</option>
+            <option value="ell">Ελληνικά (Greek)</option>
+            <option value="ara">العربية (Arabic)</option>
+            <option value="hin">हिन्दी (Hindi)</option>
+            <option value="jpn">日本語 (Japanese)</option>
+            <option value="kor">한국어 (Korean)</option>
+            <option value="chi_sim">简体中文 (Chinese, simplified)</option>
+            <option value="chi_tra">繁體中文 (Chinese, traditional)</option>
+          </select>
+        </label>
+        <button type="button" class="btn btn--primary" id="go">Read the text</button>
+      </div>
+
+      <div class="tx__bar" id="bar" hidden>
+        <p id="barText" aria-live="polite">Starting…</p>
+        <div class="tx__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="track"><div class="tx__fill" id="fill"></div></div>
+        <div class="tx__actions"><button type="button" class="btn btn--ghost btn--sm" id="cancel">Cancel</button></div>
+      </div>
+
+      <p class="tx__msg" id="msg" role="alert" hidden></p>
+
+      <div class="tx__out" id="out" hidden>
+        <label for="text" class="tx__label" style="font-size:13.5px;font-weight:650;color:var(--muted)">Extracted text (you can edit it)</label>
+        <textarea class="tx__text" id="text" spellcheck="false"></textarea>
+        <p class="it__stat" id="stat"></p>
+        <div class="tx__actions">
+          <button type="button" class="btn btn--primary btn--sm" id="copy">Copy the text</button>
+          <button type="button" class="btn btn--ghost btn--sm" id="save">Save as .txt</button>
+          <button type="button" class="btn btn--ghost btn--sm" id="again">Read something else</button>
+        </div>
+        <p class="tx__note">OCR makes mistakes. Proofread the result, especially numbers, names and anything you will publish or sign.</p>
+      </div>
+    </div>
+
+    <section>
+      <h2>How it works</h2>
+      <p>The page uses Tesseract, a long-established open-source OCR engine (Apache 2.0 licence) compiled to run inside the browser, and PDF.js from Mozilla to open PDFs. A photo is read directly. A PDF is checked page by page: if the page already holds real text, that text is copied as it is; if it is a scan, the page is drawn as an image and read like a photo.</p>
+      <p>Everything happens on your device. The engine is served by FAIND, and the first time you pick a language your browser downloads that language file (about 2 to 5 MB) from the jsDelivr CDN and keeps it. Your image or PDF is never sent anywhere. See the <a href="../privacy.html">privacy notes</a>.</p>
+    </section>
+
+    <section>
+      <h2>What people use it for</h2>
+      <h3>Copying text from a screenshot or a photo</h3>
+      <p>A slide, a sign, a page of a book, a message you cannot select. Paste the screenshot, read it, copy the result.</p>
+      <h3>Making a scanned PDF searchable or editable</h3>
+      <p>Pull the text out of an old scan, a contract or a form, then paste it into a document. You get plain text, not a rebuilt layout.</p>
+      <h3>Reading text in another language</h3>
+      <p>Extract it here, then run it through a translator. Pair it with <a href="../transcribe/">FAIND Audio to Text</a>, which also translates.</p>
+    </section>
+
+    <section>
+      <h2>What to expect</h2>
+      <table class="tx-table">
+        <tbody>
+          <tr><th scope="row">Best results</th><td>Straight, sharp, well-lit printed text, dark on light, at 200 to 300 DPI. Screenshots are ideal.</td></tr>
+          <tr><th scope="row">Weak spots</th><td>Handwriting, blur, low light, curved pages, very small text, text over pictures, decorative fonts, rotated pages.</td></tr>
+          <tr><th scope="row">Layout</th><td>Plain text in reading order. Columns can run together and tables become lines.</td></tr>
+          <tr><th scope="row">Speed</th><td>A few seconds for a photo; roughly 5 to 15 seconds per scanned PDF page on a laptop, slower on a phone.</td></tr>
+          <tr><th scope="row">Limits</th><td>25 MB per image, 50 MB and 50 pages per PDF. Keep the tab open while it works.</td></tr>
+          <tr><th scope="row">Languages</th><td>19 languages and scripts, one at a time. The language is not detected for you.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Questions people ask</h2>
+      <details class="tx__faq"><summary>How do I copy text from an image?</summary><p>Drop the photo or screenshot into the box at the top of this page, pick the language of the text, and press Read the text. After a few seconds the text appears in a box you can edit, copy or save as a .txt file. You can also paste a screenshot straight from the clipboard. Nothing is uploaded: your own device does the reading.</p></details>
+      <details class="tx__faq"><summary>Can I get the text out of a scanned PDF?</summary><p>Yes. Each page is turned into an image and read the same way as a photo. If a PDF already contains real text (most PDFs made from Word or a website do), the page uses that text directly, which is faster and exact. Scanned PDFs are read at up to 50 pages per file; a long scan takes a few minutes.</p></details>
+      <details class="tx__faq"><summary>Is my image or PDF uploaded anywhere?</summary><p>No. The file is read by code running in your browser and is never sent to FAIND or to any other server. The page does download the recognition engine from FAIND and, the first time you use a language, a language file (about 2 to 5 MB) from the jsDelivr CDN. Your browser keeps it, so the next time it is much quicker.</p></details>
+      <details class="tx__faq"><summary>Is it really free?</summary><p>Yes. No account, no watermark, no limit on how many images you read. Your own device does the work, so it costs FAIND nothing to run.</p></details>
+      <details class="tx__faq"><summary>How accurate is it?</summary><p>On a clear, straight, high-contrast image of printed text, it is usually right on nearly every word. Accuracy drops on blurry photos, low light, curved pages, small text, busy backgrounds and unusual fonts. The page shows a confidence score so you know when to double-check. Always proofread before you rely on the text, especially numbers.</p></details>
+      <details class="tx__faq"><summary>Can it read handwriting?</summary><p>Not reliably. The engine is built for printed text. Neat block capitals sometimes come out well, but joined-up handwriting usually does not. If handwriting is what you need, test with a sample first and expect to retype a lot.</p></details>
+      <details class="tx__faq"><summary>Which languages does it read?</summary><p>English, Italian, French, German, Spanish, Portuguese, Dutch, Polish, Romanian, Turkish, Russian, Ukrainian, Greek, Arabic, Hindi, Japanese, Korean and Chinese (simplified and traditional). Pick the language of the text, because it is not detected for you. A page in a mix of two languages comes out better if you select the main one.</p></details>
+      <details class="tx__faq"><summary>Why is the text full of strange characters?</summary><p>Usually one of three things: the wrong language is selected, the image is too small or blurry, or the text is rotated or on a curved page. Choose the correct language, use a larger or sharper image, rotate it upright first, and crop out anything that is not text. A scan at 200 to 300 DPI works best.</p></details>
+      <details class="tx__faq"><summary>Does it keep the layout, columns and tables?</summary><p>No. You get the text in reading order, line by line. Two-column pages can be read across the columns, and tables come out as plain lines rather than cells. For a table, crop one column or one block at a time.</p></details>
+      <details class="tx__faq"><summary>What file types and sizes work?</summary><p>JPG, PNG, WebP, BMP, GIF and PDF, up to 25 MB per image and 50 MB per PDF. iPhone HEIC photos only open in browsers that can display them (Safari does); otherwise export them as JPG first, or take a screenshot of the photo.</p></details>
+      <details class="tx__faq"><summary>Does it work on a phone?</summary><p>Yes, in any recent browser on iPhone or Android. Reading is slower than on a computer, and a long PDF can be heavy for an older phone, so keep the tab open and the screen on while it works.</p></details>
+      <details class="tx__faq"><summary>Can I read text from a photo of a screen, a sign or a menu?</summary><p>You can try. It works best when the camera is square on to the text and the light is even. Glare, angles and decorative lettering are where it fails most. A screenshot is always cleaner than a photo of a screen.</p></details>
+    </section>
+
+    <p class="legal__back"><a class="btn btn--primary" href="../">Read today's AI news</a> <a class="btn btn--ghost" href="../transcribe/">Turn audio into text</a> <a class="btn btn--ghost" href="../bpm-key-finder/">Find the BPM and key of a song</a></p>
+  </main>
+
+  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="../cos-e-faind.html">About</a> · <a href="../glossario/en/">Glossary</a> · <a href="../approfondimenti/en/">In depth</a> · <a href="../redazione.html">Who is behind FAIND</a> · <a href="../feed.xml">RSS feed</a> · <a href="../privacy.html">Privacy and legal notes</a></p></div></footer>
+
+  <script>
+  (function () {
+    'use strict';
+    var MAX_IMG = 25 * 1024 * 1024, MAX_PDF = 50 * 1024 * 1024, MAX_PAGES = 50, MAX_SIDE = 3600;
+    var LANG_PATH = 'https://cdn.jsdelivr.net/gh/tesseract-ocr/tessdata_fast@4.1.0';
+    var VENDOR = new URL('vendor/', location.href).href;
+    var $ = function (id) { return document.getElementById(id); };
+    var drop = $('drop'), pick = $('pick'), fileInfo = $('fileInfo'), prev = $('prev'), opts = $('opts'), bar = $('bar'), msg = $('msg'), out = $('out');
+    var files = [], worker = null, token = 0, tessLoaded = null, pdfLoaded = null, thumbs = [];
+
+    function show(el, on) { el.hidden = !on; }
+    function error(t) { msg.textContent = t; show(msg, !!t); }
+    function size(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
+    function progress(t, p) { $('barText').textContent = t; if (p != null) { var v = Math.max(0, Math.min(100, Math.round(p))); $('fill').style.width = v + '%'; $('track').setAttribute('aria-valuenow', v); } }
+    function loadScript(src) { return new Promise(function (ok, ko) { var s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = function () { ko(new Error('Could not load ' + src)); }; document.head.appendChild(s); }); }
+    function isPdf(f) { return f.type === 'application/pdf' || /\.pdf$/i.test(f.name); }
+
+    // default language from the browser
+    (function () {
+      var map = { it: 'ita', fr: 'fra', de: 'deu', es: 'spa', pt: 'por', nl: 'nld', pl: 'pol', ro: 'ron', tr: 'tur', ru: 'rus', uk: 'ukr', el: 'ell', ar: 'ara', hi: 'hin', ja: 'jpn', ko: 'kor' };
+      var l = (navigator.language || 'en').toLowerCase(), v = map[l.slice(0, 2)];
+      if (l === 'zh-tw' || l === 'zh-hk' || l.indexOf('hant') > -1) v = 'chi_tra'; else if (l.slice(0, 2) === 'zh') v = 'chi_sim';
+      if (v) $('lang').value = v;
+    })();
+
+    function reset() {
+      token++; if (worker) { try { worker.terminate(); } catch (e) {} worker = null; }
+      thumbs.forEach(function (u) { URL.revokeObjectURL(u); }); thumbs = [];
+      files = []; pick.value = ''; prev.innerHTML = '';
+      [fileInfo, prev, opts, bar, out].forEach(function (e) { show(e, false); });
+      show(drop, true); error('');
+    }
+
+    function setFiles(list) {
+      error('');
+      var imgs = [], pdfs = [];
+      Array.prototype.forEach.call(list, function (f) { (isPdf(f) ? pdfs : imgs).push(f); });
+      if (!imgs.length && !pdfs.length) return;
+      if (pdfs.length && imgs.length) return error('Pick either images or one PDF at a time.');
+      if (pdfs.length > 1) return error('Pick one PDF at a time.');
+      for (var i = 0; i < imgs.length; i++) {
+        if (!/^image\//.test(imgs[i].type) && !/\.(jpe?g|png|webp|bmp|gif|heic|heif)$/i.test(imgs[i].name)) return error('"' + imgs[i].name + '" is not an image or a PDF.');
+        if (imgs[i].size > MAX_IMG) return error('"' + imgs[i].name + '" is ' + size(imgs[i].size) + '. Images up to 25 MB are accepted.');
+      }
+      if (pdfs[0] && pdfs[0].size > MAX_PDF) return error('This PDF is ' + size(pdfs[0].size) + '. PDFs up to 50 MB are accepted.');
+      files = pdfs.length ? pdfs : imgs;
+      var total = files.reduce(function (a, f) { return a + f.size; }, 0);
+      $('fileName').textContent = files.length === 1 ? files[0].name : files.length + ' images';
+      $('fileMeta').textContent = '· ' + size(total);
+      prev.innerHTML = '';
+      if (!pdfs.length) files.slice(0, 8).forEach(function (f) { var u = URL.createObjectURL(f); thumbs.push(u); var im = new Image(); im.src = u; im.alt = ''; prev.appendChild(im); });
+      show(prev, !pdfs.length);
+      show(drop, false); show(fileInfo, true); show(opts, true); show(out, false);
+    }
+
+    drop.addEventListener('click', function () { pick.click(); });
+    drop.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick.click(); } });
+    pick.addEventListener('change', function () { setFiles(pick.files); });
+    ['dragenter', 'dragover'].forEach(function (n) { drop.addEventListener(n, function (e) { e.preventDefault(); drop.classList.add('is-over'); }); });
+    ['dragleave', 'drop'].forEach(function (n) { drop.addEventListener(n, function (e) { e.preventDefault(); drop.classList.remove('is-over'); }); });
+    drop.addEventListener('drop', function (e) { if (e.dataTransfer && e.dataTransfer.files.length) setFiles(e.dataTransfer.files); });
+    document.addEventListener('paste', function (e) {
+      var fl = e.clipboardData && e.clipboardData.files;
+      if (fl && fl.length && bar.hidden) { e.preventDefault(); setFiles(fl); }
+    });
+    $('change').addEventListener('click', reset);
+    $('again').addEventListener('click', reset);
+    $('cancel').addEventListener('click', function () { reset(); });
+
+    function canvasFrom(src, w, h) {
+      var s = 1, m = Math.max(w, h);
+      if (m > MAX_SIDE) s = MAX_SIDE / m; else if (m < 1200) s = Math.min(2, 1800 / m);
+      var c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w * s)); c.height = Math.max(1, Math.round(h * s));
+      var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.imageSmoothingQuality = 'high'; x.drawImage(src, 0, 0, c.width, c.height);
+      return c;
+    }
+    async function imageCanvas(file) {
+      var bmp;
+      try { bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+      catch (e) { try { bmp = await createImageBitmap(file); } catch (e2) { throw new Error('This browser cannot open "' + file.name + '". For iPhone HEIC photos, export a JPG or use a screenshot.'); } }
+      var c = canvasFrom(bmp, bmp.width, bmp.height); if (bmp.close) bmp.close(); return c;
+    }
+    async function getPdfjs() {
+      if (!pdfLoaded) pdfLoaded = import(VENDOR + 'pdf.min.mjs').then(function (m) { m.GlobalWorkerOptions.workerSrc = VENDOR + 'pdf.worker.min.mjs'; return m; });
+      return pdfLoaded;
+    }
+
+    async function makeWorker(lang, my) {
+      if (!tessLoaded) tessLoaded = loadScript(VENDOR + 'tesseract.min.js');
+      await tessLoaded;
+      progress('Starting the reader…', 2);
+      var w = await Tesseract.createWorker(lang, 1, {
+        workerPath: VENDOR + 'worker.min.js', corePath: VENDOR, langPath: LANG_PATH, gzip: false,
+        logger: function (m) {
+          if (my !== token) return;
+          if (/loading language/.test(m.status)) progress('Downloading the language file (first time only)…', 4 + (m.progress || 0) * 10);
+        }
+      });
+      return w;
+    }
+
+    function stats(parts) {
+      var words = 0, conf = 0, n = 0;
+      parts.forEach(function (p) { if (p.conf != null) { conf += p.conf; n++; } });
+      var txt = parts.map(function (p) { return p.text; }).join(' ');
+      words = (txt.match(/\S+/g) || []).length;
+      var c = n ? Math.round(conf / n) : null;
+      var s = words + ' words';
+      if (c != null) s += ' · confidence ' + c + '%' + (c < 70 ? ' (low: check it carefully)' : c < 85 ? ' (fair: proofread)' : '');
+      return s;
+    }
+
+    $('go').addEventListener('click', async function () {
+      if (!files.length) return;
+      var my = ++token, lang = $('lang').value, parts = [], multi = false;
+      error(''); show(out, false); show(opts, false); show(bar, true); progress('Preparing…', 1);
+      try {
+        var pdf = isPdf(files[0]);
+        var items = []; // {label, get: async () => {text, conf} }
+        if (pdf) {
+          var lib = await getPdfjs();
+          var doc = await lib.getDocument({ data: new Uint8Array(await files[0].arrayBuffer()) }).promise;
+          if (my !== token) return;
+          var total = Math.min(doc.numPages, MAX_PAGES), cut = doc.numPages > MAX_PAGES;
+          multi = total > 1;
+          for (var p = 1; p <= total; p++) (function (p) {
+            items.push({ label: 'page ' + p + ' of ' + total, head: '— Page ' + p + ' —', get: async function (ocr) {
+              var page = await doc.getPage(p);
+              var tc = await page.getTextContent();
+              var t = tc.items.map(function (i) { return i.str + (i.hasEOL ? '\n' : ''); }).join('').replace(/[ \t]+\n/g, '\n').trim();
+              if (t.replace(/\s/g, '').length >= 25) { page.cleanup(); return { text: t, conf: null }; }
+              var vp = page.getViewport({ scale: 1 }), sc = Math.min(3, Math.max(1.5, 2000 / Math.max(vp.width, vp.height) * 1.3));
+              var v = page.getViewport({ scale: sc }), c = document.createElement('canvas'); c.width = Math.round(v.width); c.height = Math.round(v.height);
+              var cx = c.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, c.width, c.height);
+              await page.render({ canvasContext: cx, viewport: v, canvas: c }).promise; page.cleanup();
+              return await ocr(c);
+            } });
+          })(p);
+          if (cut) items.cutNote = 'Only the first ' + MAX_PAGES + ' of ' + doc.numPages + ' pages were read.';
+        } else {
+          multi = files.length > 1;
+          files.forEach(function (f, i) { items.push({ label: 'image ' + (i + 1) + ' of ' + files.length, head: '— ' + f.name + ' —', get: async function (ocr) { return await ocr(await imageCanvas(f)); } }); });
+        }
+        var recog = async function (canvas) {
+          if (!worker) worker = await makeWorker(lang, my);
+          var blob = await new Promise(function (ok) { canvas.toBlob(ok, 'image/png'); });
+          var r = await worker.recognize(blob);
+          return { text: (r.data.text || '').trim(), conf: r.data.confidence };
+        };
+        var lazyOcr = async function (c) { if (!worker) { var w = await makeWorker(lang, my); if (my !== token) { w.terminate(); throw new Error('cancelled'); } worker = w; } return recog(c); };
+        for (var i = 0; i < items.length; i++) {
+          if (my !== token) return;
+          progress('Reading ' + items[i].label + '…', 15 + (i / items.length) * 83);
+          var r = await items[i].get(lazyOcr);
+          parts.push({ text: r.text, conf: r.conf, head: items[i].head });
+        }
+        if (my !== token) return;
+        var text = parts.map(function (p) { return (multi ? p.head + '\n\n' : '') + p.text; }).join('\n\n').trim();
+        if (!text) { show(bar, false); show(opts, true); return error('No text found. Try a sharper or larger image, check the language, or rotate the image upright.'); }
+        $('text').value = text;
+        $('stat').textContent = stats(parts) + (items.cutNote ? ' · ' + items.cutNote : '');
+        if (worker) { try { worker.terminate(); } catch (e) {} worker = null; }
+        show(bar, false); show(out, true); show(opts, true);
+        $('out').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } catch (e) {
+        if (my !== token || (e && e.message === 'cancelled')) return;
+        show(bar, false); show(opts, true);
+        if (worker) { try { worker.terminate(); } catch (e2) {} worker = null; }
+        error(/Failed to fetch|NetworkError|load/i.test(String(e && e.message)) ? 'Could not download what the reader needs (the engine or the language file). Check your connection and try again.' : ((e && e.message) || 'Something went wrong.'));
+      }
+    });
+
+    $('copy').addEventListener('click', function () {
+      var t = $('text'), b = $('copy'), done = function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy the text'; }, 1600); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t.value).then(done, function () { t.select(); document.execCommand('copy'); done(); });
+      else { t.select(); document.execCommand('copy'); done(); }
+    });
+    $('save').addEventListener('click', function () {
+      var base = (files[0] && files[0].name ? files[0].name.replace(/\.[^.]+$/, '') : 'text') || 'text';
+      var u = URL.createObjectURL(new Blob([$('text').value], { type: 'text/plain;charset=utf-8' }));
+      var a = document.createElement('a'); a.href = u; a.download = base + '.txt'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 2000);
+    });
+  })();
+  </script>
+</body>
+</html>
