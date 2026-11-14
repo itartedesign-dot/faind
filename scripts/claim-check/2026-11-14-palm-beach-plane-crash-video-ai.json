@@ -2,7 +2,7 @@
  "slug": "palm-beach-plane-crash-video-ai",
  "date": "2026-11-14",
  "question": "Is the Palm Beach plane crash video made with AI?",
- "desc": "Posts called the dashcam video of the Palm Beach County jet crash \"100% AI\". It is real footage. What the evidence shows, and why an AI-detector screenshot proves nothing.",
+ "desc": "No, the Palm Beach plane crash video is not AI-generated. It is real dashcam footage. What the evidence shows, and why an AI-detector screenshot proves nothing.",
  "verdict": "false",
  "claim": "Footage of the 1 November 2026 plane crash in Palm Beach County, Florida, \"was 100%\" generated with AI, and \"that was not an airplane\".",
  "lede": "After the Learjet 60 crash in Palm Beach County on 1 November, posts on X said the dashcam video was AI-generated. <strong>It is not.</strong> The footage was first posted by the driver who recorded it, it was used by major news outlets, and a media forensics expert who reviewed it told PolitiFact it is authentic. The \"proof\" in the posts was a screenshot from an AI-detection tool, which is not evidence.",
@@ -13,19 +13,62 @@
   "We found no figures on how widely the claim spread, so we cannot call it viral."
  ],
  "sections": [
-  ["What was claimed", "On 1 November, the day of the crash, three posts on X said the footage was \"100%\" AI-generated and that \"that was not an airplane\". The posts showed a screenshot from an AI-detection tool as proof. The posts came from anonymous accounts."],
-  ["What the evidence shows", "<strong>The source.</strong> According to PolitiFact, the video was first posted on Facebook by Aki Kuusisto, a digital creator from West Palm Beach. In the comments he wrote that the crash was \"not quite what I had in mind when I installed the dash cam\".\n\n<strong>The coverage.</strong> The footage was used by Euronews and, according to PolitiFact, by the Associated Press, CNN, CBS News and the BBC, which tied it to the Palm Beach County crash.\n\n<strong>The crash itself.</strong> A Learjet 60 left Austin-Bergstrom for North Eleuthera in the Bahamas with nine people aboard and crashed near Military Trail and 10th Avenue North in the Greenacres area. All nine died. At a briefing on 2 November, NTSB member Tom Chapman said the crew had reported light icing and moderate turbulence shortly before the crash and that there was \"some indication the aircraft may have broken apart before impact\". The cause has not been determined.\n\n<strong>The expert.</strong> Darren Linvill, co-director of Clemson University's Media Forensics Hub, told PolitiFact the video is authentic."],
-  ["Why the detector screenshot proves nothing", "The posts used a screenshot from Hive Moderation. PolitiFact ran the original footage through the same tool and it was not flagged. AI detectors return a probability from a model, and the result changes with the file: a re-uploaded, compressed or screen-recorded copy can score differently from the original. A detector score is a hint at best. It cannot confirm that a video is fake, and it cannot confirm that it is real."],
-  ["What we don't know", "We do not know how many people saw the claim: the fact-checks we read give no view counts. We also do not know why the aircraft went down. The NTSB investigation is open and nothing in the video settles it."],
-  ["How to check a video yourself", "Find where it first appeared and who posted it. Check whether news outlets with their own reporting used it and tied it to a documented event. Treat a detector screenshot as a lead to follow, not a verdict. When real footage is wrongly called AI-made, people can dismiss real events, which is why it matters."]
+  [
+   "What was claimed",
+   "On 1 November, the day of the crash, three posts on X said the footage was \"100%\" AI-generated and that \"that was not an airplane\". The posts showed a screenshot from an AI-detection tool as proof. The posts came from anonymous accounts."
+  ],
+  [
+   "What the evidence shows",
+   "<strong>The source.</strong> According to PolitiFact, the video was first posted on Facebook by Aki Kuusisto, a digital creator from West Palm Beach. In the comments he wrote that the crash was \"not quite what I had in mind when I installed the dash cam\".\n\n<strong>The coverage.</strong> The footage was used by Euronews and, according to PolitiFact, by the Associated Press, CNN, CBS News and the BBC, which tied it to the Palm Beach County crash.\n\n<strong>The crash itself.</strong> A Learjet 60 left Austin-Bergstrom for North Eleuthera in the Bahamas with nine people aboard and crashed near Military Trail and 10th Avenue North in the Greenacres area. All nine died. At a briefing on 2 November, NTSB member Tom Chapman said the crew had reported light icing and moderate turbulence shortly before the crash and that there was \"some indication the aircraft may have broken apart before impact\". The cause has not been determined.\n\n<strong>The expert.</strong> Darren Linvill, co-director of Clemson University's Media Forensics Hub, told PolitiFact the video is authentic."
+  ],
+  [
+   "Why the detector screenshot proves nothing",
+   "The posts used a screenshot from Hive Moderation. PolitiFact ran the original footage through the same tool and it was not flagged. AI detectors return a probability from a model, and the result changes with the file: a re-uploaded, compressed or screen-recorded copy can score differently from the original. A detector score is a hint at best. It cannot confirm that a video is fake, and it cannot confirm that it is real."
+  ],
+  [
+   "What we don't know",
+   "We do not know how many people saw the claim: the fact-checks we read give no view counts. We also do not know why the aircraft went down. The NTSB investigation is open and nothing in the video settles it."
+  ],
+  [
+   "How to check a video yourself",
+   "Find where it first appeared and who posted it. Check whether news outlets with their own reporting used it and tied it to a documented event. Treat a detector screenshot as a lead to follow, not a verdict. When real footage is wrongly called AI-made, people can dismiss real events, which is why it matters."
+  ]
  ],
  "faq": [
-  ["Is the Palm Beach plane crash video real?", "Yes. PolitiFact rated the claim that it was AI-generated \"Pants on Fire\", and a media forensics expert told it the video is authentic."],
-  ["Can an AI detector tell if a video is fake?", "Not reliably. It returns a probability that can change with the file. The original footage of this video was not flagged by the tool the posts used."]
+  [
+   "Is the Palm Beach plane crash video real?",
+   "Yes. PolitiFact rated the claim that it was AI-generated \"Pants on Fire\", and a media forensics expert told it the video is authentic."
+  ],
+  [
+   "Is the Palm Beach plane crash video an AI video or fake?",
+   "No. It was first posted by the creator who recorded it with a dash cam, and news outlets used it and tied it to the documented crash of 1 November 2026."
+  ],
+  [
+   "Can an AI detector tell if a video is fake?",
+   "Not reliably. It returns a probability that can change with the file. The original footage of this video was not flagged by the tool the posts used."
+  ],
+  [
+   "How can I check if a video is made with AI?",
+   "Find where it first appeared and who posted it, check whether news outlets with their own reporting used it for a documented event, and treat a detector score as a lead, not a verdict."
+  ]
  ],
  "sources": [
-  { "name": "PolitiFact", "title": "Palm Beach plane crash footage isn't AI-generated, despite social media claims (2 November 2026)", "url": "https://politifact.com/factchecks/2026/nov/02/tweets/palm-beach-florida-plane-crash-video-ai/" },
-  { "name": "Euronews", "title": "Dashcam captures deadly private jet crash in Florida (2 November 2026)", "url": "https://euronews.com/2026/11/02/dashcam-captures-deadly-private-jet-crash-in-florida" },
-  { "name": "FOX 13", "title": "Learjet may have broken apart before Florida deadly crash, NTSB says (NTSB briefing of 2 November 2026)", "url": "https://www.fox13news.com/news/florida-learjet-broken-deadly-crash-ntsb" }
- ]
+  {
+   "name": "PolitiFact",
+   "title": "Palm Beach plane crash footage isn't AI-generated, despite social media claims (2 November 2026)",
+   "url": "https://politifact.com/factchecks/2026/nov/02/tweets/palm-beach-florida-plane-crash-video-ai/"
+  },
+  {
+   "name": "Euronews",
+   "title": "Dashcam captures deadly private jet crash in Florida (2 November 2026)",
+   "url": "https://euronews.com/2026/11/02/dashcam-captures-deadly-private-jet-crash-in-florida"
+  },
+  {
+   "name": "FOX 13",
+   "title": "Learjet may have broken apart before Florida deadly crash, NTSB says (NTSB briefing of 2 November 2026)",
+   "url": "https://www.fox13news.com/news/florida-learjet-broken-deadly-crash-ntsb"
+  }
+ ],
+ "seoTitle": "Is the Palm Beach plane crash video AI-generated? Fact check",
+ "answer": "No. The Palm Beach plane crash video is real dashcam footage, not AI-generated."
 }

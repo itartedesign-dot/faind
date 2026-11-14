@@ -7,7 +7,8 @@
    • I testi stanno in scripts/claim-check/AAAA-MM-GG-<slug>.json ed escono solo
      dopo l'ok di Paolo (si aggiungono con una PR). Senza file, nessuna pagina.
    • Forma del file:
-       { slug, date: 'AAAA-MM-GG', question, desc, verdict: 'false'|'true'|'ai'|'unverifiable',
+       { slug, date: 'AAAA-MM-GG', question (come la scriverebbe chi cerca: "Is X real?", "Is this video made with AI?"),
+         seoTitle? (default: question + " Fact check"), answer (una frase: la risposta diretta, in apertura), desc (inizia con la risposta), verdict: 'false'|'true'|'ai'|'unverifiable',
          claim, lede, brief: [..], sections: [[titolo, html], ..], faq?: [[domanda, risposta], ..],
          sources: [{ name, title, url }, ..], deep?: [slug approfondimento, ..] }
    • Pagine: claim-check/<slug>.html e l'indice claim-check/.
@@ -35,13 +36,14 @@ const CSS = `<style>
     .cc__badge{display:inline-block;color:#fff;font-weight:800;font-size:15px;letter-spacing:.04em;text-transform:uppercase;padding:6px 14px;border-radius:8px}
     .cc__claim{margin:0;color:var(--muted);font-size:15px;line-height:1.4}
     .cc__claim b{color:var(--ink)}
+    .cc__answer{font-size:18px;line-height:1.45;font-weight:600;margin:14px 0 10px;color:var(--ink)}
   </style>`;
 
 export async function loadClaims() {
   let files = [];
   try { files = (await readdir(DATA)).filter(f => f.endsWith('.json')); } catch { return []; }
   const list = await Promise.all(files.map(async f => JSON.parse(await readFile(path.join(DATA, f), 'utf8'))));
-  return list.filter(p => p.slug && p.date && p.question && VERDICT[p.verdict]).sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
+  return list.filter(p => p.slug && p.date && p.question && p.answer && VERDICT[p.verdict]).sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
 }
 
 const badge = (v) => `<span class="cc__badge" style="background:${VERDICT[v].color}">${VERDICT[v].label}</span>`;
@@ -51,7 +53,7 @@ export function claimPage(p, all = []) {
   const deep = (p.deep || []).map(s => articleBySlug(s, 'en')).filter(Boolean);
   const others = all.filter(x => x.slug !== p.slug && x.date <= p.date);
   const jsonld = { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'NewsArticle', '@id': url + '#article', headline: p.question, description: p.desc, image, inLanguage: 'en-GB',
+    { '@type': 'NewsArticle', '@id': url + '#article', headline: p.seoTitle || `${p.question} Fact check`, description: p.desc, image, inLanguage: 'en-GB',
       datePublished: p.date, dateModified: p.updated || p.date, mainEntityOfPage: url,
       author: { '@type': 'Organization', name: 'FAIND', url: SITE + 'about.html' }, publisher: { '@id': SITE + '#org' },
       citation: (p.sources || []).map(s => ({ '@type': 'CreativeWork', name: s.title || s.name, url: s.url, publisher: { '@type': 'Organization', name: s.name } })) },
@@ -67,6 +69,7 @@ export function claimPage(p, all = []) {
     <h1 class="legal__title">${esc(p.question)}</h1>
     <p class="legal__updated">By the <a href="../about.html">FAIND newsroom</a> · <time datetime="${p.date}">${day(p.date)}</time></p>
     <div class="cc__verdict">${badge(p.verdict)}<p class="cc__claim"><b>The claim:</b> ${esc(p.claim)}</p></div>
+    <p class="cc__answer"><b>Short answer:</b> ${esc(p.answer)}</p>
     <p class="legal__lede">${p.lede}</p>
 
     <div class="art__brief">
@@ -96,7 +99,7 @@ ${others.length ? `
       <ul class="art__news">${deep.map(d => `<li><a href="../${d.path}">${esc(d.title)}</a></li>`).join('')}</ul>
     </section>
 ` : ''}`;
-  return shell({ lang: 'en', file, langs: ['en'], title: p.question, desc: p.desc, image, jsonld, main, dir: CLAIM_DIR, altDirs: { en: CLAIM_DIR }, up: '../' });
+  return shell({ lang: 'en', file, langs: ['en'], title: p.seoTitle || `${p.question} Fact check`, desc: p.desc, image, jsonld, main, dir: CLAIM_DIR, altDirs: { en: CLAIM_DIR }, up: '../' });
 }
 
 function indexPage(all) {
