@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Find the BPM, Key and Chords of a Song: Free, No Upload | FAIND</title>
+  <meta name="description" content="Drop in a song and get its BPM, musical key (with Camelot code) and chords. Free, no sign-up. Runs on your own device: the file is never uploaded. Chords are estimates.">
+  <link rel="canonical" href="https://faind.org/bpm-key-finder/">
+  <meta name="theme-color" content="#0E1222">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FAIND">
+  <meta property="og:title" content="Find the BPM, key and chords of a song, free | FAIND">
+  <meta property="og:description" content="Tempo, key, Camelot code and chords from an audio file. Free, no sign-up, your file never leaves your device.">
+  <meta property="og:url" content="https://faind.org/bpm-key-finder/">
+  <meta property="og:image" content="https://faind.org/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../assets/favicon.png?v=3" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/icon-180.png?v=3">
+  <script>(function(){var t=null;try{t=localStorage.getItem('faind-theme')}catch(e){}if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})();</script>
+  <link rel="stylesheet" href="../assets/fonts/archivo.css">
+  <link rel="stylesheet" href="../style.css">
+  <script src="../stats.js" defer></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","@id":"https://faind.org/bpm-key-finder/#app","name":"FAIND BPM, Key and Chords Finder","url":"https://faind.org/bpm-key-finder/","description":"Free in-browser tool that estimates the BPM, musical key (with Camelot code) and chords of a song from an audio file. The file stays on the user's device.","applicationCategory":"MultimediaApplication","operatingSystem":"Any (modern web browser)","inLanguage":"en","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"publisher":{"@id":"https://faind.org/#org"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I find the key and BPM of a song?","acceptedAnswer":{"@type":"Answer","text":"Drop the audio file into the box at the top of this page. After a few seconds you see the tempo in beats per minute, the musical key (for example A minor) and its Camelot code, which DJs use to mix in key. There is no account and no upload: your own device does the analysis."}},{"@type":"Question","name":"Can I find the chords of a song from an MP3?","acceptedAnswer":{"@type":"Answer","text":"Yes, as an estimate. The page listens to the harmony and lists the major and minor chords in time order, and you can play the song and watch the current chord light up. It is a good starting point for learning a song, but always check it against your ears or your instrument."}},{"@type":"Question","name":"How accurate are the chords it finds?","acceptedAnswer":{"@type":"Answer","text":"It reads chords from the full mix, with drums, vocals and everything else playing at once, and that is hard even for dedicated software. Expect the main chords of a clear, harmonic song to be right most of the time, and expect mistakes on busy mixes, heavy distortion, rap or songs that change key. It only names plain major and minor chords, so a Cmaj7 or a C7 usually appears as C. Treat the result as a draft."}},{"@type":"Question","name":"How does the BPM and key detection work?","acceptedAnswer":{"@type":"Answer","text":"Tempo comes from the rhythm of the sound: the page measures how often the music hits (kicks, snares, strums) and finds the beat rate that fits best. The key comes from which of the 12 notes are played most, compared with typical major and minor patterns. Chords use the same note information, matched second by second against major and minor triads. All of it runs on your device."}},{"@type":"Question","name":"What is the Camelot code?","acceptedAnswer":{"@type":"Answer","text":"It is a numbered wheel, from 1A to 12B, that DJs use to pick tracks that mix well. Songs with the same number, or a number one step away, are harmonically compatible. The page shows both the Camelot and the Open Key notation."}},{"@type":"Question","name":"Why does it show two possible keys?","acceptedAnswer":{"@type":"Answer","text":"Every major key shares its notes with a relative minor key (C major and A minor, for example), so the two are easy to confuse. When the match is close, the page tells you and lists the next best keys. The chords often settle it: a song that starts and ends on Am is usually in A minor."}},{"@type":"Question","name":"Why is the BPM double or half of what I expected?","acceptedAnswer":{"@type":"Answer","text":"A beat can be felt at two speeds. A slow ballad at 70 BPM can also be counted as 140. The page picks the most likely one and shows the other reading under it, so you can choose the one that matches how you tap your foot."}},{"@type":"Question","name":"Is my song uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The file is decoded and analysed in your browser and is never sent to FAIND or to any other server. This page loads nothing else to do the analysis."}},{"@type":"Question","name":"Is it really free?","acceptedAnswer":{"@type":"Answer","text":"Yes: no account, no watermark, no limit on how many songs you check. Your own device does the work, so it costs FAIND nothing to run."}},{"@type":"Question","name":"What files and lengths work?","acceptedAnswer":{"@type":"Answer","text":"MP3, WAV, M4A, AAC, OGG, FLAC and the sound of most video files, as long as your browser can play them. Files up to 150 MB are accepted, and the first 10 minutes of the audio are analysed."}},{"@type":"Question","name":"Does it work if the tempo changes during the song?","acceptedAnswer":{"@type":"Answer","text":"It reports one average tempo for the whole song, so it works best on songs played to a steady beat. Live recordings and songs with tempo changes can come out wrong or with low confidence."}},{"@type":"Question","name":"Can I paste a Spotify or YouTube link?","acceptedAnswer":{"@type":"Answer","text":"No. The page works on audio files you choose from your own device, because a browser cannot take the sound out of a streaming page. If you have the right to use the track, open the file here."}}]}]}</script>
+  <style>
+    .tx { max-width: 880px; }
+    .tx__logo { display: block; width: 96px; height: 96px; margin: 0 0 14px; border-radius: 22px; }
+    .tx__eyebrow { margin: 0 0 8px; font-size: 12.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--link); }
+    .tx__card { margin-top: 24px; padding: 22px; border: 1px solid var(--rule); border-radius: var(--radius-l); background: var(--surface); box-shadow: var(--shadow); }
+    .tx__drop { display: grid; place-items: center; gap: 6px; min-height: 168px; padding: 24px; text-align: center; border: 2px dashed var(--rule); border-radius: var(--radius-m); background: var(--surface-2); cursor: pointer; transition: border-color .15s, background .15s; }
+    .tx__drop:hover, .tx__drop.is-over, .tx__drop:focus-visible { border-color: var(--link); outline: none; }
+    .tx__drop strong { font-size: 18px; color: var(--ink); }
+    .tx__drop span { font-size: 14.5px; color: var(--muted); }
+    .tx__drop[hidden] { display: none; }
+    .tx__row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; align-items: end; }
+    .tx__field { display: grid; gap: 6px; font-size: 13.5px; font-weight: 650; color: var(--muted); }
+    .tx__field select { min-height: 42px; padding: 0 12px; border: 1px solid var(--rule); border-radius: var(--radius-s); background: var(--surface); color: var(--ink); font: inherit; font-weight: 500; }
+    .tx__file { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; font-size: 15px; color: var(--ink); }
+    .tx__file b { overflow-wrap: anywhere; }
+    .tx__file small { color: var(--muted); }
+    .tx__file[hidden], .tx__row[hidden], .tx__bar[hidden], .tx__out[hidden], .tx__msg[hidden] { display: none; }
+    .tx__bar { margin-top: 18px; }
+    .tx__bar p { margin: 0 0 8px; font-size: 14.5px; color: var(--muted); }
+    .tx__track { height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; border: 1px solid var(--rule); }
+    .tx__fill { height: 100%; width: 0; background: var(--brand-blue); transition: width .25s ease; }
+    .tx__msg { margin-top: 16px; padding: 12px 14px; border-radius: var(--radius-s); background: var(--t-news-bg); color: var(--t-news); font-size: 14.5px; font-weight: 600; }
+    .tx__out { margin-top: 22px; }
+    .tx__tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .tx__tab { padding: 7px 14px; border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; }
+    .tx__tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .tx__text { width: 100%; min-height: 280px; padding: 14px; border: 1px solid var(--rule); border-radius: var(--radius-m); background: var(--surface); color: var(--ink); font: 15px/1.6 var(--font); resize: vertical; }
+    .tx__text:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+    .tx__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+    .tx__tr { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--rule); }
+    .tx__tr .tx__row { margin-top: 0; }
+    .tx__tr[hidden], .tx__trfrom[hidden], .tx__trnote[hidden] { display: none; }
+    .tx__trnote { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+    .tx__trnote .btn { margin-top: 10px; }
+    .tx h3 { margin: 18px 0 4px; font-size: 18px; font-weight: 750; }
+    .tx__note { margin-top: 14px; font-size: 13.5px; color: var(--muted); }
+    .tx__support { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
+    .tx__support[hidden] { display: none; }
+    .btn[disabled] { opacity: .5; cursor: not-allowed; }
+    .tx-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 15px; }
+    .tx-table th, .tx-table td { padding: 9px 10px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; color: var(--muted); }
+    .tx-table th { color: var(--ink); font-weight: 700; }
+    details.tx__faq { border-top: 1px solid var(--rule); padding: 12px 0; }
+    details.tx__faq summary { cursor: pointer; font-weight: 700; color: var(--ink); font-size: 16px; }
+    details.tx__faq p { margin-top: 8px; }
+    @media (max-width: 560px) { .tx__card { padding: 16px; } .tx__field, .tx__field select { width: 100%; } }
+  
+    .kb__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-top: 4px; }
+    .kb__stat { padding: 16px; border: 1px solid var(--rule); border-radius: var(--radius-m); background: var(--surface-2); }
+    .kb__label { margin: 0 0 4px; font-size: 12.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+    .kb__big { margin: 0; font-size: 34px; line-height: 1.1; font-weight: 800; color: var(--ink); }
+    .kb__sub { margin: 6px 0 0; font-size: 14px; color: var(--muted); line-height: 1.45; }
+    .kb__player { width: 100%; margin-top: 18px; }
+    .tx ul.kb__chords { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+    .tx ul.kb__chords li { margin: 0; padding: 0; list-style: none; }
+    .tx ul.kb__chords li::before { content: none; }
+    .kb__chip { display: grid; justify-items: center; min-width: 58px; padding: 7px 10px; border: 1px solid var(--rule); border-radius: var(--radius-s); background: var(--surface); color: var(--ink); font: inherit; cursor: pointer; }
+    .kb__chip b { font-size: 17px; }
+    .kb__chip small { font-size: 11.5px; color: var(--muted); }
+    .kb__chip.is-on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .kb__chip.is-on small { color: inherit; opacity: .8; }
+    .kb__used { margin: 8px 0 0; font-size: 15px; color: var(--muted); }
+    .kb__used b { color: var(--ink); }
+    .kb__stat[hidden], .kb__player[hidden] { display: none; }
+  </style>
+</head>
+<body class="np-page">
+  <header class="masthead">
+    <div class="masthead__bar wrap">
+      <a class="brand" href="../" aria-label="FAIND — Home"><img class="brand__img brand__img--light" src="../assets/logo-payoff-light.webp" width="451" height="180" alt="FAIND – Flash AI News Daily"><img class="brand__img brand__img--dark" src="../assets/logo-payoff-dark.webp" width="451" height="180" alt="FAIND – Flash AI News Daily"></a>
+      <a class="np__back" href="../">← Back to the news</a>
+    </div>
+  </header>
+
+  <main class="wrap legal tx">
+    <img class="tx__logo" src="../assets/bpm-key-icon.webp" width="96" height="96" alt="FAIND BPM, Key and Chords Finder app icon" decoding="async">
+    <p class="tx__eyebrow">FAIND app · free tool</p>
+    <h1 class="legal__title">Find the BPM, key and chords of a song</h1>
+    <p class="legal__lede">Drop in a song and get its tempo, its musical key with the Camelot code, and a chord chart you can follow while it plays. It runs in your browser, so the file is never uploaded. No account, no watermark, no limits. Tempo and key are measured; chords are an estimate.</p>
+
+    <div class="tx__card" id="app">
+      <div class="tx__drop" id="drop" role="button" tabindex="0" aria-label="Choose an audio file">
+        <strong>Drop a song here, or tap to choose</strong>
+        <span>MP3, WAV, M4A, FLAC, OGG, MP4 and more · up to 150 MB · first 10 minutes analysed</span>
+      </div>
+      <input type="file" id="pick" accept="audio/*,video/*" hidden>
+
+      <div class="tx__file" id="fileInfo" hidden>
+        <span><b id="fileName"></b> <small id="fileMeta"></small></span>
+        <button type="button" class="btn btn--ghost btn--sm" id="change">Change file</button>
+      </div>
+
+      <div class="tx__bar" id="bar" hidden>
+        <p id="barText" aria-live="polite">Reading the file…</p>
+        <div class="tx__track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="track"><div class="tx__fill" id="fill"></div></div>
+        <div class="tx__actions"><button type="button" class="btn btn--ghost btn--sm" id="cancel">Cancel</button></div>
+      </div>
+
+      <p class="tx__msg" id="msg" role="alert" hidden></p>
+
+      <div class="tx__out" id="out" hidden>
+        <div class="kb__stats">
+          <div class="kb__stat"><p class="kb__label">Tempo</p><p class="kb__big" id="bpm">–</p><p class="kb__sub" id="bpmSub"></p></div>
+          <div class="kb__stat"><p class="kb__label">Key</p><p class="kb__big" id="key">–</p><p class="kb__sub" id="keySub"></p></div>
+          <div class="kb__stat"><p class="kb__label">Camelot · Open Key</p><p class="kb__big" id="cam">–</p><p class="kb__sub" id="camSub"></p></div>
+        </div>
+
+        <audio class="kb__player" id="player" controls preload="metadata" hidden></audio>
+
+        <h3>Chords (estimate)</h3>
+        <p class="kb__used" id="used"></p>
+        <ul class="kb__chords" id="chords" aria-label="Chord timeline"></ul>
+        <div class="tx__actions">
+          <button type="button" class="btn btn--primary btn--sm" id="copy">Copy the chord chart</button>
+          <button type="button" class="btn btn--ghost btn--sm" id="again">Analyse another song</button>
+        </div>
+        <p class="tx__note">Tap a chord to jump to that point in the song. Chords are read from the full mix and shown as plain major or minor chords, so extensions (7th, sus, add9) are not named. Check the result with your ears or your instrument before you rely on it.</p>
+      </div>
+    </div>
+
+    <section>
+      <h2>How it works</h2>
+      <p>The page decodes your audio in the browser and looks at it in three ways. For the tempo it measures how often the sound hits (kicks, snares, strums) and finds the beat rate that fits best. For the key it counts which of the 12 notes are played most, after correcting for songs that are slightly out of tune, and compares that with the usual major and minor patterns. For the chords it does the same note counting second by second and matches each moment against major and minor triads, then smooths the result so the chords do not flicker.</p>
+      <p>The analysis code is written by FAIND, runs on your device and loads no other libraries. Nothing is sent anywhere. See the <a href="../privacy.html">privacy notes</a>.</p>
+    </section>
+
+    <section>
+      <h2>What people use it for</h2>
+      <h3>DJs and producers matching tracks</h3>
+      <p>Get the BPM and the Camelot code, and pick tracks with the same number or one step away on the wheel. Check a sample or a loop before you drop it into a project.</p>
+      <h3>Learning a song</h3>
+      <p>Play the file, follow the chord chart as it moves, and use it as a first draft to work out on guitar or piano. Slow passages and clear chords come out best.</p>
+      <h3>Singers and bands choosing a key</h3>
+      <p>Find the key of the original so you can decide whether to transpose it for your voice or your instrument.</p>
+    </section>
+
+    <section>
+      <h2>What to expect</h2>
+      <table class="tx-table">
+        <tbody>
+          <tr><th scope="row">Tempo</th><td>One average BPM for the whole song, with the double or half reading shown under it. Best on songs with a steady beat.</td></tr>
+          <tr><th scope="row">Key</th><td>The best match among 24 major and minor keys, plus the next best ones. The relative major or minor is the most common mix-up, and the page says when it is close.</td></tr>
+          <tr><th scope="row">Chords</th><td>Plain major and minor chords, an estimate. Good on clear harmonic music, weaker on busy mixes, heavy distortion, rap and songs that change key.</td></tr>
+          <tr><th scope="row">Speed</th><td>Usually a few seconds to half a minute, depending on your device and the length of the song.</td></tr>
+          <tr><th scope="row">Limits</th><td>Up to 150 MB per file; the first 10 minutes are analysed. Keep the tab open while it works.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Questions people ask</h2>
+      <details class="tx__faq"><summary>How do I find the key and BPM of a song?</summary><p>Drop the audio file into the box at the top of this page. After a few seconds you see the tempo in beats per minute, the musical key (for example A minor) and its Camelot code, which DJs use to mix in key. There is no account and no upload: your own device does the analysis.</p></details>
+      <details class="tx__faq"><summary>Can I find the chords of a song from an MP3?</summary><p>Yes, as an estimate. The page listens to the harmony and lists the major and minor chords in time order, and you can play the song and watch the current chord light up. It is a good starting point for learning a song, but always check it against your ears or your instrument.</p></details>
+      <details class="tx__faq"><summary>How accurate are the chords it finds?</summary><p>It reads chords from the full mix, with drums, vocals and everything else playing at once, and that is hard even for dedicated software. Expect the main chords of a clear, harmonic song to be right most of the time, and expect mistakes on busy mixes, heavy distortion, rap or songs that change key. It only names plain major and minor chords, so a Cmaj7 or a C7 usually appears as C. Treat the result as a draft.</p></details>
+      <details class="tx__faq"><summary>How does the BPM and key detection work?</summary><p>Tempo comes from the rhythm of the sound: the page measures how often the music hits (kicks, snares, strums) and finds the beat rate that fits best. The key comes from which of the 12 notes are played most, compared with typical major and minor patterns. Chords use the same note information, matched second by second against major and minor triads. All of it runs on your device.</p></details>
+      <details class="tx__faq"><summary>What is the Camelot code?</summary><p>It is a numbered wheel, from 1A to 12B, that DJs use to pick tracks that mix well. Songs with the same number, or a number one step away, are harmonically compatible. The page shows both the Camelot and the Open Key notation.</p></details>
+      <details class="tx__faq"><summary>Why does it show two possible keys?</summary><p>Every major key shares its notes with a relative minor key (C major and A minor, for example), so the two are easy to confuse. When the match is close, the page tells you and lists the next best keys. The chords often settle it: a song that starts and ends on Am is usually in A minor.</p></details>
+      <details class="tx__faq"><summary>Why is the BPM double or half of what I expected?</summary><p>A beat can be felt at two speeds. A slow ballad at 70 BPM can also be counted as 140. The page picks the most likely one and shows the other reading under it, so you can choose the one that matches how you tap your foot.</p></details>
+      <details class="tx__faq"><summary>Is my song uploaded anywhere?</summary><p>No. The file is decoded and analysed in your browser and is never sent to FAIND or to any other server. This page loads nothing else to do the analysis.</p></details>
+      <details class="tx__faq"><summary>Is it really free?</summary><p>Yes: no account, no watermark, no limit on how many songs you check. Your own device does the work, so it costs FAIND nothing to run.</p></details>
+      <details class="tx__faq"><summary>What files and lengths work?</summary><p>MP3, WAV, M4A, AAC, OGG, FLAC and the sound of most video files, as long as your browser can play them. Files up to 150 MB are accepted, and the first 10 minutes of the audio are analysed.</p></details>
+      <details class="tx__faq"><summary>Does it work if the tempo changes during the song?</summary><p>It reports one average tempo for the whole song, so it works best on songs played to a steady beat. Live recordings and songs with tempo changes can come out wrong or with low confidence.</p></details>
+      <details class="tx__faq"><summary>Can I paste a Spotify or YouTube link?</summary><p>No. The page works on audio files you choose from your own device, because a browser cannot take the sound out of a streaming page. If you have the right to use the track, open the file here.</p></details>
+    </section>
+
+    <p class="legal__back"><a class="btn btn--primary" href="../">Read today's AI news</a> <a class="btn btn--ghost" href="../transcribe/">Turn audio into text</a></p>
+  </main>
+
+  <footer class="footer"><div class="wrap footer__inner"><p class="footer__legal">FAIND – Flash AI News Daily · <a href="../cos-e-faind.html">About</a> · <a href="../glossario/en/">Glossary</a> · <a href="../approfondimenti/en/">In depth</a> · <a href="../redazione.html">Who is behind FAIND</a> · <a href="../feed.xml">RSS feed</a> · <a href="../privacy.html">Privacy and legal notes</a></p></div></footer>
+
+  <script>
+  (function () {
+    'use strict';
+    var MAX_BYTES = 150 * 1024 * 1024, MAX_SECONDS = 600, SR = 22050;
+    var $ = function (id) { return document.getElementById(id); };
+    var drop = $('drop'), pick = $('pick'), fileInfo = $('fileInfo'), bar = $('bar'), msg = $('msg'), out = $('out'), player = $('player');
+    var worker = null, objUrl = null, chords = [], chartText = '', token = 0;
+
+    function show(el, on) { el.hidden = !on; }
+    function error(t) { msg.textContent = t; show(msg, !!t); }
+    function size(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
+    function mmss(s) { s = Math.round(s); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+    function progress(p, text) {
+      var v = Math.max(0, Math.min(100, Math.round(p * 100)));
+      $('fill').style.width = v + '%'; $('track').setAttribute('aria-valuenow', v);
+      if (text) $('barText').textContent = text;
+    }
+    function stop() { token++; if (worker) { worker.terminate(); worker = null; } show(bar, false); }
+
+    function decode(buf) {
+      return new Promise(function (resolve, reject) {
+        var Off = window.OfflineAudioContext || window.webkitOfflineAudioContext, Ctx = window.AudioContext || window.webkitAudioContext, ctx;
+        function run(c, resample) {
+          var copy = buf.slice(0), done = false;
+          function ok(a) { if (!done) { done = true; resolve({ audio: a, resample: resample }); } }
+          function ko(e) { if (!done) { done = true; reject(e || new Error('decode')); } }
+          try { var pr = c.decodeAudioData(copy, ok, ko); if (pr && pr.then) pr.then(ok, ko); } catch (e) { ko(e); }
+        }
+        try { ctx = new Off(2, 1, SR); } catch (e) { ctx = null; }
+        if (ctx) {
+          var fell = false;
+          var p = new Promise(function (res, rej) {
+            var copy = buf.slice(0), done = false;
+            function ok(a) { if (!done) { done = true; res(a); } }
+            function ko(e) { if (!done) { done = true; rej(e); } }
+            try { var pr = ctx.decodeAudioData(copy, ok, ko); if (pr && pr.then) pr.then(ok, ko); } catch (e) { ko(e); }
+          });
+          p.then(function (a) { resolve({ audio: a, resample: false }); }, function () {
+            if (!Ctx) return reject(new Error('decode'));
+            run(new Ctx(), true);
+          });
+        } else if (Ctx) run(new Ctx(), true); else reject(new Error('unsupported'));
+      });
+    }
+    function toMono22k(res) {
+      var a = res.audio, n = a.length, ch = a.numberOfChannels, rate = a.sampleRate, mono = new Float32Array(n), c, i;
+      for (c = 0; c < ch; c++) { var d = a.getChannelData(c); for (i = 0; i < n; i++) mono[i] += d[i] / ch; }
+      if (rate === SR) return mono.subarray(0, Math.min(n, MAX_SECONDS * SR));
+      // simple box-filter resample to 22050 Hz (used only when the browser could not decode straight to that rate)
+      var ratio = rate / SR, outN = Math.min(Math.floor(n / ratio), MAX_SECONDS * SR), out = new Float32Array(outN), j;
+      for (j = 0; j < outN; j++) { var s = Math.floor(j * ratio), e = Math.min(n, Math.max(s + 1, Math.floor((j + 1) * ratio))), sum = 0; for (i = s; i < e; i++) sum += mono[i]; out[j] = sum / (e - s); }
+      return out;
+    }
+
+    function setFile(f) {
+      error(''); show(out, false);
+      if (!f) return;
+      if (f.size > MAX_BYTES) { error('This file is larger than 150 MB. Use a smaller version of the song.'); return; }
+      stop();
+      $('fileName').textContent = f.name; $('fileMeta').textContent = size(f.size);
+      show(drop, false); show(fileInfo, true); show(bar, true); progress(0.02, 'Reading the file…');
+      if (objUrl) URL.revokeObjectURL(objUrl);
+      objUrl = URL.createObjectURL(f); player.src = objUrl;
+      var my = ++token;
+      f.arrayBuffer().then(decode).then(function (res) {
+        if (my !== token) return;
+        progress(0.08, 'Analysing the tempo, key and chords…');
+        var mono = toMono22k(res);
+        if (mono.length < SR * 8) { throw new Error('short'); }
+        worker = new Worker('worker.js');
+        worker.onmessage = function (e) {
+          if (my !== token) return;
+          if (e.data.type === 'progress') progress(0.08 + 0.92 * e.data.p);
+          else if (e.data.type === 'done') { worker.terminate(); worker = null; show(bar, false); render(e.data.result, res.audio.duration); }
+          else { stop(); fail(e.data.message); }
+        };
+        worker.onerror = function () { if (my === token) { stop(); fail(''); } };
+        worker.postMessage({ samples: mono }, [mono.buffer]);
+      }).catch(function (err) {
+        if (my !== token) return;
+        stop();
+        fail(err && err.message === 'short' ? 'short' : '');
+      });
+    }
+    function fail(kind) {
+      show(fileInfo, false); show(drop, true);
+      error(kind === 'short' ? 'This clip is too short to analyse. Use at least 10 seconds of music.' : 'This file could not be read. Try an MP3, WAV or M4A, or convert it first.');
+    }
+
+    function render(r, fullDuration) {
+      var t = r.tempo;
+      if (t) {
+        $('bpm').textContent = Math.round(t.bpm * 10) / 10 + ' BPM';
+        $('bpmSub').textContent = 'Could also be felt as ' + t.alt + ' BPM (double or half time).' + (t.confidence < 8 ? ' Low confidence: the beat is not very steady or clear.' : '');
+      } else { $('bpm').textContent = '–'; $('bpmSub').textContent = 'No clear beat found.'; }
+      var k = r.key;
+      $('key').textContent = k.name;
+      var lead = k.level === 'clear' ? 'Clear match.' : (k.level === 'probable' ? 'Probable match.' : 'Unsure: several keys fit.');
+      $('keySub').textContent = lead + ' Next best: ' + k.alts.slice(0, 2).map(function (a) { return a.name; }).join(', ') + '.' + (r.tuningCents && Math.abs(r.tuningCents) >= 15 ? ' Tuned ' + (r.tuningCents > 0 ? '+' : '') + r.tuningCents + ' cents from standard pitch.' : '');
+      $('cam').textContent = k.camelot + ' · ' + k.openKey;
+      $('camSub').textContent = 'Mixes well with ' + neighbours(k.camelot) + '.';
+      chords = r.chords;
+      var ul = $('chords'); ul.textContent = '';
+      var count = {}, lines = [], i;
+      chords.forEach(function (c, idx) {
+        var li = document.createElement('li'), b = document.createElement('button');
+        b.type = 'button'; b.className = 'kb__chip'; b.dataset.i = idx;
+        b.innerHTML = '<b></b><small></small>'; b.firstChild.textContent = c.name; b.lastChild.textContent = mmss(c.t0);
+        b.addEventListener('click', function () { player.currentTime = c.t0; player.play().catch(function () {}); });
+        li.appendChild(b); ul.appendChild(li);
+        count[c.name] = (count[c.name] || 0) + (c.t1 - c.t0);
+        lines.push(mmss(c.t0) + '  ' + c.name);
+      });
+      var top = Object.keys(count).sort(function (a, b) { return count[b] - count[a]; }).slice(0, 6);
+      $('used').innerHTML = chords.length ? 'Most used: <b></b>' : 'No clear chords found in this file.';
+      if (chords.length) $('used').lastChild.textContent = top.join(' · ');
+      chartText = ($('fileName').textContent + '\n' + $('bpm').textContent + ' · ' + k.name + ' (' + k.camelot + ')\nChords are estimates\n\n' + lines.join('\n'));
+      show(player, true); show(out, true);
+      out.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+    function neighbours(c) {
+      var n = parseInt(c, 10), l = c.slice(-1), up = n % 12 + 1, dn = (n + 10) % 12 + 1;
+      return c + ', ' + dn + l + ', ' + up + l + ' and ' + n + (l === 'A' ? 'B' : 'A');
+    }
+
+    player.addEventListener('timeupdate', function () {
+      var t = player.currentTime, on = -1, i;
+      for (i = 0; i < chords.length; i++) if (t >= chords[i].t0 && t < chords[i].t1) { on = i; break; }
+      var cur = document.querySelector('.kb__chip.is-on');
+      if (cur && +cur.dataset.i === on) return;
+      if (cur) cur.classList.remove('is-on');
+      if (on >= 0) { var el = document.querySelector('.kb__chip[data-i="' + on + '"]'); if (el) el.classList.add('is-on'); }
+    });
+
+    drop.addEventListener('click', function () { pick.click(); });
+    drop.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick.click(); } });
+    ['dragenter', 'dragover'].forEach(function (n) { drop.addEventListener(n, function (e) { e.preventDefault(); drop.classList.add('is-over'); }); });
+    ['dragleave', 'drop'].forEach(function (n) { drop.addEventListener(n, function (e) { e.preventDefault(); drop.classList.remove('is-over'); }); });
+    drop.addEventListener('drop', function (e) { var f = e.dataTransfer && e.dataTransfer.files[0]; if (f) setFile(f); });
+    pick.addEventListener('change', function () { if (pick.files[0]) setFile(pick.files[0]); pick.value = ''; });
+    function reset() { stop(); player.pause(); show(out, false); show(fileInfo, false); show(drop, true); error(''); }
+    $('change').addEventListener('click', reset);
+    $('again').addEventListener('click', reset);
+    $('cancel').addEventListener('click', reset);
+    $('copy').addEventListener('click', function () {
+      var b = $('copy');
+      (navigator.clipboard ? navigator.clipboard.writeText(chartText) : Promise.reject()).then(function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy the chord chart'; }, 1500); }, function () { b.textContent = 'Copy not allowed here'; });
+    });
+  })();
+  </script>
+</body>
+</html>

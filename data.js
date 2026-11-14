@@ -172,6 +172,21 @@ window.FAIND_DATA = {
       link: { type: "try", url: "transcribe/" }
     },
     {
+      id: "faind-bpm-key-finder",
+      category: "chatbot",
+      tag: "tool",
+      title: {
+        it: "FAIND BPM e tonalità: tempo, chiave e accordi di un brano",
+        en: "FAIND BPM, Key and Chords Finder: tempo, key and chords of a song"
+      },
+      summary: {
+        it: "Carichi un brano e ottieni BPM, tonalità e una stima degli accordi, nel tuo browser: il file non viene caricato da nessuna parte. Gratis.",
+        en: "Drop in a song and get its BPM, key and an estimate of its chords in your browser. The file is never uploaded. Free."
+      },
+      source: { name: "FAIND", url: "bpm-key-finder/" },
+      link: { type: "try", url: "bpm-key-finder/" }
+    },
+    {
       id: "ollama",
       category: "chatbot",
       tag: "download",
