@@ -157,6 +157,21 @@ window.FAIND_DATA = {
   /* ------------------------ GUIDE & DOWNLOAD ------------------------ */
   guides: [
     {
+      id: "faind-transcribe",
+      category: "chatbot",
+      tag: "tool",
+      title: {
+        it: "FAIND Transcribe: da audio e video a testo e sottotitoli",
+        en: "FAIND Transcribe: audio and video to text and subtitles"
+      },
+      summary: {
+        it: "Trascrizione con Whisper nel tuo browser: il file non viene caricato da nessuna parte. Gratis, senza registrazione.",
+        en: "Whisper runs in your browser, so your file is never uploaded. Free, no sign-up."
+      },
+      source: { name: "FAIND", url: "transcribe/" },
+      link: { type: "try", url: "transcribe/" }
+    },
+    {
       id: "ollama",
       category: "chatbot",
       tag: "download",
