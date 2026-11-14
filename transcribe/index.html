@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="../assets/fonts/archivo.css">
   <link rel="stylesheet" href="../style.css">
   <script src="../stats.js" defer></script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","@id":"https://faind.org/transcribe/#app","name":"FAIND Transcribe","url":"https://faind.org/transcribe/","description":"Free in-browser transcription of audio and video into text and SRT/VTT subtitles, using the Whisper speech recognition model on the user's own device.","applicationCategory":"MultimediaApplication","operatingSystem":"Any (modern web browser)","inLanguage":"en","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"publisher":{"@id":"https://faind.org/#org"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is my audio uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The speech model is downloaded to your browser and the transcription runs on your own device. The file is never sent to FAIND or to any other server."}},{"@type":"Question","name":"Is it really free?","acceptedAnswer":{"@type":"Answer","text":"Yes: no account, no watermark, no minutes limit. The work is done by your own computer or phone, so it costs FAIND nothing to run."}},{"@type":"Question","name":"Which languages does it support?","acceptedAnswer":{"@type":"Answer","text":"Whisper handles about a hundred languages. You can pick the language or leave it on automatic detection. Accuracy is best for widely spoken languages and drops with background noise, heavy accents and overlapping speakers."}},{"@type":"Question","name":"Does it tell speakers apart?","acceptedAnswer":{"@type":"Answer","text":"No. The output is one continuous transcript with timestamps. It does not label who is speaking."}},{"@type":"Question","name":"Why is the first run slow?","acceptedAnswer":{"@type":"Answer","text":"The first time, your browser downloads the speech model. It is then stored by your browser, so later runs start straight away."}},{"@type":"Question","name":"How long can the file be?","acceptedAnswer":{"@type":"Answer","text":"Up to 60 minutes and 400 MB per file. Long files take longer on slower devices; a computer with a recent browser is the best choice."}}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","@id":"https://faind.org/transcribe/#app","name":"FAIND Transcribe","url":"https://faind.org/transcribe/","description":"Free in-browser transcription of audio and video into text and SRT/VTT subtitles, using the Whisper speech recognition model on the user's own device.","applicationCategory":"MultimediaApplication","operatingSystem":"Any (modern web browser)","inLanguage":"en","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"publisher":{"@id":"https://faind.org/#org"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is my audio uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The speech model is downloaded to your browser and the transcription runs on your own device. The file is never sent to FAIND or to any other server."}},{"@type":"Question","name":"Is it really free?","acceptedAnswer":{"@type":"Answer","text":"Yes: no account, no watermark, no minutes limit. The work is done by your own computer or phone, so it costs FAIND nothing to run."}},{"@type":"Question","name":"Which languages does it support?","acceptedAnswer":{"@type":"Answer","text":"Whisper handles about a hundred languages. You can pick the language or leave it on automatic detection. Accuracy is best for widely spoken languages and drops with background noise, heavy accents and overlapping speakers."}},{"@type":"Question","name":"Can it translate the transcript?","acceptedAnswer":{"@type":"Answer","text":"Yes, into 15 languages, from the menu under the result. In recent desktop Chrome it uses the browser's built-in on-device translator; elsewhere it offers a free open model that runs on your device after a one-time download of several hundred MB. The text stays on your device. Machine translation can be wrong on names, idioms and technical terms."}},{"@type":"Question","name":"Does it tell speakers apart?","acceptedAnswer":{"@type":"Answer","text":"No. The output is one continuous transcript with timestamps. It does not label who is speaking."}},{"@type":"Question","name":"Why is the first run slow?","acceptedAnswer":{"@type":"Answer","text":"The first time, your browser downloads the speech model. It is then stored by your browser, so later runs start straight away."}},{"@type":"Question","name":"How long can the file be?","acceptedAnswer":{"@type":"Answer","text":"Up to 60 minutes and 400 MB per file. Long files take longer on slower devices; a computer with a recent browser is the best choice."}}]}]}</script>
   <style>
     .tx { max-width: 880px; }
     .tx__eyebrow { margin: 0 0 8px; font-size: 12.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--link); }
@@ -49,6 +49,11 @@
     .tx__text { width: 100%; min-height: 280px; padding: 14px; border: 1px solid var(--rule); border-radius: var(--radius-m); background: var(--surface); color: var(--ink); font: 15px/1.6 var(--font); resize: vertical; }
     .tx__text:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
     .tx__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+    .tx__tr { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--rule); }
+    .tx__tr .tx__row { margin-top: 0; }
+    .tx__tr[hidden], .tx__trfrom[hidden], .tx__trnote[hidden] { display: none; }
+    .tx__trnote { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
+    .tx__trnote .btn { margin-top: 10px; }
     .tx__note { margin-top: 14px; font-size: 13.5px; color: var(--muted); }
     .tx__support { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
     .tx__support[hidden] { display: none; }
@@ -126,6 +131,17 @@
           <button type="button" class="btn btn--primary btn--sm" id="copy">Copy</button>
           <button type="button" class="btn btn--ghost btn--sm" id="download">Download</button>
         </div>
+        <div class="tx__tr" id="tr">
+          <div class="tx__row">
+            <label class="tx__field">Translate to
+              <select id="trTo"><option value="">Original (no translation)</option></select>
+            </label>
+            <label class="tx__field tx__trfrom" id="trFromWrap" hidden>Text is in
+              <select id="trFrom"><option value="">Choose…</option></select>
+            </label>
+          </div>
+          <p class="tx__trnote" id="trNote" aria-live="polite" hidden></p>
+        </div>
         <p class="tx__note">Check the result before you publish it. Automatic transcripts can miss names, numbers and technical terms.</p>
       </div>
       <p class="tx__support" id="support" hidden></p>
@@ -155,6 +171,7 @@
       <details class="tx__faq"><summary>Is my audio uploaded anywhere?</summary><p>No. The model is downloaded to your browser and the transcription runs on your device. The file is never sent to FAIND or to any other server.</p></details>
       <details class="tx__faq"><summary>Is it really free?</summary><p>Yes: no account, no watermark, no minutes limit. Your own device does the work, so it costs FAIND nothing to run.</p></details>
       <details class="tx__faq"><summary>Which languages does it support?</summary><p>Whisper handles about a hundred languages. Pick one from the list or leave it on automatic detection. Setting the language yourself usually helps with short or noisy clips.</p></details>
+      <details class="tx__faq"><summary>Can it translate the transcript?</summary><p>Yes, into the same 15 languages, from the menu under the result. In recent desktop Chrome the translation uses the browser's built-in on-device translator, with nothing to download. Elsewhere it offers a free open model (several hundred MB, stored by your browser after the first use). Either way the text stays on your device. Machine translation can be wrong on names, idioms and technical terms.</p></details>
       <details class="tx__faq"><summary>Does it tell speakers apart?</summary><p>No. The output is one continuous transcript with timestamps, without speaker labels.</p></details>
       <details class="tx__faq"><summary>Why is the first run slow?</summary><p>The first time, your browser downloads the speech model. It is then stored by the browser, so later runs start straight away.</p></details>
       <details class="tx__faq"><summary>How long can the file be?</summary><p>Up to 60 minutes and 400 MB per file. For longer recordings, split the file first.</p></details>
@@ -185,7 +202,7 @@
 
     function setFile(f) {
       error('');
-      show(out, false);
+      show(out, false); resetTr();
       if (!f) return;
       if (f.size > MAX_BYTES) { error('This file is larger than 400 MB. Split or compress it first.'); return; }
       file = f;
@@ -223,7 +240,7 @@
 
     $('go').addEventListener('click', function () {
       if (!file || busy) return;
-      busy = true; error(''); show(out, false); show(opts, false); show(bar, true);
+      busy = true; error(''); show(out, false); resetTr(); show(opts, false); show(bar, true);
       $('go').disabled = true;
       progress(0, 'Reading the file…');
       decode(file).then(function (a) {
@@ -276,19 +293,26 @@
       var p = function (n, w) { return ('00' + n).slice(-w); };
       return p(h, 2) + ':' + p(m, 2) + ':' + p(sec, 2) + (comma ? ',' : '.') + p(ms, 3);
     }
+    function formats(segs) {
+      return {
+        srt: segs.map(function (c, i) { return (i + 1) + '\n' + ts(c.s, true) + ' --> ' + ts(c.e, true) + '\n' + c.t + '\n'; }).join('\n'),
+        vtt: 'WEBVTT\n\n' + segs.map(function (c) { return ts(c.s) + ' --> ' + ts(c.e) + '\n' + c.t + '\n'; }).join('\n')
+      };
+    }
     function build(m) {
       var segs = m.chunks.map(function (c, i, arr) {
         var s = c.start == null ? (i ? arr[i - 1].end : 0) : c.start;
         var e = c.end == null ? (arr[i + 1] && arr[i + 1].start != null ? arr[i + 1].start : m.duration) : c.end;
         return { s: s || 0, e: e, t: c.text.trim() };
       }).filter(function (c) { return c.t; });
-      var srt = segs.map(function (c, i) { return (i + 1) + '\n' + ts(c.s, true) + ' --> ' + ts(c.e, true) + '\n' + c.t + '\n'; }).join('\n');
-      var vtt = 'WEBVTT\n\n' + segs.map(function (c) { return ts(c.s) + ' --> ' + ts(c.e) + '\n' + c.t + '\n'; }).join('\n');
-      return { txt: m.text, srt: srt, vtt: vtt, empty: !segs.length && !m.text };
+      var f = formats(segs);
+      var srt = f.srt, vtt = f.vtt;
+      return { txt: m.text, srt: srt, vtt: vtt, segs: segs, empty: !segs.length && !m.text };
     }
     function render() {
       show(out, true);
-      $('result').value = results.empty ? '' : results[fmt];
+      var v = view();
+      $('result').value = results.empty ? '' : v[fmt];
       if (results.empty) error('No speech was found in this file.');
     }
     document.querySelectorAll('.tx__tab').forEach(function (b) {
@@ -308,11 +332,133 @@
       if (!results) return;
       var base = (file ? file.name.replace(/\.[^.]+$/, '') : 'transcript') || 'transcript';
       var a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([results[fmt]], { type: 'text/plain;charset=utf-8' }));
-      a.download = base + '.' + fmt;
+      a.href = URL.createObjectURL(new Blob([view()[fmt]], { type: 'text/plain;charset=utf-8' }));
+      a.download = base + (curTo ? '.' + LANGS[curTo].c : '') + '.' + fmt;
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
     });
+
+    /* ---- Translation ---------------------------------------------------- */
+    var LANGS = {
+      english: { n: 'English', c: 'en', f: 'eng_Latn' }, italian: { n: 'Italian', c: 'it', f: 'ita_Latn' },
+      french: { n: 'French', c: 'fr', f: 'fra_Latn' }, german: { n: 'German', c: 'de', f: 'deu_Latn' },
+      spanish: { n: 'Spanish', c: 'es', f: 'spa_Latn' }, portuguese: { n: 'Portuguese', c: 'pt', f: 'por_Latn' },
+      dutch: { n: 'Dutch', c: 'nl', f: 'nld_Latn' }, polish: { n: 'Polish', c: 'pl', f: 'pol_Latn' },
+      russian: { n: 'Russian', c: 'ru', f: 'rus_Cyrl' }, turkish: { n: 'Turkish', c: 'tr', f: 'tur_Latn' },
+      arabic: { n: 'Arabic', c: 'ar', f: 'arb_Arab' }, hindi: { n: 'Hindi', c: 'hi', f: 'hin_Deva' },
+      japanese: { n: 'Japanese', c: 'ja', f: 'jpn_Jpan' }, korean: { n: 'Korean', c: 'ko', f: 'kor_Hang' },
+      chinese: { n: 'Chinese', c: 'zh', f: 'zho_Hans' }
+    };
+    var trTo = $('trTo'), trFrom = $('trFrom'), trNote = $('trNote');
+    var cache = {}, curTo = '', trJob = 0, trWorker = null;
+    Object.keys(LANGS).forEach(function (k) {
+      [trTo, trFrom].forEach(function (sel) { var o = document.createElement('option'); o.value = k; o.textContent = LANGS[k].n; sel.appendChild(o); });
+    });
+    function view() { return curTo && cache[curTo] ? cache[curTo] : results; }
+    function note(t) { trNote.textContent = t || ''; show(trNote, !!t); }
+    function resetTr() {
+      trJob++; if (trWorker) { trWorker.terminate(); trWorker = null; }
+      cache = {}; curTo = ''; trTo.value = ''; trTo.disabled = false; show($('trFromWrap'), false); trFrom.value = ''; note('');
+    }
+    function showTr(k) { curTo = k; if (results) render(); }
+    function nativeOK() { return typeof window.Translator !== 'undefined' && typeof window.Translator.create === 'function'; }
+
+    function sourceLang(sample) {
+      var chosen = $('lang').value;
+      if (chosen !== 'auto') return Promise.resolve(chosen);
+      if (trFrom.value) return Promise.resolve(trFrom.value);
+      if (typeof window.LanguageDetector === 'undefined') return Promise.resolve('');
+      return window.LanguageDetector.create().then(function (d) { return d.detect(sample); }).then(function (r) {
+        var code = r && r[0] && r[0].detectedLanguage ? String(r[0].detectedLanguage).toLowerCase().split('-')[0] : '', k;
+        for (k in LANGS) if (LANGS[k].c === code) return k;
+        return '';
+      }).catch(function () { return ''; });
+    }
+
+    function applyTexts(to, texts) {
+      var segs = results.segs.map(function (c, i) { return { s: c.s, e: c.e, t: texts[i] || c.t }; });
+      var f = formats(segs);
+      cache[to] = { txt: texts.join(' ').replace(/\s+/g, ' ').trim(), srt: f.srt, vtt: f.vtt };
+      note('Machine translation into ' + LANGS[to].n + '. Check names, idioms and technical terms before you use it.');
+      showTr(to);
+    }
+
+    function viaNative(src, to, texts, job) {
+      var opts = { sourceLanguage: LANGS[src].c, targetLanguage: LANGS[to].c };
+      return window.Translator.availability(opts).then(function (a) {
+        if (a === 'unavailable') return null;
+        return window.Translator.create(Object.assign({
+          monitor: function (m) { m.addEventListener('downloadprogress', function (e) { if (job === trJob) note('Downloading the translation language pack: ' + Math.round(e.loaded * 100) + '%'); }); }
+        }, opts)).then(function (t) {
+          var out = [], i = 0;
+          function next() {
+            if (job !== trJob) return Promise.reject(new Error('cancelled'));
+            if (i >= texts.length) return Promise.resolve(out);
+            note('Translating… ' + Math.round(100 * i / texts.length) + '%');
+            return t.translate(texts[i]).then(function (r) { out.push(r); i++; return next(); });
+          }
+          return next();
+        });
+      });
+    }
+
+    function viaModel(src, to, texts, job) {
+      return new Promise(function (res, rej) {
+        trWorker = new Worker('translate-worker.js', { type: 'module' });
+        trWorker.onmessage = function (ev) {
+          var m = ev.data;
+          if (job !== trJob) return;
+          if (m.type === 'download') note('Downloading the translation model (first use only): ' + Math.round(m.value * 100) + '%');
+          else if (m.type === 'progress') note('Translating… ' + Math.round(m.value * 100) + '%');
+          else if (m.type === 'done') { trWorker.terminate(); trWorker = null; res(m.texts); }
+          else if (m.type === 'error') { trWorker.terminate(); trWorker = null; rej(new Error(m.message)); }
+        };
+        trWorker.onerror = function () { if (trWorker) { trWorker.terminate(); trWorker = null; } rej(new Error('worker')); };
+        trWorker.postMessage({ type: 'run', texts: texts, src: LANGS[src].f, tgt: LANGS[to].f });
+      });
+    }
+
+    function runTr(to, src, modelOK) {
+      var job = ++trJob, texts = results.segs.map(function (c) { return c.t; });
+      trTo.disabled = true; note('Preparing the translation…');
+      var p = nativeOK() ? viaNative(src, to, texts, job).catch(function () { return null; }) : Promise.resolve(null);
+      p.then(function (r) {
+        if (r) return r;
+        if (modelOK) return viaModel(src, to, texts, job);
+        trTo.disabled = false; askModel(to, src); return null;
+      }).then(function (r) {
+        if (job !== trJob || !r) return;
+        trTo.disabled = false; applyTexts(to, r);
+      }).catch(function (e) {
+        if (job !== trJob) return;
+        trTo.disabled = false; trTo.value = ''; showTr('');
+        note('Translation failed on this device. Your transcript is unchanged. Try a recent desktop Chrome or a shorter file.');
+      });
+    }
+
+    function askModel(to, src) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn btn--primary btn--sm'; b.textContent = 'Download the model and translate';
+      trNote.textContent = 'This browser has no built-in translator. FAIND can use a free open translation model that runs on your device. It is a large one-time download (several hundred MB), then your browser keeps it. The text is not uploaded.';
+      trNote.appendChild(document.createElement('br')); trNote.appendChild(b); show(trNote, true);
+      b.addEventListener('click', function () { runTr(to, src, true); });
+    }
+
+    function startTr(to) {
+      var src = $('lang').value !== 'auto' ? $('lang').value : trFrom.value;
+      trJob++; if (trWorker) { trWorker.terminate(); trWorker = null; }
+      if (!to) { note(''); showTr(''); return; }
+      if (!results || results.empty || !results.segs.length) { trTo.value = ''; return; }
+      if (cache[to]) { applyTexts2(to); return; }
+      sourceLang(results.segs.slice(0, 5).map(function (c) { return c.t; }).join(' ')).then(function (s) {
+        if (!s) { show($('trFromWrap'), true); note('Choose the language of the text, then pick the target language again.'); trTo.value = ''; return; }
+        if (s === to) { note('The text is already in ' + LANGS[to].n + '.'); trTo.value = ''; return; }
+        trFrom.value = s;
+        if (nativeOK()) runTr(to, s, false); else askModel(to, s);
+      });
+    }
+    function applyTexts2(to) { note('Machine translation into ' + LANGS[to].n + '. Check names, idioms and technical terms before you use it.'); showTr(to); }
+    trTo.addEventListener('change', function () { startTr(trTo.value); });
   })();
   </script>
 </body>
