@@ -374,8 +374,8 @@ export function articleBySlug(slug, lang = 'it') {
 // dir: cartella della pagina se non è quella degli approfondimenti (Il punto usa la stessa veste)
 export const uiFor = (lang) => UI[lang];
 // altDirs: cartelle delle lingue sorelle se la pagina non è un approfondimento (Il punto)
-export function shell({ lang, file, langs, title, desc, image, imageAlt = 'FAIND – Flash AI News Daily', imageSize = [1200, 630], jsonld, main, type = 'article', dir = ARTICLE_DIR[lang], altDirs = ARTICLE_DIR }) {
-  const u = UI[lang], up = upOf(lang), url = `${SITE}${dir}${file}`;
+export function shell({ lang, file, langs, title, desc, image, imageAlt = 'FAIND – Flash AI News Daily', imageSize = [1200, 630], jsonld, main, type = 'article', dir = ARTICLE_DIR[lang], altDirs = ARTICLE_DIR, up: upDir }) {
+  const u = UI[lang], up = upDir || upOf(lang), url = `${SITE}${dir}${file}`;
   const alts = langs.length > 1 ? langs.map(k => `  <link rel="alternate" hreflang="${k}" href="${SITE}${altDirs[k]}${file}">`).join('\n') + `\n  <link rel="alternate" hreflang="x-default" href="${SITE}${altDirs.it}${file}">\n` : '';
   const sw = langs.length > 1 ? `    <p class="lsw"><span class="lsw__lab">${u.pageLang}:</span> ${langs.map(k => k === lang
     ? `<span class="lsw__on" aria-current="page">${LANG_LABEL[k]}</span>`
