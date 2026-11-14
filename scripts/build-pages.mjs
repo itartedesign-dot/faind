@@ -589,12 +589,13 @@ export async function buildSite(out, root, { archive = { items: [] } } = {}) {
   }
   const sent = await pingIndexNow(pending);
   const gameUrls = (archive.gamesSeoPinged ? [] : ['games/', 'faind-game/', 'signal-maze/', 'lost-signal/']).map(p => SITE + p);   // pagine dei giochi: avviso una volta sola ciascuna (Lost Signal e la pagina games aggiornata)
-  pending = [...new Set([...(sent ? [] : pending), ...fresh, ...newSubjects, ...gameUrls])].slice(-10000);
+  const transcribeUrls = archive.transcribeSeoPinged ? [] : [SITE + 'transcribe/'];   // pagina Transcribe aggiornata (domande, lingue, traduzione): avviso una volta sola
+  pending = [...new Set([...(sent ? [] : pending), ...fresh, ...newSubjects, ...gameUrls, ...transcribeUrls])].slice(-10000);
 
   // L'archivio aggiornato: il prossimo giro lo rilegge dal sito online
   await writeFile(path.join(root, 'archivio.json'), JSON.stringify({
     updated: new Date().toISOString(), items: archived, subjects: registry, pending,
-    indexnowStart: archive.indexnowStart || (sent ? today : ''), gamesSeoPinged: true
+    indexnowStart: archive.indexnowStart || (sent ? today : ''), gamesSeoPinged: true, transcribeSeoPinged: true
   }));
   out.archiveCount = archived.length;
 
