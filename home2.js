@@ -53,7 +53,7 @@
     { k: 'curiosita', ids: ['strano-ma-vero', 'h2smv'], icon: true },   // in testa il blocco di Strano ma vero, poi la lista (Paolo, 12 ottobre 2026)
     { k: 'prezzi', ids: ['prezzi', 'convenzioni'], icon: true },
     { k: 'lavoro', ids: ['job'], icon: true },
-    { k: 'strumenti', ids: ['trending', 'guide'], icon: true },   // prima i trending tool, poi gli strumenti da scaricare (Paolo, 12 ottobre 2026)
+    { k: 'strumenti', ids: ['faindapp', 'trending', 'guide'], icon: true },   // prima i trending tool, poi gli strumenti da scaricare (Paolo, 12 ottobre 2026)
     { k: 'uomoai', ids: ['focus'], icon: true },   // l'ex sezione Focus: robot, casa, medicina, lavoro e clima
     { k: 'telegram', ids: ['telegram'], icon: true },
     { k: 'gioca', ids: [], icon: true, link: 'games/' },   // non apre un pannello: porta alla pagina Faind Games (elenco dei giochi: News Rush, Signal Maze e Lost Signal)

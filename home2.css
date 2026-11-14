@@ -223,3 +223,13 @@ a.h2app { text-decoration: none; }
 .nlpop.nlpop--fixed.is-typing .nlpop__img { width: 82%; }
 .nlpop.nlpop--fixed.is-typing .nlpop__input { font-size: 18px; padding: 12px 14px; }
 @media (max-width: 1120px) { .nlpop.nlpop--fixed { align-self: start; } }
+
+/* Scheda in evidenza dell'app FAIND Audio to Text (Tool e guide, 14 novembre 2026) */
+.faindapp__card { display: grid; grid-template-columns: 132px 1fr; gap: 18px; align-items: center; padding: 18px; border: 2px solid var(--link); border-radius: var(--radius-l); background: var(--surface); color: inherit; text-decoration: none; box-shadow: var(--shadow); }
+.faindapp__card:hover, .faindapp__card:focus-visible { border-color: var(--brand-blue); }
+.faindapp__icon { display: block; width: 132px; height: 132px; border-radius: 28px; }
+.faindapp__tag { margin: 0 0 6px; font-size: 12.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--link); }
+.faindapp__title { margin: 0 0 8px; font-size: 22px; line-height: 1.2; color: var(--ink); }
+.faindapp__body p:not(.faindapp__tag) { margin: 0 0 12px; color: var(--muted); line-height: 1.5; }
+.faindapp__btn { display: inline-flex; }
+@media (max-width: 560px) { .faindapp__card { grid-template-columns: 1fr; justify-items: start; } .faindapp__icon { width: 96px; height: 96px; border-radius: 22px; } .faindapp__title { font-size: 19px; } }
