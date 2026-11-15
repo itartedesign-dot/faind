@@ -162,11 +162,11 @@ window.FAIND_DATA = {
       tag: "tool",
       title: {
         it: "FAIND Audio to Text: da audio e video a testo, con lingua e traduzione",
-        en: "FAIND Audio to Text: audio and video to text, with language choice and translation"
+        en: "FAIND Audio to Text: audio and video to text, translation, and audio extraction"
       },
       summary: {
         it: "Trascrizione e traduzione nel tuo browser: il file non viene caricato da nessuna parte. Gratis, senza registrazione.",
-        en: "Transcription and translation run in your browser, so your file is never uploaded. Free, no sign-up."
+        en: "Transcription, translation and audio extraction (MP3, WAV, M4A) run in your browser, so your file is never uploaded. Free, no sign-up."
       },
       source: { name: "FAIND", url: "transcribe/" },
       link: { type: "try", url: "transcribe/" }
