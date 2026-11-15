@@ -1,27 +1,30 @@
 /* FAIND Audio to Text, estrazione audio: codifica MP3 nel browser con lamejs (porta JavaScript di LAME, LGPL),
-   servito da FAIND come file separato e non modificato (vendor/lame.min.js). Il suono non viene inviato a nessun server. */
+   servito da FAIND come file separato e non modificato (vendor/lame.min.js). Il suono non viene inviato a nessun server.
+   Riceve il suono a pezzi (init, data, end) per non duplicare in memoria l'audio intero. */
 importScripts('vendor/lame.min.js');
+
+var enc = null, out = [], ch = 1;
+
+function toInt16(src) {
+  var o = new Int16Array(src.length), k, v;
+  for (k = 0; k < src.length; k++) { v = src[k]; v = v < -1 ? -1 : v > 1 ? 1 : v; o[k] = v < 0 ? v * 32768 : v * 32767; }
+  return o;
+}
 
 self.onmessage = function (ev) {
   var m = ev.data || {};
   try {
-    var ch = m.channels.length, enc = new lamejs.Mp3Encoder(ch, m.rate, m.kbps), out = [], n = m.channels[0].length, step = 1152 * 20, i, c, k, last = 0;
-    var buf = [new Int16Array(step), new Int16Array(step)];
-    for (i = 0; i < n; i += step) {
-      var len = Math.min(step, n - i);
-      for (c = 0; c < ch; c++) {
-        var src = m.channels[c], dst = buf[c];
-        for (k = 0; k < len; k++) { var v = src[i + k]; v = v < -1 ? -1 : v > 1 ? 1 : v; dst[k] = v < 0 ? v * 32768 : v * 32767; }
-      }
-      var a = buf[0].subarray(0, len), b = ch > 1 ? buf[1].subarray(0, len) : undefined;
-      var d = ch > 1 ? enc.encodeBuffer(a, b) : enc.encodeBuffer(a);
+    if (m.type === 'init') {
+      ch = m.ch; enc = new lamejs.Mp3Encoder(ch, m.rate, m.kbps); out = [];
+    } else if (m.type === 'data') {
+      var a = toInt16(m.channels[0]), d = ch > 1 ? enc.encodeBuffer(a, toInt16(m.channels[1])) : enc.encodeBuffer(a);
       if (d.length) out.push(d);
-      var p = i / n;
-      if (p - last > 0.02) { last = p; self.postMessage({ type: 'progress', value: p }); }
+      self.postMessage({ type: 'ack' });
+    } else if (m.type === 'end') {
+      var f = enc.flush();
+      if (f.length) out.push(f);
+      self.postMessage({ type: 'done', chunks: out });
     }
-    var f = enc.flush();
-    if (f.length) out.push(f);
-    self.postMessage({ type: 'done', chunks: out });
   } catch (e) {
     self.postMessage({ type: 'error', message: String(e && e.message || e) });
   }
