@@ -41,6 +41,9 @@
     .tx__bar { margin-top: 18px; }
     .tx__bar p { margin: 0 0 8px; font-size: 14.5px; color: var(--muted); }
     .tx__track { height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; border: 1px solid var(--rule); }
+    .tx__track.is-wait .tx__fill { width: 35% !important; animation: txwait 1.1s ease-in-out infinite alternate; }
+    @keyframes txwait { from { margin-left: 0; } to { margin-left: 65%; } }
+    @media (prefers-reduced-motion: reduce) { .tx__track.is-wait .tx__fill { animation: none; width: 100% !important; opacity: .5; } }
     .tx__fill { height: 100%; width: 0; background: var(--brand-blue); transition: width .25s ease; }
     .tx__msg { margin-top: 16px; padding: 12px 14px; border-radius: var(--radius-s); background: var(--t-news-bg); color: var(--t-news); font-size: 14.5px; font-weight: 600; }
     .tx__out { margin-top: 22px; }
@@ -362,7 +365,9 @@
     pick.addEventListener('change', function () { setFile(pick.files[0]); pick.value = ''; });
     $('change').addEventListener('click', function () { if (busy) return; show(fileInfo, false); hidePanels(); show(out, false); clearAudio(); show(drop, true); file = null; error(''); });
 
+    function wait(text) { $('track').classList.add('is-wait'); $('barText').textContent = text; }
     function progress(p, text) {
+      $('track').classList.remove('is-wait');
       $('fill').style.width = Math.round(p * 100) + '%';
       $('track').setAttribute('aria-valuenow', Math.round(p * 100));
       if (text) $('barText').textContent = text;
@@ -370,11 +375,15 @@
     function finish() { busy = false; show(bar, false); panel(); $('go').disabled = false; $('agoBtn').disabled = false; }
 
     function decode(f, rate, keep) {
-      rate = rate || 16000;
       return f.arrayBuffer().then(function (buf) {
-        var Ctx = window.AudioContext || window.webkitAudioContext;
-        var ctx = new Ctx({ sampleRate: rate });
-        return new Promise(function (res, rej) { ctx.decodeAudioData(buf, res, rej); }).then(function (ab) {
+        var Ctx = window.AudioContext || window.webkitAudioContext, ctx;
+        if (rate) ctx = new Ctx({ sampleRate: rate });
+        else { ctx = new Ctx(); if (ctx.sampleRate > 48000) { ctx.close(); ctx = new Ctx({ sampleRate: 48000 }); } }   // 0 = la frequenza nativa del dispositivo (più sicura su Safari)
+        var done = new Promise(function (res, rej) {
+          var t = setTimeout(function () { rej(new Error('timeout: this browser did not finish decoding the audio')); }, 60000);
+          ctx.decodeAudioData(buf, function (x) { clearTimeout(t); res(x); }, function (e) { clearTimeout(t); rej(e || new Error('decode error')); });
+        });
+        return done.then(function (ab) {
           ctx.close();
           if (keep) { var chs = [], q; for (q = 0; q < ab.numberOfChannels; q++) chs.push(ab.getChannelData(q)); return { channels: chs, rate: ab.sampleRate, seconds: ab.duration }; }
           var n = ab.length, ch = ab.numberOfChannels, mono = new Float32Array(n), c, i, d;
@@ -388,8 +397,8 @@
       if (!file || busy) return;
       busy = true; error(''); show(out, false); resetTr(); hidePanels(); show(bar, true);
       $('go').disabled = true;
-      progress(0, 'Reading the file…');
-      decode(file).then(function (a) {
+      wait('Reading the file… large videos can take a minute.');
+      decode(file, 16000).then(function (a) {
         if (!busy) return;
         if (a.seconds > MAX_SECONDS) { error('This recording is longer than 60 minutes. Split it first.'); finish(); return; }
         start(a);
@@ -501,9 +510,9 @@
     }
     $('agoBtn').addEventListener('click', function () {
       if (!file || busy) return;
-      var job = ++ajob, fm = $('afmt').value, voice = $('aq').value === 'voice', rate = voice ? 16000 : 44100;
+      var job = ++ajob, fm = $('afmt').value, voice = $('aq').value === 'voice', rate = voice ? 16000 : 0;
       busy = true; error(''); clearAudio(); hidePanels(); show(bar, true); $('agoBtn').disabled = true;
-      progress(0, 'Reading the file…');
+      wait('Reading the file… large videos can take a minute.');
       var stage = 'read';
       mediaDuration(file).then(function (d) {
         if (d > (voice ? 3600 : 1800)) { var e = new Error(voice ? 'This file is longer than 60 minutes. Split it first.' : 'This file is longer than 30 minutes. Use the Voice quality (up to 60 minutes) or split it first.'); e.user = true; throw e; }
