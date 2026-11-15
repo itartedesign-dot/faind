@@ -428,16 +428,26 @@
     }
     function encodeMp3(chs, rate, kbps, job) {
       return new Promise(function (res, rej) {
+        var n = chs[0].length, STEP = 1152 * 400, pos = 0, ready = true;
         mp3w = new Worker('mp3-worker.js');
+        function send() {
+          if (job !== ajob || !mp3w) return;
+          if (pos >= n) { mp3w.postMessage({ type: 'end' }); return; }
+          var end = Math.min(n, pos + STEP), parts = chs.map(function (c) { return c.slice(pos, end); });   // copie: non si cedono mai i buffer dell'AudioBuffer (Safari)
+          pos = end;
+          mp3w.postMessage({ type: 'data', channels: parts }, parts.map(function (c) { return c.buffer; }));
+          progress(pos / n, 'Encoding MP3… ' + Math.round(100 * pos / n) + '%');
+        }
         mp3w.onmessage = function (ev) {
           var m = ev.data;
           if (job !== ajob) return;
-          if (m.type === 'progress') progress(m.value, 'Encoding MP3… ' + Math.round(m.value * 100) + '%');
+          if (m.type === 'ack') setTimeout(send, 0);
           else if (m.type === 'done') { mp3w.terminate(); mp3w = null; res(new Blob(m.chunks, { type: 'audio/mpeg' })); }
           else if (m.type === 'error') { mp3w.terminate(); mp3w = null; rej(new Error(m.message)); }
         };
-        mp3w.onerror = function () { if (mp3w) { mp3w.terminate(); mp3w = null; } rej(new Error('worker')); };
-        mp3w.postMessage({ channels: chs, rate: rate, kbps: kbps }, chs.map(function (c) { return c.buffer; }));
+        mp3w.onerror = function (e) { if (mp3w) { mp3w.terminate(); mp3w = null; } rej(new Error('mp3 worker ' + (e && e.message || ''))); };
+        mp3w.postMessage({ type: 'init', ch: chs.length, rate: rate, kbps: kbps });
+        send();
       });
     }
     function stripAdts(u) {
@@ -494,11 +504,14 @@
       var job = ++ajob, fm = $('afmt').value, voice = $('aq').value === 'voice', rate = voice ? 16000 : 44100;
       busy = true; error(''); clearAudio(); hidePanels(); show(bar, true); $('agoBtn').disabled = true;
       progress(0, 'Reading the file…');
+      var stage = 'read';
       mediaDuration(file).then(function (d) {
         if (d > (voice ? 3600 : 1800)) { var e = new Error(voice ? 'This file is longer than 60 minutes. Split it first.' : 'This file is longer than 30 minutes. Use the Voice quality (up to 60 minutes) or split it first.'); e.user = true; throw e; }
+        stage = 'decode';
         return decode(file, rate, true);
       }).then(function (a) {
         if (job !== ajob) return null;
+        stage = 'encode';
         var chs = voice ? mixMono(a.channels) : (a.channels.length > 2 ? mixMono(a.channels) : a.channels);
         if (fm === 'wav') { progress(1, 'Writing WAV…'); return [window.FaindAudio.wav(chs, a.rate), 'wav']; }
         if (fm === 'mp3') return encodeMp3(chs, a.rate, voice ? 64 : 128, job).then(function (b) { return [b, 'mp3']; });
@@ -508,7 +521,7 @@
         finish(); showAudio(r[0], r[1]);
       }).catch(function (e) {
         if (job !== ajob) return;
-        error(e && e.user ? e.message : (e && /AAC/.test(e.message || '') ? e.message : 'This browser could not read or convert the audio in this file. Try another format, or convert the file to MP4 or MP3 first.'));
+        error(e && e.user ? e.message : (e && /AAC/.test(e.message || '') ? e.message : 'This browser could not ' + (stage === 'encode' ? 'convert' : 'read') + ' the audio in this file (' + stage + ': ' + String(e && (e.name ? e.name + ' ' : '') + (e && e.message || e)).slice(0, 120) + '). Try another format, or convert the file to MP4 or MP3 first.'));
         finish();
       });
     });
