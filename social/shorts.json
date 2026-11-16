@@ -110,6 +110,16 @@
       "titolo": "Screening del seno con l'AI: più tumori trovati, ma anche più richiami #Shorts",
       "testo": "In Spagna, in un programma di screening del seno, l'intelligenza artificiale ha letto per prima le mammografie di 31.301 donne: i casi a basso rischio non sono stati riletti da un radiologo e il lavoro di lettura è calato di oltre il 60%. Con l'AI sono stati trovati più tumori (7,3 ogni 1.000 donne contro 6,3), ma sono aumentati anche i richiami per ulteriori esami. Un risultato promettente, con un compromesso da valutare.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: \"AI-based triage and decision support in mammography and digital tomosynthesis for breast cancer screening: a paired, noninferiority trial\", Nature Medicine, 2026\nhttps://www.nature.com/articles/s41591-026-04277-x\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Mammografia #TumoreAlSeno #Prevenzione #Salute #Scienza #DalCassetto #FAIND",
       "telegram": "In uno studio spagnolo l'AI ha aiutato a trovare più tumori al seno, ma ha anche portato più richiami: le storie utili hanno anche queste righe."
+    },
+    {
+      "id": "dal-cassetto-12",
+      "aneddoto": 12,
+      "dalle": "2026-11-16T10:42:00Z",
+      "scade": "2026-11-16T12:33:34Z",
+      "video": "https://export-download.canva.com/YCRMk/DAHbEpYCRMk/-1/0-25292146157878782.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH4R7NKVBA%2F20261115%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261115T195441Z&X-Amz-Expires=59933&X-Amz-Signature=2a8ecac495e7d6f568b3a3c5bf6b6755c37eee913b5d30aad8e53d92b85aae01&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Mon%2C%2016%20Nov%202026%2012%3A33%3A34%20GMT",
+      "titolo": "L'AI che prevede le piene dei fiumi fino a 7 giorni prima #Shorts",
+      "testo": "Un'alluvione non si ferma con una previsione, ma una previsione può dare tempo per prepararsi. Google Research ha addestrato un modello di intelligenza artificiale sui dati di migliaia di stazioni di misura dei fiumi: oggi il servizio Flood Hub prevede le piene dei fiumi fino a sette giorni prima, anche dove i fiumi non sono misurati. Nello studio, l'affidabilità media delle previsioni globali è passata da zero a cinque giorni di anticipo.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Nearing et al., \"Global prediction of extreme floods in ungauged watersheds\", Nature, 2024 (Google Research)\nhttps://research.google/blog/using-ai-to-expand-global-access-to-reliable-flood-forecasts/\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Alluvioni #Meteo #Clima #Scienza #Google #DalCassetto #FAIND",
+      "telegram": "Un'AI di Google prevede le piene dei fiumi fino a sette giorni prima: il tempo guadagnato è la parte che serve davvero."
     }
   ]
 }
