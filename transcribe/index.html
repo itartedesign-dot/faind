@@ -527,7 +527,7 @@
         return encodeM4a(chs, a.rate, voice ? 48000 : 128000, job).then(function (b) { return [b, 'm4a']; });
       }).then(function (r) {
         if (!r || job !== ajob) return;
-        finish(); showAudio(r[0], r[1]);
+        finish(); showAudio(r[0], r[1]); if (window.faindEvent) faindEvent('transcribe-extract-done');
       }).catch(function (e) {
         if (job !== ajob) return;
         error(e && e.user ? e.message : (e && /AAC/.test(e.message || '') ? e.message : 'This browser could not ' + (stage === 'encode' ? 'convert' : 'read') + ' the audio in this file (' + stage + ': ' + String(e && (e.name ? e.name + ' ' : '') + (e && e.message || e)).slice(0, 120) + '). Try another format, or convert the file to MP4 or MP3 first.'));
@@ -550,7 +550,7 @@
         } else if (m.type === 'progress') {
           progress(m.value, 'Transcribing… about ' + Math.round(m.value * 100) + '%');
         } else if (m.type === 'done') {
-          results = build(m); finish(); render();
+          results = build(m); finish(); render(); if (window.faindEvent) faindEvent('transcribe-text-done');
           worker.terminate(); worker = null;
         } else if (m.type === 'error') {
           error('Transcription failed: ' + m.message + '. Try the Fast quality, a shorter file, or another browser.');

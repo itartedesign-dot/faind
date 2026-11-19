@@ -19,4 +19,13 @@
   s.src = 'https://gc.zgo.at/count.js';
   s.setAttribute('data-goatcounter', 'https://' + CODICE + '.goatcounter.com/count');
   document.head.appendChild(s);
+  // Conta solo che uno strumento ha prodotto un risultato (nome dell'evento, mai file, nome o contenuto).
+  // Serve a distinguere l'uso vero dalle semplici visite. Senza GoatCounter (o con Do Not Track) non fa nulla.
+  window.faindEvent = function (name) {
+    var n = 0;
+    (function send() {
+      if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: 'event/' + name, title: name, event: true });
+      else if (n++ < 20) setTimeout(send, 500);
+    })();
+  };
 })();

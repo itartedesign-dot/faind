@@ -327,7 +327,7 @@
         worker.onmessage = function (e) {
           if (my !== token) return;
           if (e.data.type === 'progress') progress(0.08 + 0.92 * e.data.p);
-          else if (e.data.type === 'done') { worker.terminate(); worker = null; show(bar, false); render(e.data.result, res.audio.duration); }
+          else if (e.data.type === 'done') { worker.terminate(); worker = null; show(bar, false); render(e.data.result, res.audio.duration); if (window.faindEvent) faindEvent('bpm-key-done'); }
           else { stop(); fail(e.data.message); }
         };
         worker.onerror = function () { if (my === token) { stop(); fail(''); } };
