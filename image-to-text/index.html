@@ -400,7 +400,7 @@
         $('text').value = text; $('join').checked = false; unjoined = null;
         $('stat').textContent = stats(parts) + (items.cutNote ? ' · ' + items.cutNote : '');
         if (worker) { try { worker.terminate(); } catch (e) {} worker = null; }
-        show(bar, false); show(out, true); show(opts, true);
+        show(bar, false); show(out, true); show(opts, true); if (window.faindEvent) faindEvent('image-to-text-done');
         $('out').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       } catch (e) {
         if (my !== token || (e && e.message === 'cancelled')) return;
