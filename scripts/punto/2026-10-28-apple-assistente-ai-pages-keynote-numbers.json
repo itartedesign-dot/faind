@@ -1,0 +1,118 @@
+{
+ "slug": "apple-assistente-ai-pages-keynote-numbers",
+ "date": "2026-10-28",
+ "title": "Apple porta un assistente AI in Pages, Keynote e Numbers: cosa fa, quanto costa e perché per ora non è per tutti",
+ "desc": "Apple annuncia un assistente AI in beta per Pages, Keynote e Numbers, basato su modelli Apple e OpenAI. Cosa fa, con quali limiti (solo inglese USA), quanto costa Creator Studio e cosa non è stato detto sui dati.",
+ "lede": "Il 27 ottobre Apple ha annunciato un aggiornamento di <strong>Apple Creator Studio</strong> che porta un assistente basato sull'intelligenza artificiale dentro Pages, Keynote e Numbers, costruito con modelli di Apple e di OpenAI. L'assistente è in beta, parla solo inglese statunitense e arriverà a novembre per gli abbonati: per ora, più che una novità da usare, è un annuncio da leggere con attenzione.",
+ "brief": [
+  "Pages, Keynote e Numbers ricevono un assistente che «capisce il contesto del documento»: aiuta a scrivere, a costruire presentazioni e a lavorare sui dati.",
+  "Secondo Apple è basato su modelli sviluppati da Apple e su modelli di OpenAI.",
+  "È in beta, funziona solo in inglese statunitense e richiede un dispositivo compatibile con Apple Intelligence e iOS 27, iPadOS 27 o macOS 27.",
+  "Gli aggiornamenti di Creator Studio arrivano a novembre, gratis per chi è già abbonato; per i nuovi abbonati l'abbonamento costa 12,99 dollari al mese o 129 all'anno (prezzi USA).",
+  "Su macOS 27 le tre app supportano il Model Context Protocol, che permette ad agenti AI esterni di leggere e modificare i documenti."
+ ],
+ "sections": [
+  [
+   "Cosa ha annunciato Apple",
+   "Nel comunicato del 27 ottobre Apple presenta la novità come il più importante aggiornamento di Creator Studio dal suo lancio. Al centro ci sono gli assistenti intelligenti: ciascuna delle tre app di produttività riceve un assistente che tiene conto del documento aperto.\n\nIn Keynote aiuta a progettare, animare e rifinire le slide. In Pages scrive bozze, riorganizza e rivede i testi. In Numbers calcola, visualizza e ordina i dati, propone il tipo di grafico con un'anteprima e costruisce tabelle personalizzate. Accanto agli assistenti, Apple annuncia anche novità non legate a queste tre app, tra cui un assistente per Logic Pro, la funzione Generate Fill in Pixelmator Pro e nuovi contenuti per Final Cut Pro."
+  ],
+  [
+   "Con quali limiti",
+   "Il comunicato riporta con precisione i vincoli, che alcuni resoconti italiani non evidenziano. Gli assistenti sono in beta, sono disponibili solo in inglese statunitense e richiedono un dispositivo compatibile con Apple Intelligence con iOS 27, iPadOS 27 o macOS 27 o successivi. Per i Paesi, Apple non indica altro che i prezzi in dollari e la lingua: non c'è un elenco di mercati né una data per altre lingue, italiano compreso.\n\nPer quanto riguarda il costo, Keynote, Pages e Numbers restano gratuite, ma le funzioni di intelligenza artificiale sono legate all'abbonamento Creator Studio, secondo la ricostruzione di Data Studios. Apple indica 12,99 dollari al mese o 129 all'anno per i nuovi iscritti, con un mese di prova, tre mesi gratis con l'acquisto di un Mac o iPad idoneo e un piano ridotto per studenti e docenti. Chi è già abbonato avrà l'aggiornamento gratis a novembre.",
+   {
+    "caption": "In breve",
+    "head": [
+     "Voce",
+     "Dato"
+    ],
+    "rows": [
+     [
+      "Annuncio",
+      "27 ottobre 2026"
+     ],
+     [
+      "Arrivo",
+      "novembre 2026, gratis per chi è già abbonato a Creator Studio"
+     ],
+     [
+      "Stato",
+      "beta"
+     ],
+     [
+      "Lingua",
+      "solo inglese statunitense"
+     ],
+     [
+      "Requisiti",
+      "dispositivo con Apple Intelligence e iOS 27, iPadOS 27 o macOS 27"
+     ],
+     [
+      "Modelli",
+      "modelli Apple e modelli OpenAI"
+     ],
+     [
+      "Prezzo per i nuovi abbonati (USA)",
+      "12,99 dollari al mese o 129 all'anno"
+     ]
+    ]
+   }
+  ],
+  [
+   "I modelli di OpenAI e gli agenti esterni",
+   "Che l'assistente si appoggi anche a OpenAI è una delle informazioni più rilevanti del comunicato, che parla di una combinazione di modelli sviluppati da Apple e di OpenAI. Apple non spiega però come il lavoro sia diviso tra i due, dove vengano elaborate le richieste né quali dati dei documenti arrivino a OpenAI o vengano conservati; Data Studios sottolinea che il comunicato non nomina nemmeno Private Cloud Compute. L'unica funzione descritta come eseguita sul dispositivo è l'analisi dei suoni nel browser di Logic Pro.\n\nUn'altra novità riguarda il Model Context Protocol (MCP): su macOS 27 e successivi Keynote, Pages e Numbers permettono ad agenti AI di terze parti di leggere i contenuti, modificarli ed eseguire azioni automatiche. Per Data Studios, Apple non ha però indicato quali agenti siano compatibili, quali azioni siano esposte né come funzionino permessi e conferme: dettagli importanti, visto che un agente esterno potrebbe lavorare su documenti di lavoro."
+  ],
+  [
+   "Un lancio con qualche incertezza",
+   "Il 22 ottobre, qualche giorno prima dell'annuncio, il sito tedesco Apfelpatient ha riferito che le versioni 15.4.1 di Pages, Keynote e Numbers parlavano nelle note di rilascio di un «Intelligent Assistant» in beta, ma la funzione non compariva nemmeno agli abbonati, e per alcune ore le app sono sparite dall'App Store tedesco prima di tornare disponibili. Il sito non indica una causa ufficiale e la spiegazione è una sua ipotesi. È un segnale di quanto la funzione fosse ancora in preparazione.\n\nIl comunicato, del resto, è promozionale: la frase di Apple sul «più entusiasmante aggiornamento» di Creator Studio è un giudizio dell'azienda, non una valutazione indipendente, e per ora non ci sono prove d'uso su cui giudicare quanto l'assistente funzioni davvero."
+  ]
+ ],
+ "faq": [
+  [
+   "Che cosa fa l'assistente AI di Pages, Keynote e Numbers?",
+   "Capisce il contesto del documento aperto: in Pages scrive e rivede i testi, in Keynote progetta e anima le slide, in Numbers calcola, ordina i dati e propone grafici."
+  ],
+  [
+   "Posso usarlo in Italia e in italiano?",
+   "Per ora no: Apple indica che è in beta e disponibile solo in inglese statunitense, senza annunciare altre lingue."
+  ],
+  [
+   "Quando arriva?",
+   "Apple ha annunciato l'aggiornamento di Creator Studio per novembre 2026, gratis per chi è già abbonato. Non abbiamo verificato se sia già disponibile."
+  ],
+  [
+   "Serve un abbonamento?",
+   "Le tre app restano gratuite, ma le funzioni AI sono legate all'abbonamento Creator Studio, che per i nuovi iscritti costa 12,99 dollari al mese o 129 all'anno (prezzi USA)."
+  ],
+  [
+   "Che cosa si sa sui dati?",
+   "Poco: Apple dice che usa modelli propri e di OpenAI ma non spiega come siano divisi, dove vengano elaborate le richieste né quali dati siano conservati."
+  ]
+ ],
+ "sources": [
+  {
+   "name": "Apple",
+   "title": "Apple Creator Studio adds powerful new AI features and even more creative tools",
+   "url": "https://www.apple.com/newsroom/2026/10/apple-creator-studio-adds-powerful-new-ai-features-and-even-more-creative-tools/"
+  },
+  {
+   "name": "Punto Informatico",
+   "title": "Apple lancia assistente AI su Pages, Keynote e Numbers",
+   "url": "https://www.punto-informatico.it/apple-assistente-ai-pages-keynote-numbers/"
+  },
+  {
+   "name": "Data Studios",
+   "title": "Apple Creator Studio adds OpenAI-backed AI assistants to Logic Pro, Keynote, Pages and Numbers",
+   "url": "https://www.datastudios.org/post/apple-creator-studio-ai-assistants-openai-logic-pro-keynote-pages-numbers-mcp"
+  },
+  {
+   "name": "Apfelpatient",
+   "title": "Pages, Keynote und Numbers: KI-Update zurückgezogen",
+   "url": "https://www.apfelpatient.de/news/pages-keynote-numbers-ki-update-zurueckgezogen"
+  }
+ ],
+ "deep": [
+  "intelligenza-artificiale-gratis-o-a-pagamento",
+  "cos-e-chatgpt-come-funziona"
+ ],
+ "updated": "2026-11-19"
+}
