@@ -77,7 +77,7 @@
       "titolo": "Allagamenti anche lontano dai fiumi",
       "testo": "Per allagare una strada non serve sempre un fiume vicino. Piogge intense possono mettere in crisi anche una città. Google ha sviluppato un modello AI dedicato agli allagamenti improvvisi urbani, con previsioni fino a ventiquattro ore. Un problema diverso dalle piene fluviali, che richiede un modello diverso.",
       "fonte": "Google Research",
-      "verificato": false
+      "verificato": true
     },
     {
       "titolo": "Le scie che si possono evitare",
@@ -176,6 +176,10 @@
     {
       "n": 12,
       "day": "2026-11-16"
+    },
+    {
+      "n": 13,
+      "day": "2026-11-19"
     }
   ]
 }

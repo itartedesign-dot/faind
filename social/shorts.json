@@ -120,6 +120,16 @@
       "titolo": "L'AI che prevede le piene dei fiumi fino a 7 giorni prima #Shorts",
       "testo": "Un'alluvione non si ferma con una previsione, ma una previsione può dare tempo per prepararsi. Google Research ha addestrato un modello di intelligenza artificiale sui dati di migliaia di stazioni di misura dei fiumi: oggi il servizio Flood Hub prevede le piene dei fiumi fino a sette giorni prima, anche dove i fiumi non sono misurati. Nello studio, l'affidabilità media delle previsioni globali è passata da zero a cinque giorni di anticipo.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Nearing et al., \"Global prediction of extreme floods in ungauged watersheds\", Nature, 2024 (Google Research)\nhttps://research.google/blog/using-ai-to-expand-global-access-to-reliable-flood-forecasts/\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Alluvioni #Meteo #Clima #Scienza #Google #DalCassetto #FAIND",
       "telegram": "Un'AI di Google prevede le piene dei fiumi fino a sette giorni prima: il tempo guadagnato è la parte che serve davvero."
+    },
+    {
+      "id": "dal-cassetto-13",
+      "aneddoto": 13,
+      "dalle": "2026-11-19T10:42:00Z",
+      "scade": "2026-11-19T11:42:37Z",
+      "video": "https://export-download.canva.com/54YwY/DAHbWm54YwY/-1/0-6542001115074889932.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH4R7NKVBA%2F20261118%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261118T123726Z&X-Amz-Expires=83111&X-Amz-Signature=4579229300b4235458f41655aa665a3f9cf2cfdcbba9e9554537b90eaa7fffff&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Thu%2C%2019%20Nov%202026%2011%3A42%3A37%20GMT",
+      "titolo": "L'AI che stima il rischio di allagamenti improvvisi in città fino a 24 ore prima #Shorts",
+      "testo": "Per avere una strada allagata non serve sempre un fiume vicino: bastano piogge intense su una città. Google Research ha addestrato un modello di intelligenza artificiale a stimare il rischio di allagamenti improvvisi nelle aree urbane fino a 24 ore prima, usando previsioni del tempo e dati su terreno e urbanizzazione. È un lavoro di ricerca con celle di 20 chilometri: indica dove il rischio è alto, non strada per strada.\n\nDal cassetto di Faindo: storie vere di intelligenza artificiale e scienza.\n\nFonte: Zlydenko e Cohen, \"Protecting cities with AI-driven flash flood forecasting\", Google Research, 12 marzo 2026\nhttps://research.google/blog/protecting-cities-with-ai-driven-flash-flood-forecasting/\n\nLe notizie sull'intelligenza artificiale ogni giorno: https://faind.org\n\n#Shorts #IntelligenzaArtificiale #AI #Allagamenti #Meteo #Clima #Scienza #Google #DalCassetto #FAIND",
+      "telegram": "Un'AI di Google stima il rischio di allagamenti improvvisi in città fino a 24 ore prima, anche dove non passa nessun fiume."
     }
   ]
 }
