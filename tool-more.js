@@ -32,9 +32,9 @@
 
   var css = document.createElement('style');
   css.textContent =
-    '.fmore{min-height:396px;margin:28px 0 8px;padding:20px;border:1px solid var(--rule);border-radius:var(--radius-m,10px);background:var(--surface)}' +
+    '.fmore{min-height:396px;margin:28px 0 8px;padding:20px;border:1px solid #DCE3ED;border-radius:var(--radius-m,10px);background:#FFFFFF;color:#15213A;--ink:#15213A;--muted:#4A5870;--rule:#DCE3ED;--link:#1259A0}' +
     '.fmore[hidden]{display:none}' +
-    '.fmore h2{margin:0 0 4px;font-size:18px}' +
+    '.fmore h2{margin:0 0 4px;font-size:18px;color:#15213A}' +
     '.fmore__lede{margin:0 0 14px;color:var(--muted);font-size:14.5px}' +
     '.fmore .fmore__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 16px;padding:0;list-style:none}' +
     '.fmore .fmore__card{margin:0;padding:0;list-style:none}' +
