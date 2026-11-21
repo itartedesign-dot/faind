@@ -74,6 +74,12 @@ fatto con lo strumento GitHub `push_files` (non con git):
 
 Messaggio del commit: `Card Canva <card> del <data>`.
 
+**Come scrivere (dal 21 novembre 2026).** Il server GitHub MCP (`push_files`) è stato ritirato e `gh api` non può
+scrivere. Usa invece git da terminale nel clone `/home/claude/faind`: `git fetch origin main`, crea un branch locale da
+`origin/main`, modifica solo i due file, un solo commit con il messaggio sopra, poi `git push origin <branch>:main`.
+Il resto (controlli, un solo commit, solo questi due file) resta uguale. Se `push_files` tornasse disponibile va bene anche quello.
+Il link PNG di Canva scade: esporta la pagina subito prima di scrivere il commit.
+
 Il commit avvia subito l'automazione del sito, che scarica il PNG (il link di Canva scade dopo
 poche ore) e lo pubblica come `https://faind.org/social/canva-<card>.png`. Il post del giorno
 usa quella immagine.
