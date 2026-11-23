@@ -105,3 +105,8 @@ un hashtag con l'autore (es. `#LeonardoDaVinci`).
 
 Chiudi con no_reply_needed se tutto è andato bene. Scrivi nel thread "Giochi LinkedIn" solo se qualcosa
 non funziona al tentativo delle 12:40, o se ti sei fermato per un dubbio sull'opera.
+
+**Come scrivere (dal 21 novembre 2026).** `push_files` (server GitHub MCP) è stato ritirato e `gh api` non può scrivere:
+al posto di `push_files` usa git da terminale nel clone `/home/claude/faind` (`git fetch origin main`, branch locale da
+`origin/main`, solo i file indicati, un solo commit con lo stesso messaggio, poi `git push origin <branch>:main`).
+Il link PNG di Canva scade: esporta la pagina subito prima del commit.

@@ -72,6 +72,11 @@ quando scade: `X-Amz-Date` + `X-Amz-Expires` secondi (in UTC).
 Paolo ha autorizzato questa routine a scrivere su `main` **solo questi due file**, in un unico commit
 fatto con lo strumento GitHub `push_files` (non con git). Rileggili da `main` subito prima.
 
+**Come scrivere (dal 21 novembre 2026).** Il server GitHub MCP (`push_files`) è stato ritirato e `gh api` non può
+scrivere. Usa invece git da terminale nel clone `/home/claude/faind`: `git fetch origin main`, crea un branch locale da
+`origin/main`, modifica solo i due file, un solo commit, poi `git push origin <branch>:main`. Il resto (controlli, un solo
+commit, solo questi due file) resta uguale. Se `push_files` tornasse disponibile va bene anche quello.
+
 - `social/shorts.json`: aggiungi in fondo alla `coda`
   `{"id": "dal-cassetto-NN", "aneddoto": N, "dalle": <adesso, ISO UTC>, "scade": <scadenza del link, ISO UTC>, "video": <link MP4>, "titolo": ..., "testo": ..., "telegram": ...}`
   (`NN` = numero dell'aneddoto a due cifre). Non togliere gli short già usciti.
