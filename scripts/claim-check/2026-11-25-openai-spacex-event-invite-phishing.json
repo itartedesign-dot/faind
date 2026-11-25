@@ -1,0 +1,36 @@
+{
+ "slug": "openai-spacex-event-invite-phishing",
+ "date": "2026-11-25",
+ "question": "Is the OpenAI or SpaceX event invitation real?",
+ "seoTitle": "Is the OpenAI or SpaceX event invite real? Phishing check",
+ "answer": "No. According to Push Security, invitations to fake OpenAI, SpaceX and Anthropic events are a phishing campaign that steals Microsoft and Google accounts.",
+ "desc": "No. Invitations to OpenAI, SpaceX and Anthropic events that offer free ChatGPT Pro or Grok Heavy and ask for a work sign-in are a phishing campaign, per Push Security. How it works and how to spot it.",
+ "verdict": "false",
+ "claim": "An invitation to an OpenAI, SpaceX or Anthropic event, offering three months of ChatGPT Pro or Grok Heavy, or a \"SpaceX share\", if you sign in with your work Microsoft or Google account.",
+ "lede": "Security firm Push Security reported on 5 November 2026 a campaign built on fake event registration pages for <strong>OpenAI</strong>, <strong>SpaceX</strong> and <strong>Anthropic</strong>. The offer is not real. The pages ask visitors to sign in with a work Microsoft or Google account to \"claim a reward\", and use that sign-in to take over the account, including accounts protected by multi-factor authentication. The report comes from a security vendor and is the only technical source we found: no statement from the three companies was in the coverage we read.",
+ "brief": [
+  "Push Security detected and blocked visits to the fake pages in late October 2026 and published its analysis on 5 November 2026.",
+  "The lures are an OpenAI Academy livestream (4 November, reward: three months of ChatGPT Pro), an invite-only SpaceX briefing (12 November, reward: three months of Grok Heavy or a \"SpaceX share\") and an Anthropic event at AWS re:Invent.",
+  "The pages ask for a work sign-in through \"Continue with Microsoft\" or \"Continue with Google\" and capture passwords, MFA responses and session cookies.",
+  "Neither Push nor the news coverage says the campaign uses AI to write the emails. The AI companies are the bait, not the method.",
+  "No figures on victims or scale have been published."
+ ],
+ "sections": [
+  ["What the invitation looks like", "According to Push Security, the invitation links to a registration page for an event from a well-known AI brand and promises a reward. Examples in its report: an \"OpenAI Academy\" livestream on 4 November titled \"ChatGPT for Social & Digital Marketing Teams\" with three months of ChatGPT Pro, and an invite-only SpaceX \"Starship Product Briefing\" on 12 November with three months of Grok Heavy or a \"SpaceX share\". An Anthropic page tied to AWS re:Invent was no longer live when Push investigated it.\n\nTo see the page, the visitor first passes a Cloudflare challenge (\"Confirm you're not a robot.\"). Push says this stops most public scanners. Links reach people through shortened Google links, Zapier's zpr.io links and a redirect on x.com; earlier versions used GoTo Webinar email or real Zoom event pages."],
+  ["How the scam takes the account", "The page offers two sign-in buttons. <strong>Continue with Microsoft</strong> starts a device code phish: the victim is asked to enter a code on Microsoft's real device login page and approve it, which hands the attacker access tokens through a service Push calls Kali365. The victim is then sent to a second page, run through VoidProxy, that captures the password and the session cookie. <strong>Continue with Google</strong> opens a VoidProxy reverse proxy of Google's real sign-in flow and captures the password, the MFA response and the session cookie.\n\nPush describes Kali365 and VoidProxy as separate phishing-as-a-service platforms built to defeat MFA checks. The fake event pages come from two kits Push calls ZoomMock (May to October 2026) and MSDRoot (from 22 October 2026). It rates the link between the two kits as \"medium-high\"."],
+  ["How to tell it is fake", "Signs described by Push: a request to sign in with a work account to claim a reward; a robot-check page before the event page; a device code \"Confirm access\" dialog; an address that is not the brand's own, in the pattern <code>brand.eventrsvp[.]app/event/...</code>; and brand leftovers in the page code, such as Claude mentioned inside the OpenAI page. The domain eventrsvp[.]app was three days old on 2 November.\n\nBleepingComputer, which reported the research on 5 November, advises employees not to enter a Microsoft device code supplied by an unfamiliar website, and organisations to restrict device code sign-in where it is not needed and to use phishing-resistant MFA such as FIDO2 security keys. Push's own report offers no general mitigation list beyond its product."],
+  ["What we don't know", "We do not know how many people received the invitations or how many accounts were compromised: no figures were published. We do not know who runs the campaign; Push does not name an actor. We found no statement from OpenAI, Anthropic or SpaceX. Push is a security vendor and its post promotes its product, so we treat it as the source of the analysis, not as an independent audit. The pages rotate domains every few weeks, so individual addresses go stale quickly."],
+  ["What to do if you received one", "Do not sign in and do not enter any device code. If you already did, change the password from a different device, sign out of all sessions and tell your IT or security team: session cookies can let an attacker in even after a password change. Check an invitation to a real event on the organiser's own website, not through the link in the message."]
+ ],
+ "faq": [
+  ["Is the OpenAI event invitation real?", "No. According to Push Security, invitations to fake OpenAI events offering three months of ChatGPT Pro are part of a phishing campaign that steals Microsoft and Google work accounts."],
+  ["Is the SpaceX event with free Grok Heavy real?", "Push Security describes a fake invite-only SpaceX briefing dated 12 November 2026 that offers three months of Grok Heavy or a \"SpaceX share\" as bait to take over work accounts."],
+  ["Is this phishing campaign made with AI?", "Not according to the sources we read. The campaign uses AI brands as bait. Push says only that convincing lure pages are easier to make with AI tools today, as a general remark."],
+  ["How can I check if an event invitation is real?", "Do not use the link in the message. Look the event up on the organiser's official website, and be wary of any page that asks for a work sign-in or a device code to claim a reward."]
+ ],
+ "sources": [
+  { "name": "Push Security", "title": "Fake event invites combine Kali365 and VoidProxy payloads (5 November 2026)", "url": "https://pushsecurity.com/blog/ai-themed-fake-event-campaign-analysis" },
+  { "name": "BleepingComputer", "title": "Fake OpenAI, SpaceX events used to steal Microsoft, Google accounts (5 November 2026)", "url": "https://www.bleepingcomputer.com/news/security/fake-openai-spacex-events-used-to-steal-microsoft-google-accounts/" },
+  { "name": "TechRadar", "title": "Hackers use fake OpenAI, SpaceX, and Anthropic event invites in new phishing scam (6 November 2026)", "url": "https://www.techradar.com/pro/security/hackers-use-fake-openai-spacex-and-anthropic-event-invites-in-new-phishing-scam-to-steal-microsoft-and-google-accounts" }
+ ]
+}
