@@ -2,6 +2,50 @@
    Ogni voce: lingua → elenco di [titoletto, testo]. Si mostrano nella pagina del termine, sopra le notizie.
    Aggiungere una voce solo se c'è davvero qualcosa di utile da dire: niente testo di riempimento. */
 export const MORE = {
+  'speech-to-text': {
+    it: [
+      ['Come funziona', 'Il modello ascolta l\'audio a piccoli tratti e prevede le parole una dopo l\'altra, un po\' come un <a href="llm.html">LLM</a> fa con il testo. Alla fine produce la trascrizione, e spesso anche i tempi di ogni frase, che servono per i sottotitoli (SRT e VTT).'],
+      ['Quanto è affidabile', 'Dipende dalla registrazione. Voce chiara e poco rumore danno risultati ottimi; musica di sottofondo, persone che si sovrappongono, accenti forti e termini tecnici o nomi propri fanno più errori. Nomi, cifre e citazioni vanno sempre ricontrollati prima di pubblicarli.'],
+      ['Senza caricare il file', 'Whisper può girare direttamente nel browser: la registrazione non lascia il dispositivo. È quello che fa <a href="../transcribe/">Audio to Text di FAIND</a>, gratis e senza account: trascrive audio e video, crea sottotitoli, traduce il risultato o estrae solo l\'audio.']
+    ],
+    en: [
+      ['How it works', 'The model listens to the audio in short stretches and predicts the words one after another, much as an <a href="llm.html">LLM</a> does with text. The result is a transcript, usually with the timing of each sentence, which is what subtitle files (SRT and VTT) need.'],
+      ['How accurate it is', 'It depends on the recording. Clear speech with little noise gives very good results; background music, people talking over each other, strong accents, technical terms and proper names produce more errors. Always check names, figures and quotes before publishing them.'],
+      ['Without uploading the file', 'Whisper can run right in the browser, so the recording never leaves your device. That is how <a href="../../transcribe/">FAIND Audio to Text</a> works, free and without an account: it transcribes audio and video, builds subtitles, translates the result or extracts just the audio.']
+    ],
+    fr: [
+      ['Comment ça marche', 'Le modèle écoute l\'audio par petits morceaux et prédit les mots les uns après les autres, un peu comme un <a href="llm.html">LLM</a> le fait avec du texte. Il produit une transcription, souvent avec l\'horodatage de chaque phrase, ce qu\'il faut pour les fichiers de sous-titres (SRT et VTT).'],
+      ['Sa fiabilité', 'Elle dépend de l\'enregistrement. Une voix claire et peu de bruit donnent de très bons résultats ; musique de fond, voix qui se chevauchent, accents marqués, termes techniques et noms propres font plus d\'erreurs. Vérifiez toujours noms, chiffres et citations avant de les publier.'],
+      ['Sans envoyer le fichier', 'Whisper peut tourner directement dans le navigateur : l\'enregistrement ne quitte pas votre appareil. C\'est ce que fait <a href="../../transcribe/">Audio to Text de FAIND</a>, gratuit et sans compte : il transcrit l\'audio et la vidéo, crée des sous-titres, traduit le résultat ou extrait seulement l\'audio.']
+    ],
+    de: [
+      ['So funktioniert es', 'Das Modell hört die Aufnahme in kurzen Abschnitten ab und sagt die Wörter nacheinander voraus, ähnlich wie ein <a href="llm.html">LLM</a> bei Text. Heraus kommt ein Transkript, meist mit dem Zeitpunkt jedes Satzes, den Untertiteldateien (SRT und VTT) brauchen.'],
+      ['Wie zuverlässig es ist', 'Das hängt von der Aufnahme ab. Klare Stimme und wenig Rauschen liefern sehr gute Ergebnisse; Hintergrundmusik, Durcheinanderreden, starke Akzente, Fachbegriffe und Eigennamen führen zu mehr Fehlern. Namen, Zahlen und Zitate immer vor der Veröffentlichung prüfen.'],
+      ['Ohne Datei-Upload', 'Whisper kann direkt im Browser laufen, die Aufnahme verlässt das Gerät nicht. So arbeitet <a href="../../transcribe/">FAIND Audio to Text</a>, gratis und ohne Konto: Es transkribiert Audio und Video, erstellt Untertitel, übersetzt das Ergebnis oder extrahiert nur die Tonspur.']
+    ]
+  },
+  'ocr': {
+    it: [
+      ['Come funziona', 'Il programma individua le zone con del testo nell\'immagine e riconosce le lettere una per una, oggi quasi sempre con una rete neurale. Il risultato è testo vero, non più una foto: si può selezionare, cercare e incollare altrove.'],
+      ['Dove sbaglia', 'Il testo piccolo, sfocato, storto o su sfondi complicati viene letto peggio, come i caratteri decorativi e la scrittura a mano. Nelle cifre un 0 e una O, o un 1 e una l, si confondono facilmente: controlla numeri, codici e importi.'],
+      ['Senza caricare il file', 'L\'OCR può girare nel browser, quindi foto e documenti restano sul tuo dispositivo. È quello che fa <a href="../image-to-text/">Image to Text di FAIND</a>: gratis, senza account, in 19 lingue, anche per PDF scansionati.']
+    ],
+    en: [
+      ['How it works', 'The software finds the areas of an image that contain text and recognises the letters one by one, today almost always with a neural network. The result is real text rather than a picture: you can select it, search it and paste it elsewhere.'],
+      ['Where it goes wrong', 'Small, blurry or skewed text and busy backgrounds are read less well, and so are decorative fonts and handwriting. In figures a 0 and an O, or a 1 and an l, are easy to mix up: check numbers, codes and amounts.'],
+      ['Without uploading the file', 'OCR can run in the browser, so photos and documents stay on your device. That is how <a href="../../image-to-text/">FAIND Image to Text</a> works: free, no account, 19 languages, scanned PDFs included.']
+    ],
+    fr: [
+      ['Comment ça marche', 'Le logiciel repère les zones de l\'image qui contiennent du texte et reconnaît les lettres une à une, aujourd\'hui presque toujours avec un réseau de neurones. Le résultat est du vrai texte, plus une image : on peut le sélectionner, le rechercher et le coller ailleurs.'],
+      ['Où il se trompe', 'Le texte petit, flou ou penché et les fonds chargés sont moins bien lus, tout comme les polices décoratives et l\'écriture manuscrite. Dans les chiffres, un 0 et un O, ou un 1 et un l, se confondent facilement : vérifiez nombres, codes et montants.'],
+      ['Sans envoyer le fichier', 'L\'OCR peut tourner dans le navigateur : photos et documents restent sur votre appareil. C\'est ce que fait <a href="../../image-to-text/">Image to Text de FAIND</a> : gratuit, sans compte, en 19 langues, PDF numérisés compris.']
+    ],
+    de: [
+      ['So funktioniert es', 'Die Software findet die Bildbereiche mit Text und erkennt die Buchstaben einzeln, heute fast immer mit einem neuronalen Netz. Das Ergebnis ist echter Text statt eines Bildes: Man kann ihn markieren, durchsuchen und anderswo einfügen.'],
+      ['Wo Fehler passieren', 'Kleiner, unscharfer oder schiefer Text und unruhige Hintergründe werden schlechter gelesen, ebenso Zierschriften und Handschrift. Bei Zahlen verwechselt man leicht 0 und O oder 1 und l: Zahlen, Codes und Beträge prüfen.'],
+      ['Ohne Datei-Upload', 'OCR kann im Browser laufen, Fotos und Dokumente bleiben auf Ihrem Gerät. So arbeitet <a href="../../image-to-text/">FAIND Image to Text</a>: gratis, ohne Konto, 19 Sprachen, auch gescannte PDFs.']
+    ]
+  },
   'data-center': {
     it: [
       ['Cos\'è un data center', 'Un data center è un edificio, o un gruppo di edifici, pieno di server: computer collegati in rete, con impianti per l\'alimentazione elettrica, il raffreddamento e le connessioni a internet. Ci girano siti web, app, archivi di dati e, sempre più spesso, i modelli di intelligenza artificiale. Si scrive anche "datacenter", tutto attaccato, o "data centre" all\'inglese britannico: è la stessa cosa.'],
