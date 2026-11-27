@@ -1,8 +1,14 @@
 {
-  "day": "2026-11-20",
-  "url": "https://export-download.canva.com/7DAVA/DAHbb07DAVA/-1/0/0001-1081386658938584860.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH4R7NKVBA%2F20261119%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261119T084004Z&X-Amz-Expires=87650&X-Amz-Signature=1cdaa8d27de4edfbe2eec3dad84329b4d2ba3c4dde2f7e6f62cae8e286262fe4&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Fri%2C%2020%20Nov%202026%2009%3A00%3A54%20GMT",
-  "design_id": "DAHbb07DAVA",
-  "mantra_n": 12,
-  "mantra": "The chatbot agrees with you. Even when it would be better not to.",
-  "ids": ["a-fc5fe854945b", "a-16352857db75", "a-01b60687ca3d", "a-6c0cb905f5da", "a-ea2578756e00"]
+  "day": "2026-11-27",
+  "url": "https://export-download.canva.com/PuWFE/DAHcF8PuWFE/-1/0/0001-5699828796831358914.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH4R7NKVBA%2F20261126%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261126T225916Z&X-Amz-Expires=36404&X-Amz-Signature=ffd6ebeee9f0f4df650ed93f26f33bb8921a08064617d16e2a301ce0cb3e7cbb&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-expires=Fri%2C%2027%20Nov%202026%2009%3A06%3A00%20GMT",
+  "design_id": "DAHcF8PuWFE",
+  "mantra_n": 14,
+  "mantra": "The answer was flawless. Too bad it was made up.",
+  "ids": [
+    "a-b64237d1ead6",
+    "a-2728edb65e82",
+    "a-9392c5b8f8a0",
+    "a-ff1da2007d25",
+    "a-6e42720bc891"
+  ]
 }
